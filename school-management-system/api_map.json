@@ -1,0 +1,1369 @@
+{
+  "GET /api/students/profile/": {
+    "method": "GET",
+    "url": "/api/students/profile/",
+    "files": [
+      "frontend/src/pages/student/Results.jsx",
+      "frontend/src/components/common/Navbar.jsx",
+      "frontend/src/pages/student/Profile.jsx"
+    ]
+  },
+  "GET /api/students/siblings/": {
+    "method": "GET",
+    "url": "/api/students/siblings/",
+    "files": [
+      "frontend/src/components/common/Navbar.jsx"
+    ]
+  },
+  "GET /api/teachers/profile/": {
+    "method": "GET",
+    "url": "/api/teachers/profile/",
+    "files": [
+      "frontend/src/pages/teacher/Profile.jsx",
+      "frontend/src/pages/teacher/Students.jsx",
+      "frontend/src/components/common/Navbar.jsx",
+      "frontend/src/pages/teacher/Dashboard.jsx"
+    ]
+  },
+  "GET /api/students/": {
+    "method": "GET",
+    "url": "/api/students/",
+    "files": [
+      "frontend/src/pages/admin/ManageStudents.jsx",
+      "frontend/src/pages/admin/AddStudent.jsx",
+      "frontend/src/pages/admin/Classes.jsx",
+      "frontend/src/pages/admin/Fees.jsx"
+    ]
+  },
+  "GET /api/classes/main-classes/": {
+    "method": "GET",
+    "url": "/api/classes/main-classes/",
+    "files": [
+      "frontend/src/pages/admin/Announcements.jsx",
+      "frontend/src/pages/admin/AddStudent.jsx",
+      "frontend/src/pages/admin/Fees.jsx",
+      "frontend/src/pages/admin/Syllabus.jsx",
+      "frontend/src/pages/admin/ManageStudents.jsx",
+      "frontend/src/pages/admin/Classes.jsx",
+      "frontend/src/pages/admin/Dashboard.jsx",
+      "frontend/src/pages/admin/Holidays.jsx",
+      "frontend/src/pages/admin/Subjects.jsx",
+      "frontend/src/pages/admin/AssignTeacher.jsx"
+    ]
+  },
+  "GET /api/classes/main-sections/": {
+    "method": "GET",
+    "url": "/api/classes/main-sections/",
+    "files": [
+      "frontend/src/pages/admin/ManageStudents.jsx",
+      "frontend/src/pages/admin/AddStudent.jsx",
+      "frontend/src/pages/admin/Dashboard.jsx"
+    ]
+  },
+  "POST /api/students/admin-create/": {
+    "method": "POST",
+    "url": "/api/students/admin-create/",
+    "files": [
+      "frontend/src/pages/admin/AddStudent.jsx",
+      "frontend/src/pages/admin/Dashboard.jsx"
+    ]
+  },
+  "GET /api/teachers/": {
+    "method": "GET",
+    "url": "/api/teachers/",
+    "files": [
+      "frontend/src/pages/admin/ManageTeachers.jsx",
+      "frontend/src/pages/common/TimeTable.jsx",
+      "frontend/src/pages/admin/Classes.jsx",
+      "frontend/src/pages/admin/AddTeacher.jsx",
+      "frontend/src/pages/admin/Subjects.jsx",
+      "frontend/src/pages/admin/AssignTeacher.jsx"
+    ]
+  },
+  "POST /api/teachers/admin/create-teacher/": {
+    "method": "POST",
+    "url": "/api/teachers/admin/create-teacher/",
+    "files": [
+      "frontend/src/pages/admin/AddTeacher.jsx"
+    ]
+  },
+  "PATCH /api/announcements/${editingId}/": {
+    "method": "PATCH",
+    "url": "/api/announcements/${editingId}/",
+    "files": [
+      "frontend/src/pages/admin/Announcements.jsx"
+    ]
+  },
+  "POST /api/announcements/": {
+    "method": "POST",
+    "url": "/api/announcements/",
+    "files": [
+      "frontend/src/pages/admin/Announcements.jsx"
+    ]
+  },
+  "DELETE /api/announcements/${id}/": {
+    "method": "DELETE",
+    "url": "/api/announcements/${id}/",
+    "files": [
+      "frontend/src/pages/admin/Announcements.jsx"
+    ]
+  },
+  "POST /api/announcements/${id}/notify/": {
+    "method": "POST",
+    "url": "/api/announcements/${id}/notify/",
+    "files": [
+      "frontend/src/pages/admin/Announcements.jsx"
+    ]
+  },
+  "GET /api/classes/admin-sections/": {
+    "method": "GET",
+    "url": "/api/classes/admin-sections/",
+    "files": [
+      "frontend/src/pages/admin/Classes.jsx",
+      "frontend/src/pages/admin/Exams.jsx",
+      "frontend/src/pages/common/TimeTable.jsx",
+      "frontend/src/pages/admin/AssignTeacher.jsx"
+    ]
+  },
+  "GET /api/subjects/teacher-assignments/": {
+    "method": "GET",
+    "url": "/api/subjects/teacher-assignments/",
+    "files": [
+      "frontend/src/pages/admin/AssignTeacher.jsx"
+    ]
+  },
+  "GET /api/subjects/": {
+    "method": "GET",
+    "url": "/api/subjects/",
+    "files": [
+      "frontend/src/pages/teacher/Assignment.jsx",
+      "frontend/src/pages/common/TimeTable.jsx",
+      "frontend/src/pages/admin/Syllabus.jsx",
+      "frontend/src/pages/admin/Exams.jsx",
+      "frontend/src/pages/admin/Subjects.jsx",
+      "frontend/src/pages/teacher/Dashboard.jsx",
+      "frontend/src/pages/admin/AssignTeacher.jsx"
+    ]
+  },
+  "PATCH /api/subjects/teacher-assignments/${editingId}/": {
+    "method": "PATCH",
+    "url": "/api/subjects/teacher-assignments/${editingId}/",
+    "files": [
+      "frontend/src/pages/admin/AssignTeacher.jsx"
+    ]
+  },
+  "POST /api/subjects/teacher-assignments/": {
+    "method": "POST",
+    "url": "/api/subjects/teacher-assignments/",
+    "files": [
+      "frontend/src/pages/admin/AssignTeacher.jsx"
+    ]
+  },
+  "DELETE /api/subjects/teacher-assignments/${id}/": {
+    "method": "DELETE",
+    "url": "/api/subjects/teacher-assignments/${id}/",
+    "files": [
+      "frontend/src/pages/admin/AssignTeacher.jsx"
+    ]
+  },
+  "GET /api/bulk-upload/history/": {
+    "method": "GET",
+    "url": "/api/bulk-upload/history/",
+    "files": [
+      "frontend/src/pages/admin/BulkImport.jsx"
+    ]
+  },
+  "DELETE /api/bulk-upload/history/${logId}/": {
+    "method": "DELETE",
+    "url": "/api/bulk-upload/history/${logId}/",
+    "files": [
+      "frontend/src/pages/admin/BulkImport.jsx"
+    ]
+  },
+  "POST /api/bulk-upload/validate/": {
+    "method": "POST",
+    "url": "/api/bulk-upload/validate/",
+    "files": [
+      "frontend/src/pages/admin/BulkImport.jsx"
+    ]
+  },
+  "POST /api/bulk-upload/confirm/": {
+    "method": "POST",
+    "url": "/api/bulk-upload/confirm/",
+    "files": [
+      "frontend/src/pages/admin/BulkImport.jsx"
+    ]
+  },
+  "GET /api/classes/admin-structure/": {
+    "method": "GET",
+    "url": "/api/classes/admin-structure/",
+    "files": [
+      "frontend/src/pages/admin/Classes.jsx"
+    ]
+  },
+  "GET /api/timetable/shifts/": {
+    "method": "GET",
+    "url": "/api/timetable/shifts/",
+    "files": [
+      "frontend/src/pages/admin/Classes.jsx",
+      "frontend/src/pages/teacher/Dashboard.jsx",
+      "frontend/src/pages/common/TimeTable.jsx"
+    ]
+  },
+  "PATCH /api/classes/admin-class/${editingClass.id}/": {
+    "method": "PATCH",
+    "url": "/api/classes/admin-class/${editingClass.id}/",
+    "files": [
+      "frontend/src/pages/admin/Classes.jsx"
+    ]
+  },
+  "POST /api/classes/admin-create-class/": {
+    "method": "POST",
+    "url": "/api/classes/admin-create-class/",
+    "files": [
+      "frontend/src/pages/admin/Classes.jsx"
+    ]
+  },
+  "DELETE /api/classes/admin-class/${id}/": {
+    "method": "DELETE",
+    "url": "/api/classes/admin-class/${id}/",
+    "files": [
+      "frontend/src/pages/admin/Classes.jsx"
+    ]
+  },
+  "PATCH /api/classes/admin-sections/${editingSection.id}/": {
+    "method": "PATCH",
+    "url": "/api/classes/admin-sections/${editingSection.id}/",
+    "files": [
+      "frontend/src/pages/admin/Classes.jsx"
+    ]
+  },
+  "POST /api/classes/admin-sections/create/": {
+    "method": "POST",
+    "url": "/api/classes/admin-sections/create/",
+    "files": [
+      "frontend/src/pages/admin/Classes.jsx"
+    ]
+  },
+  "DELETE /api/classes/admin-sections/${id}/": {
+    "method": "DELETE",
+    "url": "/api/classes/admin-sections/${id}/",
+    "files": [
+      "frontend/src/pages/admin/Classes.jsx"
+    ]
+  },
+  "POST /api/classes/admin-assign-student/": {
+    "method": "POST",
+    "url": "/api/classes/admin-assign-student/",
+    "files": [
+      "frontend/src/pages/admin/Classes.jsx"
+    ]
+  },
+  "GET /api/admin/dashboard/stats": {
+    "method": "GET",
+    "url": "/api/admin/dashboard/stats",
+    "files": [
+      "frontend/src/pages/admin/Dashboard.jsx"
+    ]
+  },
+  "GET /api/gallery/": {
+    "method": "GET",
+    "url": "/api/gallery/",
+    "files": [
+      "frontend/src/pages/common/Gallery.jsx",
+      "frontend/src/pages/admin/Dashboard.jsx"
+    ]
+  },
+  "GET /api/academics/exams/": {
+    "method": "GET",
+    "url": "/api/academics/exams/",
+    "files": [
+      "frontend/src/pages/student/Exams.jsx",
+      "frontend/src/pages/student/Results.jsx",
+      "frontend/src/pages/admin/PublishResults.jsx",
+      "frontend/src/pages/admin/Exams.jsx",
+      "frontend/src/pages/teacher/UploadResult.jsx",
+      "frontend/src/pages/teacher/Dashboard.jsx"
+    ]
+  },
+  "GET /api/classes/sections/": {
+    "method": "GET",
+    "url": "/api/classes/sections/",
+    "files": [
+      "frontend/src/pages/admin/Reports.jsx",
+      "frontend/src/pages/teacher/Assignment.jsx",
+      "frontend/src/pages/admin/PublishResults.jsx",
+      "frontend/src/pages/admin/Exams.jsx",
+      "frontend/src/pages/admin/Messaging.jsx"
+    ]
+  },
+  "GET /api/academics/exams/${selectedExam.id}/schedule/": {
+    "method": "GET",
+    "url": "/api/academics/exams/${selectedExam.id}/schedule/",
+    "files": [
+      "frontend/src/pages/admin/Exams.jsx"
+    ]
+  },
+  "GET /api/academics/exams/${selectedExamId}/subject-status/": {
+    "method": "GET",
+    "url": "/api/academics/exams/${selectedExamId}/subject-status/",
+    "files": [
+      "frontend/src/pages/admin/Exams.jsx"
+    ]
+  },
+  "POST /api/academics/exams/": {
+    "method": "POST",
+    "url": "/api/academics/exams/",
+    "files": [
+      "frontend/src/pages/admin/Exams.jsx"
+    ]
+  },
+  "POST /api/academics/exams/${selectedExamId}/schedule/": {
+    "method": "POST",
+    "url": "/api/academics/exams/${selectedExamId}/schedule/",
+    "files": [
+      "frontend/src/pages/admin/Exams.jsx"
+    ]
+  },
+  "GET /api/academics/exams/${selectedExamId}/schedule/": {
+    "method": "GET",
+    "url": "/api/academics/exams/${selectedExamId}/schedule/",
+    "files": [
+      "frontend/src/pages/admin/Exams.jsx"
+    ]
+  },
+  "DELETE /api/academics/schedule/${id}/": {
+    "method": "DELETE",
+    "url": "/api/academics/schedule/${id}/",
+    "files": [
+      "frontend/src/pages/admin/Exams.jsx"
+    ]
+  },
+  "PATCH /api/academics/schedule/${editingScheduleId}/": {
+    "method": "PATCH",
+    "url": "/api/academics/schedule/${editingScheduleId}/",
+    "files": [
+      "frontend/src/pages/admin/Exams.jsx"
+    ]
+  },
+  "PUT /api/academics/exams/${selectedExamId}/publish-results/": {
+    "method": "PUT",
+    "url": "/api/academics/exams/${selectedExamId}/publish-results/",
+    "files": [
+      "frontend/src/pages/admin/Exams.jsx"
+    ]
+  },
+  "PATCH /api/academics/exams/${editingExamId}/": {
+    "method": "PATCH",
+    "url": "/api/academics/exams/${editingExamId}/",
+    "files": [
+      "frontend/src/pages/admin/Exams.jsx"
+    ]
+  },
+  "DELETE /api/academics/exams/${examId}/": {
+    "method": "DELETE",
+    "url": "/api/academics/exams/${examId}/",
+    "files": [
+      "frontend/src/pages/admin/Exams.jsx"
+    ]
+  },
+  "GET /api/fees/admin/dashboard/": {
+    "method": "GET",
+    "url": "/api/fees/admin/dashboard/",
+    "files": [
+      "frontend/src/pages/admin/Fees.jsx"
+    ]
+  },
+  "GET /api/fees/admin/structures/": {
+    "method": "GET",
+    "url": "/api/fees/admin/structures/",
+    "files": [
+      "frontend/src/pages/admin/Fees.jsx"
+    ]
+  },
+  "GET /api/fees/admin/student-fees/": {
+    "method": "GET",
+    "url": "/api/fees/admin/student-fees/",
+    "files": [
+      "frontend/src/pages/admin/Fees.jsx"
+    ]
+  },
+  "GET /api/fees/admin/student-fees/${selectedFeeId}/": {
+    "method": "GET",
+    "url": "/api/fees/admin/student-fees/${selectedFeeId}/",
+    "files": [
+      "frontend/src/pages/admin/Fees.jsx"
+    ]
+  },
+  "PATCH /api/fees/admin/structures/${editingStructureId}/": {
+    "method": "PATCH",
+    "url": "/api/fees/admin/structures/${editingStructureId}/",
+    "files": [
+      "frontend/src/pages/admin/Fees.jsx"
+    ]
+  },
+  "POST /api/fees/admin/structures/": {
+    "method": "POST",
+    "url": "/api/fees/admin/structures/",
+    "files": [
+      "frontend/src/pages/admin/Fees.jsx"
+    ]
+  },
+  "DELETE /api/fees/admin/structures/${id}/?force=1": {
+    "method": "DELETE",
+    "url": "/api/fees/admin/structures/${id}/?force=1",
+    "files": [
+      "frontend/src/pages/admin/Fees.jsx"
+    ]
+  },
+  "POST /api/fees/admin/sync-class/": {
+    "method": "POST",
+    "url": "/api/fees/admin/sync-class/",
+    "files": [
+      "frontend/src/pages/admin/Fees.jsx"
+    ]
+  },
+  "POST /api/fees/admin/student-fees/create/": {
+    "method": "POST",
+    "url": "/api/fees/admin/student-fees/create/",
+    "files": [
+      "frontend/src/pages/admin/Fees.jsx"
+    ]
+  },
+  "GET /api/fees/admin/receipt/${paymentId}/": {
+    "method": "GET",
+    "url": "/api/fees/admin/receipt/${paymentId}/",
+    "files": [
+      "frontend/src/pages/admin/Fees.jsx"
+    ]
+  },
+  "GET /api/fees/admin/export/csv/": {
+    "method": "GET",
+    "url": "/api/fees/admin/export/csv/",
+    "files": [
+      "frontend/src/pages/admin/Fees.jsx"
+    ]
+  },
+  "GET /api/fees/admin/class-fee-cards/": {
+    "method": "GET",
+    "url": "/api/fees/admin/class-fee-cards/",
+    "files": [
+      "frontend/src/pages/admin/FinanceCards.jsx"
+    ]
+  },
+  "POST /api/fees/admin/class-fee-cards/": {
+    "method": "POST",
+    "url": "/api/fees/admin/class-fee-cards/",
+    "files": [
+      "frontend/src/pages/admin/FinanceCards.jsx"
+    ]
+  },
+  "POST /api/fees/admin/class-fee-cards/bootstrap/": {
+    "method": "POST",
+    "url": "/api/fees/admin/class-fee-cards/bootstrap/",
+    "files": [
+      "frontend/src/pages/admin/FinanceCards.jsx"
+    ]
+  },
+  "POST /api/fees/admin/class-fee-cards/upload/": {
+    "method": "POST",
+    "url": "/api/fees/admin/class-fee-cards/upload/",
+    "files": [
+      "frontend/src/pages/admin/FinanceCards.jsx"
+    ]
+  },
+  "POST /api/fees/admin/class-fee-cards/upload-file/": {
+    "method": "POST",
+    "url": "/api/fees/admin/class-fee-cards/upload-file/",
+    "files": [
+      "frontend/src/pages/admin/FinanceCards.jsx"
+    ]
+  },
+  "POST /api/fees/admin/class-fee-cards/rollback/": {
+    "method": "POST",
+    "url": "/api/fees/admin/class-fee-cards/rollback/",
+    "files": [
+      "frontend/src/pages/admin/FinanceCards.jsx"
+    ]
+  },
+  "DELETE /api/fees/admin/class-fee-cards/delete-all/": {
+    "method": "DELETE",
+    "url": "/api/fees/admin/class-fee-cards/delete-all/",
+    "files": [
+      "frontend/src/pages/admin/FinanceCards.jsx"
+    ]
+  },
+  "GET /api/holidays/": {
+    "method": "GET",
+    "url": "/api/holidays/",
+    "files": [
+      "frontend/src/pages/student/Hollidays.jsx",
+      "frontend/src/pages/student/Holidays.jsx",
+      "frontend/src/pages/teacher/Holidays.jsx",
+      "frontend/src/pages/admin/Holidays.jsx",
+      "frontend/src/pages/student/Attendance.jsx"
+    ]
+  },
+  "PATCH /api/holidays/${editingId}/": {
+    "method": "PATCH",
+    "url": "/api/holidays/${editingId}/",
+    "files": [
+      "frontend/src/pages/admin/Holidays.jsx"
+    ]
+  },
+  "POST /api/holidays/": {
+    "method": "POST",
+    "url": "/api/holidays/",
+    "files": [
+      "frontend/src/pages/admin/Holidays.jsx"
+    ]
+  },
+  "DELETE /api/holidays/${id}/": {
+    "method": "DELETE",
+    "url": "/api/holidays/${id}/",
+    "files": [
+      "frontend/src/pages/admin/Holidays.jsx"
+    ]
+  },
+  "GET /api/holidays/export/csv/": {
+    "method": "GET",
+    "url": "/api/holidays/export/csv/",
+    "files": [
+      "frontend/src/pages/admin/Holidays.jsx"
+    ]
+  },
+  "DELETE /api/students/delete/${row.id}/": {
+    "method": "DELETE",
+    "url": "/api/students/delete/${row.id}/",
+    "files": [
+      "frontend/src/pages/admin/ManageStudents.jsx"
+    ]
+  },
+  "PATCH /api/students/update/${editRow.id}/": {
+    "method": "PATCH",
+    "url": "/api/students/update/${editRow.id}/",
+    "files": [
+      "frontend/src/pages/admin/ManageStudents.jsx"
+    ]
+  },
+  "DELETE /api/teachers/delete/${row.id}/": {
+    "method": "DELETE",
+    "url": "/api/teachers/delete/${row.id}/",
+    "files": [
+      "frontend/src/pages/admin/ManageTeachers.jsx"
+    ]
+  },
+  "PATCH /api/teachers/update/${editRow.id}/": {
+    "method": "PATCH",
+    "url": "/api/teachers/update/${editRow.id}/",
+    "files": [
+      "frontend/src/pages/admin/ManageTeachers.jsx"
+    ]
+  },
+  "GET /api/communication/doubts/": {
+    "method": "GET",
+    "url": "/api/communication/doubts/",
+    "files": [
+      "frontend/src/pages/student/Messaging.jsx",
+      "frontend/src/pages/admin/Messaging.jsx",
+      "frontend/src/pages/teacher/Messaging.jsx"
+    ]
+  },
+  "GET /api/communication/doubts/${activeConvId}/": {
+    "method": "GET",
+    "url": "/api/communication/doubts/${activeConvId}/",
+    "files": [
+      "frontend/src/pages/student/Messaging.jsx",
+      "frontend/src/pages/admin/Messaging.jsx",
+      "frontend/src/pages/teacher/Messaging.jsx"
+    ]
+  },
+  "GET /api/academics/exams/${selectedExamId}/detailed-status/": {
+    "method": "GET",
+    "url": "/api/academics/exams/${selectedExamId}/detailed-status/",
+    "files": [
+      "frontend/src/pages/admin/PublishResults.jsx"
+    ]
+  },
+  "POST /api/academics/exams/${selectedExamId}/publish-results/": {
+    "method": "POST",
+    "url": "/api/academics/exams/${selectedExamId}/publish-results/",
+    "files": [
+      "frontend/src/pages/admin/PublishResults.jsx"
+    ]
+  },
+  "GET /api/reports/download/?${params.toString()}": {
+    "method": "GET",
+    "url": "/api/reports/download/?${params.toString()}",
+    "files": [
+      "frontend/src/pages/admin/Reports.jsx"
+    ]
+  },
+  "GET /api/shops/": {
+    "method": "GET",
+    "url": "/api/shops/",
+    "files": [
+      "frontend/src/pages/admin/ShopLocations.jsx",
+      "frontend/src/pages/student/Shops.jsx"
+    ]
+  },
+  "PUT /api/shops/${editingShop.id}/": {
+    "method": "PUT",
+    "url": "/api/shops/${editingShop.id}/",
+    "files": [
+      "frontend/src/pages/admin/ShopLocations.jsx"
+    ]
+  },
+  "POST /api/shops/": {
+    "method": "POST",
+    "url": "/api/shops/",
+    "files": [
+      "frontend/src/pages/admin/ShopLocations.jsx"
+    ]
+  },
+  "DELETE /api/shops/${id}/": {
+    "method": "DELETE",
+    "url": "/api/shops/${id}/",
+    "files": [
+      "frontend/src/pages/admin/ShopLocations.jsx"
+    ]
+  },
+  "DELETE /api/students/delete/${id}/": {
+    "method": "DELETE",
+    "url": "/api/students/delete/${id}/",
+    "files": [
+      "frontend/src/pages/admin/StudentCards.jsx"
+    ]
+  },
+  "PATCH /api/students/update/${editStudent.id}/": {
+    "method": "PATCH",
+    "url": "/api/students/update/${editStudent.id}/",
+    "files": [
+      "frontend/src/pages/admin/StudentCards.jsx"
+    ]
+  },
+  "GET /api/subjects/${subjectId}/details/": {
+    "method": "GET",
+    "url": "/api/subjects/${subjectId}/details/",
+    "files": [
+      "frontend/src/pages/admin/SubjectDetails.jsx"
+    ]
+  },
+  "GET /api/subjects/${subjectId}/marks/": {
+    "method": "GET",
+    "url": "/api/subjects/${subjectId}/marks/",
+    "files": [
+      "frontend/src/pages/admin/SubjectDetails.jsx"
+    ]
+  },
+  "POST /api/subjects/${subjectId}/notes/": {
+    "method": "POST",
+    "url": "/api/subjects/${subjectId}/notes/",
+    "files": [
+      "frontend/src/pages/admin/SubjectDetails.jsx"
+    ]
+  },
+  "POST /api/subjects/${subjectId}/assignments/": {
+    "method": "POST",
+    "url": "/api/subjects/${subjectId}/assignments/",
+    "files": [
+      "frontend/src/pages/admin/SubjectDetails.jsx"
+    ]
+  },
+  "DELETE /api/subjects/notes/${noteId}/": {
+    "method": "DELETE",
+    "url": "/api/subjects/notes/${noteId}/",
+    "files": [
+      "frontend/src/pages/admin/SubjectDetails.jsx"
+    ]
+  },
+  "DELETE /api/subjects/assignments/${assignmentId}/": {
+    "method": "DELETE",
+    "url": "/api/subjects/assignments/${assignmentId}/",
+    "files": [
+      "frontend/src/pages/admin/SubjectDetails.jsx"
+    ]
+  },
+  "PATCH /api/subjects/${editingSubject.id}/": {
+    "method": "PATCH",
+    "url": "/api/subjects/${editingSubject.id}/",
+    "files": [
+      "frontend/src/pages/admin/Subjects.jsx"
+    ]
+  },
+  "POST /api/subjects/create/": {
+    "method": "POST",
+    "url": "/api/subjects/create/",
+    "files": [
+      "frontend/src/pages/admin/Subjects.jsx"
+    ]
+  },
+  "DELETE /api/subjects/${subjectId}/": {
+    "method": "DELETE",
+    "url": "/api/subjects/${subjectId}/",
+    "files": [
+      "frontend/src/pages/admin/Subjects.jsx"
+    ]
+  },
+  "GET /api/syllabus/": {
+    "method": "GET",
+    "url": "/api/syllabus/",
+    "files": [
+      "frontend/src/pages/student/Syllabus.jsx",
+      "frontend/src/pages/teacher/Syllabus.jsx",
+      "frontend/src/pages/admin/Syllabus.jsx"
+    ]
+  },
+  "POST /api/syllabus/control/": {
+    "method": "POST",
+    "url": "/api/syllabus/control/",
+    "files": [
+      "frontend/src/pages/admin/Syllabus.jsx"
+    ]
+  },
+  "PATCH /api/syllabus/control/${editId}/": {
+    "method": "PATCH",
+    "url": "/api/syllabus/control/${editId}/",
+    "files": [
+      "frontend/src/pages/admin/Syllabus.jsx"
+    ]
+  },
+  "DELETE /api/syllabus/control/${id}/": {
+    "method": "DELETE",
+    "url": "/api/syllabus/control/${id}/",
+    "files": [
+      "frontend/src/pages/admin/Syllabus.jsx"
+    ]
+  },
+  "DELETE /api/teachers/delete/${id}/": {
+    "method": "DELETE",
+    "url": "/api/teachers/delete/${id}/",
+    "files": [
+      "frontend/src/pages/admin/TeacherCards.jsx"
+    ]
+  },
+  "PATCH /api/teachers/update/${editTeacher.id}/": {
+    "method": "PATCH",
+    "url": "/api/teachers/update/${editTeacher.id}/",
+    "files": [
+      "frontend/src/pages/admin/TeacherCards.jsx"
+    ]
+  },
+  "POST /api/gallery/": {
+    "method": "POST",
+    "url": "/api/gallery/",
+    "files": [
+      "frontend/src/pages/common/Gallery.jsx"
+    ]
+  },
+  "DELETE /api/gallery/${id}/": {
+    "method": "DELETE",
+    "url": "/api/gallery/${id}/",
+    "files": [
+      "frontend/src/pages/common/Gallery.jsx"
+    ]
+  },
+  "GET /api/timetable/user-shift/": {
+    "method": "GET",
+    "url": "/api/timetable/user-shift/",
+    "files": [
+      "frontend/src/pages/teacher/Dashboard.jsx",
+      "frontend/src/pages/common/TimeTable.jsx"
+    ]
+  },
+  "DELETE /api/timetable/${id}/": {
+    "method": "DELETE",
+    "url": "/api/timetable/${id}/",
+    "files": [
+      "frontend/src/pages/common/TimeTable.jsx"
+    ]
+  },
+  "PUT /api/timetable/${entry.id}/": {
+    "method": "PUT",
+    "url": "/api/timetable/${entry.id}/",
+    "files": [
+      "frontend/src/pages/common/TimeTable.jsx"
+    ]
+  },
+  "POST /api/timetable/": {
+    "method": "POST",
+    "url": "/api/timetable/",
+    "files": [
+      "frontend/src/pages/common/TimeTable.jsx"
+    ]
+  },
+  "PUT /api/timetable/shifts/${editingShift.id}/": {
+    "method": "PUT",
+    "url": "/api/timetable/shifts/${editingShift.id}/",
+    "files": [
+      "frontend/src/pages/common/TimeTable.jsx"
+    ]
+  },
+  "POST /api/timetable/shifts/": {
+    "method": "POST",
+    "url": "/api/timetable/shifts/",
+    "files": [
+      "frontend/src/pages/common/TimeTable.jsx"
+    ]
+  },
+  "GET /api/dealers/schools/": {
+    "method": "GET",
+    "url": "/api/dealers/schools/",
+    "files": [
+      "frontend/src/pages/dealer/Dashboard.jsx"
+    ]
+  },
+  "GET /api/dealers/profile/": {
+    "method": "GET",
+    "url": "/api/dealers/profile/",
+    "files": [
+      "frontend/src/pages/dealer/Dashboard.jsx",
+      "frontend/src/pages/dealer/Profile.jsx"
+    ]
+  },
+  "POST /api/dealers/schools/": {
+    "method": "POST",
+    "url": "/api/dealers/schools/",
+    "files": [
+      "frontend/src/pages/dealer/Dashboard.jsx"
+    ]
+  },
+  "POST /api/dealers/schools/${id}/toggle_active/": {
+    "method": "POST",
+    "url": "/api/dealers/schools/${id}/toggle_active/",
+    "files": [
+      "frontend/src/pages/dealer/Dashboard.jsx"
+    ]
+  },
+  "PATCH /api/dealers/schools/${editingSchoolId}/": {
+    "method": "PATCH",
+    "url": "/api/dealers/schools/${editingSchoolId}/",
+    "files": [
+      "frontend/src/pages/dealer/Dashboard.jsx"
+    ]
+  },
+  "GET /api/dealers/schools/${school.id}/admins/": {
+    "method": "GET",
+    "url": "/api/dealers/schools/${school.id}/admins/",
+    "files": [
+      "frontend/src/pages/dealer/Dashboard.jsx"
+    ]
+  },
+  "PATCH /api/dealers/profile/me/": {
+    "method": "PATCH",
+    "url": "/api/dealers/profile/me/",
+    "files": [
+      "frontend/src/pages/dealer/Profile.jsx"
+    ]
+  },
+  "GET /api/assignments/": {
+    "method": "GET",
+    "url": "/api/assignments/",
+    "files": [
+      "frontend/src/pages/teacher/AssignmentList.jsx",
+      "frontend/src/pages/teacher/Dashboard.jsx",
+      "frontend/src/pages/student/Assignments.jsx",
+      "frontend/src/pages/student/Profile.jsx"
+    ]
+  },
+  "GET /api/assignments/my-submissions/": {
+    "method": "GET",
+    "url": "/api/assignments/my-submissions/",
+    "files": [
+      "frontend/src/pages/student/Assignments.jsx",
+      "frontend/src/pages/student/Profile.jsx"
+    ]
+  },
+  "POST /api/assignments/submit/": {
+    "method": "POST",
+    "url": "/api/assignments/submit/",
+    "files": [
+      "frontend/src/pages/student/Assignments.jsx"
+    ]
+  },
+  "GET /api/attendance/my-attendance/": {
+    "method": "GET",
+    "url": "/api/attendance/my-attendance/",
+    "files": [
+      "frontend/src/pages/student/Attendance.jsx",
+      "frontend/src/pages/student/Profile.jsx"
+    ]
+  },
+  "GET /api/timetable/": {
+    "method": "GET",
+    "url": "/api/timetable/",
+    "files": [
+      "frontend/src/pages/student/Timetable.jsx",
+      "frontend/src/pages/teacher/Dashboard.jsx",
+      "frontend/src/pages/student/Attendance.jsx"
+    ]
+  },
+  "GET /api/attendance/my/report/pdf/": {
+    "method": "GET",
+    "url": "/api/attendance/my/report/pdf/",
+    "files": [
+      "frontend/src/pages/student/Attendance.jsx"
+    ]
+  },
+  "GET /api/academics/exams/${examId}/schedule/": {
+    "method": "GET",
+    "url": "/api/academics/exams/${examId}/schedule/",
+    "files": [
+      "frontend/src/pages/student/Exams.jsx"
+    ]
+  },
+  "GET /api/fees/my/receipt/${paymentId}/": {
+    "method": "GET",
+    "url": "/api/fees/my/receipt/${paymentId}/",
+    "files": [
+      "frontend/src/pages/student/Fees.jsx",
+      "frontend/src/pages/student/Ledger.jsx"
+    ]
+  },
+  "POST /api/fees/my/pay/": {
+    "method": "POST",
+    "url": "/api/fees/my/pay/",
+    "files": [
+      "frontend/src/pages/student/Fees.jsx"
+    ]
+  },
+  "GET /api/communication/threads/": {
+    "method": "GET",
+    "url": "/api/communication/threads/",
+    "files": [
+      "frontend/src/pages/student/Messageing.jsx"
+    ]
+  },
+  "GET /api/communication/conversation/${activeUserId}/": {
+    "method": "GET",
+    "url": "/api/communication/conversation/${activeUserId}/",
+    "files": [
+      "frontend/src/pages/student/Messageing.jsx"
+    ]
+  },
+  "POST /api/communication/conversation/${activeUserId}/": {
+    "method": "POST",
+    "url": "/api/communication/conversation/${activeUserId}/",
+    "files": [
+      "frontend/src/pages/student/Messageing.jsx"
+    ]
+  },
+  "GET /api/teachers/list-all/": {
+    "method": "GET",
+    "url": "/api/teachers/list-all/",
+    "files": [
+      "frontend/src/pages/student/Messaging.jsx"
+    ]
+  },
+  "POST /api/communication/doubts/${activeConvId}/": {
+    "method": "POST",
+    "url": "/api/communication/doubts/${activeConvId}/",
+    "files": [
+      "frontend/src/pages/student/Messaging.jsx",
+      "frontend/src/pages/teacher/Messaging.jsx"
+    ]
+  },
+  "PATCH /api/communication/doubts/message/${msgId}/": {
+    "method": "PATCH",
+    "url": "/api/communication/doubts/message/${msgId}/",
+    "files": [
+      "frontend/src/pages/student/Messaging.jsx",
+      "frontend/src/pages/teacher/Messaging.jsx"
+    ]
+  },
+  "DELETE /api/communication/doubts/message/${msgId}/": {
+    "method": "DELETE",
+    "url": "/api/communication/doubts/message/${msgId}/",
+    "files": [
+      "frontend/src/pages/student/Messaging.jsx",
+      "frontend/src/pages/teacher/Messaging.jsx"
+    ]
+  },
+  "POST /api/communication/doubts/": {
+    "method": "POST",
+    "url": "/api/communication/doubts/",
+    "files": [
+      "frontend/src/pages/student/Messaging.jsx"
+    ]
+  },
+  "PATCH /api/communication/my/${id}/": {
+    "method": "PATCH",
+    "url": "/api/communication/my/${id}/",
+    "files": [
+      "frontend/src/pages/student/Notifications.jsx"
+    ]
+  },
+  "DELETE /api/communication/my/${id}/": {
+    "method": "DELETE",
+    "url": "/api/communication/my/${id}/",
+    "files": [
+      "frontend/src/pages/student/Notifications.jsx"
+    ]
+  },
+  "POST /api/communication/my/mark-all-read/": {
+    "method": "POST",
+    "url": "/api/communication/my/mark-all-read/",
+    "files": [
+      "frontend/src/pages/student/Notifications.jsx"
+    ]
+  },
+  "GET /api/announcements/${announcementId}/": {
+    "method": "GET",
+    "url": "/api/announcements/${announcementId}/",
+    "files": [
+      "frontend/src/pages/student/Notifications.jsx"
+    ]
+  },
+  "GET /api/fees/my/": {
+    "method": "GET",
+    "url": "/api/fees/my/",
+    "files": [
+      "frontend/src/pages/student/Profile.jsx"
+    ]
+  },
+  "GET /api/tenants/common/school-info/": {
+    "method": "GET",
+    "url": "/api/tenants/common/school-info/",
+    "files": [
+      "frontend/src/pages/teacher/Profile.jsx",
+      "frontend/src/pages/student/Profile.jsx"
+    ]
+  },
+  "POST /api/students/profile/photo/": {
+    "method": "POST",
+    "url": "/api/students/profile/photo/",
+    "files": [
+      "frontend/src/pages/student/Profile.jsx"
+    ]
+  },
+  "DELETE /api/students/profile/photo/": {
+    "method": "DELETE",
+    "url": "/api/students/profile/photo/",
+    "files": [
+      "frontend/src/pages/student/Profile.jsx"
+    ]
+  },
+  "GET /api/students/profile/id-card/": {
+    "method": "GET",
+    "url": "/api/students/profile/id-card/",
+    "files": [
+      "frontend/src/pages/student/Profile.jsx"
+    ]
+  },
+  "GET /api/academics/results/my/": {
+    "method": "GET",
+    "url": "/api/academics/results/my/",
+    "files": [
+      "frontend/src/pages/student/Results.jsx"
+    ]
+  },
+  "GET /api/academics/results/my/${selectedOption.exam_id}/pdf/": {
+    "method": "GET",
+    "url": "/api/academics/results/my/${selectedOption.exam_id}/pdf/",
+    "files": [
+      "frontend/src/pages/student/Results.jsx"
+    ]
+  },
+  "GET /api/syllabus/student-filters/": {
+    "method": "GET",
+    "url": "/api/syllabus/student-filters/",
+    "files": [
+      "frontend/src/pages/student/Syllabus.jsx"
+    ]
+  },
+  "GET /api/tenants/admin-schools/": {
+    "method": "GET",
+    "url": "/api/tenants/admin-schools/",
+    "files": [
+      "frontend/src/services/schoolService.js",
+      "frontend/src/pages/superadmin/Dashboard.jsx"
+    ]
+  },
+  "GET /api/dealers/management/": {
+    "method": "GET",
+    "url": "/api/dealers/management/",
+    "files": [
+      "frontend/src/pages/superadmin/Dashboard.jsx",
+      "frontend/src/pages/superadmin/DealerManagement.jsx"
+    ]
+  },
+  "POST /api/tenants/admin-schools/": {
+    "method": "POST",
+    "url": "/api/tenants/admin-schools/",
+    "files": [
+      "frontend/src/pages/superadmin/Dashboard.jsx"
+    ]
+  },
+  "PATCH /api/tenants/admin-schools/${editingSchoolId}/": {
+    "method": "PATCH",
+    "url": "/api/tenants/admin-schools/${editingSchoolId}/",
+    "files": [
+      "frontend/src/pages/superadmin/Dashboard.jsx"
+    ]
+  },
+  "POST /api/dealers/management/": {
+    "method": "POST",
+    "url": "/api/dealers/management/",
+    "files": [
+      "frontend/src/pages/superadmin/Dashboard.jsx",
+      "frontend/src/pages/superadmin/DealerManagement.jsx"
+    ]
+  },
+  "GET /api/tenants/admin-schools/${school.id}/admins/": {
+    "method": "GET",
+    "url": "/api/tenants/admin-schools/${school.id}/admins/",
+    "files": [
+      "frontend/src/pages/superadmin/Dashboard.jsx"
+    ]
+  },
+  "PATCH /api/tenants/admin-schools/${id}/": {
+    "method": "PATCH",
+    "url": "/api/tenants/admin-schools/${id}/",
+    "files": [
+      "frontend/src/pages/superadmin/Dashboard.jsx"
+    ]
+  },
+  "POST /api/dealers/management/${id}/toggle_active/": {
+    "method": "POST",
+    "url": "/api/dealers/management/${id}/toggle_active/",
+    "files": [
+      "frontend/src/pages/superadmin/Dashboard.jsx"
+    ]
+  },
+  "POST /api/tenants/bulk-id-cards/": {
+    "method": "POST",
+    "url": "/api/tenants/bulk-id-cards/",
+    "files": [
+      "frontend/src/pages/superadmin/Dashboard.jsx"
+    ]
+  },
+  "GET /api/dealers/management/${dealer.id}/schools/": {
+    "method": "GET",
+    "url": "/api/dealers/management/${dealer.id}/schools/",
+    "files": [
+      "frontend/src/pages/superadmin/DealerManagement.jsx"
+    ]
+  },
+  "DELETE /api/dealers/management/${id}/": {
+    "method": "DELETE",
+    "url": "/api/dealers/management/${id}/",
+    "files": [
+      "frontend/src/pages/superadmin/DealerManagement.jsx"
+    ]
+  },
+  "GET /api/auth/profile/": {
+    "method": "GET",
+    "url": "/api/auth/profile/",
+    "files": [
+      "frontend/src/pages/superadmin/Profile.jsx"
+    ]
+  },
+  "PATCH /api/auth/update-profile/": {
+    "method": "PATCH",
+    "url": "/api/auth/update-profile/",
+    "files": [
+      "frontend/src/pages/superadmin/Profile.jsx"
+    ]
+  },
+  "POST /api/assignments/create/": {
+    "method": "POST",
+    "url": "/api/assignments/create/",
+    "files": [
+      "frontend/src/pages/teacher/Assignment.jsx"
+    ]
+  },
+  "DELETE /api/assignments/${id}/": {
+    "method": "DELETE",
+    "url": "/api/assignments/${id}/",
+    "files": [
+      "frontend/src/pages/teacher/AssignmentList.jsx"
+    ]
+  },
+  "PATCH /api/assignments/${editRow.id}/": {
+    "method": "PATCH",
+    "url": "/api/assignments/${editRow.id}/",
+    "files": [
+      "frontend/src/pages/teacher/AssignmentList.jsx"
+    ]
+  },
+  "GET /api/assignments/${r.id}/submissions/": {
+    "method": "GET",
+    "url": "/api/assignments/${r.id}/submissions/",
+    "files": [
+      "frontend/src/pages/teacher/AssignmentList.jsx"
+    ]
+  },
+  "GET /api/classes/teaching-sections/": {
+    "method": "GET",
+    "url": "/api/classes/teaching-sections/",
+    "files": [
+      "frontend/src/pages/teacher/Messaging.jsx",
+      "frontend/src/pages/teacher/MarkAttendance.jsx",
+      "frontend/src/pages/teacher/Students.jsx",
+      "frontend/src/pages/teacher/UploadResult.jsx",
+      "frontend/src/pages/teacher/Dashboard.jsx"
+    ]
+  },
+  "GET /api/communication/my/": {
+    "method": "GET",
+    "url": "/api/communication/my/",
+    "files": [
+      "frontend/src/pages/teacher/Dashboard.jsx"
+    ]
+  },
+  "GET /api/students/by-class/${c.id}/": {
+    "method": "GET",
+    "url": "/api/students/by-class/${c.id}/",
+    "files": [
+      "frontend/src/pages/teacher/Students.jsx",
+      "frontend/src/pages/teacher/Dashboard.jsx"
+    ]
+  },
+  "GET /api/attendance/class-summary/": {
+    "method": "GET",
+    "url": "/api/attendance/class-summary/",
+    "files": [
+      "frontend/src/pages/teacher/Dashboard.jsx"
+    ]
+  },
+  "POST /api/attendance/mark/": {
+    "method": "POST",
+    "url": "/api/attendance/mark/",
+    "files": [
+      "frontend/src/pages/teacher/Dashboard.jsx"
+    ]
+  },
+  "GET /api/attendance/teacher/sheet/": {
+    "method": "GET",
+    "url": "/api/attendance/teacher/sheet/",
+    "files": [
+      "frontend/src/pages/teacher/MarkAttendance.jsx"
+    ]
+  },
+  "POST /api/attendance/teacher/save/": {
+    "method": "POST",
+    "url": "/api/attendance/teacher/save/",
+    "files": [
+      "frontend/src/pages/teacher/MarkAttendance.jsx"
+    ]
+  },
+  "POST /api/communication/doubts/${activeConvId}/resolve/": {
+    "method": "POST",
+    "url": "/api/communication/doubts/${activeConvId}/resolve/",
+    "files": [
+      "frontend/src/pages/teacher/Messaging.jsx"
+    ]
+  },
+  "GET /api/teachers/profile/documents/": {
+    "method": "GET",
+    "url": "/api/teachers/profile/documents/",
+    "files": [
+      "frontend/src/pages/teacher/Profile.jsx"
+    ]
+  },
+  "PATCH /api/teachers/profile/": {
+    "method": "PATCH",
+    "url": "/api/teachers/profile/",
+    "files": [
+      "frontend/src/pages/teacher/Profile.jsx"
+    ]
+  },
+  "PATCH /api/accounts/change-password/": {
+    "method": "PATCH",
+    "url": "/api/accounts/change-password/",
+    "files": [
+      "frontend/src/pages/teacher/Profile.jsx"
+    ]
+  },
+  "POST /api/teachers/profile/photo/": {
+    "method": "POST",
+    "url": "/api/teachers/profile/photo/",
+    "files": [
+      "frontend/src/pages/teacher/Profile.jsx"
+    ]
+  },
+  "DELETE /api/teachers/profile/photo/": {
+    "method": "DELETE",
+    "url": "/api/teachers/profile/photo/",
+    "files": [
+      "frontend/src/pages/teacher/Profile.jsx"
+    ]
+  },
+  "GET /api/teachers/profile/id-card/": {
+    "method": "GET",
+    "url": "/api/teachers/profile/id-card/",
+    "files": [
+      "frontend/src/pages/teacher/Profile.jsx"
+    ]
+  },
+  "POST /api/teachers/profile/documents/": {
+    "method": "POST",
+    "url": "/api/teachers/profile/documents/",
+    "files": [
+      "frontend/src/pages/teacher/Profile.jsx"
+    ]
+  },
+  "GET /api/students/by-class/${selectedClassId}/": {
+    "method": "GET",
+    "url": "/api/students/by-class/${selectedClassId}/",
+    "files": [
+      "frontend/src/pages/teacher/Students.jsx"
+    ]
+  },
+  "GET /api/academics/results/upload/": {
+    "method": "GET",
+    "url": "/api/academics/results/upload/",
+    "files": [
+      "frontend/src/pages/teacher/UploadResult.jsx"
+    ]
+  },
+  "GET /api/students/by-class/${selectedSectionId}/": {
+    "method": "GET",
+    "url": "/api/students/by-class/${selectedSectionId}/",
+    "files": [
+      "frontend/src/pages/teacher/UploadResult.jsx"
+    ]
+  },
+  "GET /api/academics/class-sections/${selectedSectionId}/teacher-subjects/": {
+    "method": "GET",
+    "url": "/api/academics/class-sections/${selectedSectionId}/teacher-subjects/",
+    "files": [
+      "frontend/src/pages/teacher/UploadResult.jsx"
+    ]
+  },
+  "GET /api/academics/exams/${examId}/subject-status/": {
+    "method": "GET",
+    "url": "/api/academics/exams/${examId}/subject-status/",
+    "files": [
+      "frontend/src/pages/teacher/UploadResult.jsx"
+    ]
+  },
+  "POST /api/academics/results/upload/": {
+    "method": "POST",
+    "url": "/api/academics/results/upload/",
+    "files": [
+      "frontend/src/pages/teacher/UploadResult.jsx"
+    ]
+  },
+  "POST /api/academics/exams/${examId}/publish-results/": {
+    "method": "POST",
+    "url": "/api/academics/exams/${examId}/publish-results/",
+    "files": [
+      "frontend/src/pages/teacher/UploadResult.jsx"
+    ]
+  },
+  "POST /api/auth/login/": {
+    "method": "POST",
+    "url": "/api/auth/login/",
+    "files": [
+      "frontend/src/services/authService.js"
+    ]
+  },
+  "GET /api/tenants/school-info/${schoolId}/": {
+    "method": "GET",
+    "url": "/api/tenants/school-info/${schoolId}/",
+    "files": [
+      "frontend/src/services/schoolService.js"
+    ]
+  }
+}

@@ -1,0 +1,188 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light;
+  color: #212529;
+  background-color: #ffffff;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img, video, canvas, svg {
+  max-width: 100%;
+}
+
+button, input, select, textarea {
+  font: inherit;
+  max-width: 100%;
+}
+
+table {
+  max-width: 100%;
+}
+
+/* Custom Animations for Premium UI */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.duration-500 {
+  animation-duration: 500ms;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Mobile resilience for the legacy inline-styled dashboard pages. */
+.app-shell main {
+  min-width: 0;
+}
+
+.app-content-surface {
+  min-width: 0;
+}
+
+.app-content-surface > * {
+  max-width: 100%;
+}
+
+.table-scroll-hint {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .app-shell {
+    min-height: 100dvh;
+    height: 100dvh;
+  }
+
+  .app-content-surface {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .app-content-surface h1 {
+    font-size: clamp(1.35rem, 7vw, 2rem) !important;
+    line-height: 1.15 !important;
+  }
+
+  .app-content-surface h2 {
+    font-size: clamp(1.1rem, 5.5vw, 1.5rem) !important;
+    line-height: 1.2 !important;
+  }
+
+  .app-content-surface button,
+  .app-content-surface a,
+  .app-content-surface input,
+  .app-content-surface select,
+  .app-content-surface textarea {
+    min-height: 42px;
+  }
+
+  .app-content-surface input,
+  .app-content-surface select,
+  .app-content-surface textarea {
+    width: 100% !important;
+  }
+
+  .app-content-surface [style*="grid-template-columns: 1fr 1fr"],
+  .app-content-surface [style*="grid-template-columns: 1fr 2fr"],
+  .app-content-surface [style*="grid-template-columns: 1.2fr 0.8fr"],
+  .app-content-surface [style*="gridTemplateColumns: 1fr 1fr"],
+  .app-content-surface [style*="gridTemplateColumns: 1fr 2fr"],
+  .app-content-surface [style*="gridTemplateColumns: 1.2fr 0.8fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  .app-content-surface [style*="grid-template-columns: repeat(12"],
+  .app-content-surface [style*="gridTemplateColumns: repeat(12"],
+  .app-content-surface [style*="grid-template-columns: repeat(7"],
+  .app-content-surface [style*="gridTemplateColumns: repeat(7"],
+  .app-content-surface [style*="grid-template-columns: 1fr 220px 220px 1fr"],
+  .app-content-surface [style*="gridTemplateColumns: 1fr 220px 220px 1fr"],
+  .app-content-surface [style*="grid-template-columns: 1fr 200px"],
+  .app-content-surface [style*="gridTemplateColumns: 1fr 200px"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  .app-content-surface [style*="gridColumn: span"],
+  .app-content-surface [style*="grid-column: span"] {
+    grid-column: 1 / -1 !important;
+  }
+
+  .app-content-surface [style*="width: 350px"],
+  .app-content-surface [style*="min-width: 240px"],
+  .app-content-surface [style*="minWidth: 240"],
+  .app-content-surface [style*="minWidth: '240px'"] {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .app-content-surface [style*="padding: 32px"],
+  .app-content-surface [style*="padding: 40px"],
+  .app-content-surface [style*="padding: 48px"] {
+    padding: 16px !important;
+  }
+
+  .app-content-surface table {
+    min-width: 640px;
+  }
+
+  .app-content-surface table,
+  .app-content-surface thead,
+  .app-content-surface tbody,
+  .app-content-surface tr,
+  .app-content-surface th,
+  .app-content-surface td {
+    white-space: nowrap;
+  }
+
+  .app-content-surface table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-scroll-hint {
+    display: block;
+  }
+}
