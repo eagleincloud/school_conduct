@@ -9,7 +9,7 @@ from zk import ZK
 DEVICE_IP = '192.168.0.150'
 DEVICE_PORT = 4370         # Z500V2 custom TCP Port (from machine settings)
 SCHOOL_ID = 'DEFAULT'            # !!! UNIQUE SCHOOL ID (e.g. 'school_01', 'school_02' etc. as per DB)
-SERVER_URL = 'http://54.153.62.203/api/attendance/biometric-punch/'
+SERVER_URL = 'http://13.233.140.195/api/attendance/biometric-punch/'
 DEVICE_SECRET_KEY = 'y0ur_Sup3r_S3cr3t_B1om3tr1c_K3y_987'  # Must match the configured key in Django settings
 # =========================================================================
 
@@ -20,7 +20,7 @@ def start_bridge():
     print("=" * 60)
 
     # force_udp=False (TCP Mode) and ommit_ping=True based on hardware configuration
-    zk = ZK(DEVICE_IP, port=DEVICE_PORT, timeout=10, password=102001, force_udp=False, ommit_ping=True)
+    zk = ZK(DEVICE_IP, port=DEVICE_PORT, timeout=10, password=0, force_udp=False, ommit_ping=True)
 
     conn = None
 

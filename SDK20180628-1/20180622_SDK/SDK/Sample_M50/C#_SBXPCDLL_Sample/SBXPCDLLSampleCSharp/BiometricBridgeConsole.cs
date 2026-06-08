@@ -9,12 +9,12 @@ namespace SBXPCDLLSampleCSharp
         // =========================================================================
         // CONFIGURATION - UPDATE THESE PARAMETERS FOR YOUR SCHOOL DEPLOYMENT
         // =========================================================================
-        private const string DEVICE_IP = "192.168.0.103";        // Biometric machine IP (from photos)
+        private const string DEVICE_IP = "192.168.0.150";        // Biometric machine IP (from photos)
         private const int DEVICE_PORT = 4370;                     // Biometric custom TCP port (from photos)
         private const int DEVICE_PASSWORD = 0;                    // Communication password (No/0)
         private const int MACHINE_NUMBER = 1;                     // Machine ID/Number (usually 1)
         private const string SCHOOL_ID = "DEFAULT";               // Unique school identifier for isolation
-        private const string SERVER_URL = "https://school-management-system-l12n.onrender.com/api/attendance/biometric-punch/";
+        private const string SERVER_URL = "http://13.233.140.195/api/attendance/biometric-punch/";
         private const string DEVICE_SECRET_KEY = "y0ur_Sup3r_S3cr3t_B1om3tr1c_K3y_987";
         // =========================================================================
 

@@ -1,0 +1,21 @@
+[Unit]
+Description=Gunicorn daemon for School Management System
+After=network.target
+
+[Service]
+User=ec2-user
+Group=ec2-user
+WorkingDirectory=/home/ec2-user/school-app/backend
+ExecStart=/home/ec2-user/school-app/venv/bin/gunicorn \
+    --workers 3 \
+    --bind 127.0.0.1:8000 \
+    --timeout 120 \
+    --access-logfile /home/ec2-user/school-app/logs/gunicorn-access.log \
+    --error-logfile /home/ec2-user/school-app/logs/gunicorn-error.log \
+    config.wsgi:application
+Restart=on-failure
+RestartSec=5
+EnvironmentFile=/home/ec2-user/school-app/backend/.env
+
+[Install]
+WantedBy=multi-user.target

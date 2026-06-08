@@ -144,7 +144,11 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "https://school-management-system-1-ucmf.onrender.com",
-    "https://school-management-system-36wrqw719.vercel.app"
+    "https://school-management-system-36wrqw719.vercel.app",
+    "http://54.183.203.190",
+    "http://ec2-54-183-203-190.us-west-1.compute.amazonaws.com",
+    "http://13.233.140.195",
+    "http://ec2-13-233-140-195.ap-south-1.compute.amazonaws.com",
 ]
 
 # Password validation
@@ -184,7 +188,11 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # CSRF Trusted Origins for Render
 CSRF_TRUSTED_ORIGINS = [
     "https://school-management-system-l12n.onrender.com",
-    "https://school-management-system-1-ucmf.onrender.com"
+    "https://school-management-system-1-ucmf.onrender.com",
+    "http://54.183.203.190",
+    "http://ec2-54-183-203-190.us-west-1.compute.amazonaws.com",
+    "http://13.233.140.195",
+    "http://ec2-13-233-140-195.ap-south-1.compute.amazonaws.com",
 ]
 for host in ALLOWED_HOSTS:
     if host and host != '*' and host != '.onrender.com':

@@ -88,3 +88,33 @@ C:\Users\Ankit\OneDrive\Desktop\All Projects\School management system\SDK2018062
 C:\Users\Ankit\OneDrive\Desktop\All Projects\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.csproj.GenerateResource.Cache
 C:\Users\Ankit\OneDrive\Desktop\All Projects\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCSampleCSharp.exe
 C:\Users\Ankit\OneDrive\Desktop\All Projects\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCSampleCSharp.pdb
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\datEnrollDat.mdb
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\GEN_FONT.dll
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\GEN_FONT64.dll
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\SBPCCOMM.dll
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\SBPCCOMM64.dll
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\SBXPCDLL.dll
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\SBXPCDLL64.dll
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\SBXPCSampleCSharp.exe.config
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\SBXPCSampleCSharp.exe
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\SBXPCSampleCSharp.pdb
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.csprojResolveAssemblyReference.cache
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmAccessTz.resources
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmBellInfo.resources
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmDaigong.resources
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmDepartment.resources
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmEnroll.resources
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmEvent.resources
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmLockCtrl.resources
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmLog.resources
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmLogServerSetting.resources
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmMain.resources
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmPrtCode.resources
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmCommParam.resources
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmSystemInfo.resources
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmTrMode.resources
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmTrString.resources
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCSampleCSharp.Properties.Resources.resources
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.csproj.GenerateResource.Cache
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCSampleCSharp.exe
+c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCSampleCSharp.pdb
