@@ -793,20 +793,27 @@ class BiometricDevicePunchView(views.APIView):
 
     def post(self, request):
         from django.conf import settings
+        from attendance.models import BiometricDevice
         
         # Verify Token in headers
         api_key = request.headers.get('X-Device-Token')
-        expected_key = getattr(settings, 'DEVICE_SECRET_KEY', 'default_secret_key_123')
-        
-        if not api_key or api_key != expected_key:
-            return Response({'error': 'Unauthorized: Invalid Device Token'}, status=status.HTTP_401_UNAUTHORIZED)
-
-        rfid_code = request.data.get('rfid_code')
         school_id = request.data.get('school_id')  # e.g., "school_01"
+        rfid_code = request.data.get('rfid_code')
         punch_time_raw = request.data.get('punch_time')  # Format: "YYYY-MM-DD HH:MM:SS"
         
         if not rfid_code or not school_id:
             return Response({'error': 'rfid_code and school_id are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Verify Token and School ID dynamically in database
+        device_exists = BiometricDevice.objects.filter(
+            school__school_id=school_id,
+            device_secret_key=api_key,
+            is_active=True
+        ).exists()
+        
+        if not device_exists:
+            return Response({'error': 'Unauthorized: Invalid Device Token or School mismatch'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
         # Find Student associated strictly with this rfid_code and school_id
         student = StudentProfile.objects.select_related('class_section', 'user', 'school').filter(

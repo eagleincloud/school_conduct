@@ -6,20 +6,122 @@ namespace SBXPCDLLSampleCSharp
 {
     class BiometricBridgeConsole
     {
-        // =========================================================================
-        // CONFIGURATION - UPDATE THESE PARAMETERS FOR YOUR SCHOOL DEPLOYMENT
-        // =========================================================================
-        private const string DEVICE_IP = "192.168.0.150";        // Biometric machine IP (from photos)
-        private const int DEVICE_PORT = 4370;                     // Biometric custom TCP port (from photos)
-        private const int DEVICE_PASSWORD = 0;                    // Communication password (No/0)
-        private const int MACHINE_NUMBER = 1;                     // Machine ID/Number (usually 1)
-        private const string SCHOOL_ID = "DEFAULT";               // Unique school identifier for isolation
-        private const string SERVER_URL = "http://13.233.140.195/api/attendance/biometric-punch/";
-        private const string DEVICE_SECRET_KEY = "y0ur_Sup3r_S3cr3t_B1om3tr1c_K3y_987";
+        private static string DEVICE_IP = "192.168.0.150";
+        private static int DEVICE_PORT = 4370;
+        private static int DEVICE_PASSWORD = 0;
+        private static int MACHINE_NUMBER = 1;
+        private static string SCHOOL_ID = "DEFAULT";
+        private static string SERVER_URL = "http://127.0.0.1:8000/api/attendance/biometric-punch/";
+        private static string DEVICE_SECRET_KEY = "y0ur_Sup3r_S3cr3t_B1om3tr1c_K3y_987";
+
+        class BridgeSettings
+        {
+            public string DeviceIp = "192.168.0.150";
+            public int DevicePort = 4370;
+            public int DevicePassword = 0;
+            public int MachineNumber = 1;
+            public string SchoolId = "DEFAULT";
+            public string ServerUrl = "http://127.0.0.1:8000/api/attendance/biometric-punch/";
+            public string DeviceSecretKey = "y0ur_Sup3r_S3cr3t_B1om3tr1c_K3y_987";
+        }
+
+        static BridgeSettings LoadSettings(string[] args)
+        {
+            BridgeSettings settings = new BridgeSettings();
+            string configPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bridge_config.json");
+            
+            if (args != null && args.Length > 0 && !string.IsNullOrEmpty(args[0]))
+            {
+                string argPath = args[0];
+                if (System.IO.Path.IsPathRooted(argPath))
+                {
+                    configPath = argPath;
+                }
+                else
+                {
+                    configPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, argPath);
+                }
+            }
+            
+            if (System.IO.File.Exists(configPath))
+            {
+                try
+                {
+                    string content = System.IO.File.ReadAllText(configPath);
+                    settings.DeviceIp = GetJsonValue(content, "device_ip", settings.DeviceIp);
+                    settings.DevicePort = int.Parse(GetJsonValue(content, "device_port", settings.DevicePort.ToString()));
+                    settings.DevicePassword = int.Parse(GetJsonValue(content, "device_password", settings.DevicePassword.ToString()));
+                    settings.MachineNumber = int.Parse(GetJsonValue(content, "machine_number", settings.MachineNumber.ToString()));
+                    settings.SchoolId = GetJsonValue(content, "school_id", settings.SchoolId);
+                    settings.ServerUrl = GetJsonValue(content, "server_url", settings.ServerUrl);
+                    settings.DeviceSecretKey = GetJsonValue(content, "device_secret_key", settings.DeviceSecretKey);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("[WARNING] Failed to parse config file: " + configPath + ", using defaults. Error: " + ex.Message);
+                }
+            }
+            else
+            {
+                Console.WriteLine("[INFO] Config file not found: " + configPath + ", generating default config...");
+                try
+                {
+                    string defaultJson = "{\n" +
+                        "  \"device_ip\": \"192.168.0.150\",\n" +
+                        "  \"device_port\": 4370,\n" +
+                        "  \"device_password\": 0,\n" +
+                        "  \"machine_number\": 1,\n" +
+                        "  \"school_id\": \"DEFAULT\",\n" +
+                        "  \"server_url\": \"http://127.0.0.1:8000/api/attendance/biometric-punch/\",\n" +
+                        "  \"device_secret_key\": \"y0ur_Sup3r_S3cr3t_B1om3tr1c_K3y_987\"\n" +
+                        "}";
+                    System.IO.File.WriteAllText(configPath, defaultJson);
+                }
+                catch { }
+            }
+            return settings;
+        }
+
+        static string GetJsonValue(string json, string key, string defaultValue)
+        {
+            string searchStr = "\"" + key + "\"";
+            int index = json.IndexOf(searchStr);
+            if (index == -1) return defaultValue;
+            
+            int colonIndex = json.IndexOf(":", index);
+            if (colonIndex == -1) return defaultValue;
+            
+            int valueStart = colonIndex + 1;
+            while (valueStart < json.Length && (char.IsWhiteSpace(json[valueStart]) || json[valueStart] == '"'))
+            {
+                valueStart++;
+            }
+            
+            int valueEnd = valueStart;
+            while (valueEnd < json.Length && json[valueEnd] != ',' && json[valueEnd] != '}' && json[valueEnd] != '\n' && json[valueEnd] != '\r' && json[valueEnd] != '"')
+            {
+                valueEnd++;
+            }
+            
+            if (valueEnd > valueStart)
+            {
+                return json.Substring(valueStart, valueEnd - valueStart).Trim();
+            }
+            return defaultValue;
+        }
         // =========================================================================
 
         public static void Run(string[] args)
         {
+            BridgeSettings settings = LoadSettings(args);
+            DEVICE_IP = settings.DeviceIp;
+            DEVICE_PORT = settings.DevicePort;
+            DEVICE_PASSWORD = settings.DevicePassword;
+            MACHINE_NUMBER = settings.MachineNumber;
+            SCHOOL_ID = settings.SchoolId;
+            SERVER_URL = settings.ServerUrl;
+            DEVICE_SECRET_KEY = settings.DeviceSecretKey;
+
             Console.Title = "Z500V2 Biometric Bridge Console";
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("======================================================================");

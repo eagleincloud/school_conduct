@@ -1,0 +1,9 @@
+{
+  "device_ip": "127.0.0.1",
+  "device_port": 4370,
+  "device_password": 0,
+  "machine_number": 1,
+  "school_id": "school_01",
+  "server_url": "http://127.0.0.1:8000/api/attendance/biometric-punch/",
+  "device_secret_key": "test_secret_123"
+}

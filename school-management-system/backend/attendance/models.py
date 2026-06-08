@@ -44,3 +44,19 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"{self.student.user.username} - {self.date} ({self.status}/{self.verification_status})"
+
+
+class BiometricDevice(models.Model):
+    school = models.ForeignKey('tenants.School', on_delete=models.CASCADE, related_name='biometric_devices')
+    name = models.CharField(max_length=100, help_text="e.g. Main Gate, Hostel")
+    device_ip = models.GenericIPAddressField(default="192.168.0.150")
+    device_port = models.IntegerField(default=4370)
+    device_password = models.IntegerField(default=0)
+    machine_number = models.IntegerField(default=1)
+    device_secret_key = models.CharField(max_length=255, default="y0ur_Sup3r_S3cr3t_B1om3tr1c_K3y_987")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.school.name} - {self.name} ({self.device_ip})"
+
