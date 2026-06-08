@@ -11,13 +11,21 @@ const schoolService = {
       throw new Error("Invalid school ID");
     }
     try {
-      const url = `${BASE_URL}schools/${schoolId}/`;
-      const response = await fetch(url);
-      if (!response.ok) throw new Error("Failed to fetch school information");
-      const data = await response.json();
-      return data;
+      // Use the centralized axios `api` instance so baseURL, headers and interceptors
+      // are consistently applied (avoids subtle URL/headers mismatches).
+      const encodedId = encodeURIComponent(String(schoolId));
+      const res = await api.get(`/schools/${encodedId}/`);
+      return res.data;
     } catch (error) {
-      console.error(`Error fetching school info for ${schoolId}:`, error);
+      // Improve logging to include status and response body when available
+      if (error.response) {
+        console.error(`Error fetching school info for ${schoolId}:`, {
+          status: error.response.status,
+          data: error.response.data,
+        });
+      } else {
+        console.error(`Error fetching school info for ${schoolId}:`, error.message || error);
+      }
       throw error;
     }
   },

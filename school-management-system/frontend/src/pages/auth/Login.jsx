@@ -6,7 +6,10 @@ import useSchoolStore from "../../store/schoolStore";
 import { useStudent } from "../../context/StudentContext";
 
 const Login = () => {
-  const { schoolId } = useParams();
+  const { schoolId: rawSchoolId } = useParams();
+  const schoolId = (rawSchoolId || '').toString().trim();
+  const normalizedSchoolId = schoolId.replace(/\s+/g, '').toUpperCase();
+  const finalSchoolId = normalizedSchoolId === 'DEFALT' ? 'DEFAULT' : normalizedSchoolId;
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -25,13 +28,13 @@ const Login = () => {
   } = useSchoolStore();
 
   useEffect(() => {
-    if (!schoolId || schoolId === "undefined") {
+    if (!finalSchoolId || finalSchoolId === "undefined") {
       navigate("/");
       return;
     }
-    fetchSchoolInfo(schoolId);
+    fetchSchoolInfo(finalSchoolId);
     return () => clearSchool();
-  }, [schoolId, fetchSchoolInfo, clearSchool, navigate]);
+  }, [finalSchoolId, fetchSchoolInfo, clearSchool, navigate]);
 
   // Get the expected role from URL (e.g., /school/:id/login?role=admin)
   const expectedRole = searchParams.get("role") || "student";
@@ -58,7 +61,7 @@ const Login = () => {
 
         // Enforce strict tenant isolation
         // String coercion is used since API might send number, URL param is string
-        if (String(user.school_id) !== String(schoolId)) {
+        if (String(user.school_id) !== String(finalSchoolId)) {
           setError(`Access Denied: You do not belong to this school portal.`);
           authService.logout();
           logout();

@@ -3,6 +3,13 @@
 from django.db import migrations
 
 
+def _drop_stale_constraint(apps, schema_editor):
+    if schema_editor.connection.vendor != 'postgresql':
+        return
+    with schema_editor.connection.cursor() as cursor:
+        cursor.execute("ALTER TABLE timetable_timetableentry DROP CONSTRAINT IF EXISTS timetable_timetableentry_school_id_teacher_id_day_67c86a88_uniq;")
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -10,7 +17,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL(
-            "ALTER TABLE timetable_timetableentry DROP CONSTRAINT IF EXISTS timetable_timetableentry_school_id_teacher_id_day_67c86a88_uniq;"
-        ),
+        migrations.RunPython(_drop_stale_constraint, reverse_code=migrations.RunPython.noop),
     ]

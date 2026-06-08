@@ -3,6 +3,15 @@
 from django.db import migrations
 
 
+def _drop_parent_columns(apps, schema_editor):
+    # Only execute raw SQL on PostgreSQL to avoid SQLite syntax errors
+    if schema_editor.connection.vendor != 'postgresql':
+        return
+    with schema_editor.connection.cursor() as cursor:
+        cursor.execute("ALTER TABLE students_studentprofile DROP COLUMN IF EXISTS parent_guardian_name;")
+        cursor.execute("ALTER TABLE students_studentprofile DROP COLUMN IF EXISTS parent_contact_number;")
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -22,20 +31,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             database_operations=[
-                migrations.RunSQL(
-                    sql="""
-                        DO $$
-                        BEGIN
-                            IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='students_studentprofile' AND column_name='parent_guardian_name') THEN
-                                ALTER TABLE students_studentprofile DROP COLUMN parent_guardian_name;
-                            END IF;
-                            IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='students_studentprofile' AND column_name='parent_contact_number') THEN
-                                ALTER TABLE students_studentprofile DROP COLUMN parent_contact_number;
-                            END IF;
-                        END $$;
-                    """,
-                    reverse_sql=migrations.RunSQL.noop,
-                ),
+                migrations.RunPython(_drop_parent_columns, reverse_code=migrations.RunPython.noop),
             ],
         ),
     ]

@@ -21,9 +21,9 @@ const useSchoolStore = create((set) => ({
       const schoolData = await schoolService.getSchoolInfo(schoolId);
       set({ school: schoolData, loading: false });
     } catch (err) {
+      const serverMessage = err.response?.data?.message || err.response?.data?.error || err.response?.data || err.message;
       set({
-        error:
-          err.response?.data?.detail || "Failed to fetch school information.",
+        error: serverMessage || "Failed to fetch school information.",
         loading: false,
         school: null,
       });

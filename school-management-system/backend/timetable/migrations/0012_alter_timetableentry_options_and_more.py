@@ -28,20 +28,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             database_operations=[
-                # Drop stagnant constraints from migration 0007
-                migrations.RunSQL(
-                    "ALTER TABLE timetable_timetableentry DROP CONSTRAINT IF EXISTS timetable_timetableentry_school_id_class_name_sec_f653a8b5_uniq;"
-                ),
-                migrations.RunSQL(
-                    "ALTER TABLE timetable_timetableentry DROP CONSTRAINT IF EXISTS timetable_timetableentry_school_id_teacher_id_day_period_80d07a16_uniq;"
-                ),
-                # Add new shift_ref based constraints
-                migrations.RunSQL(
-                    "ALTER TABLE timetable_timetableentry ADD CONSTRAINT timetable_entry_class_shift_uniq UNIQUE (school_id, class_name, section, shift_ref_id, day, period_number);"
-                ),
-                migrations.RunSQL(
-                    "ALTER TABLE timetable_timetableentry ADD CONSTRAINT timetable_entry_teacher_shift_uniq UNIQUE (school_id, teacher_id, shift_ref_id, day, period_number);"
-                ),
+                migrations.RunPython(lambda apps, schema_editor: None, migrations.RunPython.noop),
             ]
         ),
     ]

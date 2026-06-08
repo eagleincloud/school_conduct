@@ -88,7 +88,12 @@ function useInView(threshold = 0.1) {
    MAIN COMPONENT
    ═══════════════════════════════════════════════ */
 export default function LandingPage() {
-  const { schoolId } = useParams();
+  const { schoolId: rawSchoolId } = useParams();
+  const schoolId = (rawSchoolId || '').toString().trim();
+  // Normalize common user input mistakes: trim spaces and uppercase
+  const normalizedSchoolId = schoolId.replace(/\s+/g, '').toUpperCase();
+  // Auto-correct a frequent typo
+  const finalSchoolId = normalizedSchoolId === 'DEFALT' ? 'DEFAULT' : normalizedSchoolId;
   const navigate = useNavigate();
   const { school, loading, error, fetchSchoolInfo, clearSchool } = useSchoolStore();
   
@@ -108,11 +113,11 @@ export default function LandingPage() {
   ];
 
   useEffect(() => {
-    if (!schoolId || schoolId === 'undefined') {
+    if (!finalSchoolId || finalSchoolId === 'undefined') {
       navigate('/');
       return;
     }
-    fetchSchoolInfo(schoolId);
+    fetchSchoolInfo(finalSchoolId);
     return () => clearSchool();
   }, [schoolId, fetchSchoolInfo, clearSchool, navigate]);
 
@@ -173,7 +178,7 @@ export default function LandingPage() {
           
           <div className="pt-4 border-t border-slate-50">
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Institutional Identifier</p>
-            <p className="text-sm font-mono text-blue-600 font-bold mt-1">ID: {schoolId || 'N/A'}</p>
+              <p className="text-sm font-mono text-blue-600 font-bold mt-1">ID: {finalSchoolId || 'N/A'}</p>
           </div>
         </div>
       </div>

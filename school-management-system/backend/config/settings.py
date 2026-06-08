@@ -1,4 +1,5 @@
 import os
+import re
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
@@ -17,7 +18,10 @@ raw_hosts = os.getenv('ALLOWED_HOSTS', '*')
 if raw_hosts:
     # Clean brackets and quotes in case they were written as a list string in .env
     clean_hosts = raw_hosts.replace('[', '').replace(']', '').replace("'", "").replace('"', '')
-    ALLOWED_HOSTS = [h.strip() for h in clean_hosts.split(',') if h.strip()]
+    # Remove any scheme (http:// or https://) that may have been included by mistake
+    clean_hosts = re.sub(r'https?://', '', clean_hosts)
+    # Split and strip whitespace and trailing slashes from each host
+    ALLOWED_HOSTS = [h.strip().rstrip('/') for h in clean_hosts.split(',') if h.strip()]
 else:
     ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
 
@@ -115,19 +119,28 @@ REST_FRAMEWORK = {
     ),
 }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'postgres'),
-        'USER': os.getenv('DB_USER', 'postgres.uzztcarhwpsrjhaxqgiu'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'quZz5KvCpSKSO5lJ'),
-        'HOST': os.getenv('DB_HOST', 'aws-1-ap-south-1.pooler.supabase.com'),
-        'PORT': os.getenv('DB_PORT', '6543'),
-        'OPTIONS': {
-            'sslmode': 'require',
+if DEBUG:
+    # Use lightweight SQLite for local development to avoid external DB dependencies
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME', 'postgres'),
+            'USER': os.getenv('DB_USER', 'postgres.uzztcarhwpsrjhaxqgiu'),
+            'PASSWORD': os.getenv('DB_PASSWORD', 'quZz5KvCpSKSO5lJ'),
+            'HOST': os.getenv('DB_HOST', 'aws-1-ap-south-1.pooler.supabase.com'),
+            'PORT': os.getenv('DB_PORT', '6543'),
+            'OPTIONS': {
+                'sslmode': 'require',
+            },
         },
-    },
-}
+    }
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
@@ -143,12 +156,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://school-management-system-1-ucmf.onrender.com",
-    "https://school-management-system-36wrqw719.vercel.app",
-    "http://54.183.203.190",
-    "http://ec2-54-183-203-190.us-west-1.compute.amazonaws.com",
-    "http://13.233.140.195",
-    "http://ec2-13-233-140-195.ap-south-1.compute.amazonaws.com",
+    "http://localhost:3000",
 ]
 
 # Password validation
@@ -187,19 +195,19 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # CSRF Trusted Origins for Render
 CSRF_TRUSTED_ORIGINS = [
-    "https://school-management-system-l12n.onrender.com",
-    "https://school-management-system-1-ucmf.onrender.com",
-    "http://54.183.203.190",
-    "http://ec2-54-183-203-190.us-west-1.compute.amazonaws.com",
-    "http://13.233.140.195",
-    "http://ec2-13-233-140-195.ap-south-1.compute.amazonaws.com",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
 ]
-for host in ALLOWED_HOSTS:
-    if host and host != '*' and host != '.onrender.com':
-        if not host.startswith('http'):
-            CSRF_TRUSTED_ORIGINS.append(f"https://{host}")
-        else:
-            CSRF_TRUSTED_ORIGINS.append(host)
+
+# Only automatically append host-derived https entries in non-debug (production)
+# to avoid adding https://localhost during local development.
+if not DEBUG:
+    for host in ALLOWED_HOSTS:
+        if host and host != '*' and host != '.onrender.com':
+            if not host.startswith('http'):
+                CSRF_TRUSTED_ORIGINS.append(f"https://{host}")
+            else:
+                CSRF_TRUSTED_ORIGINS.append(host)
 
 # ============================================================
 # EMAIL CONFIGURATION
@@ -226,5 +234,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'your-email@gmail.com')          # ← SENDER email (your Gmail)
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'your-app-password')      # ← Gmail App Password (16 chars)
 
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+CONTACT_EMAIL = os.getenv('CONTACT_EMAIL', 'admin-email@gmail.com')              # ← RECEIVER email (enquiries go here)
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 CONTACT_EMAIL = os.getenv('CONTACT_EMAIL', 'admin-email@gmail.com')              # ← RECEIVER email (enquiries go here)

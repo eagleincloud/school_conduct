@@ -1,163 +1,284 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading;
 
 namespace SBXPCDLLSampleCSharp
 {
-    class BiometricBridgeConsole
+    static class BiometricBridgeConsole
     {
-        // =========================================================================
-        // CONFIGURATION - UPDATE THESE PARAMETERS FOR YOUR SCHOOL DEPLOYMENT
-        // =========================================================================
-        private const string DEVICE_IP = "192.168.0.150";        // Biometric machine IP (from photos)
-        private const int DEVICE_PORT = 4370;                     // Biometric custom TCP port (from photos)
-        private const int DEVICE_PASSWORD = 0;                    // Communication password (No/0)
-        private const int MACHINE_NUMBER = 1;                     // Machine ID/Number (usually 1)
-        private const string SCHOOL_ID = "DEFAULT";               // Unique school identifier for isolation
-        private const string SERVER_URL = "http://13.233.140.195/api/attendance/biometric-punch/";
-        private const string DEVICE_SECRET_KEY = "y0ur_Sup3r_S3cr3t_B1om3tr1c_K3y_987";
-        // =========================================================================
+        private const string DeviceIp = "192.168.0.150";
+        private const int DevicePort = 4370;
+        private const int DevicePassword = 0;
+        private const int MachineNumber = 1;
+        private const string SchoolId = "DEFAULT";
+        private const string ServerUrl = "http://13.233.140.195/api/attendance/biometric-punch/";
+        private const string DeviceSecretKey = "y0ur_Sup3r_S3cr3t_B1om3tr1c_K3y_987";
+        private const string ErrorLogPath = "biometric_bridge_errors.log";
 
         public static void Run(string[] args)
         {
-            Console.Title = "Z500V2 Biometric Bridge Console";
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("======================================================================");
-            Console.WriteLine("     Z500V2 NATIVE C# BIOMETRIC BRIDGE SERVICE");
-            Console.WriteLine("     School ID: [" + SCHOOL_ID + "]");
-            Console.WriteLine("======================================================================");
-            Console.ResetColor();
-
-            // Initialize .NET DLL configuration
+            Program.gMachineNumber = MachineNumber;
             sbxpc.SBXPCDLL.DotNET();
             sbxpc.SBXPCDLL._DisableTranseiveCallback();
 
             while (true)
             {
-                Console.WriteLine(string.Format("\n[INFO] Connecting to Biometric machine {0}:{1}...", DEVICE_IP, DEVICE_PORT));
-                
-                // Connect to Z500V2 natively over TCP/IP using the official DLL SDK
-                bool connected = sbxpc.SBXPCDLL.ConnectTcpip(MACHINE_NUMBER, DEVICE_IP, DEVICE_PORT, DEVICE_PASSWORD);
-
-                if (connected)
+                try
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("[SUCCESS] Connected to Biometric machine natively over TCP/IP!");
-                    Console.ResetColor();
-
-                    DateTime lastCheckedTime = DateTime.Now;
-
-                    while (true)
-                    {
-                        try
-                        {
-                            // Temporarily disable device to read logs safely
-                            sbxpc.SBXPCDLL.EnableDevice(MACHINE_NUMBER, 0);
-
-                            // Read general punch logs from device memory
-                            bool readSuccess = sbxpc.SBXPCDLL.ReadAllGLogData(MACHINE_NUMBER);
-
-                            if (readSuccess)
-                            {
-                                int tmno, seno, smno, vmode, yr, mon, day, hr, min, sec;
-                                
-                                // Retrieve logs in a loop
-                                while (sbxpc.SBXPCDLL.GetGeneralLogData(MACHINE_NUMBER, out tmno, out seno, out smno, out vmode, out yr, out mon, out day, out hr, out min, out sec))
-                                {
-                                    DateTime punchTime = new DateTime(yr, mon, day, hr, min, sec);
-
-                                    // Verify if the punch is new
-                                    if (punchTime > lastCheckedTime)
-                                    {
-                                        Console.ForegroundColor = ConsoleColor.Yellow;
-                                        Console.WriteLine(string.Format("[PUNCH DETECTED] Student Card/User ID: {0} | Time: {1:yyyy-MM-dd HH:mm:ss}", seno, punchTime));
-                                        Console.ResetColor();
-
-                                        // Push punch to the Django Cloud Server
-                                        SyncPunchWithCloud(seno.ToString(), punchTime);
-
-                                        lastCheckedTime = punchTime;
-                                    }
-                                }
-                            }
-
-                            // Re-enable device
-                            sbxpc.SBXPCDLL.EnableDevice(MACHINE_NUMBER, 1);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("[ERROR] Error occurred in polling loop: " + ex.Message);
-                            Console.ResetColor();
-                        }
-
-                        // Polling delay: checks logs every 5 seconds
-                        Thread.Sleep(5000);
-                    }
+                    StartBridge();
                 }
-                else
+                catch (Exception ex)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("[CRITICAL ERROR] Native Connection Failed! Verify IP, Port and Cable.");
-                    Console.ResetColor();
-                    Console.WriteLine("Retrying connection in 15 seconds...");
-                    Thread.Sleep(15000);
+                    WriteError("Bridge crashed: " + ex);
+                    Console.WriteLine("[RESTARTING] Bridge crashed. Restarting in 10 seconds...");
+                    Thread.Sleep(TimeSpan.FromSeconds(10));
                 }
             }
         }
 
-        private static void SyncPunchWithCloud(string cardNo, DateTime punchTime)
+        private static void StartBridge()
         {
+            Console.WriteLine(new string('=', 60));
+            Console.WriteLine("Biometric Bridge Service - School ID: [" + SchoolId + "]");
+            Console.WriteLine("Connecting to Biometric Device " + DeviceIp + ":" + DevicePort + "...");
+            Console.WriteLine(new string('=', 60));
+
+            if (!sbxpc.SBXPCDLL.ConnectTcpip(MachineNumber, DeviceIp, DevicePort, DevicePassword))
+            {
+                int errorCode;
+                sbxpc.SBXPCDLL.GetLastError(MachineNumber, out errorCode);
+                throw new InvalidOperationException("Device connection failed: " + util.ErrorPrint(errorCode));
+            }
+
+            Console.WriteLine("[SUCCESS] Connected to biometric machine.");
+            Console.WriteLine("Listening and polling for new punches. Syncing with: " + ServerUrl);
+
+            DateTime lastCheckedPunchTime = DateTime.Now;
+            var postedPunchKeys = new HashSet<string>();
+
             try
             {
-                // Force TLS 1.2 for modern HTTPS servers
-                System.Net.ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072;
-
-                // Build the secure multi-tenant payload manually (avoid Newtonsoft dependency)
-                string json = "{" +
-                    "\"rfid_code\":\"" + cardNo + "\"," +
-                    "\"school_id\":\"" + SCHOOL_ID + "\"," +
-                    "\"punch_time\":\"" + punchTime.ToString("yyyy-MM-dd HH:mm:ss") + "\"" +
-                    "}";
-
-                using (System.Net.WebClient wc = new System.Net.WebClient())
-                {
-                    wc.Headers[System.Net.HttpRequestHeader.ContentType] = "application/json";
-                    wc.Headers.Add("X-Device-Token", DEVICE_SECRET_KEY);
-                    wc.Encoding = Encoding.UTF8;
-
-                    // Sync POST request to Django
-                    string responseBody = wc.UploadString(SERVER_URL, "POST", json);
-
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("  [SYNCED] Card " + cardNo + " attendance posted to Django backend!");
-                    Console.ResetColor();
-                }
-            }
-            catch (System.Net.WebException webEx)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                string responseText = "";
-                if (webEx.Response != null)
+                while (true)
                 {
                     try
                     {
-                        using (var reader = new System.IO.StreamReader(webEx.Response.GetResponseStream()))
+                        foreach (PunchLog punch in ReadPunchLogs())
                         {
-                            responseText = reader.ReadToEnd();
+                            if (punch.Timestamp <= lastCheckedPunchTime)
+                            {
+                                continue;
+                            }
+
+                            string punchKey = punch.RfidCode + "|" + punch.Timestamp.ToString("yyyy-MM-dd HH:mm:ss");
+                            if (postedPunchKeys.Contains(punchKey))
+                            {
+                                continue;
+                            }
+
+                            Console.WriteLine("[PUNCH DETECTED] RFID/User ID: " + punch.RfidCode + " | Time: " + punch.Timestamp);
+                            PostPunch(punch);
+                            postedPunchKeys.Add(punchKey);
+
+                            if (punch.Timestamp > lastCheckedPunchTime)
+                            {
+                                lastCheckedPunchTime = punch.Timestamp;
+                            }
                         }
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("[ERROR] Polling error: " + ex.Message);
+                        WriteError("Polling error: " + ex);
+                    }
+
+                    Thread.Sleep(TimeSpan.FromSeconds(5));
                 }
-                Console.WriteLine("  [FAILED] Server rejected punch: " + webEx.Message + " | Response: " + responseText);
-                Console.ResetColor();
             }
-            catch (Exception ex)
+            finally
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("  [ERROR] HTTP post error: " + ex.Message);
-                Console.ResetColor();
+                try
+                {
+                    sbxpc.SBXPCDLL.EnableDevice(MachineNumber, 1);
+                    sbxpc.SBXPCDLL.Disconnect(MachineNumber);
+                }
+                catch
+                {
+                }
+
+                Console.WriteLine("[INFO] Connection closed.");
             }
+        }
+
+        private static IEnumerable<PunchLog> ReadPunchLogs()
+        {
+            var punches = new List<PunchLog>();
+            int errorCode;
+
+            sbxpc.SBXPCDLL.EnableDevice(MachineNumber, 0);
+
+            try
+            {
+                if (!sbxpc.SBXPCDLL.ReadGeneralLogData(MachineNumber, 0))
+                {
+                    sbxpc.SBXPCDLL.GetLastError(MachineNumber, out errorCode);
+                    Console.WriteLine("[WARNING] Could not read general logs: " + util.ErrorPrint(errorCode));
+                    return punches;
+                }
+
+                while (true)
+                {
+                    int terminalMachineNumber;
+                    int enrollNumber;
+                    int enrollMachineNumber;
+                    int verifyMode;
+                    int year;
+                    int month;
+                    int day;
+                    int hour;
+                    int minute;
+                    int second;
+
+                    bool hasLog = sbxpc.SBXPCDLL.GetGeneralLogData(
+                        MachineNumber,
+                        out terminalMachineNumber,
+                        out enrollNumber,
+                        out enrollMachineNumber,
+                        out verifyMode,
+                        out year,
+                        out month,
+                        out day,
+                        out hour,
+                        out minute,
+                        out second);
+
+                    if (!hasLog)
+                    {
+                        break;
+                    }
+
+                    DateTime timestamp;
+                    try
+                    {
+                        timestamp = new DateTime(year, month, day, hour, minute, second);
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+
+                    punches.Add(new PunchLog(enrollNumber.ToString(), timestamp));
+                }
+            }
+            finally
+            {
+                sbxpc.SBXPCDLL.EnableDevice(MachineNumber, 1);
+            }
+
+            return punches;
+        }
+
+        private static void PostPunch(PunchLog punch)
+        {
+            string json = "{"
+                + "\"rfid_code\":\"" + JsonEscape(punch.RfidCode) + "\","
+                + "\"school_id\":\"" + JsonEscape(SchoolId) + "\","
+                + "\"punch_time\":\"" + punch.Timestamp.ToString("yyyy-MM-dd HH:mm:ss") + "\""
+                + "}";
+
+            byte[] body = Encoding.UTF8.GetBytes(json);
+            var request = (HttpWebRequest)WebRequest.Create(ServerUrl);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Headers.Add("X-Device-Token", DeviceSecretKey);
+            request.Timeout = 10000;
+            request.ContentLength = body.Length;
+
+            using (Stream requestStream = request.GetRequestStream())
+            {
+                requestStream.Write(body, 0, body.Length);
+            }
+
+            try
+            {
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    string responseBody = ReadResponseBody(response);
+                    if ((int)response.StatusCode == 201 || (int)response.StatusCode == 200)
+                    {
+                        Console.WriteLine("  [SYNCED] Server accepted punch: " + responseBody);
+                    }
+                    else
+                    {
+                        Console.WriteLine("  [FAILED] Server rejected punch: " + (int)response.StatusCode + " - " + responseBody);
+                        WriteError("Server rejected punch for RFID " + punch.RfidCode + ": " + (int)response.StatusCode + " - " + responseBody);
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                var response = ex.Response as HttpWebResponse;
+                if (response == null)
+                {
+                    throw;
+                }
+
+                using (response)
+                {
+                    string responseBody = ReadResponseBody(response);
+                    Console.WriteLine("  [FAILED] Server rejected punch: " + (int)response.StatusCode + " - " + responseBody);
+                    WriteError("Server rejected punch for RFID " + punch.RfidCode + ": " + (int)response.StatusCode + " - " + responseBody);
+                }
+            }
+        }
+
+        private static string ReadResponseBody(HttpWebResponse response)
+        {
+            Stream responseStream = response.GetResponseStream();
+            if (responseStream == null)
+            {
+                return string.Empty;
+            }
+
+            using (responseStream)
+            using (var reader = new StreamReader(responseStream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        private static string JsonEscape(string value)
+        {
+            return (value ?? string.Empty)
+                .Replace("\\", "\\\\")
+                .Replace("\"", "\\\"")
+                .Replace("\r", "\\r")
+                .Replace("\n", "\\n");
+        }
+
+        private static void WriteError(string message)
+        {
+            try
+            {
+                File.AppendAllText(ErrorLogPath, "[" + DateTime.Now + "] " + message + Environment.NewLine);
+            }
+            catch
+            {
+            }
+        }
+
+        private sealed class PunchLog
+        {
+            public PunchLog(string rfidCode, DateTime timestamp)
+            {
+                RfidCode = rfidCode;
+                Timestamp = timestamp;
+            }
+
+            public string RfidCode { get; private set; }
+            public DateTime Timestamp { get; private set; }
         }
     }
 }
