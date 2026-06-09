@@ -1,4 +1,0 @@
-0000000000000000000000000000000000000000 39c577a0ec56a620632218f7e5dcb210f587d6aa Mrankit47 <ankitkushwah0210k@gmail.com> 1780648641 +0530	branch: Created from HEAD
-39c577a0ec56a620632218f7e5dcb210f587d6aa 4d3a65782c5af8a25785aa740bbcce39745d65f0 Mrankit47 <ankitkushwah0210k@gmail.com> 1780648816 +0530	pull origin main: Fast-forward
-4d3a65782c5af8a25785aa740bbcce39745d65f0 c454ff55968612a842fd609e6fa7f98cf11f0052 Mrankit47 <ankitkushwah0210k@gmail.com> 1780649482 +0530	commit: fix: resolve git merge conflict markers in frontend files
-c454ff55968612a842fd609e6fa7f98cf11f0052 3bdaf3165db3f36a7085a7ca8f9dbc557478c02c Mrankit47 <ankitkushwah0210k@gmail.com> 1780649706 +0530	commit: fix: make ALLOWED_HOSTS parsing robust in settings.py

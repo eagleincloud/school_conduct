@@ -1,10 +1,10 @@
 {
-  "device_name": "main gate",
-  "device_ip": "192.168.0.150",
+  "device_name": "Main Gate",
+  "device_ip": "192.168.0.50",
   "device_port": 4370,
   "device_password": 0,
   "machine_number": 1,
-  "school_id": "DEFAULT",
+  "school_id": "NORTH",
   "server_url": "http://127.0.0.1:8000/api/attendance/biometric-punch/",
-  "device_secret_key": "xK9rRROQnQjNI2Rit6wZ9vFhavW307Ui"
+  "device_secret_key": "6-cU2q8ReYiLriTLKpKMOh4_T24t0gnq"
 }

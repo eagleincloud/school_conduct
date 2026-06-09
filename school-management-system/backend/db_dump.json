@@ -1,0 +1,5458 @@
+[
+{
+  "model": "sessions.session",
+  "pk": "2n1tw29dq9lgwq04i7lfdrgca5bbyj73",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hBmBtrq0r1nIAMMUjU0Ke3KeHfbpAvdvvf-fyvP61L82mT2Y1IXBer0ywLHp9RdpAfX-6TjVJd5DHpP9GGbvk1JXtej_Tso3Mq2liG6jpCJWMhZQIJsQ2ZGwi6jpGycE0x9v2HGaA0MIAYMR3cGRPX5At1SN3U:1w5fJu:0hxEhhU0AFdnQ0BtUlDl0cWpSjM6C2WMHiZJNoAKW7U",
+    "expire_date": "2026-04-09T07:39:58.748Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "480w7i3454edrjl3e89o09gxcxdb1v6r",
+  "fields": {
+    "session_data": ".eJxVjEsOAiEQBe_C2hBgGhpcuvcMBLpBRs2QzGdlvLtOMgvdvqp6LxHTtra4LWWOI4uzGAZx-h1zokeZdsL3NN26pD6t85jlrsiDLvLauTwvh_t30NLSvnWoBsEjBgserCfNxKk6a5xPlFFTIVaeKwGo4AsGV611iNpQMQpAvD_8Qjef:1wUIQA:NQSi8VsSW6eR8fsy4mMopa6xThoj-tgCg-xcqOZKiLA",
+    "expire_date": "2026-06-16T06:16:14.526Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "gngg4vi4bas3tlshjg4m1gwq7c7938iz",
+  "fields": {
+    "session_data": ".eJxVjM0OwiAQhN-FsyGLlJ_16L3PQBZYpWogKe3J-O62SQ96m8z3zbxFoHUpYe08hymLi1Di9NtFSk-uO8gPqvcmU6vLPEW5K_KgXY4t8-t6uH8HhXrZ1qAisAZLxjnwQzYOtVUqI0dt8RzBsDWDv1lIhrzbEipCSlYjIaMSny-v5TbG:1wU5Tq:FCCR5KPLpjPL1PTxiz8oa-N_P_ELCGZ3IOrlFwA3R8w",
+    "expire_date": "2026-06-15T16:27:10.558Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "iaguodq1fv9tskcxvtzkzxcjdvg8tl3i",
+  "fields": {
+    "session_data": ".eJxVjr0OgjAURt_lzqQptFx-No066aYzub1tLUpoQmEyvrshMuj6nZOT7wUdLXPoluSmrrfQglKQ_Y6G-OnGldgHjfcoOI7z1BuxKmKjSVyidcN-c_8CgVKAFnzhSFq0HtFqqlShmrpGlJY5t5WXptGGjS9yZkb2pUYnS2LipkJdkoMMEocYh-_Nw_G0u52v8P4AYHw_zQ:1w7tza:GCx9TVMbmTMxWIvyhac1g6I1lCOWh_18ohxTO_M9XKk",
+    "expire_date": "2026-04-15T11:44:14.535Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "sglpa3pzc2yq2qhqtu5rhk8llk04qszy",
+  "fields": {
+    "session_data": ".eJxVjM0OwiAQhN-FsyGLlJ_16L3PQBZYpWogKe3J-O62SQ96m8z3zbxFoHUpYe08hymLi1Di9NtFSk-uO8gPqvcmU6vLPEW5K_KgXY4t8-t6uH8HhXrZ1qAisAZLxjnwQzYOtVUqI0dt8RzBsDWDv1lIhrzbEipCSlYjIaMSny-v5TbG:1wU5Zd:GgXjQ21zR3aMVFCsc3gbkHbHDZavdS_MJkDsgPhrVHs",
+    "expire_date": "2026-06-15T16:33:09.162Z"
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$R5To3KbW2PT3OjNzOXDrBH$ExNQe/EEyyOgYr+3JUUpSVjSR1HOw+wZ4NEQPCXGJhI=",
+    "last_login": "2026-06-01T16:33:09.060Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-03-26T07:32:51.613Z",
+    "email": "admin@gmail.com",
+    "name": null,
+    "role": "admin",
+    "phone": null,
+    "school": 1,
+    "profile_photo": "media/school_conduct/profile_photo/test2_zi7ebl",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$vQpimEvo1kHiLhWhCRTYWV$agKyFtdwcMsGaiXTfNsiS3ZSifaiP0nb9UcIBgDqlTs=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "system_admin",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-03-30T11:45:13.916Z",
+    "email": "super@atheris.com",
+    "name": null,
+    "role": "superadmin",
+    "phone": null,
+    "school": 1,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$AxMTJeD6d5jceHfniKaVz8$LJ47OnwEvm5vbf/+Wu17XFWppD76fyaHjbqkSC/gtEI=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "admin_jupiter",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-01T05:45:39.443Z",
+    "email": "admin@jupiter.com",
+    "name": null,
+    "role": "admin",
+    "phone": null,
+    "school": 6,
+    "profile_photo": "media/school_conduct/profile_photo/test_hrzvkq",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$Czku73L7A0ZrUV51kIzOQ2$ngau6o1f1CFuG/yayhj6XVwhHvEghm5OQVwiI6dqZqg=",
+    "last_login": "2026-06-02T06:16:14.460Z",
+    "is_superuser": true,
+    "username": "superadmin",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-01T06:11:48.698Z",
+    "email": "superadmin@gmail.com",
+    "name": "Super Admin",
+    "role": "superadmin",
+    "phone": "1234567890",
+    "school": 1,
+    "profile_photo": "media/School conduct/Root Users/superadmin/profile_photo/WhatsApp_Image_2026-04-27_at_11.23.40_1_liwqoe",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$nxNcoH7eTAkjdOIVmzpoq7$gHXaNEw56h534W2xkXbioSwC3djqPxusbm+aaL6UghA=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "default_admin",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-01T13:29:09.393Z",
+    "email": "admin@default.com",
+    "name": "Default Admin",
+    "role": "admin",
+    "phone": "9874510236",
+    "school": 1,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$cD0xzCX9WZCo08ajspQMrQ$anGNAGLxy++dKfJHDsMS+CSHd2XyFueFoN+GyhdgL24=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "ankit47",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-01T13:33:08.332Z",
+    "email": "ankit47@gmail.com",
+    "name": "Ankit",
+    "role": "admin",
+    "phone": "8877994455",
+    "school": 2,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$G5ARbStpPojYm63Od2mW8e$4DlcQJiItEPdDtm754AnFZ/XnTuH1MEwnvVSZdT55Rs=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "ansh",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-01T13:35:06.188Z",
+    "email": "ansh@gmail.com",
+    "name": "ansh",
+    "role": "admin",
+    "phone": "7788559944",
+    "school": 3,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$9sCh2uoAX20JuDHDoo8TYu$V2tUR2s7uYAXrdyJzE/wugIIPyWSvoH4rfluz/vsuM4=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "demoadmin",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-02T11:04:15.723Z",
+    "email": "admin@demo-school.com",
+    "name": "Demo Admin",
+    "role": "admin",
+    "phone": null,
+    "school": 4,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$vGfv96dR2VgUZNlLJ0ukgA$qp6v1nEIzcSrwpLicIyCDKtmiAK16i0taqhp42kho7o=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "shiv",
+    "first_name": "shiv",
+    "last_name": "kumar",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-02T12:10:32.147Z",
+    "email": "shiv@gmail.com",
+    "name": "shiv kumar",
+    "role": "student",
+    "phone": null,
+    "school": 1,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$pDLVxwPFBHPYZG5VoqWlLq$Yxi8gI2m01XUD3/aCPPoKpisYnjJtyPmoNaXSIUQAYs=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "ram",
+    "first_name": "ram",
+    "last_name": "kumar",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-02T13:05:33.254Z",
+    "email": "ram@gmail.com",
+    "name": "ram kumar",
+    "role": "student",
+    "phone": null,
+    "school": null,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$UY1ngmFUG0DycjjbLvBWLk$o0fpZs8Zm607yKno3RT0460a+J8sJw/j0XsOlBaogsI=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "monika",
+    "first_name": "monika",
+    "last_name": "kumari",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-02T13:07:54.719Z",
+    "email": "monika@gmail.com",
+    "name": "monika kumari",
+    "role": "student",
+    "phone": null,
+    "school": null,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$QhVBvGPtQldnjIJmimlOA7$o1/wkgeaVELe6qieqpfXffeK9qVDYcbvHEUjvVSGIpo=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "ayushi1",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-02T13:18:53.418Z",
+    "email": "ayushi1@gmail.com",
+    "name": "ayushi patel",
+    "role": "teacher",
+    "phone": null,
+    "school": 1,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$4e0DmIMwTRZ5njIZbgbZUL$BlC0fxgTk1m2BYoRVlfxTvnphmnJGaCIPX5xirgDHvk=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "ayushi101",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-02T13:21:26.789Z",
+    "email": "ayushi101@gmail.com",
+    "name": "ayushi patel",
+    "role": "teacher",
+    "phone": null,
+    "school": 1,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$EYGRcL2fvdjC0YzFK9d0yz$sz4ZbJzi9HR9UF/LNnMiogYsrHEiFM4fJSLfVXq/3OE=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "mohini",
+    "first_name": "mohini",
+    "last_name": "kumari",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-02T13:37:06.817Z",
+    "email": "mohini@gmail.com",
+    "name": "mohini kumari",
+    "role": "student",
+    "phone": null,
+    "school": null,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$IIxY2yP6WEUHo0q0Iqp4Ks$ENkslH0Qhg02hOxO2OXR25uHqSWPYLfOvuqmEjHVgHo=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "dealer",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-06T10:48:20.777Z",
+    "email": "dealer@gmail.com",
+    "name": null,
+    "role": "dealer",
+    "phone": null,
+    "school": null,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$DHo0cuMyx8x3UxCpFPJxZD$AX307JRoH+IGlQ7tVBuC+g1+w7lK/JehVFjOCR2a3as=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "john",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-06T11:18:33.068Z",
+    "email": "john.doe@gmail.com",
+    "name": "John Doe",
+    "role": "admin",
+    "phone": null,
+    "school": 5,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$znSTGBvklKuLTepBpp9dTt$gvCkXZGgPtIG+Dw+hjyq9IvZpRzQxo/g4T6ag2UG+xo=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "thomas",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-07T10:48:27.985Z",
+    "email": "thomas@school.com",
+    "name": "Thomas",
+    "role": "admin",
+    "phone": null,
+    "school": 6,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$gx2hPWygDQDt5dESa9kB0F$ROVCqKGE41uFyZjrAZZbs3QVBIl6iBrNxxgBh1/NOvQ=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "dealer1",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-08T07:06:32.401Z",
+    "email": "dealer1@school.com",
+    "name": null,
+    "role": "dealer",
+    "phone": null,
+    "school": null,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$KnD7ybKgVm3JmoNOqNUZhc$bPLlbYjH2lQAywMx2sqmDnVUYEq2XKqJJrHBgFAj9vU=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Ram",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-08T07:08:45.564Z",
+    "email": "ram@kv.com",
+    "name": "Ram",
+    "role": "admin",
+    "phone": null,
+    "school": 7,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$XhRg1Wi8XdfjKXsdfx3gbq$GIG/O0jPp2T2vlj/rwT4ilD5maQ4vzx1WrBeospz5iU=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "shweta",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-08T08:28:59.370Z",
+    "email": "shweta@gmail.com",
+    "name": "Shweta Sharma",
+    "role": "teacher",
+    "phone": null,
+    "school": 1,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$lAmCfxIOguT3mv2xBSoDSu$ILULkRh2vvd2aIhKv9q4+QY1EAsY6nWg8Zn8s4l9IaI=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "rudra",
+    "first_name": "Rudra",
+    "last_name": "singh",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-08T11:53:05.232Z",
+    "email": "rudra@gmail.com",
+    "name": "Rudra singh",
+    "role": "student",
+    "phone": null,
+    "school": 1,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$ClVPYnQs6o4coXaRIcU9IM$w3RHG4RqF71VnOvNR6fr1c6ExbHizDIZ924n003kXSs=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "jhon_ather",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-10T07:21:42.155Z",
+    "email": "jhonather@gmail.com",
+    "name": "Jhon Ather",
+    "role": "admin",
+    "phone": null,
+    "school": 8,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$1jkXB0ug3c3nr6OBgc9tXe$Lk4IRJ7SmxFjJW/L0hIFg4MIJwUSEGJM6f7j4Woq+2s=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "neha",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-13T12:44:06.877Z",
+    "email": "neha@gmail.com",
+    "name": "Neha Kumari",
+    "role": "teacher",
+    "phone": null,
+    "school": 1,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$rm0fjoHSKOCidDPQX36etJ$DpdC1HliYc2JR1PVpMiXcZ5kSZX/gakCcqcItNVakoU=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "pooja",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-13T12:46:28.349Z",
+    "email": "pooja@gmail.com",
+    "name": "Pooja Kumari",
+    "role": "teacher",
+    "phone": null,
+    "school": 1,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$DnlPdGcHVbNITRuhQAM49o$Az0UsUVOlkdAoR8YuaG+36+yrKiLVoV50kaK1Io4dZQ=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "anmol",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-13T12:48:55.453Z",
+    "email": "anmol@gmail.com",
+    "name": "Anmol kumar",
+    "role": "teacher",
+    "phone": null,
+    "school": 1,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$6EvHT6CXnSzLHOisjrebk2$buqLSAQU1zmmkOhPHVK7qt6+l487yR/RRk+C2Sxl6eg=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "jet123",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-14T09:12:09.332Z",
+    "email": "Jet@gmail.com",
+    "name": "jet",
+    "role": "admin",
+    "phone": null,
+    "school": 9,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$GIDHbKbv0ajUgzNKgSWkdq$yCmMcQ24CXGmCitYgSi3g4ndZbJoniLccky3clJ5Wz8=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "test_teacher_1",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-14T11:55:24.517Z",
+    "email": null,
+    "name": null,
+    "role": "teacher",
+    "phone": null,
+    "school": null,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$kKygupFLdqXyjDOwANpqiK$C+wCUXLHmFzqdDBWpSDAbG/8mVSx5hN7gWweJ2isO34=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "test_teacher_2",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-14T11:55:25.588Z",
+    "email": null,
+    "name": null,
+    "role": "teacher",
+    "phone": null,
+    "school": null,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$13fuF85mCv52qclRc9FF9s$kpmQYHfzG1y1YBQVy4MJ32nAOxTeBdl2CzlcqW/GUy0=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "teacher_user",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-14T12:50:43.242Z",
+    "email": null,
+    "name": "teacher 1",
+    "role": "teacher",
+    "phone": null,
+    "school": 1,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$JMQ8uY895pwDSUgpfLEVp6$CJUeRCdK9hOj5Q45oOi8Xb4rOWbG6WmdsB9XBOkwma0=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "akash",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-16T06:37:43.243Z",
+    "email": "akash@dps.com",
+    "name": "Akash Yadav",
+    "role": "admin",
+    "phone": "9988774455",
+    "school": 10,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$q2X0NAnJqlrFwuNPOixh7H$I61OB0/VSmiFrKH4dd0do+pRQ8VePEHn5OyYFT1c6EA=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "anil",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-16T07:35:51.336Z",
+    "email": "anil@gvs.com",
+    "name": "Anil P",
+    "role": "admin",
+    "phone": null,
+    "school": 11,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$ozgmdMpMLf6WLChJxFnpO8$r3iKphgt96oSPquVZ6YzUrCjLk3LT6CxA9pTj28ORng=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "tanvi",
+    "first_name": "tanvi",
+    "last_name": "prajapat",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-21T06:01:07.106Z",
+    "email": "tanvi@123",
+    "name": "tanvi prajapat",
+    "role": "student",
+    "phone": null,
+    "school": 10,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$CUKhRpweJWHzlD7y9J44Yz$Q+gPWTEW94f0LHaSzFU+ALNQk7Y8N/A2j7fT2i83Uvc=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "ankit",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-21T06:06:18.260Z",
+    "email": "ankit@gamil.com",
+    "name": "ANKIT Kushwah",
+    "role": "teacher",
+    "phone": null,
+    "school": 10,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$z4DgMWcLl2SjyMvRVGlza6$K67bXa1Fo0EVwGcYRZMdn/e6s/+fHk+zHqYhR4Bep8E=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "teacher_user_1",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-21T06:51:07.279Z",
+    "email": null,
+    "name": "Ankit Kushwah",
+    "role": "teacher",
+    "phone": null,
+    "school": 10,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "t_teacher",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-21T07:01:20.283Z",
+    "email": null,
+    "name": "Ankit Kushwah",
+    "role": "student",
+    "phone": null,
+    "school": 1,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$copK0151rnDycEXsBFTC6V$f7sQoJCsC+MI+uhgGZOuRzugNMCEYyhyhVwtIbE2hIk=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "shivani",
+    "first_name": "shivani",
+    "last_name": "kumari",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-21T11:32:41.661Z",
+    "email": "shivani@gmail.com",
+    "name": "shivani kumari",
+    "role": "student",
+    "phone": null,
+    "school": 1,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$jsktDeCs5RMNrHsYtKQoA3$ZdLWGur+v/IgNzZwp7hM1gFi6tp8mroVeZIJkcF3Has=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "shivam",
+    "first_name": "Shivam",
+    "last_name": "Kumar",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-21T11:42:52.052Z",
+    "email": "shivam@gmail.com",
+    "name": "Shivam Kumar",
+    "role": "student",
+    "phone": null,
+    "school": 1,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$3ba6JLNzW3wflnotaiFB23$POBn/ADKWZJxNVTGK47Yz0vJ5ZKE3l3TxpFi3W/cZlo=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "shalini",
+    "first_name": "Shalini",
+    "last_name": "Rajpoot",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-22T06:54:01.050Z",
+    "email": "shalini@gmail.com",
+    "name": "Shalini Rajpoot",
+    "role": "student",
+    "phone": null,
+    "school": 10,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$0Kprm4VzBiiZnrGzvtNZFl$tzZYJvfeO04hyNfokKfcpc+qAyK+s2QGGRH1niNC9Pg=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "root_test",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-03T03:32:02.053Z",
+    "email": "root@test.com",
+    "name": null,
+    "role": "admin",
+    "phone": null,
+    "school": null,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$c7qNlgXx8248a0hlUHmeZh$rsqIj7Qu7Ppm5zIHcp8N50JnS/DzW4di7flYspiEswk=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "shivam_1",
+    "first_name": "Shivam ",
+    "last_name": "Sharma",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-02T09:01:10.474Z",
+    "email": "",
+    "name": "Shivam  Sharma",
+    "role": "student",
+    "phone": null,
+    "school": 1,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$JuNDaCFQSgBQ6YqoohJiL0$OhNhV0kLYj+qqdtr4ugLgrL3zB4wKPXwIBcE9nOL67g=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "ankit1",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-06-02T12:45:47.154Z",
+    "email": "ankit@gmail.com",
+    "name": "Ankit",
+    "role": "admin",
+    "phone": null,
+    "school": 16,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$UfwYEhNp38voRTUapvW8Zq$tr/dHoLhLzzyG1/kt/4QhKoq1d2TnvrYW8nSGFc2fW4=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "lalitk",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-04T07:26:24.373Z",
+    "email": "lalitk@gmail.com",
+    "name": "Lalit  kumar",
+    "role": "teacher",
+    "phone": null,
+    "school": 16,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$BV1ZbHOcOlRfICu7yLopbR$9u48VFgByAMdKxRkERY955ACd1hyuL2cAj1aXmubKFo=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "hriday",
+    "first_name": "Hriday",
+    "last_name": "Pandey",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-04T07:35:08.942Z",
+    "email": "hriday@gmail.com",
+    "name": "Hriday Pandey",
+    "role": "student",
+    "phone": null,
+    "school": 16,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$R5y0V4eRYUXkruK7Yqpau1$WSqeXVywpi8mi5Pa5zFgDVlHxjXHDEoxqv6X9IOuveY=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "jain",
+    "first_name": "ronak",
+    "last_name": "jain",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-04T07:40:07.111Z",
+    "email": "jain@gmail.com",
+    "name": "ronak jain",
+    "role": "student",
+    "phone": null,
+    "school": 16,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$PIJdqj9ctcSyuwxS9sb7Y1$tg+HlTLOHgfCJKDEKmDbr2u0UoFWfpa/mtbp8UuQIFY=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "jack",
+    "first_name": "JACK",
+    "last_name": "ryan",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-04T13:18:04.007Z",
+    "email": "jack@gmail.com",
+    "name": "JACK ryan",
+    "role": "student",
+    "phone": null,
+    "school": 1,
+    "profile_photo": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "students.parent",
+  "pk": 1,
+  "fields": {
+    "name": "Ramesh",
+    "mobile": "+911234567899",
+    "email": null
+  }
+},
+{
+  "model": "students.parent",
+  "pk": 2,
+  "fields": {
+    "name": "Akash Kumar",
+    "mobile": "+919876543279",
+    "email": null
+  }
+},
+{
+  "model": "students.parent",
+  "pk": 3,
+  "fields": {
+    "name": "ramesh",
+    "mobile": "+919876543298",
+    "email": null
+  }
+},
+{
+  "model": "students.parent",
+  "pk": 4,
+  "fields": {
+    "name": "asdfghj",
+    "mobile": "+912345678903",
+    "email": null
+  }
+},
+{
+  "model": "students.parent",
+  "pk": 5,
+  "fields": {
+    "name": "jhknlbnbk",
+    "mobile": "+917894561230",
+    "email": null
+  }
+},
+{
+  "model": "students.parent",
+  "pk": 6,
+  "fields": {
+    "name": "mjnhbgvfds",
+    "mobile": "+919876543276",
+    "email": null
+  }
+},
+{
+  "model": "students.parent",
+  "pk": 7,
+  "fields": {
+    "name": "asdfghjkl",
+    "mobile": "+911234567890",
+    "email": null
+  }
+},
+{
+  "model": "students.parent",
+  "pk": 8,
+  "fields": {
+    "name": "peter",
+    "mobile": "+919876543210",
+    "email": null
+  }
+},
+{
+  "model": "students.studentprofile",
+  "pk": 18,
+  "fields": {
+    "user": [
+      "shiv"
+    ],
+    "school": 1,
+    "uuid": "54b2d33a-bc4f-4e23-a428-18f89c483fc7",
+    "admission_number": "ADM101",
+    "roll_number": "101A",
+    "rfid_code": "3",
+    "class_section": 24,
+    "parent": 6,
+    "dob": "2026-04-10",
+    "gender": "Male",
+    "blood_group": "B+",
+    "father_name": "mjnhbgvfds",
+    "mother_name": "",
+    "father_contact": "+919876543276",
+    "mother_contact": "",
+    "bus_no": "05",
+    "address": "mnbvcxzjhg",
+    "date_of_admission": "2026-04-24",
+    "category": "OBC",
+    "photo": ""
+  }
+},
+{
+  "model": "students.studentprofile",
+  "pk": 19,
+  "fields": {
+    "user": [
+      "ram"
+    ],
+    "school": null,
+    "uuid": "54b2d33a-bc4f-4e23-a428-18f89c483fc7",
+    "admission_number": "ADM102",
+    "roll_number": "102A",
+    "rfid_code": null,
+    "class_section": 17,
+    "parent": 3,
+    "dob": "2005-01-04",
+    "gender": "Male",
+    "blood_group": "O+",
+    "father_name": "ramesh",
+    "mother_name": null,
+    "father_contact": "+919876543298",
+    "mother_contact": null,
+    "bus_no": null,
+    "address": "indore",
+    "date_of_admission": "2026-01-01",
+    "category": "OBC",
+    "photo": "student_photos/WhatsApp_Image_2026-04-06_at_12.48.21_PM.jpeg"
+  }
+},
+{
+  "model": "students.studentprofile",
+  "pk": 20,
+  "fields": {
+    "user": [
+      "monika"
+    ],
+    "school": null,
+    "uuid": "54b2d33a-bc4f-4e23-a428-18f89c483fc7",
+    "admission_number": "ADM103",
+    "roll_number": "103A",
+    "rfid_code": null,
+    "class_section": 17,
+    "parent": 2,
+    "dob": "2002-04-03",
+    "gender": "Female",
+    "blood_group": "B+",
+    "father_name": "Akash Kumar",
+    "mother_name": null,
+    "father_contact": "+919876543279",
+    "mother_contact": null,
+    "bus_no": null,
+    "address": "Bhopal",
+    "date_of_admission": "2026-02-03",
+    "category": "General",
+    "photo": ""
+  }
+},
+{
+  "model": "students.studentprofile",
+  "pk": 21,
+  "fields": {
+    "user": [
+      "mohini"
+    ],
+    "school": null,
+    "uuid": "54b2d33a-bc4f-4e23-a428-18f89c483fc7",
+    "admission_number": "ADM104",
+    "roll_number": "101A",
+    "rfid_code": null,
+    "class_section": 17,
+    "parent": 2,
+    "dob": "2007-08-03",
+    "gender": "Female",
+    "blood_group": "O-",
+    "father_name": "dfghj",
+    "mother_name": null,
+    "father_contact": "+919876543279",
+    "mother_contact": null,
+    "bus_no": null,
+    "address": "indore",
+    "date_of_admission": "2026-02-03",
+    "category": "OBC",
+    "photo": ""
+  }
+},
+{
+  "model": "students.studentprofile",
+  "pk": 64,
+  "fields": {
+    "user": [
+      "rudra"
+    ],
+    "school": 1,
+    "uuid": "54b2d33a-bc4f-4e23-a428-18f89c483fc7",
+    "admission_number": "ADM105",
+    "roll_number": "101A",
+    "rfid_code": null,
+    "class_section": 26,
+    "parent": 5,
+    "dob": "2024-10-02",
+    "gender": "Male",
+    "blood_group": "A+",
+    "father_name": "jhknlbnbk",
+    "mother_name": "",
+    "father_contact": "+917894561230",
+    "mother_contact": "",
+    "bus_no": "",
+    "address": "ygjhbkjpo",
+    "date_of_admission": "2026-01-04",
+    "category": "General",
+    "photo": ""
+  }
+},
+{
+  "model": "students.studentprofile",
+  "pk": 65,
+  "fields": {
+    "user": [
+      "tanvi"
+    ],
+    "school": 10,
+    "uuid": "54b2d33a-bc4f-4e23-a428-18f89c483fc7",
+    "admission_number": "ADM106",
+    "roll_number": "101A",
+    "rfid_code": null,
+    "class_section": 28,
+    "parent": 4,
+    "dob": "2004-05-16",
+    "gender": "Female",
+    "blood_group": "",
+    "father_name": "asdfghj",
+    "mother_name": "sdfghjk",
+    "father_contact": "+912345678903",
+    "mother_contact": "+912345678934",
+    "bus_no": "MPO9f84",
+    "address": "Indore",
+    "date_of_admission": "2026-04-01",
+    "category": "OBC",
+    "photo": ""
+  }
+},
+{
+  "model": "students.studentprofile",
+  "pk": 70,
+  "fields": {
+    "user": [
+      "shivani"
+    ],
+    "school": 1,
+    "uuid": "15abb1fc-4cb1-43b7-ac4a-ec2b6a93c056",
+    "admission_number": "ADM103",
+    "roll_number": "103A",
+    "rfid_code": "4",
+    "class_section": 24,
+    "parent": 1,
+    "dob": "2006-02-08",
+    "gender": "Female",
+    "blood_group": "A+",
+    "father_name": "Ramesh",
+    "mother_name": "Mamta",
+    "father_contact": "+911234567899",
+    "mother_contact": "+919987654321",
+    "bus_no": "MP09f008",
+    "address": "Indore",
+    "date_of_admission": "2026-01-01",
+    "category": "OBC",
+    "photo": ""
+  }
+},
+{
+  "model": "students.studentprofile",
+  "pk": 71,
+  "fields": {
+    "user": [
+      "shivam"
+    ],
+    "school": 1,
+    "uuid": "cfe7c8fc-28e0-407b-9b26-e9b35a732355",
+    "admission_number": "ADM102",
+    "roll_number": "102A",
+    "rfid_code": null,
+    "class_section": 26,
+    "parent": 1,
+    "dob": "2009-06-07",
+    "gender": "Male",
+    "blood_group": "B+",
+    "father_name": "Ramesh",
+    "mother_name": "Mamta",
+    "father_contact": "+911234567899",
+    "mother_contact": "+919987654321",
+    "bus_no": "MP09f008",
+    "address": "Indore",
+    "date_of_admission": "2026-01-03",
+    "category": "OBC",
+    "photo": ""
+  }
+},
+{
+  "model": "students.studentprofile",
+  "pk": 72,
+  "fields": {
+    "user": [
+      "shalini"
+    ],
+    "school": 10,
+    "uuid": "a0bdd2aa-c70c-482e-beda-80533f252aef",
+    "admission_number": "ADM101",
+    "roll_number": "102A",
+    "rfid_code": null,
+    "class_section": 28,
+    "parent": 7,
+    "dob": "2006-07-20",
+    "gender": "Male",
+    "blood_group": "O+",
+    "father_name": "asdfghjkl",
+    "mother_name": "sdfghjk",
+    "father_contact": "+911234567890",
+    "mother_contact": "+911234567890",
+    "bus_no": "qwe08",
+    "address": "Indore",
+    "date_of_admission": "2026-01-05",
+    "category": "OBC",
+    "photo": ""
+  }
+},
+{
+  "model": "students.studentprofile",
+  "pk": 74,
+  "fields": {
+    "user": [
+      "shivam_1"
+    ],
+    "school": 1,
+    "uuid": "3b70684f-0559-4ec6-a024-74ecfad7a68f",
+    "admission_number": "ADM104",
+    "roll_number": "104A",
+    "rfid_code": "5",
+    "class_section": 24,
+    "parent": 7,
+    "dob": "2026-06-02",
+    "gender": "Male",
+    "blood_group": "A+",
+    "father_name": "Rakesh Sharma ",
+    "mother_name": "Rohini Sharma ",
+    "father_contact": "+911234567890",
+    "mother_contact": "+911234567890",
+    "bus_no": "",
+    "address": "scheme 140 indore ",
+    "date_of_admission": "2026-06-02",
+    "category": "General",
+    "photo": ""
+  }
+},
+{
+  "model": "students.studentprofile",
+  "pk": 75,
+  "fields": {
+    "user": [
+      "hriday"
+    ],
+    "school": 16,
+    "uuid": "e2fd3633-49bd-4d80-afdf-7e8672380a02",
+    "admission_number": "ADM101",
+    "roll_number": "101A",
+    "rfid_code": "9",
+    "class_section": 29,
+    "parent": 7,
+    "dob": "2026-06-04",
+    "gender": "Male",
+    "blood_group": "AB+",
+    "father_name": "Lalit Kumar ",
+    "mother_name": "Sapna Kumar ",
+    "father_contact": "+911234567890",
+    "mother_contact": "+911234567890",
+    "bus_no": "",
+    "address": "bhopal",
+    "date_of_admission": "2026-06-04",
+    "category": "EWS",
+    "photo": ""
+  }
+},
+{
+  "model": "students.studentprofile",
+  "pk": 76,
+  "fields": {
+    "user": [
+      "jain"
+    ],
+    "school": 16,
+    "uuid": "341a1179-224f-4e9e-b200-cd84834bcccf",
+    "admission_number": "ADM102",
+    "roll_number": "101A",
+    "rfid_code": "7",
+    "class_section": null,
+    "parent": 7,
+    "dob": "2005-05-07",
+    "gender": "Male",
+    "blood_group": "O+",
+    "father_name": "mahesh",
+    "mother_name": "ritika",
+    "father_contact": "+911234567890",
+    "mother_contact": "+911234567890",
+    "bus_no": "",
+    "address": "vijaynagar",
+    "date_of_admission": "2009-04-05",
+    "category": "General",
+    "photo": ""
+  }
+},
+{
+  "model": "students.studentprofile",
+  "pk": 87,
+  "fields": {
+    "user": [
+      "jack"
+    ],
+    "school": 1,
+    "uuid": "61b76576-9718-4643-ab36-dd3eb968c522",
+    "admission_number": "ADM106",
+    "roll_number": "103A",
+    "rfid_code": null,
+    "class_section": 26,
+    "parent": 8,
+    "dob": "2008-06-12",
+    "gender": "Male",
+    "blood_group": "AB-",
+    "father_name": "peter",
+    "mother_name": "alien",
+    "father_contact": "+919876543210",
+    "mother_contact": "+919876532197",
+    "bus_no": "526",
+    "address": "default_admin",
+    "date_of_admission": "2026-01-05",
+    "category": "General",
+    "photo": ""
+  }
+},
+{
+  "model": "teachers.teacherprofile",
+  "pk": 17,
+  "fields": {
+    "user": [
+      "ayushi101"
+    ],
+    "school": 1,
+    "uuid": "4f698e82-cf18-4b85-80b6-165e377c9fea",
+    "employee_id": "T001",
+    "subject_specialization": "Physics",
+    "phone_number": "+911234567890",
+    "gender": "Female",
+    "dob": "2026-04-02",
+    "qualification": "MCA / BCA",
+    "experience_years": 3,
+    "joining_date": "2026-04-03",
+    "role": "Class Teacher",
+    "status": "Active",
+    "profile_image_base64": null,
+    "photo": ""
+  }
+},
+{
+  "model": "teachers.teacherprofile",
+  "pk": 29,
+  "fields": {
+    "user": [
+      "shweta"
+    ],
+    "school": 1,
+    "uuid": "4f698e82-cf18-4b85-80b6-165e377c9fea",
+    "employee_id": "T002",
+    "subject_specialization": "Mathematics",
+    "phone_number": "+918974561230",
+    "gender": "Female",
+    "dob": "2000-02-02",
+    "qualification": "B.tech",
+    "experience_years": 2,
+    "joining_date": "2026-10-04",
+    "role": "Subject Teacher",
+    "status": "Active",
+    "profile_image_base64": null,
+    "photo": ""
+  }
+},
+{
+  "model": "teachers.teacherprofile",
+  "pk": 30,
+  "fields": {
+    "user": [
+      "neha"
+    ],
+    "school": 1,
+    "uuid": "4f698e82-cf18-4b85-80b6-165e377c9fea",
+    "employee_id": "T003",
+    "subject_specialization": "Science",
+    "phone_number": "+911234567895",
+    "gender": "Female",
+    "dob": "2002-01-15",
+    "qualification": "MSC / BSC",
+    "experience_years": 2,
+    "joining_date": "2026-01-01",
+    "role": "Subject Teacher",
+    "status": "Active",
+    "profile_image_base64": "",
+    "photo": ""
+  }
+},
+{
+  "model": "teachers.teacherprofile",
+  "pk": 31,
+  "fields": {
+    "user": [
+      "pooja"
+    ],
+    "school": 1,
+    "uuid": "4f698e82-cf18-4b85-80b6-165e377c9fea",
+    "employee_id": "T004",
+    "subject_specialization": "Mathematics",
+    "phone_number": "+912345678904",
+    "gender": "Female",
+    "dob": "2004-04-14",
+    "qualification": "MSC",
+    "experience_years": null,
+    "joining_date": "2026-02-01",
+    "role": "Subject Teacher",
+    "status": "Active",
+    "profile_image_base64": "",
+    "photo": ""
+  }
+},
+{
+  "model": "teachers.teacherprofile",
+  "pk": 32,
+  "fields": {
+    "user": [
+      "anmol"
+    ],
+    "school": 1,
+    "uuid": "4f698e82-cf18-4b85-80b6-165e377c9fea",
+    "employee_id": "T005",
+    "subject_specialization": "Computer Science",
+    "phone_number": "+919876543456",
+    "gender": "Male",
+    "dob": "2006-04-29",
+    "qualification": "B.tech",
+    "experience_years": 4,
+    "joining_date": "2026-03-31",
+    "role": "Subject Teacher",
+    "status": "Active",
+    "profile_image_base64": "",
+    "photo": ""
+  }
+},
+{
+  "model": "teachers.teacherprofile",
+  "pk": 33,
+  "fields": {
+    "user": [
+      "teacher_user"
+    ],
+    "school": 1,
+    "uuid": "4f698e82-cf18-4b85-80b6-165e377c9fea",
+    "employee_id": "T006",
+    "subject_specialization": "Chemistry",
+    "phone_number": "+919988445511",
+    "gender": "Male",
+    "dob": "2000-04-14",
+    "qualification": "M.Sc",
+    "experience_years": 2,
+    "joining_date": "2026-04-20",
+    "role": "Subject Teacher",
+    "status": "Active",
+    "profile_image_base64": "",
+    "photo": ""
+  }
+},
+{
+  "model": "teachers.teacherprofile",
+  "pk": 37,
+  "fields": {
+    "user": [
+      "teacher_user_1"
+    ],
+    "school": 10,
+    "uuid": "35ab2799-c6d3-4ea6-8f51-8c12876501cc",
+    "employee_id": "T001",
+    "subject_specialization": "Computer Science",
+    "phone_number": "+919977876391",
+    "gender": "Male",
+    "dob": "2000-10-02",
+    "qualification": "MCA",
+    "experience_years": 2,
+    "joining_date": "2026-05-01",
+    "role": "Subject Teacher",
+    "status": "Active",
+    "profile_image_base64": "",
+    "photo": ""
+  }
+},
+{
+  "model": "teachers.teacherprofile",
+  "pk": 39,
+  "fields": {
+    "user": [
+      "lalitk"
+    ],
+    "school": null,
+    "uuid": "533860c1-6736-4255-a20b-6e3c5c2a9432",
+    "employee_id": "T001",
+    "subject_specialization": "Computer Science",
+    "phone_number": "+911234567890",
+    "gender": "Male",
+    "dob": "2026-06-04",
+    "qualification": "M.Sc",
+    "experience_years": 5,
+    "joining_date": "2026-06-04",
+    "role": "Subject Teacher",
+    "status": "Active",
+    "profile_image_base64": "",
+    "photo": ""
+  }
+},
+{
+  "model": "classes.mainclass",
+  "pk": 18,
+  "fields": {
+    "school": 1,
+    "name": "3",
+    "code": null,
+    "description": null
+  }
+},
+{
+  "model": "classes.mainclass",
+  "pk": 20,
+  "fields": {
+    "school": null,
+    "name": "6",
+    "code": null,
+    "description": null
+  }
+},
+{
+  "model": "classes.mainclass",
+  "pk": 21,
+  "fields": {
+    "school": null,
+    "name": "10",
+    "code": null,
+    "description": null
+  }
+},
+{
+  "model": "classes.mainclass",
+  "pk": 22,
+  "fields": {
+    "school": 1,
+    "name": "2",
+    "code": null,
+    "description": null
+  }
+},
+{
+  "model": "classes.mainclass",
+  "pk": 23,
+  "fields": {
+    "school": 1,
+    "name": "10",
+    "code": null,
+    "description": null
+  }
+},
+{
+  "model": "classes.mainclass",
+  "pk": 24,
+  "fields": {
+    "school": 1,
+    "name": "5",
+    "code": null,
+    "description": null
+  }
+},
+{
+  "model": "classes.mainclass",
+  "pk": 25,
+  "fields": {
+    "school": 10,
+    "name": "12",
+    "code": null,
+    "description": null
+  }
+},
+{
+  "model": "classes.mainclass",
+  "pk": 26,
+  "fields": {
+    "school": 16,
+    "name": "10",
+    "code": null,
+    "description": null
+  }
+},
+{
+  "model": "classes.mainclass",
+  "pk": 27,
+  "fields": {
+    "school": 16,
+    "name": "4",
+    "code": null,
+    "description": null
+  }
+},
+{
+  "model": "classes.mainsection",
+  "pk": 1,
+  "fields": {
+    "school": 1,
+    "name": "A"
+  }
+},
+{
+  "model": "classes.mainsection",
+  "pk": 2,
+  "fields": {
+    "school": 1,
+    "name": "B"
+  }
+},
+{
+  "model": "classes.mainsection",
+  "pk": 3,
+  "fields": {
+    "school": 1,
+    "name": "C"
+  }
+},
+{
+  "model": "classes.mainsection",
+  "pk": 4,
+  "fields": {
+    "school": 1,
+    "name": "D"
+  }
+},
+{
+  "model": "classes.mainsection",
+  "pk": 5,
+  "fields": {
+    "school": 1,
+    "name": "Section A"
+  }
+},
+{
+  "model": "classes.mainsection",
+  "pk": 6,
+  "fields": {
+    "school": 1,
+    "name": "QA"
+  }
+},
+{
+  "model": "classes.mainsection",
+  "pk": 7,
+  "fields": {
+    "school": 1,
+    "name": "QB"
+  }
+},
+{
+  "model": "classes.mainsection",
+  "pk": 8,
+  "fields": {
+    "school": 10,
+    "name": "A"
+  }
+},
+{
+  "model": "classes.mainsection",
+  "pk": 9,
+  "fields": {
+    "school": 16,
+    "name": "A"
+  }
+},
+{
+  "model": "classes.mainsection",
+  "pk": 10,
+  "fields": {
+    "school": 16,
+    "name": "a"
+  }
+},
+{
+  "model": "classes.classsection",
+  "pk": 16,
+  "fields": {
+    "school": null,
+    "class_ref": 20,
+    "section_ref": 1,
+    "class_teacher": null,
+    "assigned_shift": null,
+    "room_number": null
+  }
+},
+{
+  "model": "classes.classsection",
+  "pk": 17,
+  "fields": {
+    "school": null,
+    "class_ref": 21,
+    "section_ref": 1,
+    "class_teacher": 17,
+    "assigned_shift": null,
+    "room_number": null
+  }
+},
+{
+  "model": "classes.classsection",
+  "pk": 24,
+  "fields": {
+    "school": 1,
+    "class_ref": 23,
+    "section_ref": 1,
+    "class_teacher": null,
+    "assigned_shift": null,
+    "room_number": null
+  }
+},
+{
+  "model": "classes.classsection",
+  "pk": 25,
+  "fields": {
+    "school": 1,
+    "class_ref": 22,
+    "section_ref": 1,
+    "class_teacher": null,
+    "assigned_shift": null,
+    "room_number": null
+  }
+},
+{
+  "model": "classes.classsection",
+  "pk": 26,
+  "fields": {
+    "school": 1,
+    "class_ref": 18,
+    "section_ref": 1,
+    "class_teacher": null,
+    "assigned_shift": null,
+    "room_number": null
+  }
+},
+{
+  "model": "classes.classsection",
+  "pk": 27,
+  "fields": {
+    "school": 1,
+    "class_ref": 24,
+    "section_ref": 1,
+    "class_teacher": null,
+    "assigned_shift": null,
+    "room_number": null
+  }
+},
+{
+  "model": "classes.classsection",
+  "pk": 28,
+  "fields": {
+    "school": 10,
+    "class_ref": 25,
+    "section_ref": 8,
+    "class_teacher": null,
+    "assigned_shift": null,
+    "room_number": null
+  }
+},
+{
+  "model": "classes.classsection",
+  "pk": 29,
+  "fields": {
+    "school": 16,
+    "class_ref": 26,
+    "section_ref": 9,
+    "class_teacher": 39,
+    "assigned_shift": null,
+    "room_number": null
+  }
+},
+{
+  "model": "classes.classsection",
+  "pk": 30,
+  "fields": {
+    "school": 16,
+    "class_ref": 27,
+    "section_ref": 9,
+    "class_teacher": null,
+    "assigned_shift": null,
+    "room_number": null
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 9,
+  "fields": {
+    "student": 19,
+    "class_section": null,
+    "date": "2026-04-06",
+    "status": "present",
+    "verification_status": "approved",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-04-06T05:53:17.125Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-04-06T05:53:17.298Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 10,
+  "fields": {
+    "student": 20,
+    "class_section": null,
+    "date": "2026-04-06",
+    "status": "present",
+    "verification_status": "approved",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-04-06T05:53:17.456Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-04-06T05:53:17.586Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 11,
+  "fields": {
+    "student": 21,
+    "class_section": null,
+    "date": "2026-04-06",
+    "status": "present",
+    "verification_status": "approved",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-04-06T05:53:17.727Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-04-06T05:53:17.855Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 12,
+  "fields": {
+    "student": 18,
+    "class_section": null,
+    "date": "2026-04-06",
+    "status": "present",
+    "verification_status": "approved",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-04-06T08:16:39.282Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-04-06T08:16:39.460Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 13,
+  "fields": {
+    "student": 18,
+    "class_section": null,
+    "date": "2026-04-07",
+    "status": "present",
+    "verification_status": "approved",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-04-07T10:23:19.659Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-04-07T10:23:18.702Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 14,
+  "fields": {
+    "student": 64,
+    "class_section": null,
+    "date": "2026-04-14",
+    "status": "present",
+    "verification_status": "approved",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-04-14T10:21:33.029Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-04-14T10:21:33.198Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 15,
+  "fields": {
+    "student": 18,
+    "class_section": null,
+    "date": "2026-04-14",
+    "status": "present",
+    "verification_status": "approved",
+    "punch_time": null,
+    "verified_by": 29,
+    "verified_at": "2026-04-14T10:22:10.171Z",
+    "marked_by": 29,
+    "marked_via": "manual",
+    "created_at": "2026-04-14T10:22:10.305Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 16,
+  "fields": {
+    "student": 18,
+    "class_section": null,
+    "date": "2026-04-20",
+    "status": "present",
+    "verification_status": "approved",
+    "punch_time": null,
+    "verified_by": 30,
+    "verified_at": "2026-04-20T08:27:39.131Z",
+    "marked_by": 30,
+    "marked_via": "manual",
+    "created_at": "2026-04-20T08:27:39.261Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 17,
+  "fields": {
+    "student": 64,
+    "class_section": null,
+    "date": "2026-04-21",
+    "status": "present",
+    "verification_status": "approved",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-04-21T05:27:00.921Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-04-21T05:27:01.225Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 18,
+  "fields": {
+    "student": 64,
+    "class_section": null,
+    "date": "2026-04-22",
+    "status": "present",
+    "verification_status": "approved",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-04-22T06:38:39.041Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-04-22T06:38:39.351Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 19,
+  "fields": {
+    "student": 71,
+    "class_section": null,
+    "date": "2026-04-22",
+    "status": "present",
+    "verification_status": "approved",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-04-22T06:38:39.655Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-04-22T06:38:39.896Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 20,
+  "fields": {
+    "student": 18,
+    "class_section": 24,
+    "date": "2026-06-01",
+    "status": "present",
+    "verification_status": "pending",
+    "punch_time": "2026-06-01T13:34:52.630Z",
+    "verified_by": null,
+    "verified_at": null,
+    "marked_by": null,
+    "marked_via": "rfid",
+    "created_at": "2026-06-01T08:08:18.723Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 21,
+  "fields": {
+    "student": 19,
+    "class_section": 17,
+    "date": "2026-06-01",
+    "status": "present",
+    "verification_status": "pending",
+    "punch_time": "2026-06-01T13:34:49.630Z",
+    "verified_by": null,
+    "verified_at": null,
+    "marked_by": null,
+    "marked_via": "rfid",
+    "created_at": "2026-06-01T13:37:35.431Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 22,
+  "fields": {
+    "student": 20,
+    "class_section": 17,
+    "date": "2026-06-01",
+    "status": "present",
+    "verification_status": "pending",
+    "punch_time": "2026-06-01T13:34:50.630Z",
+    "verified_by": null,
+    "verified_at": null,
+    "marked_by": null,
+    "marked_via": "rfid",
+    "created_at": "2026-06-01T13:37:35.614Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 23,
+  "fields": {
+    "student": 70,
+    "class_section": 24,
+    "date": "2026-06-01",
+    "status": "present",
+    "verification_status": "pending",
+    "punch_time": "2026-06-01T10:00:00Z",
+    "verified_by": null,
+    "verified_at": null,
+    "marked_by": null,
+    "marked_via": "rfid",
+    "created_at": "2026-06-02T05:36:59.409Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 24,
+  "fields": {
+    "student": 70,
+    "class_section": 24,
+    "date": "2026-06-02",
+    "status": "present",
+    "verification_status": "approved",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-06-02T12:30:20.479Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-06-02T06:35:51.940Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 25,
+  "fields": {
+    "student": 18,
+    "class_section": 24,
+    "date": "2026-06-02",
+    "status": "present",
+    "verification_status": "approved",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-06-02T12:30:20.327Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-06-02T06:43:15.928Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 26,
+  "fields": {
+    "student": 71,
+    "class_section": 26,
+    "date": "2026-06-02",
+    "status": "present",
+    "verification_status": "pending",
+    "punch_time": "2026-06-02T11:34:00Z",
+    "verified_by": null,
+    "verified_at": null,
+    "marked_by": null,
+    "marked_via": "rfid",
+    "created_at": "2026-06-02T10:55:15.012Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 27,
+  "fields": {
+    "student": 74,
+    "class_section": null,
+    "date": "2026-06-02",
+    "status": "present",
+    "verification_status": "approved",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-06-02T12:30:20.599Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-06-02T11:35:41.969Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 28,
+  "fields": {
+    "student": 70,
+    "class_section": 24,
+    "date": "2026-06-04",
+    "status": "absent",
+    "verification_status": "rejected",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-06-04T08:57:27.239Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-06-04T07:43:52.632Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 29,
+  "fields": {
+    "student": 18,
+    "class_section": 24,
+    "date": "2026-06-04",
+    "status": "absent",
+    "verification_status": "rejected",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-06-04T08:57:26.094Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-06-04T07:47:12.901Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 30,
+  "fields": {
+    "student": 74,
+    "class_section": null,
+    "date": "2026-06-04",
+    "status": "absent",
+    "verification_status": "rejected",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-06-04T08:57:28.160Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-06-04T08:03:10.437Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 32,
+  "fields": {
+    "student": 70,
+    "class_section": 24,
+    "date": "2026-06-05",
+    "status": "absent",
+    "verification_status": "rejected",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-06-05T10:28:11.330Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-06-05T06:22:33.133Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 33,
+  "fields": {
+    "student": 18,
+    "class_section": 24,
+    "date": "2026-06-05",
+    "status": "absent",
+    "verification_status": "rejected",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-06-05T10:28:11.190Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-06-05T06:27:22.333Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 34,
+  "fields": {
+    "student": 74,
+    "class_section": 24,
+    "date": "2026-06-05",
+    "status": "absent",
+    "verification_status": "rejected",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-06-05T10:28:14.337Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-06-05T06:50:22.156Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 35,
+  "fields": {
+    "student": 74,
+    "class_section": null,
+    "date": "2026-06-07",
+    "status": "absent",
+    "verification_status": "rejected",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-06-07T09:15:19.391Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-06-07T09:14:25.804Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 36,
+  "fields": {
+    "student": 18,
+    "class_section": null,
+    "date": "2026-06-07",
+    "status": "present",
+    "verification_status": "approved",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-06-07T09:15:09.464Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-06-07T09:14:55.037Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 37,
+  "fields": {
+    "student": 70,
+    "class_section": null,
+    "date": "2026-06-07",
+    "status": "absent",
+    "verification_status": "rejected",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-06-07T09:15:17.341Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-06-07T09:15:11.718Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 38,
+  "fields": {
+    "student": 18,
+    "class_section": 24,
+    "date": "2026-06-08",
+    "status": "present",
+    "verification_status": "pending",
+    "punch_time": "2026-06-08T13:10:51Z",
+    "verified_by": null,
+    "verified_at": null,
+    "marked_by": null,
+    "marked_via": "rfid",
+    "created_at": "2026-06-08T07:44:12.394Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 39,
+  "fields": {
+    "student": 70,
+    "class_section": 24,
+    "date": "2026-06-08",
+    "status": "present",
+    "verification_status": "pending",
+    "punch_time": "2026-06-08T13:12:00Z",
+    "verified_by": null,
+    "verified_at": null,
+    "marked_by": null,
+    "marked_via": "rfid",
+    "created_at": "2026-06-08T10:13:56.818Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 40,
+  "fields": {
+    "student": 74,
+    "class_section": 24,
+    "date": "2026-06-08",
+    "status": "present",
+    "verification_status": "pending",
+    "punch_time": "2026-06-08T13:12:10Z",
+    "verified_by": null,
+    "verified_at": null,
+    "marked_by": null,
+    "marked_via": "rfid",
+    "created_at": "2026-06-08T10:20:08.221Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 41,
+  "fields": {
+    "student": 18,
+    "class_section": 24,
+    "date": "2026-06-09",
+    "status": "absent",
+    "verification_status": "rejected",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-06-09T10:23:30.990Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-06-09T07:06:01.119Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 42,
+  "fields": {
+    "student": 70,
+    "class_section": 24,
+    "date": "2026-06-09",
+    "status": "absent",
+    "verification_status": "rejected",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-06-09T10:23:31.003Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-06-09T07:06:18.625Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 43,
+  "fields": {
+    "student": 74,
+    "class_section": 24,
+    "date": "2026-06-09",
+    "status": "absent",
+    "verification_status": "rejected",
+    "punch_time": null,
+    "verified_by": 17,
+    "verified_at": "2026-06-09T10:23:31.013Z",
+    "marked_by": 17,
+    "marked_via": "manual",
+    "created_at": "2026-06-09T07:06:25.166Z"
+  }
+},
+{
+  "model": "attendance.attendance",
+  "pk": 44,
+  "fields": {
+    "student": 75,
+    "class_section": 29,
+    "date": "2026-06-09",
+    "status": "present",
+    "verification_status": "pending",
+    "punch_time": "2026-06-09T08:21:40Z",
+    "verified_by": null,
+    "verified_at": null,
+    "marked_by": null,
+    "marked_via": "rfid",
+    "created_at": "2026-06-09T08:21:32.528Z"
+  }
+},
+{
+  "model": "attendance.biometricdevice",
+  "pk": 1,
+  "fields": {
+    "school": 1,
+    "name": "main gate",
+    "site_label": "",
+    "device_type": "hybrid",
+    "device_ip": "192.168.0.150",
+    "device_port": 4370,
+    "device_password": 0,
+    "machine_number": 1,
+    "bridge_server_url": "",
+    "device_secret_key": "xK9rRROQnQjNI2Rit6wZ9vFhavW307Ui",
+    "notes": "",
+    "is_active": true,
+    "last_seen_at": "2026-06-09T10:12:18.454Z",
+    "last_punch_at": "2026-06-09T10:12:21Z",
+    "last_tested_at": "2026-06-09T10:12:18.454Z",
+    "last_test_status": "online",
+    "last_test_message": "Bridge connected and polling.",
+    "created_at": "2026-06-09T06:55:57.363Z"
+  }
+},
+{
+  "model": "attendance.biometricdevice",
+  "pk": 2,
+  "fields": {
+    "school": 1,
+    "name": "Office",
+    "site_label": "",
+    "device_type": "hybrid",
+    "device_ip": "192.168.0.151",
+    "device_port": 4370,
+    "device_password": 0,
+    "machine_number": 2,
+    "bridge_server_url": "",
+    "device_secret_key": "ok8LJn0C-BpppQQOm-V6Gu-Jf3mtZGFs",
+    "notes": "",
+    "is_active": true,
+    "last_seen_at": "2026-06-09T07:54:54.057Z",
+    "last_punch_at": "2026-06-09T07:54:59Z",
+    "last_tested_at": "2026-06-09T08:24:52.959Z",
+    "last_test_status": "offline",
+    "last_test_message": "Could not reach 192.168.0.151:4370. timed out",
+    "created_at": "2026-06-09T07:12:49.696Z"
+  }
+},
+{
+  "model": "attendance.biometricdevice",
+  "pk": 3,
+  "fields": {
+    "school": 16,
+    "name": "main gate",
+    "site_label": "",
+    "device_type": "hybrid",
+    "device_ip": "192.168.0.152",
+    "device_port": 4370,
+    "device_password": 0,
+    "machine_number": 3,
+    "bridge_server_url": "",
+    "device_secret_key": "5apHVSAKBD67U6841K8jhzCCa7IkG4tz",
+    "notes": "",
+    "is_active": true,
+    "last_seen_at": "2026-06-09T08:21:32.808Z",
+    "last_punch_at": "2026-06-09T08:21:40Z",
+    "last_tested_at": "2026-06-09T08:11:05.941Z",
+    "last_test_status": "online",
+    "last_test_message": "Punch received by backend API.",
+    "created_at": "2026-06-09T08:02:33.628Z"
+  }
+},
+{
+  "model": "academics.exam",
+  "pk": 25,
+  "fields": {
+    "name": "Drawing",
+    "class_section": 24,
+    "exam_type": "mst",
+    "start_date": "2026-04-17",
+    "end_date": "2026-04-17",
+    "total_marks": "70.00",
+    "passing_marks": "33.00",
+    "status": "Published",
+    "description": "",
+    "date": "2026-04-17",
+    "result_published": false
+  }
+},
+{
+  "model": "academics.exam",
+  "pk": 26,
+  "fields": {
+    "name": "English",
+    "class_section": 24,
+    "exam_type": "mst",
+    "start_date": "2026-04-20",
+    "end_date": "2026-04-20",
+    "total_marks": "70.00",
+    "passing_marks": "32.00",
+    "status": "Published",
+    "description": "",
+    "date": "2026-04-20",
+    "result_published": false
+  }
+},
+{
+  "model": "academics.examschedule",
+  "pk": 12,
+  "fields": {
+    "exam": 26,
+    "subject": "English",
+    "exam_date": "2026-04-20",
+    "start_time": "20:30:00",
+    "end_time": "22:30:00"
+  }
+},
+{
+  "model": "academics.examschedule",
+  "pk": 13,
+  "fields": {
+    "exam": 25,
+    "subject": "Drawing",
+    "exam_date": "2026-04-17",
+    "start_time": "20:31:00",
+    "end_time": "22:31:00"
+  }
+},
+{
+  "model": "assignments.assignment",
+  "pk": 6,
+  "fields": {
+    "title": "ASDFGHJKL",
+    "description": "",
+    "subject": "English",
+    "class_section": 24,
+    "start_date": "2026-04-21",
+    "due_date": "2026-04-22",
+    "total_marks": "100.00",
+    "submission_type": "online",
+    "instructions": "",
+    "attachment": "assignments/SQL_v1__6LLgYIc.pdf",
+    "file_url": "",
+    "created_by": 17,
+    "created_at": "2026-04-20T06:25:49.404Z"
+  }
+},
+{
+  "model": "assignments.assignment",
+  "pk": 7,
+  "fields": {
+    "title": ",mnbvcx",
+    "description": "",
+    "subject": "SST",
+    "class_section": 24,
+    "start_date": "2026-04-24",
+    "due_date": "2026-04-25",
+    "total_marks": "100.00",
+    "submission_type": "online",
+    "instructions": "",
+    "attachment": "assignments/test_1_questions.PDF",
+    "file_url": "",
+    "created_by": 31,
+    "created_at": "2026-04-20T06:50:36.939Z"
+  }
+},
+{
+  "model": "assignments.assignment",
+  "pk": 8,
+  "fields": {
+    "title": "asdfghjk",
+    "description": "asdfghjklsdfghjkl\r\nsdfghjkldfghjkl;",
+    "subject": "Hindi",
+    "class_section": 26,
+    "start_date": "2026-04-23",
+    "due_date": "2026-04-23",
+    "total_marks": "100.00",
+    "submission_type": "online",
+    "instructions": "",
+    "attachment": "assignments/test_1_questions_IDrk7Ob.PDF",
+    "file_url": "",
+    "created_by": 17,
+    "created_at": "2026-04-22T06:28:05.104Z"
+  }
+},
+{
+  "model": "assignments.submission",
+  "pk": 1,
+  "fields": {
+    "assignment": 6,
+    "student": 18,
+    "submission_date": "2026-04-20T06:36:42.863Z",
+    "file_url": "https://chatgpt.com/g/g-p-69c37ffd87b88191877e0a2b2a68e9b1-school-conduct/c/69e5c3f7-fd68-8320-b83b-939917be690f",
+    "marks": null,
+    "feedback": null
+  }
+},
+{
+  "model": "assignments.submission",
+  "pk": 2,
+  "fields": {
+    "assignment": 7,
+    "student": 18,
+    "submission_date": "2026-04-20T06:52:52.758Z",
+    "file_url": "https://onlinenotepad.org/notepad",
+    "marks": null,
+    "feedback": null
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 216,
+  "fields": {
+    "user": [
+      "ayushi101"
+    ],
+    "target_role": "teacher",
+    "title": "Announcement: azsxdfghjkl",
+    "message": "📢 New General announcement: azsxdfghjkl (2026-04-24 to 2026-04-25)",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": 4,
+    "created_at": "2026-04-06T12:06:02.640Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 217,
+  "fields": {
+    "user": [
+      "ayushi1"
+    ],
+    "target_role": "teacher",
+    "title": "Announcement: azsxdfghjkl",
+    "message": "📢 New General announcement: azsxdfghjkl (2026-04-24 to 2026-04-25)",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": 4,
+    "created_at": "2026-04-06T12:06:02.690Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 219,
+  "fields": {
+    "user": [
+      "ayushi101"
+    ],
+    "target_role": "teacher",
+    "title": "Announcement: azsxdfghjkl",
+    "message": "📢 New General announcement: azsxdfghjkl (2026-04-24 to 2026-04-25)",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": 4,
+    "created_at": "2026-04-06T12:06:25.196Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 220,
+  "fields": {
+    "user": [
+      "ayushi1"
+    ],
+    "target_role": "teacher",
+    "title": "Announcement: azsxdfghjkl",
+    "message": "📢 New General announcement: azsxdfghjkl (2026-04-24 to 2026-04-25)",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": 4,
+    "created_at": "2026-04-06T12:06:25.244Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 229,
+  "fields": {
+    "user": [
+      "ayushi1"
+    ],
+    "target_role": "teacher",
+    "title": "Announcement: Art competition",
+    "message": "📢 New General announcement: Art competition (2026-04-20 to 2026-04-20)",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": 5,
+    "created_at": "2026-04-15T12:57:22.441Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 230,
+  "fields": {
+    "user": [
+      "pooja"
+    ],
+    "target_role": "teacher",
+    "title": "Announcement: Art competition",
+    "message": "📢 New General announcement: Art competition (2026-04-20 to 2026-04-20)",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": 5,
+    "created_at": "2026-04-15T12:57:22.482Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 231,
+  "fields": {
+    "user": [
+      "anmol"
+    ],
+    "target_role": "teacher",
+    "title": "Announcement: Art competition",
+    "message": "📢 New General announcement: Art competition (2026-04-20 to 2026-04-20)",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": 5,
+    "created_at": "2026-04-15T12:57:22.514Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 232,
+  "fields": {
+    "user": [
+      "rudra"
+    ],
+    "target_role": "student",
+    "title": "Announcement: Art competition",
+    "message": "📢 New General announcement: Art competition (2026-04-20 to 2026-04-20)",
+    "is_read": true,
+    "related_exam": null,
+    "related_announcement": 5,
+    "created_at": "2026-04-15T12:57:22.546Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 234,
+  "fields": {
+    "user": [
+      "ayushi101"
+    ],
+    "target_role": "teacher",
+    "title": "Announcement: Art competition",
+    "message": "📢 New General announcement: Art competition (2026-04-20 to 2026-04-20)",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": 5,
+    "created_at": "2026-04-15T12:57:22.614Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 235,
+  "fields": {
+    "user": [
+      "neha"
+    ],
+    "target_role": "teacher",
+    "title": "Announcement: Art competition",
+    "message": "📢 New General announcement: Art competition (2026-04-20 to 2026-04-20)",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": 5,
+    "created_at": "2026-04-15T12:57:22.648Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 236,
+  "fields": {
+    "user": [
+      "shweta"
+    ],
+    "target_role": "teacher",
+    "title": "Announcement: Art competition",
+    "message": "📢 New General announcement: Art competition (2026-04-20 to 2026-04-20)",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": 5,
+    "created_at": "2026-04-15T12:57:22.681Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 237,
+  "fields": {
+    "user": [
+      "teacher_user"
+    ],
+    "target_role": "teacher",
+    "title": "Announcement: Art competition",
+    "message": "📢 New General announcement: Art competition (2026-04-20 to 2026-04-20)",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": 5,
+    "created_at": "2026-04-15T12:57:22.715Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 250,
+  "fields": {
+    "user": [
+      "ayushi101"
+    ],
+    "target_role": "teacher",
+    "title": "New Doubt",
+    "message": "Student shiv kumar sent a doubt: grammer",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": null,
+    "created_at": "2026-04-20T07:24:13.614Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 251,
+  "fields": {
+    "user": [
+      "ayushi101"
+    ],
+    "target_role": "teacher",
+    "title": "Student Reply",
+    "message": "New message in doubt chat: grammer",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": null,
+    "created_at": "2026-04-20T07:24:42.726Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 252,
+  "fields": {
+    "user": [
+      "shiv"
+    ],
+    "target_role": "student",
+    "title": "New Message",
+    "message": "New message in doubt chat: grammer",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": null,
+    "created_at": "2026-04-20T07:25:29.810Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 253,
+  "fields": {
+    "user": [
+      "ayushi101"
+    ],
+    "target_role": "teacher",
+    "title": "Student Reply",
+    "message": "New message in doubt chat: grammer",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": null,
+    "created_at": "2026-04-20T07:26:48.310Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 254,
+  "fields": {
+    "user": [
+      "shiv"
+    ],
+    "target_role": "student",
+    "title": "Exam: English",
+    "message": "Exam 'English' (2026-04-20 to 2026-04-20). Please check the timetable in My Exams.",
+    "is_read": false,
+    "related_exam": 26,
+    "related_announcement": null,
+    "created_at": "2026-04-20T08:11:25.578Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 255,
+  "fields": {
+    "user": [
+      "shiv"
+    ],
+    "target_role": "student",
+    "title": "New Message",
+    "message": "New message in doubt chat: grammer",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": null,
+    "created_at": "2026-04-20T10:27:07.648Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 256,
+  "fields": {
+    "user": [
+      "shivam"
+    ],
+    "target_role": "student",
+    "title": "New Assignment",
+    "message": "Hindi: asdfghjk | Due: 2026-04-23",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": null,
+    "created_at": "2026-04-22T06:28:05.291Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 257,
+  "fields": {
+    "user": [
+      "rudra"
+    ],
+    "target_role": "student",
+    "title": "New Assignment",
+    "message": "Hindi: asdfghjk | Due: 2026-04-23",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": null,
+    "created_at": "2026-04-22T06:28:05.291Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 258,
+  "fields": {
+    "user": [
+      "lalitk"
+    ],
+    "target_role": "teacher",
+    "title": "Attendance Verification Pending",
+    "message": "ronak jain punched attendance for 2026-06-04. Please verify (Approve/Reject).",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": null,
+    "created_at": "2026-06-04T08:43:58.799Z"
+  }
+},
+{
+  "model": "communication.notification",
+  "pk": 259,
+  "fields": {
+    "user": [
+      "lalitk"
+    ],
+    "target_role": "teacher",
+    "title": "Attendance Verification Pending",
+    "message": "Hriday Pandey punched attendance for 2026-06-09. Please verify (Approve/Reject).",
+    "is_read": false,
+    "related_exam": null,
+    "related_announcement": null,
+    "created_at": "2026-06-09T08:21:33.030Z"
+  }
+},
+{
+  "model": "communication.conversation",
+  "pk": 1,
+  "fields": {
+    "student": 18,
+    "teacher": 17,
+    "subject": "grammer",
+    "is_active": true,
+    "created_at": "2026-04-20T07:24:13.493Z"
+  }
+},
+{
+  "model": "communication.message",
+  "pk": 5,
+  "fields": {
+    "conversation": 1,
+    "sender": [
+      "ayushi101"
+    ],
+    "receiver": [
+      "shiv"
+    ],
+    "content": "Hii",
+    "attachment": "",
+    "is_read": true,
+    "created_at": "2026-04-20T10:27:07.581Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 107,
+  "fields": {
+    "class_name": "Nursery",
+    "registration_fee": "500.00",
+    "admission_fee": "2000.00",
+    "tuition_fee": "1500.00",
+    "computer_fee": "100.00",
+    "annual_charges": "0.00",
+    "science_fee": "0.00",
+    "sports_fee": "300.00",
+    "total_fee": "4400.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:16.742Z",
+    "updated_at": "2026-04-22T07:37:16.742Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 108,
+  "fields": {
+    "class_name": "KG",
+    "registration_fee": "520.00",
+    "admission_fee": "2200.00",
+    "tuition_fee": "1650.00",
+    "computer_fee": "110.00",
+    "annual_charges": "0.00",
+    "science_fee": "0.00",
+    "sports_fee": "300.00",
+    "total_fee": "4780.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:16.798Z",
+    "updated_at": "2026-04-22T07:37:16.798Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 109,
+  "fields": {
+    "class_name": "1st",
+    "registration_fee": "540.00",
+    "admission_fee": "2400.00",
+    "tuition_fee": "1800.00",
+    "computer_fee": "120.00",
+    "annual_charges": "0.00",
+    "science_fee": "0.00",
+    "sports_fee": "300.00",
+    "total_fee": "5160.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:16.836Z",
+    "updated_at": "2026-04-22T07:37:16.836Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 110,
+  "fields": {
+    "class_name": "2nd",
+    "registration_fee": "560.00",
+    "admission_fee": "2600.00",
+    "tuition_fee": "1950.00",
+    "computer_fee": "130.00",
+    "annual_charges": "0.00",
+    "science_fee": "0.00",
+    "sports_fee": "300.00",
+    "total_fee": "5540.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:16.891Z",
+    "updated_at": "2026-04-22T07:37:16.891Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 111,
+  "fields": {
+    "class_name": "3rd",
+    "registration_fee": "580.00",
+    "admission_fee": "2800.00",
+    "tuition_fee": "2100.00",
+    "computer_fee": "140.00",
+    "annual_charges": "0.00",
+    "science_fee": "0.00",
+    "sports_fee": "300.00",
+    "total_fee": "5920.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:16.936Z",
+    "updated_at": "2026-04-22T07:37:16.936Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 112,
+  "fields": {
+    "class_name": "4th",
+    "registration_fee": "600.00",
+    "admission_fee": "3000.00",
+    "tuition_fee": "2250.00",
+    "computer_fee": "150.00",
+    "annual_charges": "0.00",
+    "science_fee": "0.00",
+    "sports_fee": "300.00",
+    "total_fee": "6300.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:16.983Z",
+    "updated_at": "2026-04-22T07:37:16.983Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 113,
+  "fields": {
+    "class_name": "5th",
+    "registration_fee": "620.00",
+    "admission_fee": "3200.00",
+    "tuition_fee": "2400.00",
+    "computer_fee": "160.00",
+    "annual_charges": "0.00",
+    "science_fee": "0.00",
+    "sports_fee": "300.00",
+    "total_fee": "6680.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:17.030Z",
+    "updated_at": "2026-04-22T07:37:17.030Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 114,
+  "fields": {
+    "class_name": "6th",
+    "registration_fee": "640.00",
+    "admission_fee": "3400.00",
+    "tuition_fee": "2550.00",
+    "computer_fee": "170.00",
+    "annual_charges": "0.00",
+    "science_fee": "200.00",
+    "sports_fee": "300.00",
+    "total_fee": "7260.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:17.080Z",
+    "updated_at": "2026-04-22T07:37:17.080Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 115,
+  "fields": {
+    "class_name": "7th",
+    "registration_fee": "660.00",
+    "admission_fee": "3600.00",
+    "tuition_fee": "2700.00",
+    "computer_fee": "180.00",
+    "annual_charges": "0.00",
+    "science_fee": "200.00",
+    "sports_fee": "300.00",
+    "total_fee": "7640.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:17.124Z",
+    "updated_at": "2026-04-22T07:37:17.124Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 116,
+  "fields": {
+    "class_name": "8th",
+    "registration_fee": "680.00",
+    "admission_fee": "3800.00",
+    "tuition_fee": "2850.00",
+    "computer_fee": "190.00",
+    "annual_charges": "0.00",
+    "science_fee": "200.00",
+    "sports_fee": "300.00",
+    "total_fee": "8020.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:17.174Z",
+    "updated_at": "2026-04-22T07:37:17.174Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 117,
+  "fields": {
+    "class_name": "9th",
+    "registration_fee": "700.00",
+    "admission_fee": "4000.00",
+    "tuition_fee": "3000.00",
+    "computer_fee": "200.00",
+    "annual_charges": "0.00",
+    "science_fee": "400.00",
+    "sports_fee": "300.00",
+    "total_fee": "8600.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:17.225Z",
+    "updated_at": "2026-04-22T07:37:17.225Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 118,
+  "fields": {
+    "class_name": "10th",
+    "registration_fee": "720.00",
+    "admission_fee": "4200.00",
+    "tuition_fee": "3150.00",
+    "computer_fee": "210.00",
+    "annual_charges": "0.00",
+    "science_fee": "400.00",
+    "sports_fee": "300.00",
+    "total_fee": "8980.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:17.271Z",
+    "updated_at": "2026-04-22T07:37:17.271Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 119,
+  "fields": {
+    "class_name": "11th",
+    "registration_fee": "740.00",
+    "admission_fee": "4400.00",
+    "tuition_fee": "3300.00",
+    "computer_fee": "220.00",
+    "annual_charges": "0.00",
+    "science_fee": "600.00",
+    "sports_fee": "300.00",
+    "total_fee": "9560.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:17.317Z",
+    "updated_at": "2026-04-22T07:37:17.317Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 120,
+  "fields": {
+    "class_name": "12th",
+    "registration_fee": "760.00",
+    "admission_fee": "4600.00",
+    "tuition_fee": "3450.00",
+    "computer_fee": "230.00",
+    "annual_charges": "0.00",
+    "science_fee": "600.00",
+    "sports_fee": "300.00",
+    "total_fee": "9940.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:17.366Z",
+    "updated_at": "2026-04-22T07:37:17.366Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 121,
+  "fields": {
+    "class_name": "LKG",
+    "registration_fee": "0.00",
+    "admission_fee": "0.00",
+    "tuition_fee": "0.00",
+    "computer_fee": "0.00",
+    "annual_charges": "0.00",
+    "science_fee": "0.00",
+    "sports_fee": "0.00",
+    "total_fee": "0.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:17.417Z",
+    "updated_at": "2026-04-22T07:37:17.417Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 122,
+  "fields": {
+    "class_name": "UKG",
+    "registration_fee": "0.00",
+    "admission_fee": "0.00",
+    "tuition_fee": "0.00",
+    "computer_fee": "0.00",
+    "annual_charges": "0.00",
+    "science_fee": "0.00",
+    "sports_fee": "0.00",
+    "total_fee": "0.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:17.462Z",
+    "updated_at": "2026-04-22T07:37:17.462Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 123,
+  "fields": {
+    "class_name": "1",
+    "registration_fee": "0.00",
+    "admission_fee": "0.00",
+    "tuition_fee": "0.00",
+    "computer_fee": "0.00",
+    "annual_charges": "0.00",
+    "science_fee": "0.00",
+    "sports_fee": "0.00",
+    "total_fee": "0.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:17.506Z",
+    "updated_at": "2026-04-22T07:37:17.506Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 124,
+  "fields": {
+    "class_name": "2",
+    "registration_fee": "0.00",
+    "admission_fee": "0.00",
+    "tuition_fee": "0.00",
+    "computer_fee": "0.00",
+    "annual_charges": "0.00",
+    "science_fee": "0.00",
+    "sports_fee": "0.00",
+    "total_fee": "0.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:17.556Z",
+    "updated_at": "2026-04-22T07:37:17.556Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 125,
+  "fields": {
+    "class_name": "3",
+    "registration_fee": "0.00",
+    "admission_fee": "0.00",
+    "tuition_fee": "0.00",
+    "computer_fee": "0.00",
+    "annual_charges": "0.00",
+    "science_fee": "0.00",
+    "sports_fee": "0.00",
+    "total_fee": "0.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:17.607Z",
+    "updated_at": "2026-04-22T07:37:17.607Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 126,
+  "fields": {
+    "class_name": "4",
+    "registration_fee": "0.00",
+    "admission_fee": "0.00",
+    "tuition_fee": "0.00",
+    "computer_fee": "0.00",
+    "annual_charges": "0.00",
+    "science_fee": "0.00",
+    "sports_fee": "0.00",
+    "total_fee": "0.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:17.655Z",
+    "updated_at": "2026-04-22T07:37:17.655Z"
+  }
+},
+{
+  "model": "fees.classfeecard",
+  "pk": 127,
+  "fields": {
+    "class_name": "5",
+    "registration_fee": "0.00",
+    "admission_fee": "0.00",
+    "tuition_fee": "0.00",
+    "computer_fee": "0.00",
+    "annual_charges": "0.00",
+    "science_fee": "0.00",
+    "sports_fee": "0.00",
+    "total_fee": "0.00",
+    "created_by": [
+      "default_admin"
+    ],
+    "school": 1,
+    "created_at": "2026-04-22T07:37:17.700Z",
+    "updated_at": "2026-04-22T07:37:17.700Z"
+  }
+},
+{
+  "model": "fees.classfeecardrollback",
+  "pk": 1,
+  "fields": {
+    "school": 1,
+    "created_by": [
+      "default_admin"
+    ],
+    "source": "delete_all",
+    "snapshot": [
+      {
+        "class_name": "10",
+        "sports_fee": "800.00",
+        "science_fee": "800.00",
+        "tuition_fee": "5000.00",
+        "computer_fee": "2000.00",
+        "admission_fee": "500.00",
+        "annual_charges": "4500.00",
+        "registration_fee": "2500.00"
+      },
+      {
+        "class_name": "2",
+        "sports_fee": "3456.00",
+        "science_fee": "900.00",
+        "tuition_fee": "6000.00",
+        "computer_fee": "800.00",
+        "admission_fee": "800.00",
+        "annual_charges": "2000.00",
+        "registration_fee": "2000.00"
+      },
+      {
+        "class_name": "Nursery",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "1500.00",
+        "computer_fee": "100.00",
+        "admission_fee": "2000.00",
+        "annual_charges": "3000.00",
+        "registration_fee": "500.00"
+      },
+      {
+        "class_name": "KG",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "1650.00",
+        "computer_fee": "110.00",
+        "admission_fee": "2200.00",
+        "annual_charges": "3250.00",
+        "registration_fee": "520.00"
+      },
+      {
+        "class_name": "1st",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "1800.00",
+        "computer_fee": "120.00",
+        "admission_fee": "2400.00",
+        "annual_charges": "3500.00",
+        "registration_fee": "540.00"
+      },
+      {
+        "class_name": "2nd",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "1950.00",
+        "computer_fee": "130.00",
+        "admission_fee": "2600.00",
+        "annual_charges": "3750.00",
+        "registration_fee": "560.00"
+      },
+      {
+        "class_name": "3rd",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "2100.00",
+        "computer_fee": "140.00",
+        "admission_fee": "2800.00",
+        "annual_charges": "4000.00",
+        "registration_fee": "580.00"
+      },
+      {
+        "class_name": "4th",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "2250.00",
+        "computer_fee": "150.00",
+        "admission_fee": "3000.00",
+        "annual_charges": "4250.00",
+        "registration_fee": "600.00"
+      },
+      {
+        "class_name": "5th",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "2400.00",
+        "computer_fee": "160.00",
+        "admission_fee": "3200.00",
+        "annual_charges": "4500.00",
+        "registration_fee": "620.00"
+      },
+      {
+        "class_name": "6th",
+        "sports_fee": "300.00",
+        "science_fee": "200.00",
+        "tuition_fee": "2550.00",
+        "computer_fee": "170.00",
+        "admission_fee": "3400.00",
+        "annual_charges": "4750.00",
+        "registration_fee": "640.00"
+      },
+      {
+        "class_name": "7th",
+        "sports_fee": "300.00",
+        "science_fee": "200.00",
+        "tuition_fee": "2700.00",
+        "computer_fee": "180.00",
+        "admission_fee": "3600.00",
+        "annual_charges": "5000.00",
+        "registration_fee": "660.00"
+      },
+      {
+        "class_name": "8th",
+        "sports_fee": "300.00",
+        "science_fee": "200.00",
+        "tuition_fee": "2850.00",
+        "computer_fee": "190.00",
+        "admission_fee": "3800.00",
+        "annual_charges": "5250.00",
+        "registration_fee": "680.00"
+      },
+      {
+        "class_name": "9th",
+        "sports_fee": "300.00",
+        "science_fee": "400.00",
+        "tuition_fee": "3000.00",
+        "computer_fee": "200.00",
+        "admission_fee": "4000.00",
+        "annual_charges": "5500.00",
+        "registration_fee": "700.00"
+      },
+      {
+        "class_name": "10th",
+        "sports_fee": "300.00",
+        "science_fee": "400.00",
+        "tuition_fee": "3150.00",
+        "computer_fee": "210.00",
+        "admission_fee": "4200.00",
+        "annual_charges": "5750.00",
+        "registration_fee": "720.00"
+      },
+      {
+        "class_name": "11th",
+        "sports_fee": "300.00",
+        "science_fee": "600.00",
+        "tuition_fee": "3300.00",
+        "computer_fee": "220.00",
+        "admission_fee": "4400.00",
+        "annual_charges": "6000.00",
+        "registration_fee": "740.00"
+      },
+      {
+        "class_name": "12th",
+        "sports_fee": "300.00",
+        "science_fee": "600.00",
+        "tuition_fee": "3450.00",
+        "computer_fee": "230.00",
+        "admission_fee": "4600.00",
+        "annual_charges": "6250.00",
+        "registration_fee": "760.00"
+      },
+      {
+        "class_name": "LKG",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      },
+      {
+        "class_name": "UKG",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      },
+      {
+        "class_name": "1",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      },
+      {
+        "class_name": "3",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      },
+      {
+        "class_name": "4",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      },
+      {
+        "class_name": "5",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      },
+      {
+        "class_name": "6",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      },
+      {
+        "class_name": "7",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      },
+      {
+        "class_name": "8",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      },
+      {
+        "class_name": "9",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      },
+      {
+        "class_name": "11",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      },
+      {
+        "class_name": "12",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      }
+    ],
+    "created_at": "2026-04-13T10:13:45.182Z"
+  }
+},
+{
+  "model": "fees.classfeecardrollback",
+  "pk": 2,
+  "fields": {
+    "school": 1,
+    "created_by": [
+      "default_admin"
+    ],
+    "source": "bulk_upload",
+    "snapshot": [],
+    "created_at": "2026-04-13T10:17:55.749Z"
+  }
+},
+{
+  "model": "fees.classfeecardrollback",
+  "pk": 3,
+  "fields": {
+    "school": 1,
+    "created_by": [
+      "default_admin"
+    ],
+    "source": "file_upload",
+    "snapshot": [
+      {
+        "class_name": "Nursery",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "1500.00",
+        "computer_fee": "100.00",
+        "admission_fee": "2000.00",
+        "annual_charges": "3000.00",
+        "registration_fee": "500.00"
+      },
+      {
+        "class_name": "KG",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "1650.00",
+        "computer_fee": "110.00",
+        "admission_fee": "2200.00",
+        "annual_charges": "3250.00",
+        "registration_fee": "520.00"
+      },
+      {
+        "class_name": "1st",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "1800.00",
+        "computer_fee": "120.00",
+        "admission_fee": "2400.00",
+        "annual_charges": "3500.00",
+        "registration_fee": "540.00"
+      },
+      {
+        "class_name": "2nd",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "1950.00",
+        "computer_fee": "130.00",
+        "admission_fee": "2600.00",
+        "annual_charges": "3750.00",
+        "registration_fee": "560.00"
+      },
+      {
+        "class_name": "3rd",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "2100.00",
+        "computer_fee": "140.00",
+        "admission_fee": "2800.00",
+        "annual_charges": "4000.00",
+        "registration_fee": "580.00"
+      },
+      {
+        "class_name": "4th",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "2250.00",
+        "computer_fee": "150.00",
+        "admission_fee": "3000.00",
+        "annual_charges": "4250.00",
+        "registration_fee": "600.00"
+      },
+      {
+        "class_name": "5th",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "2400.00",
+        "computer_fee": "160.00",
+        "admission_fee": "3200.00",
+        "annual_charges": "4500.00",
+        "registration_fee": "620.00"
+      },
+      {
+        "class_name": "6th",
+        "sports_fee": "300.00",
+        "science_fee": "200.00",
+        "tuition_fee": "2550.00",
+        "computer_fee": "170.00",
+        "admission_fee": "3400.00",
+        "annual_charges": "4750.00",
+        "registration_fee": "640.00"
+      },
+      {
+        "class_name": "7th",
+        "sports_fee": "300.00",
+        "science_fee": "200.00",
+        "tuition_fee": "2700.00",
+        "computer_fee": "180.00",
+        "admission_fee": "3600.00",
+        "annual_charges": "5000.00",
+        "registration_fee": "660.00"
+      },
+      {
+        "class_name": "8th",
+        "sports_fee": "300.00",
+        "science_fee": "200.00",
+        "tuition_fee": "2850.00",
+        "computer_fee": "190.00",
+        "admission_fee": "3800.00",
+        "annual_charges": "5250.00",
+        "registration_fee": "680.00"
+      },
+      {
+        "class_name": "9th",
+        "sports_fee": "300.00",
+        "science_fee": "400.00",
+        "tuition_fee": "3000.00",
+        "computer_fee": "200.00",
+        "admission_fee": "4000.00",
+        "annual_charges": "5500.00",
+        "registration_fee": "700.00"
+      },
+      {
+        "class_name": "10th",
+        "sports_fee": "300.00",
+        "science_fee": "400.00",
+        "tuition_fee": "3150.00",
+        "computer_fee": "210.00",
+        "admission_fee": "4200.00",
+        "annual_charges": "5750.00",
+        "registration_fee": "720.00"
+      },
+      {
+        "class_name": "11th",
+        "sports_fee": "300.00",
+        "science_fee": "600.00",
+        "tuition_fee": "3300.00",
+        "computer_fee": "220.00",
+        "admission_fee": "4400.00",
+        "annual_charges": "6000.00",
+        "registration_fee": "740.00"
+      },
+      {
+        "class_name": "12th",
+        "sports_fee": "300.00",
+        "science_fee": "600.00",
+        "tuition_fee": "3450.00",
+        "computer_fee": "230.00",
+        "admission_fee": "4600.00",
+        "annual_charges": "6250.00",
+        "registration_fee": "760.00"
+      }
+    ],
+    "created_at": "2026-04-13T10:22:28.805Z"
+  }
+},
+{
+  "model": "fees.classfeecardrollback",
+  "pk": 6,
+  "fields": {
+    "school": 1,
+    "created_by": [
+      "default_admin"
+    ],
+    "source": "bootstrap",
+    "snapshot": [
+      {
+        "class_name": "Nursery",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "1500.00",
+        "computer_fee": "100.00",
+        "admission_fee": "2000.00",
+        "annual_charges": "0.00",
+        "registration_fee": "500.00"
+      },
+      {
+        "class_name": "KG",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "1650.00",
+        "computer_fee": "110.00",
+        "admission_fee": "2200.00",
+        "annual_charges": "0.00",
+        "registration_fee": "520.00"
+      },
+      {
+        "class_name": "1st",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "1800.00",
+        "computer_fee": "120.00",
+        "admission_fee": "2400.00",
+        "annual_charges": "0.00",
+        "registration_fee": "540.00"
+      },
+      {
+        "class_name": "2nd",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "1950.00",
+        "computer_fee": "130.00",
+        "admission_fee": "2600.00",
+        "annual_charges": "0.00",
+        "registration_fee": "560.00"
+      },
+      {
+        "class_name": "3rd",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "2100.00",
+        "computer_fee": "140.00",
+        "admission_fee": "2800.00",
+        "annual_charges": "0.00",
+        "registration_fee": "580.00"
+      },
+      {
+        "class_name": "4th",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "2250.00",
+        "computer_fee": "150.00",
+        "admission_fee": "3000.00",
+        "annual_charges": "0.00",
+        "registration_fee": "600.00"
+      },
+      {
+        "class_name": "5th",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "2400.00",
+        "computer_fee": "160.00",
+        "admission_fee": "3200.00",
+        "annual_charges": "0.00",
+        "registration_fee": "620.00"
+      },
+      {
+        "class_name": "6th",
+        "sports_fee": "300.00",
+        "science_fee": "200.00",
+        "tuition_fee": "2550.00",
+        "computer_fee": "170.00",
+        "admission_fee": "3400.00",
+        "annual_charges": "0.00",
+        "registration_fee": "640.00"
+      },
+      {
+        "class_name": "7th",
+        "sports_fee": "300.00",
+        "science_fee": "200.00",
+        "tuition_fee": "2700.00",
+        "computer_fee": "180.00",
+        "admission_fee": "3600.00",
+        "annual_charges": "0.00",
+        "registration_fee": "660.00"
+      },
+      {
+        "class_name": "8th",
+        "sports_fee": "300.00",
+        "science_fee": "200.00",
+        "tuition_fee": "2850.00",
+        "computer_fee": "190.00",
+        "admission_fee": "3800.00",
+        "annual_charges": "0.00",
+        "registration_fee": "680.00"
+      },
+      {
+        "class_name": "9th",
+        "sports_fee": "300.00",
+        "science_fee": "400.00",
+        "tuition_fee": "3000.00",
+        "computer_fee": "200.00",
+        "admission_fee": "4000.00",
+        "annual_charges": "0.00",
+        "registration_fee": "700.00"
+      },
+      {
+        "class_name": "10th",
+        "sports_fee": "300.00",
+        "science_fee": "400.00",
+        "tuition_fee": "3150.00",
+        "computer_fee": "210.00",
+        "admission_fee": "4200.00",
+        "annual_charges": "0.00",
+        "registration_fee": "720.00"
+      },
+      {
+        "class_name": "11th",
+        "sports_fee": "300.00",
+        "science_fee": "600.00",
+        "tuition_fee": "3300.00",
+        "computer_fee": "220.00",
+        "admission_fee": "4400.00",
+        "annual_charges": "0.00",
+        "registration_fee": "740.00"
+      },
+      {
+        "class_name": "12th",
+        "sports_fee": "300.00",
+        "science_fee": "600.00",
+        "tuition_fee": "3450.00",
+        "computer_fee": "230.00",
+        "admission_fee": "4600.00",
+        "annual_charges": "0.00",
+        "registration_fee": "760.00"
+      }
+    ],
+    "created_at": "2026-04-22T07:26:39.905Z"
+  }
+},
+{
+  "model": "fees.classfeecardrollback",
+  "pk": 7,
+  "fields": {
+    "school": 1,
+    "created_by": [
+      "default_admin"
+    ],
+    "source": "bootstrap",
+    "snapshot": [
+      {
+        "class_name": "Nursery",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "1500.00",
+        "computer_fee": "100.00",
+        "admission_fee": "2000.00",
+        "annual_charges": "0.00",
+        "registration_fee": "500.00"
+      },
+      {
+        "class_name": "KG",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "1650.00",
+        "computer_fee": "110.00",
+        "admission_fee": "2200.00",
+        "annual_charges": "0.00",
+        "registration_fee": "520.00"
+      },
+      {
+        "class_name": "1st",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "1800.00",
+        "computer_fee": "120.00",
+        "admission_fee": "2400.00",
+        "annual_charges": "0.00",
+        "registration_fee": "540.00"
+      },
+      {
+        "class_name": "2nd",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "1950.00",
+        "computer_fee": "130.00",
+        "admission_fee": "2600.00",
+        "annual_charges": "0.00",
+        "registration_fee": "560.00"
+      },
+      {
+        "class_name": "3rd",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "2100.00",
+        "computer_fee": "140.00",
+        "admission_fee": "2800.00",
+        "annual_charges": "0.00",
+        "registration_fee": "580.00"
+      },
+      {
+        "class_name": "4th",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "2250.00",
+        "computer_fee": "150.00",
+        "admission_fee": "3000.00",
+        "annual_charges": "0.00",
+        "registration_fee": "600.00"
+      },
+      {
+        "class_name": "5th",
+        "sports_fee": "300.00",
+        "science_fee": "0.00",
+        "tuition_fee": "2400.00",
+        "computer_fee": "160.00",
+        "admission_fee": "3200.00",
+        "annual_charges": "0.00",
+        "registration_fee": "620.00"
+      },
+      {
+        "class_name": "6th",
+        "sports_fee": "300.00",
+        "science_fee": "200.00",
+        "tuition_fee": "2550.00",
+        "computer_fee": "170.00",
+        "admission_fee": "3400.00",
+        "annual_charges": "0.00",
+        "registration_fee": "640.00"
+      },
+      {
+        "class_name": "7th",
+        "sports_fee": "300.00",
+        "science_fee": "200.00",
+        "tuition_fee": "2700.00",
+        "computer_fee": "180.00",
+        "admission_fee": "3600.00",
+        "annual_charges": "0.00",
+        "registration_fee": "660.00"
+      },
+      {
+        "class_name": "8th",
+        "sports_fee": "300.00",
+        "science_fee": "200.00",
+        "tuition_fee": "2850.00",
+        "computer_fee": "190.00",
+        "admission_fee": "3800.00",
+        "annual_charges": "0.00",
+        "registration_fee": "680.00"
+      },
+      {
+        "class_name": "9th",
+        "sports_fee": "300.00",
+        "science_fee": "400.00",
+        "tuition_fee": "3000.00",
+        "computer_fee": "200.00",
+        "admission_fee": "4000.00",
+        "annual_charges": "0.00",
+        "registration_fee": "700.00"
+      },
+      {
+        "class_name": "10th",
+        "sports_fee": "300.00",
+        "science_fee": "400.00",
+        "tuition_fee": "3150.00",
+        "computer_fee": "210.00",
+        "admission_fee": "4200.00",
+        "annual_charges": "0.00",
+        "registration_fee": "720.00"
+      },
+      {
+        "class_name": "11th",
+        "sports_fee": "300.00",
+        "science_fee": "600.00",
+        "tuition_fee": "3300.00",
+        "computer_fee": "220.00",
+        "admission_fee": "4400.00",
+        "annual_charges": "0.00",
+        "registration_fee": "740.00"
+      },
+      {
+        "class_name": "12th",
+        "sports_fee": "300.00",
+        "science_fee": "600.00",
+        "tuition_fee": "3450.00",
+        "computer_fee": "230.00",
+        "admission_fee": "4600.00",
+        "annual_charges": "0.00",
+        "registration_fee": "760.00"
+      },
+      {
+        "class_name": "LKG",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      },
+      {
+        "class_name": "UKG",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      },
+      {
+        "class_name": "1",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      },
+      {
+        "class_name": "2",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      },
+      {
+        "class_name": "3",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      },
+      {
+        "class_name": "4",
+        "sports_fee": "0.00",
+        "science_fee": "0.00",
+        "tuition_fee": "0.00",
+        "computer_fee": "0.00",
+        "admission_fee": "0.00",
+        "annual_charges": "0.00",
+        "registration_fee": "0.00"
+      }
+    ],
+    "created_at": "2026-04-22T07:26:40.945Z"
+  }
+},
+{
+  "model": "timetable.shift",
+  "pk": 1,
+  "fields": {
+    "school": 7,
+    "name": "Morning Shift",
+    "start_time": "08:00:00",
+    "end_time": "11:30:00",
+    "created_at": "2026-04-16T10:55:38.301Z",
+    "updated_at": "2026-04-16T10:55:38.301Z"
+  }
+},
+{
+  "model": "timetable.shift",
+  "pk": 2,
+  "fields": {
+    "school": 7,
+    "name": "Afternoon Shift",
+    "start_time": "13:00:00",
+    "end_time": "16:30:00",
+    "created_at": "2026-04-16T10:55:38.446Z",
+    "updated_at": "2026-04-16T10:55:38.446Z"
+  }
+},
+{
+  "model": "timetable.shift",
+  "pk": 3,
+  "fields": {
+    "school": 5,
+    "name": "Morning Shift",
+    "start_time": "08:00:00",
+    "end_time": "11:30:00",
+    "created_at": "2026-04-16T10:55:38.646Z",
+    "updated_at": "2026-04-16T10:55:38.646Z"
+  }
+},
+{
+  "model": "timetable.shift",
+  "pk": 4,
+  "fields": {
+    "school": 5,
+    "name": "Afternoon Shift",
+    "start_time": "13:00:00",
+    "end_time": "16:30:00",
+    "created_at": "2026-04-16T10:55:38.769Z",
+    "updated_at": "2026-04-16T10:55:38.769Z"
+  }
+},
+{
+  "model": "timetable.shift",
+  "pk": 5,
+  "fields": {
+    "school": 11,
+    "name": "Morning Shift",
+    "start_time": "08:00:00",
+    "end_time": "11:30:00",
+    "created_at": "2026-04-16T10:55:38.953Z",
+    "updated_at": "2026-04-16T10:55:38.953Z"
+  }
+},
+{
+  "model": "timetable.shift",
+  "pk": 6,
+  "fields": {
+    "school": 11,
+    "name": "Afternoon Shift",
+    "start_time": "13:00:00",
+    "end_time": "16:30:00",
+    "created_at": "2026-04-16T10:55:39.076Z",
+    "updated_at": "2026-04-16T10:55:39.076Z"
+  }
+},
+{
+  "model": "timetable.shift",
+  "pk": 7,
+  "fields": {
+    "school": 1,
+    "name": "Morning Shift",
+    "start_time": "08:00:00",
+    "end_time": "11:30:00",
+    "created_at": "2026-04-16T10:55:39.258Z",
+    "updated_at": "2026-04-16T10:55:39.258Z"
+  }
+},
+{
+  "model": "timetable.shift",
+  "pk": 8,
+  "fields": {
+    "school": 1,
+    "name": "Afternoon Shift",
+    "start_time": "13:00:00",
+    "end_time": "16:30:00",
+    "created_at": "2026-04-16T10:55:39.385Z",
+    "updated_at": "2026-04-16T10:55:39.385Z"
+  }
+},
+{
+  "model": "timetable.shift",
+  "pk": 9,
+  "fields": {
+    "school": 10,
+    "name": "Morning Shift",
+    "start_time": "08:00:00",
+    "end_time": "11:30:00",
+    "created_at": "2026-04-16T10:55:39.583Z",
+    "updated_at": "2026-04-16T10:55:39.583Z"
+  }
+},
+{
+  "model": "timetable.shift",
+  "pk": 10,
+  "fields": {
+    "school": 10,
+    "name": "Afternoon Shift",
+    "start_time": "13:00:00",
+    "end_time": "16:30:00",
+    "created_at": "2026-04-16T10:55:39.699Z",
+    "updated_at": "2026-04-16T10:55:39.699Z"
+  }
+},
+{
+  "model": "timetable.shift",
+  "pk": 11,
+  "fields": {
+    "school": 6,
+    "name": "Morning Shift",
+    "start_time": "08:00:00",
+    "end_time": "11:30:00",
+    "created_at": "2026-04-16T10:55:39.885Z",
+    "updated_at": "2026-04-16T10:55:39.885Z"
+  }
+},
+{
+  "model": "timetable.shift",
+  "pk": 12,
+  "fields": {
+    "school": 6,
+    "name": "Afternoon Shift",
+    "start_time": "13:00:00",
+    "end_time": "16:30:00",
+    "created_at": "2026-04-16T10:55:40.016Z",
+    "updated_at": "2026-04-16T10:55:40.016Z"
+  }
+},
+{
+  "model": "timetable.shift",
+  "pk": 14,
+  "fields": {
+    "school": 1,
+    "name": "A",
+    "start_time": "09:00:00",
+    "end_time": "17:00:00",
+    "created_at": "2026-06-09T10:16:30.324Z",
+    "updated_at": "2026-06-09T10:16:30.324Z"
+  }
+},
+{
+  "model": "timetable.shift",
+  "pk": 15,
+  "fields": {
+    "school": 1,
+    "name": "B",
+    "start_time": "17:00:00",
+    "end_time": "00:00:00",
+    "created_at": "2026-06-09T10:18:00.421Z",
+    "updated_at": "2026-06-09T10:18:12.073Z"
+  }
+},
+{
+  "model": "timetable.timetableentry",
+  "pk": 8,
+  "fields": {
+    "school": 1,
+    "class_name": "3",
+    "section": "A",
+    "subject": "English",
+    "teacher": [
+      "ayushi101"
+    ],
+    "day": 1,
+    "period": 1,
+    "shift": "7",
+    "shift_ref": null,
+    "period_number": 1,
+    "start_time": "08:00:00",
+    "end_time": "09:00:00",
+    "room": "323",
+    "created_at": "2026-04-02T13:42:45.246Z",
+    "updated_at": "2026-04-02T13:42:45.246Z"
+  }
+},
+{
+  "model": "timetable.timetableentry",
+  "pk": 9,
+  "fields": {
+    "school": 1,
+    "class_name": "3",
+    "section": "A",
+    "subject": "Hindi",
+    "teacher": [
+      "ayushi101"
+    ],
+    "day": 4,
+    "period": 1,
+    "shift": "7",
+    "shift_ref": null,
+    "period_number": 1,
+    "start_time": "08:00:00",
+    "end_time": "09:00:00",
+    "room": "e43",
+    "created_at": "2026-04-02T13:46:35.819Z",
+    "updated_at": "2026-04-02T13:46:35.819Z"
+  }
+},
+{
+  "model": "timetable.timetableentry",
+  "pk": 10,
+  "fields": {
+    "school": 1,
+    "class_name": "3",
+    "section": "A",
+    "subject": "English",
+    "teacher": [
+      "ayushi101"
+    ],
+    "day": 5,
+    "period": 3,
+    "shift": "8",
+    "shift_ref": null,
+    "period_number": 3,
+    "start_time": "14:00:00",
+    "end_time": "15:00:00",
+    "room": "202",
+    "created_at": "2026-04-03T12:32:02.779Z",
+    "updated_at": "2026-04-03T12:32:02.779Z"
+  }
+},
+{
+  "model": "timetable.timetableentry",
+  "pk": 11,
+  "fields": {
+    "school": 1,
+    "class_name": "10",
+    "section": "A",
+    "subject": "Mathemetics",
+    "teacher": [
+      "shweta"
+    ],
+    "day": 1,
+    "period": 1,
+    "shift": "7",
+    "shift_ref": null,
+    "period_number": 1,
+    "start_time": "08:00:00",
+    "end_time": "08:30:00",
+    "room": "101L",
+    "created_at": "2026-04-08T11:34:08.718Z",
+    "updated_at": "2026-04-08T11:34:08.718Z"
+  }
+},
+{
+  "model": "timetable.timetableentry",
+  "pk": 12,
+  "fields": {
+    "school": 1,
+    "class_name": "10",
+    "section": "A",
+    "subject": "Hindi",
+    "teacher": [
+      "shweta"
+    ],
+    "day": 3,
+    "period": 1,
+    "shift": "7",
+    "shift_ref": null,
+    "period_number": 1,
+    "start_time": "08:00:00",
+    "end_time": "08:30:00",
+    "room": "101L",
+    "created_at": "2026-04-08T11:37:08.841Z",
+    "updated_at": "2026-04-08T11:37:08.841Z"
+  }
+},
+{
+  "model": "subjects.subject",
+  "pk": 9,
+  "fields": {
+    "school": 1,
+    "class_ref": 18,
+    "name": "Hindi",
+    "code": "HD-03",
+    "description": null,
+    "status": "Active",
+    "created_at": "2026-04-01T08:20:15.420Z",
+    "updated_at": "2026-04-01T08:20:15.420Z",
+    "teachers": []
+  }
+},
+{
+  "model": "subjects.subject",
+  "pk": 11,
+  "fields": {
+    "school": null,
+    "class_ref": 20,
+    "name": "English",
+    "code": "E-103",
+    "description": null,
+    "status": "Active",
+    "created_at": "2026-04-02T07:53:01.547Z",
+    "updated_at": "2026-04-02T07:53:01.547Z",
+    "teachers": []
+  }
+},
+{
+  "model": "subjects.subject",
+  "pk": 12,
+  "fields": {
+    "school": 1,
+    "class_ref": 22,
+    "name": "English",
+    "code": "EG-100",
+    "description": null,
+    "status": "Active",
+    "created_at": "2026-04-02T13:28:30.434Z",
+    "updated_at": "2026-04-02T13:28:30.434Z",
+    "teachers": []
+  }
+},
+{
+  "model": "subjects.subject",
+  "pk": 13,
+  "fields": {
+    "school": null,
+    "class_ref": 21,
+    "name": "Hindi",
+    "code": "H001",
+    "description": null,
+    "status": "Active",
+    "created_at": "2026-04-03T17:00:34.280Z",
+    "updated_at": "2026-04-03T17:00:34.280Z",
+    "teachers": [
+      17
+    ]
+  }
+},
+{
+  "model": "subjects.subject",
+  "pk": 14,
+  "fields": {
+    "school": null,
+    "class_ref": 21,
+    "name": "English",
+    "code": "E007",
+    "description": null,
+    "status": "Active",
+    "created_at": "2026-04-03T17:01:10.690Z",
+    "updated_at": "2026-04-03T17:01:10.690Z",
+    "teachers": []
+  }
+},
+{
+  "model": "subjects.subject",
+  "pk": 15,
+  "fields": {
+    "school": null,
+    "class_ref": 21,
+    "name": "Math",
+    "code": "MTH106",
+    "description": null,
+    "status": "Active",
+    "created_at": "2026-04-03T17:01:37.359Z",
+    "updated_at": "2026-04-03T17:01:37.359Z",
+    "teachers": []
+  }
+},
+{
+  "model": "subjects.subject",
+  "pk": 16,
+  "fields": {
+    "school": null,
+    "class_ref": 21,
+    "name": "science",
+    "code": "SC108",
+    "description": null,
+    "status": "Active",
+    "created_at": "2026-04-03T17:02:56.106Z",
+    "updated_at": "2026-04-03T17:02:56.106Z",
+    "teachers": []
+  }
+},
+{
+  "model": "subjects.subject",
+  "pk": 17,
+  "fields": {
+    "school": null,
+    "class_ref": 21,
+    "name": "Social science",
+    "code": "SC109",
+    "description": null,
+    "status": "Active",
+    "created_at": "2026-04-03T17:05:08.975Z",
+    "updated_at": "2026-04-03T17:05:08.975Z",
+    "teachers": []
+  }
+},
+{
+  "model": "subjects.subject",
+  "pk": 19,
+  "fields": {
+    "school": 1,
+    "class_ref": 23,
+    "name": "English",
+    "code": null,
+    "description": null,
+    "status": "Active",
+    "created_at": "2026-04-06T08:03:26.280Z",
+    "updated_at": "2026-04-17T10:20:19.455Z",
+    "teachers": [
+      30
+    ]
+  }
+},
+{
+  "model": "subjects.subject",
+  "pk": 20,
+  "fields": {
+    "school": 1,
+    "class_ref": 23,
+    "name": "Mathemetics",
+    "code": "MTH101",
+    "description": null,
+    "status": "Active",
+    "created_at": "2026-04-08T08:32:29.968Z",
+    "updated_at": "2026-04-17T10:20:46.715Z",
+    "teachers": [
+      31
+    ]
+  }
+},
+{
+  "model": "subjects.subject",
+  "pk": 21,
+  "fields": {
+    "school": 1,
+    "class_ref": 23,
+    "name": "HINIDI",
+    "code": null,
+    "description": null,
+    "status": "Active",
+    "created_at": "2026-04-10T10:12:53.511Z",
+    "updated_at": "2026-04-17T10:20:29.442Z",
+    "teachers": [
+      32
+    ]
+  }
+},
+{
+  "model": "subjects.subject",
+  "pk": 22,
+  "fields": {
+    "school": 1,
+    "class_ref": 23,
+    "name": "SST",
+    "code": null,
+    "description": null,
+    "status": "Active",
+    "created_at": "2026-04-13T12:39:40.545Z",
+    "updated_at": "2026-04-17T10:20:56.405Z",
+    "teachers": [
+      17
+    ]
+  }
+},
+{
+  "model": "subjects.subject",
+  "pk": 23,
+  "fields": {
+    "school": 1,
+    "class_ref": 23,
+    "name": "Drawing",
+    "code": null,
+    "description": null,
+    "status": "Active",
+    "created_at": "2026-04-13T12:51:32.921Z",
+    "updated_at": "2026-04-17T10:20:06.555Z",
+    "teachers": [
+      31
+    ]
+  }
+},
+{
+  "model": "subjects.teacherassignment",
+  "pk": 11,
+  "fields": {
+    "teacher": 17,
+    "class_ref": 21,
+    "section": null,
+    "subject": 16,
+    "role": "Subject Teacher",
+    "created_at": "2026-04-03T17:05:55.137Z",
+    "updated_at": "2026-04-03T17:05:55.137Z"
+  }
+},
+{
+  "model": "subjects.teacherassignment",
+  "pk": 28,
+  "fields": {
+    "teacher": 31,
+    "class_ref": 23,
+    "section": 24,
+    "subject": 22,
+    "role": "Subject Teacher",
+    "created_at": "2026-04-17T10:43:22.646Z",
+    "updated_at": "2026-04-17T11:32:50.617Z"
+  }
+},
+{
+  "model": "subjects.teacherassignment",
+  "pk": 29,
+  "fields": {
+    "teacher": 32,
+    "class_ref": 23,
+    "section": 24,
+    "subject": 23,
+    "role": "Subject Teacher",
+    "created_at": "2026-04-17T11:26:18.786Z",
+    "updated_at": "2026-04-17T11:32:42.573Z"
+  }
+},
+{
+  "model": "subjects.teacherassignment",
+  "pk": 30,
+  "fields": {
+    "teacher": 30,
+    "class_ref": 23,
+    "section": 24,
+    "subject": 21,
+    "role": "Class Teacher",
+    "created_at": "2026-04-17T11:26:51.686Z",
+    "updated_at": "2026-04-17T11:32:31.076Z"
+  }
+},
+{
+  "model": "subjects.teacherassignment",
+  "pk": 31,
+  "fields": {
+    "teacher": 29,
+    "class_ref": 23,
+    "section": 24,
+    "subject": 20,
+    "role": "Subject Teacher",
+    "created_at": "2026-04-17T11:27:15.407Z",
+    "updated_at": "2026-04-17T11:27:15.407Z"
+  }
+},
+{
+  "model": "subjects.teacherassignment",
+  "pk": 32,
+  "fields": {
+    "teacher": 17,
+    "class_ref": 23,
+    "section": 24,
+    "subject": 19,
+    "role": "Subject Teacher",
+    "created_at": "2026-04-17T11:27:38.208Z",
+    "updated_at": "2026-04-17T11:27:38.208Z"
+  }
+},
+{
+  "model": "subjects.teacherassignment",
+  "pk": 33,
+  "fields": {
+    "teacher": 17,
+    "class_ref": 23,
+    "section": 24,
+    "subject": 21,
+    "role": "Class Teacher",
+    "created_at": "2026-04-20T08:24:11.572Z",
+    "updated_at": "2026-06-02T06:24:24.570Z"
+  }
+},
+{
+  "model": "subjects.teacherassignment",
+  "pk": 34,
+  "fields": {
+    "teacher": 17,
+    "class_ref": 18,
+    "section": 17,
+    "subject": 22,
+    "role": "Class Teacher",
+    "created_at": "2026-06-01T16:35:11.625Z",
+    "updated_at": "2026-06-01T16:35:11.625Z"
+  }
+},
+{
+  "model": "subjects.teacherassignment",
+  "pk": 35,
+  "fields": {
+    "teacher": 17,
+    "class_ref": 21,
+    "section": 17,
+    "subject": 14,
+    "role": "Class Teacher",
+    "created_at": "2026-06-02T06:17:38.844Z",
+    "updated_at": "2026-06-02T06:17:38.844Z"
+  }
+},
+{
+  "model": "holidays.holiday",
+  "pk": 1,
+  "fields": {
+    "school": 1,
+    "title": "Holi",
+    "start_date": "2026-03-04",
+    "end_date": "2026-03-05",
+    "description": null,
+    "type": "Public",
+    "created_at": "2026-03-27T07:00:09.412Z",
+    "updated_at": "2026-03-27T07:00:09.412Z",
+    "applicable_classes": []
+  }
+},
+{
+  "model": "holidays.holiday",
+  "pk": 2,
+  "fields": {
+    "school": null,
+    "title": "Good Friday",
+    "start_date": "2026-04-03",
+    "end_date": "2026-04-03",
+    "description": null,
+    "type": "Public",
+    "created_at": "2026-04-02T08:00:32.472Z",
+    "updated_at": "2026-04-02T08:00:32.472Z",
+    "applicable_classes": []
+  }
+},
+{
+  "model": "tenants.school",
+  "pk": 1,
+  "fields": {
+    "name": "Standard Public School",
+    "school_id": "DEFAULT",
+    "location": null,
+    "dealer": null,
+    "logo": "media/School conduct/Schools/Standard Public School/logo/standard_public_logo_qqosfx",
+    "hero_image": "",
+    "tagline": "",
+    "about": "Our flagship institution focusing on excellence.",
+    "established_year": null,
+    "contact_email": "admin@school.com",
+    "phone": "",
+    "address": "",
+    "google_map_link": "",
+    "board": "",
+    "classes_offered": "",
+    "streams": "",
+    "total_students_count": null,
+    "total_teachers_count": null,
+    "pass_percentage": "",
+    "show_facilities": true,
+    "show_events": true,
+    "show_testimonials": true,
+    "is_active": true,
+    "created_at": "2026-04-01T11:04:55.277Z"
+  }
+},
+{
+  "model": "tenants.school",
+  "pk": 5,
+  "fields": {
+    "name": "St. Norbert",
+    "school_id": "NORBERT",
+    "location": "Indore",
+    "dealer": 3,
+    "logo": "",
+    "hero_image": "",
+    "tagline": "",
+    "about": "",
+    "established_year": null,
+    "contact_email": "admin@norbert.com",
+    "phone": "",
+    "address": "",
+    "google_map_link": "",
+    "board": "",
+    "classes_offered": "",
+    "streams": "",
+    "total_students_count": null,
+    "total_teachers_count": null,
+    "pass_percentage": "",
+    "show_facilities": true,
+    "show_events": true,
+    "show_testimonials": true,
+    "is_active": false,
+    "created_at": "2026-04-06T11:18:32.932Z"
+  }
+},
+{
+  "model": "tenants.school",
+  "pk": 6,
+  "fields": {
+    "name": "St. Rephills",
+    "school_id": "REPHILLS",
+    "location": "Indore",
+    "dealer": 3,
+    "logo": "",
+    "hero_image": "",
+    "tagline": "",
+    "about": "",
+    "established_year": null,
+    "contact_email": "admin@rephills.com",
+    "phone": "",
+    "address": "",
+    "google_map_link": "",
+    "board": "",
+    "classes_offered": "",
+    "streams": "",
+    "total_students_count": null,
+    "total_teachers_count": null,
+    "pass_percentage": "",
+    "show_facilities": true,
+    "show_events": true,
+    "show_testimonials": true,
+    "is_active": true,
+    "created_at": "2026-04-07T10:48:27.857Z"
+  }
+},
+{
+  "model": "tenants.school",
+  "pk": 7,
+  "fields": {
+    "name": "Keshav vidyapeeth",
+    "school_id": "KV",
+    "location": "Bhopal",
+    "dealer": 4,
+    "logo": "",
+    "hero_image": "",
+    "tagline": "",
+    "about": "",
+    "established_year": null,
+    "contact_email": "admin@kv.com",
+    "phone": "",
+    "address": "",
+    "google_map_link": "",
+    "board": "",
+    "classes_offered": "",
+    "streams": "",
+    "total_students_count": null,
+    "total_teachers_count": null,
+    "pass_percentage": "",
+    "show_facilities": true,
+    "show_events": true,
+    "show_testimonials": true,
+    "is_active": true,
+    "created_at": "2026-04-08T07:08:45.449Z"
+  }
+},
+{
+  "model": "tenants.school",
+  "pk": 10,
+  "fields": {
+    "name": "Delhi Public School",
+    "school_id": "DPS",
+    "location": null,
+    "dealer": null,
+    "logo": "media/School conduct/Schools/Delhi Public School/logo/WhatsApp_Image_2026-04-27_at_11.23.40_whhtad",
+    "hero_image": "school_heros/school.jpg",
+    "tagline": "Where Innovation Meets Education",
+    "about": "",
+    "established_year": 1948,
+    "contact_email": "admin@dps.com",
+    "phone": "9988445577",
+    "address": "Indore Bypass Road, Nipaniya Rd",
+    "google_map_link": "",
+    "board": "CBSE",
+    "classes_offered": "Nursery-12",
+    "streams": "All streams",
+    "total_students_count": 1500,
+    "total_teachers_count": 85,
+    "pass_percentage": "99.9%",
+    "show_facilities": true,
+    "show_events": true,
+    "show_testimonials": true,
+    "is_active": true,
+    "created_at": "2026-04-16T06:37:43.100Z"
+  }
+},
+{
+  "model": "tenants.school",
+  "pk": 11,
+  "fields": {
+    "name": "Green Valley School",
+    "school_id": "GVS",
+    "location": "Bhopal",
+    "dealer": 4,
+    "logo": "",
+    "hero_image": "",
+    "tagline": "",
+    "about": "A modern institution focused on creativity, discipline, and digital learning.",
+    "established_year": null,
+    "contact_email": "admin@gvs.com",
+    "phone": "",
+    "address": "",
+    "google_map_link": "",
+    "board": "",
+    "classes_offered": "",
+    "streams": "",
+    "total_students_count": null,
+    "total_teachers_count": null,
+    "pass_percentage": "",
+    "show_facilities": true,
+    "show_events": true,
+    "show_testimonials": true,
+    "is_active": true,
+    "created_at": "2026-04-16T07:35:51.208Z"
+  }
+},
+{
+  "model": "tenants.school",
+  "pk": 16,
+  "fields": {
+    "name": "Nirmala Convent",
+    "school_id": "BHOPAL",
+    "location": null,
+    "dealer": null,
+    "logo": "media/School conduct/Schools/Nirmala Convent/logo/f8a36de29089f1e66c503638c4ae0337_hzpgje",
+    "hero_image": "media/School conduct/Schools/Nirmala Convent/hero/r-HOME-PAGE-MAIN-IMAGE_modlik",
+    "tagline": "To serve with Love",
+    "about": "Education is the key to unlocking the world, a passport to freedom.\" This quote from Oprah Winfrey summarises the importance of schooling in a single line.\r\n\r\nYet, the purpose of schooling is a debatable topic that brings forth many explanations.\r\nIf we took a step back to the 1800s, history would reveal that schooling back then\r\nwas to preserve and inculcate democratic values. Later, schools flourished with the purpose to prepare students for vocational courses. Much later, in the 1970s and 80s, the world became consumed by how well students performed in schools. Test scores became a top priority, and competition became rampant.",
+    "established_year": 1978,
+    "contact_email": "nirmala@gmail.com",
+    "phone": "+91 1234567890",
+    "address": "bhopal",
+    "google_map_link": "https://share.google/cuhWUS4lsP2hMRlRQ",
+    "board": "CBSE",
+    "classes_offered": "Nursery-12",
+    "streams": "Science,Arts,Commerce",
+    "total_students_count": 1200,
+    "total_teachers_count": 50,
+    "pass_percentage": "98%",
+    "show_facilities": true,
+    "show_events": true,
+    "show_testimonials": true,
+    "is_active": true,
+    "created_at": "2026-06-02T12:45:46.977Z"
+  }
+},
+{
+  "model": "syllabus.syllabus",
+  "pk": 4,
+  "fields": {
+    "class_ref": 23,
+    "subject": 22,
+    "uploaded_by": [
+      "default_admin"
+    ],
+    "title": "xc",
+    "description": "",
+    "file": "syllabus_files/10_Science_EM_LNBQ1IS_k7fiGm0.pdf",
+    "uploaded_at": "2026-04-16T09:50:34.816Z",
+    "updated_at": "2026-04-16T09:50:34.816Z"
+  }
+},
+{
+  "model": "announcements.announcement",
+  "pk": 4,
+  "fields": {
+    "school": 1,
+    "title": "azsxdfghjkl",
+    "description": "sdfghjkl;",
+    "type": "general",
+    "start_date": "2026-04-24",
+    "end_date": "2026-04-25",
+    "target_audience": "all",
+    "class_ref": null,
+    "attachment": "",
+    "is_important": true,
+    "is_pinned": true,
+    "created_by": [
+      "default_admin"
+    ],
+    "created_at": "2026-04-06T11:50:28.108Z",
+    "updated_at": "2026-04-06T11:50:28.108Z"
+  }
+},
+{
+  "model": "announcements.announcement",
+  "pk": 5,
+  "fields": {
+    "school": 1,
+    "title": "Art competition",
+    "description": "Inter school art competition.",
+    "type": "general",
+    "start_date": "2026-04-20",
+    "end_date": "2026-04-20",
+    "target_audience": "all",
+    "class_ref": null,
+    "attachment": "",
+    "is_important": false,
+    "is_pinned": false,
+    "created_by": [
+      "default_admin"
+    ],
+    "created_at": "2026-04-15T12:57:22.029Z",
+    "updated_at": "2026-04-15T12:57:22.029Z"
+  }
+},
+{
+  "model": "shops.shop",
+  "pk": 1,
+  "fields": {
+    "shop_name": "books store",
+    "shop_type": "Book Shop",
+    "address": "vijay nagar",
+    "city": "indore",
+    "contact_number": "2345678905",
+    "google_map_link": "",
+    "school": 1,
+    "created_at": "2026-04-16T07:49:03.358Z"
+  }
+},
+{
+  "model": "shops.shop",
+  "pk": 2,
+  "fields": {
+    "shop_name": "Modern Book Store",
+    "shop_type": "Book Shop",
+    "address": "Near Apple Hospital, Bhanwarkua",
+    "city": "Indore",
+    "contact_number": "9876541230",
+    "google_map_link": "",
+    "school": 10,
+    "created_at": "2026-04-17T07:45:06.666Z"
+  }
+},
+{
+  "model": "enquiries.enquiry",
+  "pk": 1,
+  "fields": {
+    "name": "Ravi kishan",
+    "email": "ravik@gmail.com",
+    "subject": "about system working",
+    "message": "hii this is ravi kishan Bhojpuri superstar....",
+    "created_at": "2026-04-22T07:49:16.167Z"
+  }
+},
+{
+  "model": "enquiries.enquiry",
+  "pk": 2,
+  "fields": {
+    "name": "Ravi kishan",
+    "email": "ravik@gmail.com",
+    "subject": "about system working",
+    "message": "Hii, this is Ravi Kishan, Bhojpuri Superstar.",
+    "created_at": "2026-04-22T07:51:07.973Z"
+  }
+},
+{
+  "model": "enquiries.enquiry",
+  "pk": 3,
+  "fields": {
+    "name": "Ravi kishan",
+    "email": "ravik@gmail.com",
+    "subject": "about system working",
+    "message": "Hii, jkfdhvkjhenhk",
+    "created_at": "2026-04-22T07:53:18.416Z"
+  }
+},
+{
+  "model": "enquiries.enquiry",
+  "pk": 4,
+  "fields": {
+    "name": "Ravi kishan",
+    "email": "ravik@gmail.com",
+    "subject": "about system working",
+    "message": "hkugilkj;Ll;juytfhgv",
+    "created_at": "2026-04-22T07:55:16.062Z"
+  }
+},
+{
+  "model": "enquiries.enquiry",
+  "pk": 5,
+  "fields": {
+    "name": "Ankit Kushwah",
+    "email": "ak0313360@gmail.com",
+    "subject": "I want to buy your ERP system.",
+    "message": "I have lot of money, i am very very very rich person i also can buy the developer of this project do not underestimate me.....",
+    "created_at": "2026-04-22T07:57:52.686Z"
+  }
+},
+{
+  "model": "enquiries.enquiry",
+  "pk": 6,
+  "fields": {
+    "name": "Shalini Rajput",
+    "email": "shalini.r@eagleincloud.io",
+    "subject": "I have implemented the system but still not deployed.",
+    "message": "I have implemented so many features in the system and give my full efforts and time or na to ye project deploy hua h na hi mujhe iska credit diya jaa raha h. WHYYYY.",
+    "created_at": "2026-04-22T08:05:08.947Z"
+  }
+},
+{
+  "model": "enquiries.enquiry",
+  "pk": 7,
+  "fields": {
+    "name": "Sagar",
+    "email": "skryadu45@zohomail.in",
+    "subject": "Instructions section add",
+    "message": "side looking good but you are not given the any instructions to help new",
+    "created_at": "2026-05-03T07:16:29.125Z"
+  }
+},
+{
+  "model": "dealers.dealer",
+  "pk": 3,
+  "fields": {
+    "name": "dealer",
+    "user": [
+      "dealer"
+    ],
+    "contact": "7894561230",
+    "location": "Indore",
+    "created_at": "2026-04-06T10:48:23.389Z"
+  }
+},
+{
+  "model": "dealers.dealer",
+  "pk": 4,
+  "fields": {
+    "name": "dealer1",
+    "user": [
+      "dealer1"
+    ],
+    "contact": "7788559944",
+    "location": "Bhopal",
+    "created_at": "2026-04-08T07:06:33.398Z"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2026-06-01T16:35:12.450Z",
+    "user": [
+      "admin"
+    ],
+    "content_type": [
+      "subjects",
+      "teacherassignment"
+    ],
+    "object_id": "34",
+    "object_repr": "ayushi patel -> 3 (A) / SST",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2026-06-02T06:17:38.994Z",
+    "user": [
+      "superadmin"
+    ],
+    "content_type": [
+      "subjects",
+      "teacherassignment"
+    ],
+    "object_id": "35",
+    "object_repr": "ayushi patel -> 10 (A) / English",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+}
+]
