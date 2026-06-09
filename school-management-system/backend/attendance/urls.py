@@ -1,4 +1,15 @@
 from django.urls import path
+from .device_views import (
+    BiometricDeviceBridgePreviewView,
+    BiometricDeviceConfigDownloadView,
+    BiometricDeviceConnectionProbeView,
+    BiometricDeviceDetailView,
+    BiometricBridgeLaunchView,
+    BiometricDeviceListCreateView,
+    BiometricDeviceRotateSecretView,
+    BiometricDeviceStatusStreamView,
+    BiometricDeviceTestView,
+)
 from .views import (
     AttendanceMarkView,
     TeacherAttendanceSheetView,
@@ -10,14 +21,25 @@ from .views import (
     TeacherAttendanceVerificationListView,
     TeacherAttendanceVerificationDecisionView,
     BiometricDevicePunchView,
+    BiometricDeviceHeartbeatView,
 )
 
 urlpatterns = [
+    path('devices/', BiometricDeviceListCreateView.as_view(), name='biometric-device-list-create'),
+    path('devices/test-connection/', BiometricDeviceConnectionProbeView.as_view(), name='biometric-device-probe'),
+    path('devices/<int:device_id>/', BiometricDeviceDetailView.as_view(), name='biometric-device-detail'),
+    path('devices/<int:device_id>/test/', BiometricDeviceTestView.as_view(), name='biometric-device-test'),
+    path('devices/<int:device_id>/rotate-secret/', BiometricDeviceRotateSecretView.as_view(), name='biometric-device-rotate-secret'),
+    path('devices/<int:device_id>/config/', BiometricDeviceConfigDownloadView.as_view(), name='biometric-device-config'),
+    path('devices/<int:device_id>/bridge-preview/', BiometricDeviceBridgePreviewView.as_view(), name='biometric-device-bridge-preview'),
+    path('devices/launch-bridges/', BiometricBridgeLaunchView.as_view(), name='biometric-device-launch-bridges'),
+    path('devices/status-stream/', BiometricDeviceStatusStreamView.as_view(), name='biometric-device-status-stream'),
     path('mark/', AttendanceMarkView.as_view(), name='mark-attendance'),
     path('teacher/sheet/', TeacherAttendanceSheetView.as_view(), name='teacher-attendance-sheet'),
     path('teacher/save/', TeacherAttendanceBulkSaveView.as_view(), name='teacher-attendance-bulk-save'),
     path('punch/', StudentPunchAttendanceView.as_view(), name='attendance-punch'),
     path('biometric-punch/', BiometricDevicePunchView.as_view(), name='biometric-device-punch'),
+    path('biometric-heartbeat/', BiometricDeviceHeartbeatView.as_view(), name='biometric-device-heartbeat'),
     path('class-summary/', TeacherClassAttendanceSummaryView.as_view(), name='teacher-class-attendance-summary'),
     path('verification/', TeacherAttendanceVerificationListView.as_view(), name='teacher-attendance-verification'),
     path('verification/decision/<int:attendance_id>/', TeacherAttendanceVerificationDecisionView.as_view(), name='teacher-attendance-verification-decision'),

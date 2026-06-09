@@ -6,6 +6,36 @@ from decimal import Decimal
 from django.db import migrations, models
 
 
+def _has_column(schema_editor, table_name, column_name):
+    connection = schema_editor.connection
+    with connection.cursor() as cursor:
+        if connection.vendor == 'postgresql':
+            cursor.execute(
+                """
+                SELECT 1
+                FROM information_schema.columns
+                WHERE table_name = %s AND column_name = %s
+                LIMIT 1
+                """,
+                [table_name, column_name],
+            )
+            return cursor.fetchone() is not None
+        if connection.vendor == 'sqlite':
+            cursor.execute(f"PRAGMA table_info({table_name})")
+            return any(row[1] == column_name for row in cursor.fetchall())
+    return False
+
+
+def add_due_date_if_missing(apps, schema_editor):
+    if _has_column(schema_editor, 'fees_feestructure', 'due_date'):
+        return
+
+    if schema_editor.connection.vendor == 'postgresql':
+        schema_editor.execute("ALTER TABLE fees_feestructure ADD COLUMN due_date date NOT NULL DEFAULT CURRENT_DATE")
+    elif schema_editor.connection.vendor == 'sqlite':
+        schema_editor.execute("ALTER TABLE fees_feestructure ADD COLUMN due_date date DEFAULT CURRENT_DATE")
+
+
 def copy_amount_into_breakdown(apps, schema_editor):
     FeeStructure = apps.get_model('fees', 'FeeStructure')
     for fs in FeeStructure.objects.all():
@@ -47,10 +77,17 @@ class Migration(migrations.Migration):
             name='studentfee',
             options={'ordering': ['-id']},
         ),
-        migrations.AddField(
-            model_name='feestructure',
-            name='due_date',
-            field=models.DateField(default=datetime.date.today),
+        migrations.SeparateDatabaseAndState(
+            state_operations=[
+                migrations.AddField(
+                    model_name='feestructure',
+                    name='due_date',
+                    field=models.DateField(default=datetime.date.today),
+                ),
+            ],
+            database_operations=[
+                migrations.RunPython(add_due_date_if_missing, migrations.RunPython.noop),
+            ],
         ),
         migrations.AddField(
             model_name='feestructure',

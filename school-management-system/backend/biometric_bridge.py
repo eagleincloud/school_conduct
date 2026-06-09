@@ -1,7 +1,13 @@
 import time
 import requests
 from datetime import datetime
-from zk import ZK
+
+try:
+    from zk import ZK
+except ImportError as exc:
+    raise ImportError(
+        "Missing dependency 'pyzk'. Install it in this environment so `from zk import ZK` can resolve."
+    ) from exc
 
 # =========================================================================
 # CONFIGURATION - CHANGE THESE SETTINGS FOR EACH SCHOOL DEPLOYMENT

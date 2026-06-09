@@ -3,6 +3,17 @@
 from django.conf import settings
 from django.db import migrations
 
+def update_constraints(apps, schema_editor):
+    connection = schema_editor.connection
+    if connection.vendor == 'postgresql':
+        with connection.cursor() as cursor:
+            cursor.execute("ALTER TABLE timetable_timetableentry DROP CONSTRAINT IF EXISTS timetable_timetableentry_school_id_class_name_sec_f653a8b5_uniq;")
+            cursor.execute("ALTER TABLE timetable_timetableentry DROP CONSTRAINT IF EXISTS timetable_timetableentry_school_id_teacher_id_day_period_80d07a16_uniq;")
+            cursor.execute("ALTER TABLE timetable_timetableentry ADD CONSTRAINT timetable_entry_class_shift_uniq UNIQUE (school_id, class_name, section, shift_ref_id, day, period_number);")
+            cursor.execute("ALTER TABLE timetable_timetableentry ADD CONSTRAINT timetable_entry_teacher_shift_uniq UNIQUE (school_id, teacher_id, shift_ref_id, day, period_number);")
+    elif connection.vendor == 'sqlite':
+        pass
+
 
 class Migration(migrations.Migration):
 
@@ -28,7 +39,11 @@ class Migration(migrations.Migration):
                 ),
             ],
             database_operations=[
-                migrations.RunPython(lambda apps, schema_editor: None, migrations.RunPython.noop),
+                migrations.RunPython(
+                    update_constraints,
+                    reverse_code=migrations.RunPython.noop,
+                ),
             ]
         ),
     ]
+

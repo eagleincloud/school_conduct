@@ -57,6 +57,7 @@ import SubjectDetails from "../pages/admin/SubjectDetails";
 import TimeTable from "../pages/common/TimeTable";
 import AdminSyllabus from "../pages/admin/Syllabus";
 import AdminMessaging from "../pages/admin/Messaging";
+import BiometricMachines from "../pages/admin/BiometricMachines";
 
 import SaaSLanding from "../pages/SaaSLanding";
 import SuperAdminLogin from "../pages/superadmin/Login";
@@ -85,6 +86,7 @@ const AppRoutes = () => {
             <Routes>
               <Route path="dashboard" element={<SuperAdminDashboard />} />
               <Route path="dealers" element={<DealerManagement />} />
+              <Route path="biometric-machines" element={<BiometricMachines />} />
               <Route path="profile" element={<SuperAdminProfile />} />
             </Routes>
           </ProtectedRoute>
@@ -186,6 +188,7 @@ const AppRoutes = () => {
               <Route path="timetable" element={<TimeTable />} />
               <Route path="syllabus" element={<AdminSyllabus />} />
               <Route path="messaging" element={<AdminMessaging />} />
+              <Route path="biometric-machines" element={<BiometricMachines />} />
               <Route path="gallery" element={<GalleryPage />} />
             </Routes>
           </ProtectedRoute>

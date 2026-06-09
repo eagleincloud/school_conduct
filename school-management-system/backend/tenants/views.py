@@ -21,26 +21,14 @@ class SchoolDetailView(APIView):
 
     def get(self, request, name):
         name_upper = name.upper()
-        
-        # Use get_or_create for DEFAULT tenant to ensure no 404 in production
-        if name_upper == 'DEFAULT':
-            school, created = School.objects.get_or_create(
-                school_id='DEFAULT',
-                defaults={
-                    'name': 'Default School',
-                    'tagline': 'Welcome to our platform',
-                    'is_active': True
-                }
+
+        try:
+            school = School.objects.get(school_id__iexact=name_upper)
+        except School.DoesNotExist:
+            return Response(
+                {"error": "Not Found", "message": f"School '{name}' not found."},
+                status=status.HTTP_404_NOT_FOUND
             )
-        else:
-            try:
-                school = School.objects.get(school_id=name)
-                created = False
-            except School.DoesNotExist:
-                return Response(
-                    {"error": "Not Found", "message": f"School '{name}' not found."}, 
-                    status=status.HTTP_404_NOT_FOUND
-                )
 
         # Serialize full public details for the frontend
         serializer = PublicSchoolSerializer(school, context={'request': request})

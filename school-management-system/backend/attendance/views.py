@@ -793,20 +793,27 @@ class BiometricDevicePunchView(views.APIView):
 
     def post(self, request):
         from django.conf import settings
+        from attendance.models import BiometricDevice
         
         # Verify Token in headers
         api_key = request.headers.get('X-Device-Token')
-        expected_key = getattr(settings, 'DEVICE_SECRET_KEY', 'default_secret_key_123')
-        
-        if not api_key or api_key != expected_key:
-            return Response({'error': 'Unauthorized: Invalid Device Token'}, status=status.HTTP_401_UNAUTHORIZED)
-
-        rfid_code = request.data.get('rfid_code')
         school_id = request.data.get('school_id')  # e.g., "school_01"
+        rfid_code = request.data.get('rfid_code')
         punch_time_raw = request.data.get('punch_time')  # Format: "YYYY-MM-DD HH:MM:SS"
         
         if not rfid_code or not school_id:
             return Response({'error': 'rfid_code and school_id are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Verify Token and School ID dynamically in database
+        device = BiometricDevice.objects.filter(
+            school__school_id=school_id,
+            device_secret_key=api_key,
+            is_active=True
+        ).select_related('school').first()
+        
+        if not device:
+            return Response({'error': 'Unauthorized: Invalid Device Token or School mismatch'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
         # Find Student associated strictly with this rfid_code and school_id
         student = StudentProfile.objects.select_related('class_section', 'user', 'school').filter(
@@ -832,6 +839,12 @@ class BiometricDevicePunchView(views.APIView):
             punch_dt = timezone.now()
 
         target_date = punch_dt.date()
+
+        device.last_seen_at = timezone.now()
+        device.last_punch_at = punch_dt
+        device.last_test_status = 'online'
+        device.last_test_message = 'Punch received by backend API.'
+        device.save(update_fields=['last_seen_at', 'last_punch_at', 'last_test_status', 'last_test_message'])
 
         # Create/Update attendance as pending
         attendance, created = Attendance.objects.select_related('student').get_or_create(
@@ -896,4 +909,48 @@ class BiometricDevicePunchView(views.APIView):
             'school_name': student.school.name,
             'punch_time': punch_dt.isoformat()
         }, status=status.HTTP_201_CREATED)
+
+
+class BiometricDeviceHeartbeatView(views.APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        from attendance.models import BiometricDevice
+
+        api_key = request.headers.get('X-Device-Token')
+        school_id = request.data.get('school_id')
+        status_value = (request.data.get('status') or 'online').strip().lower()
+        message = (request.data.get('message') or '').strip()
+
+        if not school_id:
+            return Response({'error': 'school_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        device = BiometricDevice.objects.filter(
+            school__school_id=school_id,
+            device_secret_key=api_key,
+            is_active=True,
+        ).select_related('school').first()
+
+        if not device:
+            return Response({'error': 'Unauthorized: Invalid Device Token or School mismatch'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        now = timezone.now()
+        update_fields = ['last_tested_at', 'last_test_status', 'last_test_message']
+        device.last_tested_at = now
+        device.last_test_status = 'online' if status_value == 'online' else 'offline'
+        device.last_test_message = (message or f'Bridge heartbeat: {device.last_test_status}.')[:255]
+        if status_value == 'online':
+            device.last_seen_at = now
+            update_fields.append('last_seen_at')
+        device.save(update_fields=update_fields)
+
+        return Response(
+            {
+                'message': 'Heartbeat received.',
+                'device_id': device.id,
+                'status': device.last_test_status,
+                'recorded_at': now.isoformat(),
+            },
+            status=status.HTTP_200_OK,
+        )
 

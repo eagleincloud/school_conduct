@@ -11,3 +11,4 @@ reportlab
 pandas
 cloudinary
 django-cloudinary-storage
+pyzk==0.9

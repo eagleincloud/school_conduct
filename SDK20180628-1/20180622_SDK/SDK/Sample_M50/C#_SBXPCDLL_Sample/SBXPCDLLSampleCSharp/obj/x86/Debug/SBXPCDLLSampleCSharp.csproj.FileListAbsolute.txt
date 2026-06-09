@@ -118,3 +118,36 @@ c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-
 c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.csproj.GenerateResource.Cache
 c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCSampleCSharp.exe
 c:\Users\Ankit\OneDrive\Desktop\EIC\School\School management system\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCSampleCSharp.pdb
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.csproj.AssemblyReference.cache
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmAccessTz.resources
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmBellInfo.resources
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmCommParam.resources
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmDaigong.resources
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmDepartment.resources
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmEnroll.resources
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmEvent.resources
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmLockCtrl.resources
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmLog.resources
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmLogServerSetting.resources
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmMain.resources
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmPrtCode.resources
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmSystemInfo.resources
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmTrMode.resources
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.frmTrString.resources
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCSampleCSharp.Properties.Resources.resources
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.csproj.GenerateResource.cache
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCDLLSampleCSharp.sourcelink.json
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCSampleCSharp.exe
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\obj\x86\Debug\SBXPCSampleCSharp.pdb
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\datEnrollDat.mdb
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\GEN_FONT.dll
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\GEN_FONT64.dll
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\SBPCCOMM.dll
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\SBPCCOMM64.dll
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\SBXPCDLL.dll
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\SBXPCDLL64.dll
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\SBXPCSampleCSharp.exe.config
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\SBXPCSampleCSharp.exe
+C:\Users\User\Desktop\school_conduct\student_teacher_conduct\SDK20180628-1\20180622_SDK\SDK\Sample_M50\C#_SBXPCDLL_Sample\SBXPCDLLSampleCSharp\bin\x86\Debug\SBXPCSampleCSharp.pdb

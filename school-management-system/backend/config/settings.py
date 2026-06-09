@@ -4,7 +4,7 @@ from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -13,7 +13,9 @@ SCHOOL_NAME = os.getenv('SCHOOL_NAME', 'School Management System')
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key')
 DEVICE_SECRET_KEY = os.getenv('DEVICE_SECRET_KEY', 'y0ur_Sup3r_S3cr3t_B1om3tr1c_K3y_987')
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = os.getenv('DEBUG', 'False').strip().lower() == 'true'
+USE_POSTGRES = os.getenv('USE_POSTGRES', 'False').strip().lower() == 'true'
+PUBLIC_API_BASE_URL = os.getenv('PUBLIC_API_BASE_URL', 'http://127.0.0.1:8000').rstrip('/')
 raw_hosts = os.getenv('ALLOWED_HOSTS', '*')
 if raw_hosts:
     # Clean brackets and quotes in case they were written as a list string in .env
@@ -119,8 +121,8 @@ REST_FRAMEWORK = {
     ),
 }
 
-if DEBUG:
-    # Use lightweight SQLite for local development to avoid external DB dependencies
+if DEBUG and not USE_POSTGRES:
+    # Use lightweight SQLite for local development only when Postgres is not explicitly requested.
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

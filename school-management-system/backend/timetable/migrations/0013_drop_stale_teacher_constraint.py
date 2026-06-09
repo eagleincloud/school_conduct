@@ -2,6 +2,14 @@
 
 from django.db import migrations
 
+def drop_stale_constraint(apps, schema_editor):
+    connection = schema_editor.connection
+    if connection.vendor == 'postgresql':
+        with connection.cursor() as cursor:
+            cursor.execute("ALTER TABLE timetable_timetableentry DROP CONSTRAINT IF EXISTS timetable_timetableentry_school_id_teacher_id_day_67c86a88_uniq;")
+    elif connection.vendor == 'sqlite':
+        pass
+
 
 def _drop_stale_constraint(apps, schema_editor):
     if schema_editor.connection.vendor != 'postgresql':
@@ -17,5 +25,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(_drop_stale_constraint, reverse_code=migrations.RunPython.noop),
+        migrations.RunPython(
+            drop_stale_constraint,
+            reverse_code=migrations.RunPython.noop,
+        ),
     ]
+

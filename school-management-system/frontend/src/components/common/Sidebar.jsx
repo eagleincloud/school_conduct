@@ -111,6 +111,9 @@ const Sidebar = () => {
         { path: '/admin/shops', label: 'Shop Locations', icon: '🏪' },
     ];
 
+
+        adminLinks.splice(adminLinks.length - 1, 0, { path: '/admin/biometric-machines', label: 'Biometric Machines', icon: 'Machine' });
+
     const links = role === 'student' ? studentLinks : (role === 'teacher' ? teacherLinks : adminLinks);
 
     const toggleMenu = (label) => {
