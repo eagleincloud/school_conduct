@@ -3,11 +3,26 @@ import axios from "axios";
 // Centralized API Configuration
 // Supports both Vite (import.meta.env) and Vercel/CRA (process.env)
 const getBaseURL = () => {
-  const url =
-    import.meta.env.VITE_API_URL ||
-    (typeof process !== "undefined" ? process.env.REACT_APP_API_URL : null) ||
-    "https://school-management-system-l12n.onrender.com/api/";
+  // Check if a custom mobile API URL has been set in localStorage
+  if (typeof window !== "undefined") {
+    const savedMobileUrl = localStorage.getItem("mobile_api_url");
+    if (savedMobileUrl) {
+      return savedMobileUrl.replace(/\/?$/, "/");
+    }
+  }
 
+  let url = import.meta.env.VITE_API_URL;
+  if (!url || url.startsWith('/')) {
+    // Check if running natively inside Capacitor
+    const isNativeMobile = typeof window !== "undefined" && window.Capacitor && window.Capacitor.getPlatform() !== 'web';
+    if (isNativeMobile) {
+      // Default fallback to the hosted EC2 backend server
+      url = "http://13.233.140.195/api/";
+    } else {
+      // Browser fallback (resolves relatively)
+      url = (typeof window !== "undefined" ? window.location.origin : '') + (url || '/api/');
+    }
+  }
   return url.replace(/\/?$/, "/");
 };
 

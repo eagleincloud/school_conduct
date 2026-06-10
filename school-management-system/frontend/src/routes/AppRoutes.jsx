@@ -1,8 +1,10 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { Capacitor } from "@capacitor/core";
 import Login from "../pages/auth/Login";
 import LandingPage from "../pages/LandingPage";
 import ProtectedRoute from "./ProtectedRoute";
+import MobileGateway from "../pages/auth/MobileGateway";
 
 // Student
 import StudentDashboard from "../pages/student/Dashboard";
@@ -70,9 +72,24 @@ import DealerDashboard from "../pages/dealer/Dashboard";
 import DealerProfile from "../pages/dealer/Profile";
 
 const AppRoutes = () => {
+  const isMobileApp = Capacitor.getPlatform() !== "web";
+
   return (
     <Routes>
-      <Route path="/" element={<SaaSLanding />} />
+      <Route
+        path="/"
+        element={
+          isMobileApp ? (
+            localStorage.getItem("mobile_school_id") ? (
+              <Navigate to={`/school/${localStorage.getItem("mobile_school_id")}/login`} replace />
+            ) : (
+              <MobileGateway />
+            )
+          ) : (
+            <SaaSLanding />
+          )
+        }
+      />
       <Route path="/school/:schoolId" element={<LandingPage />} />
       <Route path="/school/:schoolId/login" element={<Login />} />
       <Route path="/login" element={<Navigate to="/" replace />} />

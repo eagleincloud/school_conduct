@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">School Conduct</string>
+    <string name="title_activity_main">School Conduct</string>
+    <string name="package_name">com.schoolconduct.app</string>
+    <string name="custom_url_scheme">com.schoolconduct.app</string>
+</resources>

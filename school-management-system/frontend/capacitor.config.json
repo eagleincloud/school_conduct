@@ -1,0 +1,12 @@
+{
+  "appId": "com.schoolconduct.app",
+  "appName": "School Conduct",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "http",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}
