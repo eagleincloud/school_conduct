@@ -22,6 +22,7 @@ const AdminDashboard = () => {
         address: '',
         date_of_admission: '',
         category: '',
+        rfid_code: '',
     });
     const [mainClasses, setMainClasses] = useState([]);
     const [mainSections, setMainSections] = useState([]);
@@ -148,6 +149,7 @@ const AdminDashboard = () => {
                 admission_number: '', class_id: '', section_id: '', dob: '',
                 gender: '', blood_group: '', father_name: '', mother_name: '',
                 father_contact: '', mother_contact: '', bus_no: '', address: '', date_of_admission: '', category: '',
+                rfid_code: '',
             });
             setTimeout(() => setMessage(''), 3000);
         } catch (err) {
@@ -489,6 +491,16 @@ const AdminDashboard = () => {
                                         value={formData.bus_no}
                                         onChange={(e) => setFormData({ ...formData, bus_no: e.target.value })}
                                         className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-school-navy/5 outline-none focus:bg-white focus:border-school-navy/20 transition-all"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">RFID Code / Biometric ID</label>
+                                    <input
+                                        type="text"
+                                        placeholder="e.g. RFID_123"
+                                        value={formData.rfid_code}
+                                        onChange={(e) => setFormData({ ...formData, rfid_code: e.target.value })}
+                                        className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-school-navy/5 outline-none focus:bg-white focus:border-school-navy/20 transition-all font-medium"
                                     />
                                 </div>
                             </div>

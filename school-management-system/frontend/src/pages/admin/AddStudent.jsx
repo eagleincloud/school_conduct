@@ -20,6 +20,7 @@ const AddStudent = () => {
         address: '',
         date_of_admission: '',
         category: '',
+        rfid_code: '',
     });
     const [mainClasses, setMainClasses] = useState([]);
     const [mainSections, setMainSections] = useState([]);
@@ -143,6 +144,7 @@ const AddStudent = () => {
                 address: '',
                 date_of_admission: '',
                 category: '',
+                rfid_code: '',
             });
         } catch (err) {
             setMessage(err?.response?.data?.error ? `Error: ${err.response.data.error}` : 'Error creating student.');
@@ -454,6 +456,17 @@ const AddStudent = () => {
                             <option value="EWS">EWS</option>
                             <option value="Other">Other</option>
                         </select>
+                    </div>
+
+                    <div>
+                        <div style={labelStyle}>RFID Code (Biometric Machine ID)</div>
+                        <input
+                            type="text"
+                            placeholder="Enter RFID code (e.g. RFID_123)"
+                            value={formData.rfid_code}
+                            onChange={(e) => setFormData({ ...formData, rfid_code: e.target.value })}
+                            style={inputStyle}
+                        />
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>

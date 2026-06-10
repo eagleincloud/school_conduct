@@ -6,5 +6,5 @@
   "machine_number": 1,
   "school_id": "NORTH",
   "server_url": "http://127.0.0.1:8000/api/attendance/biometric-punch/",
-  "device_secret_key": "6-cU2q8ReYiLriTLKpKMOh4_T24t0gnq"
+  "device_secret_key": "nSOmb6_i6_fjyV5nDotTJtDrh82hYPr4"
 }

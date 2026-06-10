@@ -276,6 +276,7 @@ const ManageStudents = () => {
                 father_contact: editRow.father_contact || '',
                 mother_contact: editRow.mother_contact || '',
                 category: editRow.category || '',
+                rfid_code: editRow.rfid_code || '',
             });
             setEditRow(null);
             await loadData();
@@ -400,6 +401,7 @@ const ManageStudents = () => {
                                 <tr>
                                     <th style={th}>S.No</th>
                                     <th style={th}>Student ID</th>
+                                    <th style={th}>RFID</th>
                                     <th style={th}>Student Name</th>
 
                                     <th style={th}>Session Name</th>
@@ -415,12 +417,13 @@ const ManageStudents = () => {
                         </thead>
                         <tbody>
                                 {pagedRows.length === 0 ? (
-                                    <tr><td colSpan={13} style={{ ...td, textAlign: 'center', padding: 20 }}>No students found.</td></tr>
+                                    <tr><td colSpan={14} style={{ ...td, textAlign: 'center', padding: 20 }}>No students found.</td></tr>
 
                                 ) : pagedRows.map((s, idx) => (
                                     <tr key={s.id} style={{ background: idx % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
                                         <td style={td}>{start + idx + 1}</td>
                                         <td style={td}>{s.admission_number || '—'}</td>
+                                        <td style={td}>{s.rfid_code || '—'}</td>
                                         <td style={{ ...td, fontWeight: 700 }}>{s.name || '—'}</td>
 
                                         <td style={td}>{s.sessionName}</td>
@@ -493,6 +496,7 @@ const ManageStudents = () => {
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, fontSize: 13 }}>
                             <div><b>Name:</b> {viewRow.name || '—'}</div>
                             <div><b>Admission:</b> {viewRow.admission_number || '—'}</div>
+                            <div><b>RFID Code:</b> {viewRow.rfid_code || '—'}</div>
                             <div><b>Session:</b> {viewRow.sessionName}</div>
                             <div><b>Gender:</b> {viewRow.gender || 'Unknown'}</div>
                             <div><b>Class:</b> {viewRow.classLabel}</div>
@@ -519,6 +523,7 @@ const ManageStudents = () => {
                             <input value={editRow.last_name || ''} onChange={(e) => setEditRow((p) => ({ ...p, last_name: e.target.value }))} placeholder="Last name" style={selectStyle} />
                             <input value={editRow.email || ''} onChange={(e) => setEditRow((p) => ({ ...p, email: e.target.value }))} placeholder="Email" style={selectStyle} />
                             <input value={editRow.admission_number || ''} onChange={(e) => setEditRow((p) => ({ ...p, admission_number: e.target.value }))} placeholder="Admission number" style={selectStyle} />
+                            <input value={editRow.rfid_code || ''} onChange={(e) => setEditRow((p) => ({ ...p, rfid_code: e.target.value }))} placeholder="RFID Code" style={selectStyle} />
                             <input value={editRow.bus_no || ''} onChange={(e) => setEditRow((p) => ({ ...p, bus_no: e.target.value }))} placeholder="Bus No." style={selectStyle} />
                             <select value={editRow.gender || ''} onChange={(e) => setEditRow((p) => ({ ...p, gender: e.target.value }))} style={selectStyle}>
                                 <option value="">Gender</option>

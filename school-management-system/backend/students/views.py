@@ -277,6 +277,13 @@ class StudentUpdateView(views.APIView):
         s.address = data.get('address', s.address)
         s.date_of_admission = data.get('date_of_admission', s.date_of_admission)
         s.category = data.get('category', s.category)
+        if 'rfid_code' in data:
+            rfid_val = data.get('rfid_code')
+            if rfid_val is not None:
+                rfid_val = str(rfid_val).strip()
+                s.rfid_code = rfid_val if rfid_val else None
+            else:
+                s.rfid_code = None
         s.save()
 
         return Response({"message": "Student updated successfully"}, status=status.HTTP_200_OK)
@@ -342,7 +349,12 @@ class AdminStudentCreateView(views.APIView):
             if admission_number and '-' in admission_number:
                 admission_number = admission_number.split('-', 1)[1]
 
-            admission_number = admission_number or _next_admission_number(school)
+            rfid_val = data.get('rfid_code')
+            if rfid_val is not None:
+                rfid_val = str(rfid_val).strip()
+                rfid_code_cleaned = rfid_val if rfid_val else None
+            else:
+                rfid_code_cleaned = None
 
             parent_obj = None
             if father_contact:
@@ -369,7 +381,7 @@ class AdminStudentCreateView(views.APIView):
                     school=school,
                     admission_number=admission_number,
                     roll_number=roll_number,
-                    rfid_code=data.get('rfid_code'),
+                    rfid_code=rfid_code_cleaned,
                     class_section_id=class_section_id,
                     parent=parent_obj,
                     dob=dob,
