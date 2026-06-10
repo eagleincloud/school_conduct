@@ -159,6 +159,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:3000",
+    "http://localhost",  # capacitor webview
+    "http://127.0.0.1",
+    "http://13.233.140.195",  # EC2 IP
+    "http://13.233.140.195:8000",
+    "http://ec2-13-233-140-195.ap-south-1.compute.amazonaws.com",
+    "http://ec2-13-233-140-195.ap-south-1.compute.amazonaws.com:8000",
 ]
 
 # Password validation
@@ -199,6 +205,12 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "http://localhost",  # capacitor webview
+    "http://127.0.0.1",
+    "http://13.233.140.195",  # EC2 IP
+    "http://13.233.140.195:8000",
+    "http://ec2-13-233-140-195.ap-south-1.compute.amazonaws.com",
+    "http://ec2-13-233-140-195.ap-south-1.compute.amazonaws.com:8000",
 ]
 
 # Only automatically append host-derived https entries in non-debug (production)

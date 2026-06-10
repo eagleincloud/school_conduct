@@ -141,3 +141,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Email - console output for local dev
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Public API Base URL
+PUBLIC_API_BASE_URL = os.getenv('PUBLIC_API_BASE_URL', 'http://127.0.0.1:8000').rstrip('/')
+

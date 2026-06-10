@@ -902,10 +902,11 @@ import subprocess
 import threading
 
 def start_frontend():
-    print("Starting Frontend (Vite) on http://localhost:5173 ...")
+    frontend_host = os.getenv("FRONTEND_HOST", "0.0.0.0")
+    print(f"Starting Frontend (Vite) on http://{frontend_host}:5173 ...")
     try:
         # Use npx to ensure we find the local vite
-        subprocess.Popen(["npx", "vite", "--port", "5173", "--host", "127.0.0.1"], shell=True)
+        subprocess.Popen(["npx", "vite", "--port", "5173", "--host", frontend_host], shell=True)
     except Exception as e:
         print(f"❌ Error starting frontend: {e}")
 
@@ -915,5 +916,7 @@ if __name__ == "__main__":
     frontend_thread.start()
     
     # 2. Start Backend
-    print("Starting Backend (FastAPI) on http://127.0.0.1:8000 ...")
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    host = os.getenv("BACKEND_HOST", "0.0.0.0")
+    port = int(os.getenv("BACKEND_PORT", "8000"))
+    print(f"Starting Backend (FastAPI) on http://{host}:{port} ...")
+    uvicorn.run("main:app", host=host, port=port, reload=True)
