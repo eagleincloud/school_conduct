@@ -451,8 +451,8 @@ const AdminHolidays = () => {
                             </div>
                         </div>
 
-                        <div style={{ marginTop: '16px', overflowX: 'auto' }}>
-                            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <div style={{ marginTop: '16px', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                            <table style={{ width: '100%', minWidth: '760px', borderCollapse: 'collapse' }}>
                                 <thead>
                                     <tr style={{ backgroundColor: '#f2f4f7' }}>
                                         <th style={{ padding: '12px 10px', textAlign: 'left' }}>Title</th>
@@ -561,8 +561,8 @@ const AdminHolidays = () => {
                             </div>
                         </div>
 
-                        <div style={{ marginTop: '14px', overflowX: 'auto' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0, 1fr))', gap: '10px' }}>
+                        <div style={{ marginTop: '14px', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(44px, 1fr))', gap: '10px', minWidth: '420px' }}>
                                 {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
                                     <div key={d} style={{ color: '#6b7280', fontWeight: 1000, fontSize: '12px', textTransform: 'uppercase' }}>
                                         {d}
@@ -632,8 +632,9 @@ const AdminHolidays = () => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        padding: '18px',
+                        padding: '12px',
                         zIndex: 9999,
+                        overflowY: 'auto',
                     }}
                 >
                     <div
@@ -642,8 +643,10 @@ const AdminHolidays = () => {
                             width: 'min(780px, 100%)',
                             backgroundColor: '#fff',
                             borderRadius: '16px',
-                            padding: '18px',
+                            padding: 'clamp(14px, 4vw, 18px)',
                             border: '1px solid #e5e7eb',
+                            maxHeight: 'calc(100dvh - 24px)',
+                            overflowY: 'auto',
                         }}
                     >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
@@ -711,8 +714,9 @@ const AdminHolidays = () => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        padding: '18px',
+                        padding: '12px',
                         zIndex: 9999,
+                        overflowY: 'auto',
                     }}
                 >
                     <div
@@ -721,8 +725,10 @@ const AdminHolidays = () => {
                             width: 'min(880px, 100%)',
                             backgroundColor: '#fff',
                             borderRadius: '16px',
-                            padding: '18px',
+                            padding: 'clamp(14px, 4vw, 18px)',
                             border: '1px solid #e5e7eb',
+                            maxHeight: 'calc(100dvh - 24px)',
+                            overflowY: 'auto',
                         }}
                     >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
@@ -735,7 +741,7 @@ const AdminHolidays = () => {
                         {formError ? <div style={{ marginTop: '10px', color: '#b91c1c', fontWeight: 1000, fontSize: '13px' }}>{formError}</div> : null}
 
                         <form onSubmit={submitHoliday} style={{ marginTop: '14px', display: 'grid', gap: '14px' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '12px' }}>
                                 <div>
                                     <div style={labelStyle}>Holiday Title *</div>
                                     <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} style={inputStyle} required />
@@ -750,7 +756,7 @@ const AdminHolidays = () => {
                                 </div>
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '12px' }}>
                                 <div>
                                     <div style={labelStyle}>Start Date *</div>
                                     <input type="date" value={form.start_date} onChange={(e) => setForm({ ...form, start_date: e.target.value })} style={inputStyle} required />

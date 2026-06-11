@@ -319,8 +319,8 @@ const AssignTeacher = () => {
             )}
 
             <div style={{ marginTop: '20px', backgroundColor: '#fff', borderRadius: '16px', border: '1px solid #e5e7eb', overflow: 'hidden' }}>
-                <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                    <table style={{ width: '100%', minWidth: '760px', borderCollapse: 'collapse' }}>
                         <thead>
                             <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e5e7eb' }}>
                                 <th style={{ padding: '16px 20px', textAlign: 'left', fontSize: '13px', color: '#64748b' }}>Class & Section</th>
@@ -387,15 +387,15 @@ const AssignTeacher = () => {
             </div>
 
             {isModalOpen && (
-                <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15, 23, 42, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px' }}>
-                    <div style={{ backgroundColor: '#fff', borderRadius: '20px', width: 'min(600px, 100%)', maxHeight: '90vh', overflowY: 'auto', padding: '24px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+                <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15, 23, 42, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '12px', overflowY: 'auto' }}>
+                    <div style={{ backgroundColor: '#fff', borderRadius: '20px', width: 'min(600px, 100%)', maxHeight: 'calc(100dvh - 24px)', overflowY: 'auto', padding: 'clamp(16px, 4vw, 24px)', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                             <h2 style={{ margin: 0, fontSize: '20px', fontWeight: 800 }}>{editingId ? 'Edit Assignment' : 'New Teacher Assignment'}</h2>
                             <button onClick={resetForm} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#94a3b8' }}>×</button>
                         </div>
                         
                         <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '16px' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '12px' }}>
                                 <div>
                                     <div style={labelStyle}>Class</div>
                                     <select

@@ -326,7 +326,7 @@ const ManageTeachers = () => {
                 {loading ? (
                     <div style={{ padding: 18, color: '#64748b' }}>Loading teachers...</div>
                 ) : (
-                    <div style={{ overflowX: 'auto' }}>
+                    <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
                         <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0, minWidth: 1420 }}>
                         <thead>
                                 <tr>
@@ -408,7 +408,7 @@ const ManageTeachers = () => {
                     </div>
                 )}
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 14, borderTop: '1px solid #e2e8f0', background: '#fff' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap', padding: 14, borderTop: '1px solid #e2e8f0', background: '#fff' }}>
                     <button type="button" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1} style={{ ...selectStyle, minWidth: 95, cursor: 'pointer', opacity: currentPage === 1 ? 0.5 : 1 }}>Previous</button>
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
                         {pageNumbers.map((n) => (
@@ -436,10 +436,10 @@ const ManageTeachers = () => {
             </div>
 
             {viewRow && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, zIndex: 50 }}>
-                    <div style={{ width: '100%', maxWidth: 560, borderRadius: 16, background: '#fff', border: '1px solid #e2e8f0', boxShadow: '0 16px 40px rgba(2,6,23,0.2)', padding: 18 }}>
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 12, zIndex: 50, overflowY: 'auto' }}>
+                    <div style={{ width: '100%', maxWidth: 560, maxHeight: 'calc(100dvh - 24px)', overflowY: 'auto', borderRadius: 16, background: '#fff', border: '1px solid #e2e8f0', boxShadow: '0 16px 40px rgba(2,6,23,0.2)', padding: 18 }}>
                         <h3 style={{ marginTop: 0, marginBottom: 12 }}>Teacher Details</h3>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, fontSize: 13 }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: 10, fontSize: 13 }}>
                             <div><b>Name:</b> {viewRow.name || '—'}</div>
                             <div><b>Employee ID:</b> {viewRow.employee_id || '—'}</div>
                             <div><b>RFID Code:</b> {viewRow.rfid_code || '—'}</div>
@@ -459,10 +459,10 @@ const ManageTeachers = () => {
             )}
 
             {editRow && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, zIndex: 55 }}>
-                    <form onSubmit={saveEdit} style={{ width: '100%', maxWidth: 760, borderRadius: 16, background: '#fff', border: '1px solid #e2e8f0', boxShadow: '0 16px 40px rgba(2,6,23,0.2)', padding: 18 }}>
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 12, zIndex: 55, overflowY: 'auto' }}>
+                    <form onSubmit={saveEdit} style={{ width: '100%', maxWidth: 760, maxHeight: 'calc(100dvh - 24px)', overflowY: 'auto', borderRadius: 16, background: '#fff', border: '1px solid #e2e8f0', boxShadow: '0 16px 40px rgba(2,6,23,0.2)', padding: 18 }}>
                         <h3 style={{ marginTop: 0, marginBottom: 12 }}>Edit Teacher</h3>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: 10 }}>
                             <input value={editRow.name || ''} onChange={(e) => setEditRow((p) => ({ ...p, name: e.target.value }))} placeholder="Full name" style={selectStyle} />
                             <input value={editRow.employee_id || ''} onChange={(e) => setEditRow((p) => ({ ...p, employee_id: e.target.value }))} placeholder="Employee ID" style={selectStyle} />
                             <input value={editRow.rfid_code || ''} onChange={(e) => setEditRow((p) => ({ ...p, rfid_code: e.target.value }))} placeholder="RFID Code" style={selectStyle} />

@@ -203,7 +203,7 @@ const AddStudent = () => {
                         Section: Student Information
                     </h3>
                     <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '18px' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '12px' }}>
                         <div>
                             <div style={labelStyle}>First Name <span style={{ color: '#dc2626' }}>*</span></div>
                             <input
@@ -295,7 +295,7 @@ const AddStudent = () => {
                         />
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '12px' }}>
                         <div>
                             <div style={labelStyle}>Gender <span style={{ color: '#dc2626' }}>*</span></div>
                         <select
@@ -330,7 +330,7 @@ const AddStudent = () => {
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '12px' }}>
                         <div>
                             <div style={labelStyle}>Father's Name <span style={{ color: '#dc2626' }}>*</span></div>
                             <input
@@ -355,7 +355,7 @@ const AddStudent = () => {
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '12px' }}>
                         <div>
                             <div style={labelStyle}>Father's Contact <span style={{ color: '#dc2626' }}>*</span></div>
                             <div style={{ display: 'grid', gridTemplateColumns: '70px 1fr', gap: '8px' }}>
@@ -469,7 +469,7 @@ const AddStudent = () => {
                         />
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '12px' }}>
                         <div>
                             <div style={labelStyle}>Class <span style={{ color: '#dc2626' }}>*</span></div>
                             <select

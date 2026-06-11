@@ -327,8 +327,8 @@ const FinanceCards = () => {
 
             <div style={{ ...cardStyle, marginTop: 12 }}>
                 <h3 style={{ marginTop: 0 }}>All Fee Cards</h3>
-                <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                    <table style={{ width: '100%', minWidth: '980px', borderCollapse: 'collapse' }}>
                         <thead>
                             <tr style={{ backgroundColor: '#f9fafb' }}>
                                 <th style={{ textAlign: 'left', padding: 8 }}>Class Name</th>

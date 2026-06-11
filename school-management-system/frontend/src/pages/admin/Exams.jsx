@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useConfirm } from '../../context/ConfirmContext';
+import useBreakpoint from '../../hooks/useBreakpoint';
 import api from '../../services/api';
 
 const colors = {
@@ -23,14 +24,15 @@ const card = {
     backgroundColor: colors.white,
     border: `1px solid ${colors.border}`,
     borderRadius: '24px',
-    padding: '32px',
+    padding: 'clamp(16px, 4vw, 32px)',
     boxShadow: '0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05)',
     transition: 'all 0.3s ease',
+    minWidth: 0,
 };
 
 const input = {
     width: '100%',
-    padding: '14px 18px',
+    padding: '12px 14px',
     border: `2px solid ${colors.border}`,
     borderRadius: '16px',
     fontSize: '14px',
@@ -51,17 +53,19 @@ const label = {
 };
 
 const stepBadgeStyle = (active, done) => ({
-    padding: '12px 24px',
+    padding: '10px 16px',
     borderRadius: '20px',
     fontWeight: 900,
-    fontSize: '14px',
+    fontSize: '13px',
     backgroundColor: done ? colors.successLight : active ? colors.primaryLight : colors.white,
     color: done ? colors.success : active ? colors.primary : colors.textMuted,
     border: `2px solid ${done ? colors.success : active ? colors.primary : colors.border}`,
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: '10px',
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    flex: '1 1 110px',
 });
 
 /** Backend may return { error } or DRF field errors { start_time: [...] } — surface both. */
@@ -100,6 +104,10 @@ function timeToMinutes(t) {
 
 const Exams = () => {
     const confirm = useConfirm();
+    const { isMobile } = useBreakpoint();
+    const defineRef = useRef(null);
+    const scheduleRef = useRef(null);
+    const reviewRef = useRef(null);
     const [exams, setExams] = useState([]);
     const [sections, setSections] = useState([]);
     const [subjects, setSubjects] = useState([]);
@@ -474,28 +482,36 @@ const Exams = () => {
     const done1 = !!selectedExamId;
     const done2 = done1 && schedules.length > 0;
 
+    const goToStep = (nextStep) => {
+        setStep(nextStep);
+        const target = nextStep === 1 ? defineRef.current : nextStep === 2 ? scheduleRef.current : reviewRef.current;
+        window.requestAnimationFrame(() => {
+            target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    };
+
     return (
-        <div style={{ padding: '18px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '24px', flexWrap: 'wrap', backgroundColor: colors.white, padding: '32px', borderRadius: '24px', marginBottom: '32px', border: `1px solid ${colors.border}` }}>
-                <div>
-                    <h1 style={{ margin: 0, fontSize: '40px', fontWeight: 1000, color: colors.secondary, letterSpacing: '-1.5px' }}>Exam Engine</h1>
+        <div style={{ padding: 'clamp(12px, 3vw, 18px)', maxWidth: '100%', overflowX: 'hidden' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', flexWrap: 'wrap', backgroundColor: colors.white, padding: 'clamp(16px, 4vw, 32px)', borderRadius: '24px', marginBottom: 'clamp(18px, 4vw, 32px)', border: `1px solid ${colors.border}` }}>
+                <div style={{ minWidth: 0, flex: '1 1 260px' }}>
+                    <h1 style={{ margin: 0, fontSize: 'clamp(26px, 8vw, 40px)', lineHeight: 1.08, fontWeight: 1000, color: colors.secondary, letterSpacing: 0 }}>Exam Engine</h1>
                     <div style={{ marginTop: '8px', color: colors.textMuted, fontWeight: 700, fontSize: '15px' }}>
                         Architecting academic milestones with precision and clarity.
                     </div>
                 </div>
-                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', position: 'relative' }}>
-                    <div style={stepBadgeStyle(step === 1, done1)}>
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', position: 'relative', width: isMobile ? '100%' : 'auto' }}>
+                    <button type="button" onClick={() => goToStep(1)} style={{ ...stepBadgeStyle(step === 1, done1), cursor: 'pointer' }}>
                         <span style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: done1 ? colors.success : (step === 1 ? colors.primary : colors.border), color: colors.white, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>{done1 ? '✓' : '1'}</span>
                         Define
-                    </div>
-                    <div style={stepBadgeStyle(step === 2, done2)}>
+                    </button>
+                    <button type="button" onClick={() => goToStep(2)} style={{ ...stepBadgeStyle(step === 2, done2), cursor: 'pointer' }}>
                        <span style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: done2 ? colors.success : (step === 2 ? colors.primary : colors.border), color: colors.white, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>{done2 ? '✓' : '2'}</span>
                         Schedule
-                    </div>
-                    <div style={stepBadgeStyle(step === 3, done2)}>
+                    </button>
+                    <button type="button" onClick={() => goToStep(3)} style={{ ...stepBadgeStyle(step === 3, done2), cursor: 'pointer' }}>
                         <span style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: (step === 3 ? colors.primary : colors.border), color: colors.white, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>3</span>
                         Review
-                    </div>
+                    </button>
                 </div>
             </div>
 
@@ -521,9 +537,9 @@ const Exams = () => {
                 </div>
             )}
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1.5fr 1.4fr', gap: '32px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: 'clamp(16px, 4vw, 32px)' }}>
                 {/* Step 1 */}
-                <div style={card}>
+                <div ref={defineRef} style={{ ...card, padding: 'clamp(16px, 4vw, 32px)', minWidth: 0, overflow: 'hidden', scrollMarginTop: '96px' }}>
                     <div style={{ fontSize: '20px', fontWeight: 1000, color: colors.secondary, marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                         <span style={{ color: colors.primary }}>01</span> Create Definition
                     </div>
@@ -552,7 +568,7 @@ const Exams = () => {
                                 <option value="final">Final Exam</option>
                             </select>
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: '16px' }}>
                             <div>
                                 <div style={label}>Assessment Start</div>
                                 <input type="date" value={examForm.start_date} onChange={(e) => setExamForm({ ...examForm, start_date: e.target.value })} style={input} required />
@@ -562,7 +578,7 @@ const Exams = () => {
                                 <input type="date" value={examForm.end_date} onChange={(e) => setExamForm({ ...examForm, end_date: e.target.value })} style={input} required />
                             </div>
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: '16px' }}>
                             <div>
                                 <div style={label}>Weightage (Max)</div>
                                 <input type="number" value={examForm.total_marks} onChange={(e) => setExamForm({ ...examForm, total_marks: e.target.value })} style={input} placeholder="100" required />
@@ -591,10 +607,10 @@ const Exams = () => {
 
                 {/* Step 2 + 3 */}
                 <div style={{ display: 'grid', gap: '16px' }}>
-                    <div style={card}>
+                    <div ref={scheduleRef} style={{ ...card, padding: 'clamp(16px, 4vw, 32px)', minWidth: 0, overflow: 'hidden', scrollMarginTop: '96px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', gap: '8px', flexWrap: 'wrap' }}>
                             <div style={{ fontWeight: 900 }}>Step 2: Add Schedule</div>
-                            <select value={selectedExamId} onChange={(e) => { setSelectedExamId(e.target.value); setStep(e.target.value ? 2 : 1); }} style={{ ...input, width: '280px' }}>
+                            <select value={selectedExamId} onChange={(e) => { setSelectedExamId(e.target.value); setStep(e.target.value ? 2 : 1); }} style={{ ...input, width: isMobile ? '100%' : '280px' }}>
                                 <option value="">-- Select Exam --</option>
                                 {exams.map((e) => (
                                     <option key={e.id} value={e.id}>
@@ -610,8 +626,8 @@ const Exams = () => {
                             </div>
                         ) : (
                             <form onSubmit={addSchedule}>
-                                    <div style={{ display: 'grid', gap: '16px', backgroundColor: colors.bg, padding: '24px', borderRadius: '20px', marginBottom: '24px', border: `1px solid ${colors.border}` }}>
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '16px' }}>
+                                    <div style={{ display: 'grid', gap: '16px', backgroundColor: colors.bg, padding: 'clamp(14px, 4vw, 24px)', borderRadius: '20px', marginBottom: '24px', border: `1px solid ${colors.border}`, minWidth: 0 }}>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: '16px' }}>
                                             <div>
                                                 <div style={label}>Subject</div>
                                                 <select value={scheduleForm.subject} onChange={(e) => setScheduleForm({ ...scheduleForm, subject: e.target.value })} style={input} required>
@@ -628,7 +644,7 @@ const Exams = () => {
                                                 <input type="date" value={scheduleForm.exam_date} onChange={(e) => setScheduleForm({ ...scheduleForm, exam_date: e.target.value })} style={input} required />
                                             </div>
                                         </div>
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '16px', alignItems: 'end' }}>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: '16px', alignItems: 'end' }}>
                                             <div>
                                                 <div style={label}>Start Time</div>
                                                 <input type="time" value={scheduleForm.start_time} onChange={(e) => setScheduleForm({ ...scheduleForm, start_time: e.target.value })} style={input} required />
@@ -637,115 +653,148 @@ const Exams = () => {
                                                 <div style={label}>End Time</div>
                                                 <input type="time" value={scheduleForm.end_time} onChange={(e) => setScheduleForm({ ...scheduleForm, end_time: e.target.value })} style={input} required />
                                             </div>
-                                            <button type="submit" style={{ padding: '12px 18px', borderRadius: '16px', border: 'none', backgroundColor: colors.success, color: '#fff', fontWeight: '900', cursor: 'pointer', height: '52px', transition: 'all 0.3s', boxShadow: `0 8px 20px -6px ${colors.success}66`, minWidth: '130px', whiteSpace: 'nowrap', fontSize: '14px' }}>
+                                            <button type="submit" style={{ padding: '12px 18px', borderRadius: '16px', border: 'none', backgroundColor: colors.success, color: '#fff', fontWeight: '900', cursor: 'pointer', height: '52px', transition: 'all 0.3s', boxShadow: `0 8px 20px -6px ${colors.success}66`, minWidth: 0, width: '100%', whiteSpace: 'normal', fontSize: '14px' }}>
                                                 Create Time
                                             </button>
                                         </div>
                                     </div>
 
-                                <div style={{ overflowX: 'auto' }}>
-                                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                                        <thead>
-                                            <tr style={{ backgroundColor: '#f2f4f7' }}>
-                                                <th style={{ padding: '10px', textAlign: 'left' }}>Subject</th>
-                                                <th style={{ padding: '10px', textAlign: 'left' }}>Date</th>
-                                                <th style={{ padding: '10px', textAlign: 'left' }}>Start</th>
-                                                <th style={{ padding: '10px', textAlign: 'left' }}>End</th>
-                                                <th style={{ padding: '10px', textAlign: 'left' }}>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {schedules.map((r) => (
-                                                <tr key={r.id} style={{ borderTop: '1px solid #eef2f7' }}>
-                                                    <td style={{ padding: '10px', fontWeight: 800 }}>
-                                                        {editingScheduleId === r.id ? (
-                                                            <input
-                                                                value={editScheduleForm.subject}
-                                                                onChange={(e) => setEditScheduleForm({ ...editScheduleForm, subject: e.target.value })}
-                                                                style={input}
-                                                            />
-                                                        ) : (
-                                                            r.subject
-                                                        )}
-                                                    </td>
-                                                    <td style={{ padding: '10px' }}>
-                                                        {editingScheduleId === r.id ? (
-                                                            <input
-                                                                type="date"
-                                                                value={editScheduleForm.exam_date}
-                                                                onChange={(e) => setEditScheduleForm({ ...editScheduleForm, exam_date: e.target.value })}
-                                                                style={input}
-                                                            />
-                                                        ) : (
-                                                            r.exam_date
-                                                        )}
-                                                    </td>
-                                                    <td style={{ padding: '10px' }}>
-                                                        {editingScheduleId === r.id ? (
-                                                            <input
-                                                                type="time"
-                                                                value={editScheduleForm.start_time}
-                                                                onChange={(e) => setEditScheduleForm({ ...editScheduleForm, start_time: e.target.value })}
-                                                                style={input}
-                                                            />
-                                                        ) : (
-                                                            r.start_time
-                                                        )}
-                                                    </td>
-                                                    <td style={{ padding: '10px' }}>
-                                                        {editingScheduleId === r.id ? (
-                                                            <input
-                                                                type="time"
-                                                                value={editScheduleForm.end_time}
-                                                                onChange={(e) => setEditScheduleForm({ ...editScheduleForm, end_time: e.target.value })}
-                                                                style={input}
-                                                            />
-                                                        ) : (
-                                                            r.end_time
-                                                        )}
-                                                    </td>
-                                                    <td style={{ padding: '10px' }}>
-                                                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                                                            {editingScheduleId === r.id ? (
-                                                                <>
-                                                                    <button type="button" onClick={saveScheduleEdit} style={{ padding: '7px 12px', borderRadius: '8px', border: 'none', backgroundColor: '#ecfdf5', color: '#16a34a', fontWeight: 800, cursor: 'pointer' }}>
-                                                                        Save
-                                                                    </button>
-                                                                    <button type="button" onClick={cancelEditSchedule} style={{ padding: '7px 12px', borderRadius: '8px', border: '1px solid #e5e7eb', backgroundColor: '#fff', color: '#64748b', fontWeight: 800, cursor: 'pointer' }}>
-                                                                        Cancel
-                                                                    </button>
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <button type="button" onClick={() => startEditSchedule(r)} style={{ padding: '7px 12px', borderRadius: '8px', border: 'none', backgroundColor: '#eff6ff', color: '#2563eb', fontWeight: 800, cursor: 'pointer' }}>
-                                                                        Edit
-                                                                    </button>
-                                                                    <button type="button" onClick={() => deleteSchedule(r.id)} style={{ padding: '7px 12px', borderRadius: '8px', border: 'none', backgroundColor: '#fef2f2', color: '#ef4444', fontWeight: 800, cursor: 'pointer' }}>
-                                                                        Delete
-                                                                    </button>
-                                                                </>
-                                                            )}
+                                {isMobile ? (
+                                    <div style={{ display: 'grid', gap: '10px' }}>
+                                        {schedules.map((r) => (
+                                            <div key={r.id} style={{ border: `1px solid ${colors.border}`, borderRadius: '14px', padding: '12px', backgroundColor: '#fff', minWidth: 0 }}>
+                                                {editingScheduleId === r.id ? (
+                                                    <div style={{ display: 'grid', gap: '10px' }}>
+                                                        <input value={editScheduleForm.subject} onChange={(e) => setEditScheduleForm({ ...editScheduleForm, subject: e.target.value })} style={input} />
+                                                        <input type="date" value={editScheduleForm.exam_date} onChange={(e) => setEditScheduleForm({ ...editScheduleForm, exam_date: e.target.value })} style={input} />
+                                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                                                            <input type="time" value={editScheduleForm.start_time} onChange={(e) => setEditScheduleForm({ ...editScheduleForm, start_time: e.target.value })} style={input} />
+                                                            <input type="time" value={editScheduleForm.end_time} onChange={(e) => setEditScheduleForm({ ...editScheduleForm, end_time: e.target.value })} style={input} />
                                                         </div>
-                                                    </td>
+                                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                                                            <button type="button" onClick={saveScheduleEdit} style={{ padding: '9px 10px', borderRadius: '10px', border: 'none', backgroundColor: '#ecfdf5', color: '#16a34a', fontWeight: 900, cursor: 'pointer' }}>
+                                                                Save
+                                                            </button>
+                                                            <button type="button" onClick={cancelEditSchedule} style={{ padding: '9px 10px', borderRadius: '10px', border: '1px solid #e5e7eb', backgroundColor: '#fff', color: '#64748b', fontWeight: 900, cursor: 'pointer' }}>
+                                                                Cancel
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start' }}>
+                                                            <div style={{ minWidth: 0 }}>
+                                                                <div style={{ fontSize: '11px', color: colors.textMuted, fontWeight: 900, textTransform: 'uppercase' }}>Subject</div>
+                                                                <div style={{ fontSize: '16px', color: colors.text, fontWeight: 900, overflowWrap: 'anywhere' }}>{r.subject}</div>
+                                                            </div>
+                                                            <div style={{ flex: '0 0 auto', fontSize: '12px', color: colors.textMuted, fontWeight: 800 }}>{r.exam_date}</div>
+                                                        </div>
+                                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '12px' }}>
+                                                            <div>
+                                                                <div style={{ fontSize: '11px', color: colors.textMuted, fontWeight: 900 }}>Start</div>
+                                                                <div style={{ fontSize: '13px', color: colors.text, fontWeight: 800 }}>{r.start_time}</div>
+                                                            </div>
+                                                            <div>
+                                                                <div style={{ fontSize: '11px', color: colors.textMuted, fontWeight: 900 }}>End</div>
+                                                                <div style={{ fontSize: '13px', color: colors.text, fontWeight: 800 }}>{r.end_time}</div>
+                                                            </div>
+                                                        </div>
+                                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '12px' }}>
+                                                            <button type="button" onClick={() => startEditSchedule(r)} style={{ padding: '9px 10px', borderRadius: '10px', border: 'none', backgroundColor: '#eff6ff', color: '#2563eb', fontWeight: 900, cursor: 'pointer' }}>
+                                                                Edit
+                                                            </button>
+                                                            <button type="button" onClick={() => deleteSchedule(r.id)} style={{ padding: '9px 10px', borderRadius: '10px', border: 'none', backgroundColor: '#fef2f2', color: '#ef4444', fontWeight: 900, cursor: 'pointer' }}>
+                                                                Delete
+                                                            </button>
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                        ))}
+                                        {schedules.length === 0 && (
+                                            <div style={{ padding: '12px', color: '#6b7280', fontWeight: 800 }}>
+                                                No schedule rows yet. Add subjects to continue.
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                                        <table style={{ width: '100%', minWidth: '680px', borderCollapse: 'collapse' }}>
+                                            <thead>
+                                                <tr style={{ backgroundColor: '#f2f4f7' }}>
+                                                    <th style={{ padding: '10px', textAlign: 'left' }}>Subject</th>
+                                                    <th style={{ padding: '10px', textAlign: 'left' }}>Date</th>
+                                                    <th style={{ padding: '10px', textAlign: 'left' }}>Start</th>
+                                                    <th style={{ padding: '10px', textAlign: 'left' }}>End</th>
+                                                    <th style={{ padding: '10px', textAlign: 'left' }}>Action</th>
                                                 </tr>
-                                            ))}
-                                            {schedules.length === 0 && (
-                                                <tr>
-                                                    <td colSpan={5} style={{ padding: '12px', color: '#6b7280', fontWeight: 800 }}>
-                                                        No schedule rows yet. Add subjects to continue.
-                                                    </td>
-                                                </tr>
-                                            )}
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            </thead>
+                                            <tbody>
+                                                {schedules.map((r) => (
+                                                    <tr key={r.id} style={{ borderTop: '1px solid #eef2f7' }}>
+                                                        <td style={{ padding: '10px', fontWeight: 800 }}>
+                                                            {editingScheduleId === r.id ? (
+                                                                <input value={editScheduleForm.subject} onChange={(e) => setEditScheduleForm({ ...editScheduleForm, subject: e.target.value })} style={input} />
+                                                            ) : (
+                                                                r.subject
+                                                            )}
+                                                        </td>
+                                                        <td style={{ padding: '10px' }}>
+                                                            {editingScheduleId === r.id ? (
+                                                                <input type="date" value={editScheduleForm.exam_date} onChange={(e) => setEditScheduleForm({ ...editScheduleForm, exam_date: e.target.value })} style={input} />
+                                                            ) : (
+                                                                r.exam_date
+                                                            )}
+                                                        </td>
+                                                        <td style={{ padding: '10px' }}>
+                                                            {editingScheduleId === r.id ? (
+                                                                <input type="time" value={editScheduleForm.start_time} onChange={(e) => setEditScheduleForm({ ...editScheduleForm, start_time: e.target.value })} style={input} />
+                                                            ) : (
+                                                                r.start_time
+                                                            )}
+                                                        </td>
+                                                        <td style={{ padding: '10px' }}>
+                                                            {editingScheduleId === r.id ? (
+                                                                <input type="time" value={editScheduleForm.end_time} onChange={(e) => setEditScheduleForm({ ...editScheduleForm, end_time: e.target.value })} style={input} />
+                                                            ) : (
+                                                                r.end_time
+                                                            )}
+                                                        </td>
+                                                        <td style={{ padding: '10px' }}>
+                                                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                                                {editingScheduleId === r.id ? (
+                                                                    <>
+                                                                        <button type="button" onClick={saveScheduleEdit} style={{ padding: '7px 12px', borderRadius: '8px', border: 'none', backgroundColor: '#ecfdf5', color: '#16a34a', fontWeight: 800, cursor: 'pointer' }}>Save</button>
+                                                                        <button type="button" onClick={cancelEditSchedule} style={{ padding: '7px 12px', borderRadius: '8px', border: '1px solid #e5e7eb', backgroundColor: '#fff', color: '#64748b', fontWeight: 800, cursor: 'pointer' }}>Cancel</button>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <button type="button" onClick={() => startEditSchedule(r)} style={{ padding: '7px 12px', borderRadius: '8px', border: 'none', backgroundColor: '#eff6ff', color: '#2563eb', fontWeight: 800, cursor: 'pointer' }}>Edit</button>
+                                                                        <button type="button" onClick={() => deleteSchedule(r.id)} style={{ padding: '7px 12px', borderRadius: '8px', border: 'none', backgroundColor: '#fef2f2', color: '#ef4444', fontWeight: 800, cursor: 'pointer' }}>Delete</button>
+                                                                    </>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                                {schedules.length === 0 && (
+                                                    <tr>
+                                                        <td colSpan={5} style={{ padding: '12px', color: '#6b7280', fontWeight: 800 }}>
+                                                            No schedule rows yet. Add subjects to continue.
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
                             </form>
                         )}
                     </div>
                 </div>
 
                 {/* Overview widget */}
-                <div style={card}>
+                <div ref={reviewRef} style={{ ...card, minWidth: 0, overflow: 'hidden', scrollMarginTop: '96px' }}>
                     <div style={{ fontSize: '20px', fontWeight: 1000, color: colors.secondary, marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                         📊 Global Overview
                     </div>
@@ -761,7 +810,7 @@ const Exams = () => {
                                 ))}
                             </select>
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))', gap: '8px' }}>
                             <div>
                                 <div style={label}>Status</div>
                                 <select value={overviewStatusFilter} onChange={(e) => setOverviewStatusFilter(e.target.value)} style={input}>
@@ -800,7 +849,7 @@ const Exams = () => {
                                 <div key={e.id} style={{ 
                                     border: `1px solid ${colors.border}`, 
                                     borderRadius: '20px', 
-                                    padding: '20px', 
+                                    padding: 'clamp(14px, 3vw, 20px)', 
                                     backgroundColor: selectedExamId === String(e.id) ? colors.primaryLight : '#fff',
                                     transition: 'all 0.2s ease',
                                     borderLeft: `6px solid ${e.status === 'Published' ? colors.success : colors.warning}`,
@@ -809,29 +858,29 @@ const Exams = () => {
                                     {editingExamId === e.id ? (
                                         <div style={{ display: 'grid', gap: '12px' }}>
                                             <input value={editExamForm.name} onChange={(ev) => setEditExamForm({ ...editExamForm, name: ev.target.value })} style={input} />
-                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))', gap: '8px' }}>
                                                 <input type="date" value={editExamForm.start_date} onChange={(ev) => setEditExamForm({ ...editExamForm, start_date: ev.target.value })} style={input} />
                                                 <input type="date" value={editExamForm.end_date} onChange={(ev) => setEditExamForm({ ...editExamForm, end_date: ev.target.value })} style={input} />
                                             </div>
-                                            <div style={{ display: 'flex', gap: '8px' }}>
+                                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                                                 <button type="button" onClick={saveExamEdit} style={{ flex: 1, padding: '10px', borderRadius: '12px', border: 'none', backgroundColor: colors.success, color: '#fff', fontWeight: 800, cursor: 'pointer' }}>Save</button>
                                                 <button type="button" onClick={cancelEditExam} style={{ flex: 1, padding: '10px', borderRadius: '12px', border: `1px solid ${colors.border}`, backgroundColor: '#fff', color: colors.text, fontWeight: 800, cursor: 'pointer' }}>Cancel</button>
                                             </div>
                                         </div>
                                     ) : (
                                         <>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                                <div style={{ fontWeight: 900, color: colors.secondary, fontSize: '15px' }}>{e.name}</div>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px' }}>
+                                                <div style={{ fontWeight: 900, color: colors.secondary, fontSize: '15px', minWidth: 0, overflowWrap: 'anywhere' }}>{e.name}</div>
                                                 <span style={{ fontSize: '10px', fontWeight: 1000, backgroundColor: e.status === 'Published' ? colors.successLight : colors.warningLight, color: e.status === 'Published' ? colors.success : colors.warning, padding: '4px 8px', borderRadius: '6px', textTransform: 'uppercase' }}>{e.status}</span>
                                             </div>
                                             <div style={{ marginTop: '6px', fontSize: '13px', color: colors.textMuted, fontWeight: 700 }}>
                                                 {e.class_section_display || `${e.class_name}-${e.section_name}`}
                                             </div>
-                                            <div style={{ marginTop: '8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                            <div style={{ marginTop: '8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>📅 {e.start_date}</div>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>📊 {e.total_marks} Pts</div>
                                             </div>
-                                            <div style={{ marginTop: '16px', display: 'flex', gap: '8px' }}>
+                                            <div style={{ marginTop: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                                                 <button onClick={() => setViewingExam(e)} style={{ flex: 1, padding: '8px', borderRadius: '10px', border: 'none', backgroundColor: '#f1f5f9', color: '#475569', fontSize: '12px', fontWeight: 900, cursor: 'pointer' }}>View</button>
                                                 <button onClick={() => startEditExam(e)} style={{ flex: 1, padding: '8px', borderRadius: '10px', border: 'none', backgroundColor: '#eff6ff', color: '#2563eb', fontSize: '12px', fontWeight: 900, cursor: 'pointer' }}>Edit</button>
                                                 <button onClick={() => deleteExam(e.id, e.name)} disabled={deletingExamId === e.id} style={{ flex: 1, padding: '8px', borderRadius: '10px', border: 'none', backgroundColor: '#fef2f2', color: '#ef4444', fontSize: '12px', fontWeight: 900, cursor: 'pointer' }}>Delete</button>
@@ -846,17 +895,17 @@ const Exams = () => {
             </div>
 
             {viewingExam && (
-                <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15, 23, 42, 0.7)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000, padding: '20px' }}>
-                    <div style={{ ...card, width: 'min(900px, 100%)', maxHeight: '90vh', overflowY: 'auto', position: 'relative' }}>
-                        <button onClick={() => setViewingExam(null)} style={{ position: 'absolute', top: '24px', right: '24px', background: colors.primaryLight, border: 'none', width: '40px', height: '40px', borderRadius: '12px', cursor: 'pointer', fontSize: '20px', color: colors.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900 }}>×</button>
+                <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15, 23, 42, 0.7)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000, padding: '12px', overflowY: 'auto' }}>
+                    <div style={{ ...card, width: 'min(900px, 100%)', maxHeight: 'calc(100dvh - 24px)', overflowY: 'auto', position: 'relative' }}>
+                        <button onClick={() => setViewingExam(null)} style={{ position: 'absolute', top: '14px', right: '14px', background: colors.primaryLight, border: 'none', width: '40px', height: '40px', borderRadius: '12px', cursor: 'pointer', fontSize: '20px', color: colors.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900 }}>×</button>
                         
                         <div style={{ marginBottom: '32px' }}>
                             <span style={{ fontSize: '12px', fontWeight: 1000, color: colors.primary, backgroundColor: colors.primaryLight, padding: '6px 12px', borderRadius: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{viewingExam.exam_type}</span>
-                            <h2 style={{ fontSize: '32px', fontWeight: 1000, color: colors.secondary, margin: '12px 0 8px 0' }}>{viewingExam.name}</h2>
+                            <h2 style={{ fontSize: 'clamp(22px, 6vw, 32px)', lineHeight: 1.12, fontWeight: 1000, color: colors.secondary, margin: '12px 48px 8px 0' }}>{viewingExam.name}</h2>
                             <div style={{ color: colors.textMuted, fontWeight: 700, fontSize: '16px' }}>{viewingExam.class_section_display || `${viewingExam.class_name}-${viewingExam.section_name}`}</div>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px', marginBottom: '40px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: '16px', marginBottom: '32px' }}>
                             <div style={{ padding: '20px', backgroundColor: colors.bg, borderRadius: '20px', border: `1px solid ${colors.border}` }}>
                                 <div style={label}>Timeline</div>
                                 <div style={{ fontWeight: 800, color: colors.text }}>{viewingExam.start_date} to {viewingExam.end_date}</div>
@@ -872,8 +921,8 @@ const Exams = () => {
                         </div>
 
                         <div style={{ fontSize: '18px', fontWeight: 1000, color: colors.secondary, marginBottom: '16px' }}>Examination Schedule</div>
-                        <div style={{ overflowX: 'auto', borderRadius: '16px', border: `1px solid ${colors.border}` }}>
-                            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', borderRadius: '16px', border: `1px solid ${colors.border}` }}>
+                            <table style={{ width: '100%', minWidth: '520px', borderCollapse: 'collapse' }}>
                                 <thead>
                                     <tr style={{ backgroundColor: colors.bg }}>
                                         <th style={{ padding: '14px 20px', textAlign: 'left', fontSize: '13px', color: colors.textMuted }}>Subject</th>
@@ -910,7 +959,7 @@ const Exams = () => {
                             </div>
                         )}
 
-                        <div style={{ marginTop: '40px', display: 'flex', gap: '16px' }}>
+                        <div style={{ marginTop: '40px', display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
                             <button onClick={() => setViewingExam(null)} style={{ flex: 1, padding: '16px', borderRadius: '16px', border: `2px solid ${colors.border}`, backgroundColor: 'transparent', color: colors.text, fontWeight: 900, cursor: 'pointer' }}>Close View</button>
                         </div>
                     </div>
