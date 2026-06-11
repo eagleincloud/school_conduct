@@ -134,6 +134,7 @@ const ManageTeachers = () => {
         }
         const headers = [
             'Employee ID',
+            'RFID',
             'Teacher Name',
             'Specialization',
             'Email',
@@ -150,6 +151,7 @@ const ManageTeachers = () => {
             lines.push(
                 [
                     t.employee_id || '',
+                    t.rfid_code || '',
                     t.name || '',
                     t.specializationLabel || '',
                     t.email || '',
@@ -199,6 +201,7 @@ const ManageTeachers = () => {
                 email: editRow.email || '',
                 name: editRow.name || '',
                 employee_id: editRow.employee_id || '',
+                rfid_code: editRow.rfid_code || '',
                 subject_specialization: editRow.subject_specialization || '',
                 phone_number: editRow.phone_number || '',
                 gender: editRow.gender || '',
@@ -329,6 +332,7 @@ const ManageTeachers = () => {
                                 <tr>
                                     <th style={th}>S.No</th>
                                     <th style={th}>Employee ID</th>
+                                    <th style={th}>RFID</th>
                                     <th style={th}>Teacher Name</th>
                                     <th style={th}>Specialization</th>
                                     <th style={th}>Email</th>
@@ -345,11 +349,12 @@ const ManageTeachers = () => {
                         </thead>
                         <tbody>
                                 {pagedRows.length === 0 ? (
-                                    <tr><td colSpan={13} style={{ ...td, textAlign: 'center', padding: 20 }}>No teachers found.</td></tr>
+                                    <tr><td colSpan={15} style={{ ...td, textAlign: 'center', padding: 20 }}>No teachers found.</td></tr>
                                 ) : pagedRows.map((t, idx) => (
                                     <tr key={t.id} style={{ background: idx % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
                                         <td style={td}>{start + idx + 1}</td>
                                         <td style={td}>{t.employee_id || '—'}</td>
+                                        <td style={td}>{t.rfid_code || '—'}</td>
                                         <td style={{ ...td, fontWeight: 700 }}>{t.name || '—'}</td>
                                         <td style={td}>{t.specializationLabel}</td>
                                         <td style={td}>{t.email || '—'}</td>
@@ -366,9 +371,9 @@ const ManageTeachers = () => {
                                                     borderRadius: 6, 
                                                     fontSize: 12, 
                                                     fontWeight: 700,
-                                                    backgroundColor: t.role === 'Class Teacher' ? '#eff6ff' : '#f8fafc',
-                                                    color: t.role === 'Class Teacher' ? '#1d4ed8' : '#64748b',
-                                                    border: `1px solid ${t.role === 'Class Teacher' ? '#bfdbfe' : '#e2e8f0'}`
+                                                    backgroundColor: t.role === 'Class Teacher' ? '#eff6ff' : t.role === 'Staff' ? '#f5f3ff' : '#f8fafc',
+                                                    color: t.role === 'Class Teacher' ? '#1d4ed8' : t.role === 'Staff' ? '#7c3aed' : '#64748b',
+                                                    border: `1px solid ${t.role === 'Class Teacher' ? '#bfdbfe' : t.role === 'Staff' ? '#ddd6fe' : '#e2e8f0'}`
                                                 }}
                                             >
                                                 {t.role || 'Subject Teacher'}
@@ -437,6 +442,7 @@ const ManageTeachers = () => {
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, fontSize: 13 }}>
                             <div><b>Name:</b> {viewRow.name || '—'}</div>
                             <div><b>Employee ID:</b> {viewRow.employee_id || '—'}</div>
+                            <div><b>RFID Code:</b> {viewRow.rfid_code || '—'}</div>
                             <div><b>Email:</b> {viewRow.email || '—'}</div>
                             <div><b>Phone:</b> {viewRow.phone_number || '—'}</div>
                             <div><b>Specialization:</b> {viewRow.specializationLabel}</div>
@@ -459,6 +465,7 @@ const ManageTeachers = () => {
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                             <input value={editRow.name || ''} onChange={(e) => setEditRow((p) => ({ ...p, name: e.target.value }))} placeholder="Full name" style={selectStyle} />
                             <input value={editRow.employee_id || ''} onChange={(e) => setEditRow((p) => ({ ...p, employee_id: e.target.value }))} placeholder="Employee ID" style={selectStyle} />
+                            <input value={editRow.rfid_code || ''} onChange={(e) => setEditRow((p) => ({ ...p, rfid_code: e.target.value }))} placeholder="RFID Code" style={selectStyle} />
                             <input value={editRow.email || ''} onChange={(e) => setEditRow((p) => ({ ...p, email: e.target.value }))} placeholder="Email" style={selectStyle} />
                             <input value={editRow.phone_number || ''} onChange={(e) => setEditRow((p) => ({ ...p, phone_number: e.target.value }))} placeholder="Phone number" style={selectStyle} />
                             <input value={editRow.subject_specialization || ''} onChange={(e) => setEditRow((p) => ({ ...p, subject_specialization: e.target.value }))} placeholder="Specialization" style={selectStyle} />
@@ -479,6 +486,7 @@ const ManageTeachers = () => {
                             <select value={editRow.role || 'Subject Teacher'} onChange={(e) => setEditRow((p) => ({ ...p, role: e.target.value }))} style={selectStyle}>
                                 <option value="Subject Teacher">Subject Teacher</option>
                                 <option value="Class Teacher">Class Teacher</option>
+                                <option value="Staff">Staff</option>
                             </select>
                         </div>
                         <div style={{ marginTop: 14, display: 'flex', justifyContent: 'flex-end', gap: 10 }}>

@@ -49,7 +49,7 @@ def ensure_teacher_profile(user):
     return TeacherProfile.objects.create(
         user=user,
         employee_id=_next_employee_id(user.school),
-
+        school=user.school,
         subject_specialization='',
         status='Active',
     )
@@ -284,7 +284,7 @@ class TeacherDocumentsView(views.APIView):
         return TeacherProfile.objects.create(
             user=user,
             employee_id=_next_employee_id(user.school),
-
+            school=user.school,
             subject_specialization='',
             status='Active',
         )
@@ -345,6 +345,8 @@ class TeacherListView(views.APIView):
                 "qualification": p.qualification,
                 "experience_years": p.experience_years,
                 "joining_date": p.joining_date,
+                "role": p.role,
+                "rfid_code": p.rfid_code,
                 "status": p.status,
             }
             for p in profiles
@@ -381,6 +383,8 @@ class TeacherDetailView(views.APIView):
             "qualification": p.qualification,
             "experience_years": p.experience_years,
             "joining_date": p.joining_date,
+            "role": p.role,
+            "rfid_code": p.rfid_code,
             "status": p.status,
             "profile_image_base64": p.profile_image_base64,
         })
@@ -467,7 +471,9 @@ class TeacherUpdateView(views.APIView):
         p.experience_years = clean_field(data.get('experience_years'), p.experience_years)
         p.joining_date = clean_field(data.get('joining_date'), p.joining_date)
         p.status = data.get('status', p.status)
+        p.role = data.get('role', p.role)
         p.profile_image_base64 = data.get('profile_image_base64', p.profile_image_base64)
+        p.rfid_code = clean_field(data.get('rfid_code'), p.rfid_code)
         p.save()
 
         return Response({"message": "Teacher updated successfully"}, status=status.HTTP_200_OK)
@@ -521,6 +527,8 @@ class AdminTeacherCreateView(views.APIView):
             profile = TeacherProfile.objects.create(
                 user=user,
                 employee_id=employee_id,
+                school=school,
+                role=data.get('role') or 'Subject Teacher',
                 subject_specialization=data.get('subject_specialization'),
                 phone_number=data.get('phone_number'),
                 gender=data.get('gender'),
@@ -530,6 +538,7 @@ class AdminTeacherCreateView(views.APIView):
                 joining_date=clean_field(data.get('joining_date')),
                 status=data.get('status') or 'Active',
                 profile_image_base64=data.get('profile_image_base64'),
+                rfid_code=clean_field(data.get('rfid_code')),
             )
             return Response({"message": "Teacher created successfully"}, status=status.HTTP_201_CREATED)
         except Exception as e:
