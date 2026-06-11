@@ -162,6 +162,10 @@ const TeacherDashboard = () => {
 
   const [shifts, setShifts] = useState([]);
   const [selectedShiftId, setSelectedShiftId] = useState("");
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [galleryLoading, setGalleryLoading] = useState(false);
+  const [currentGallerySlide, setCurrentGallerySlide] = useState(0);
+  const galleryToken = localStorage.getItem('access_token');
 
   useEffect(() => {
     setLoading(true);
@@ -233,6 +237,33 @@ const TeacherDashboard = () => {
       )
       .catch(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    const fetchGallery = async () => {
+      setGalleryLoading(true);
+      try {
+        const res = await api.get('gallery/');
+        setGalleryImages(Array.isArray(res?.data) ? res.data : []);
+      } catch (e) {
+        console.error('Gallery fetch error', e);
+        setGalleryImages([]);
+      } finally {
+        setGalleryLoading(false);
+      }
+    };
+    fetchGallery();
+  }, []);
+
+  useEffect(() => {
+    if (!galleryImages.length) {
+      setCurrentGallerySlide(0);
+      return undefined;
+    }
+    const timer = setInterval(() => {
+      setCurrentGallerySlide((prev) => (prev + 1) % galleryImages.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [galleryImages]);
 
   useEffect(() => {
     if (!selectedClassId) {
@@ -1434,6 +1465,131 @@ const TeacherDashboard = () => {
                 No active subjects found.
               </div>
             ) : null}
+          </div>
+        </Card>
+
+        {/* School Gallery Highlights */}
+        <Card style={{ gridColumn: "span 12" }}>
+          <div style={{ fontWeight: 1000, color: palette.text }}>
+            School Gallery Highlights
+          </div>
+          <div
+            style={{
+              marginTop: 4,
+              color: palette.muted,
+              fontSize: 12,
+              fontWeight: 900,
+            }}
+          >
+            Auto-rotating moments from your school gallery
+          </div>
+          <div
+            style={{
+              marginTop: 12,
+              height: 220,
+              borderRadius: 16,
+              border: `1px solid ${palette.border}`,
+              backgroundColor: "#f8fafc",
+              overflow: "hidden",
+              position: "relative",
+            }}
+          >
+            {galleryLoading ? (
+              <div
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: palette.muted,
+                  fontWeight: 1000,
+                }}
+              >
+                Loading gallery...
+              </div>
+            ) : galleryImages.length === 0 ? (
+              <div
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: palette.muted,
+                  fontWeight: 1000,
+                }}
+              >
+                <div style={{ fontSize: 36, marginBottom: 8, opacity: 0.3 }}>🖼️</div>
+                No gallery images uploaded yet.
+              </div>
+            ) : (
+              <>
+                {galleryImages.map((img, idx) => (
+                  <img
+                    key={img.id}
+                    src={`${img.image_url}${galleryToken ? `?token=${galleryToken}` : ''}`}
+                    alt={img.title}
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      transition: "opacity 700ms ease",
+                      opacity: idx === currentGallerySlide ? 1 : 0,
+                      userSelect: "none",
+                    }}
+                    onContextMenu={(e) => e.preventDefault()}
+                    onDragStart={(e) => e.preventDefault()}
+                  />
+                ))}
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: "auto 0 0 0",
+                    padding: 12,
+                    background: "linear-gradient(to top, rgba(0,0,0,0.55), transparent)",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  <p
+                    style={{
+                      color: "#fff",
+                      fontWeight: 1000,
+                      fontSize: 14,
+                      margin: 0,
+                      textShadow: "0 1px 4px rgba(0,0,0,0.4)",
+                    }}
+                  >
+                    {galleryImages[currentGallerySlide]?.title}
+                  </p>
+                  <div style={{ display: "flex", gap: 6 }}>
+                    {galleryImages.map((_, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setCurrentGallerySlide(idx)}
+                        style={{
+                          width: idx === currentGallerySlide ? 20 : 8,
+                          height: 8,
+                          borderRadius: 99,
+                          border: "none",
+                          backgroundColor:
+                            idx === currentGallerySlide
+                              ? "#fff"
+                              : "rgba(255,255,255,0.4)",
+                          cursor: "pointer",
+                          transition: "all 300ms ease",
+                          padding: 0,
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </Card>
       </div>

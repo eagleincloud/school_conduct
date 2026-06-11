@@ -306,6 +306,10 @@ export default function StudentDashboard() {
   const [exams, setExams] = useState([]);
   const [results, setResults] = useState([]);
   const [feeRecords, setFeeRecords] = useState([]);
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [galleryLoading, setGalleryLoading] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const galleryToken = localStorage.getItem('access_token');
 
   const { selectedStudentId, setSelectedStudentId } = useStudent();
 
@@ -345,6 +349,33 @@ export default function StudentDashboard() {
   useEffect(() => {
     localStorage.setItem("theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    const fetchGallery = async () => {
+      setGalleryLoading(true);
+      try {
+        const res = await api.get('gallery/');
+        setGalleryImages(Array.isArray(res?.data) ? res.data : []);
+      } catch (e) {
+        console.error('Gallery fetch error', e);
+        setGalleryImages([]);
+      } finally {
+        setGalleryLoading(false);
+      }
+    };
+    fetchGallery();
+  }, []);
+
+  useEffect(() => {
+    if (!galleryImages.length) {
+      setCurrentSlide(0);
+      return undefined;
+    }
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % galleryImages.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [galleryImages]);
 
   const themeStyles = useMemo(() => {
     if (theme === "dark") {
@@ -1990,6 +2021,142 @@ export default function StudentDashboard() {
               >
                 View Fee Details
               </button>
+            </div>
+          </Card>
+        </div>
+
+        {/* School Gallery Highlights */}
+        <div style={{ gridColumn: "span 12" }}>
+          <Card style={{ ...cardStyle, minHeight: 280 }}>
+            <SectionHeader
+              icon={
+                <Icon>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <path d="m21 15-5-5L5 21" />
+                  </svg>
+                </Icon>
+              }
+              title="School Gallery Highlights"
+              subtitle="Auto-rotating moments"
+            />
+            <div
+              style={{
+                marginTop: 12,
+                height: 220,
+                borderRadius: 16,
+                border: `1px solid ${themeStyles.cardBorder}`,
+                backgroundColor: theme === "dark" ? "#0f172a" : "#f8fafc",
+                overflow: "hidden",
+                position: "relative",
+              }}
+            >
+              {galleryLoading ? (
+                <div
+                  style={{
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: themeStyles.muted,
+                    fontWeight: 1000,
+                  }}
+                >
+                  Loading gallery...
+                </div>
+              ) : galleryImages.length === 0 ? (
+                <div
+                  style={{
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: themeStyles.muted,
+                    fontWeight: 1000,
+                  }}
+                >
+                  <div style={{ fontSize: 36, marginBottom: 8, opacity: 0.3 }}>🖼️</div>
+                  No gallery images uploaded yet.
+                </div>
+              ) : (
+                <>
+                  {galleryImages.map((img, idx) => (
+                    <img
+                      key={img.id}
+                      src={`${img.image_url}${galleryToken ? `?token=${galleryToken}` : ''}`}
+                      alt={img.title}
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        transition: "opacity 700ms ease",
+                        opacity: idx === currentSlide ? 1 : 0,
+                        userSelect: "none",
+                      }}
+                      onContextMenu={(e) => e.preventDefault()}
+                      onDragStart={(e) => e.preventDefault()}
+                    />
+                  ))}
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: "auto 0 0 0",
+                      padding: 12,
+                      background: "linear-gradient(to top, rgba(0,0,0,0.55), transparent)",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-end",
+                    }}
+                  >
+                    <p
+                      style={{
+                        color: "#fff",
+                        fontWeight: 1000,
+                        fontSize: 14,
+                        margin: 0,
+                        textShadow: "0 1px 4px rgba(0,0,0,0.4)",
+                      }}
+                    >
+                      {galleryImages[currentSlide]?.title}
+                    </p>
+                    <div style={{ display: "flex", gap: 6 }}>
+                      {galleryImages.map((_, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setCurrentSlide(idx)}
+                          style={{
+                            width: idx === currentSlide ? 20 : 8,
+                            height: 8,
+                            borderRadius: 99,
+                            border: "none",
+                            backgroundColor:
+                              idx === currentSlide
+                                ? "#fff"
+                                : "rgba(255,255,255,0.4)",
+                            cursor: "pointer",
+                            transition: "all 300ms ease",
+                            padding: 0,
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </Card>
         </div>
