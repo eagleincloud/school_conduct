@@ -34,6 +34,7 @@ import TeacherAssignmentList from "../pages/teacher/AssignmentList";
 import TeacherMessaging from "../pages/teacher/Messaging";
 import TeacherHolidays from "../pages/teacher/Holidays";
 import TeacherSyllabus from "../pages/teacher/Syllabus";
+import TeacherMyAttendance from "../pages/teacher/MyAttendance";
 
 // Admin
 import AddStudent from "../pages/admin/AddStudent";
@@ -60,6 +61,7 @@ import TimeTable from "../pages/common/TimeTable";
 import AdminSyllabus from "../pages/admin/Syllabus";
 import AdminMessaging from "../pages/admin/Messaging";
 import BiometricMachines from "../pages/admin/BiometricMachines";
+import AdminTeacherAttendance from "../pages/admin/TeacherAttendance";
 
 import SaaSLanding from "../pages/SaaSLanding";
 import SuperAdminLogin from "../pages/superadmin/Login";
@@ -170,6 +172,7 @@ const AppRoutes = () => {
               <Route path="syllabus" element={<TeacherSyllabus />} />
               <Route path="messaging" element={<TeacherMessaging />} />
               <Route path="holidays" element={<TeacherHolidays />} />
+              <Route path="my-attendance" element={<TeacherMyAttendance />} />
               <Route path="timetable" element={<TimeTable />} />
               <Route path="gallery" element={<GalleryPage />} />
             </Routes>
@@ -206,6 +209,7 @@ const AppRoutes = () => {
               <Route path="syllabus" element={<AdminSyllabus />} />
               <Route path="messaging" element={<AdminMessaging />} />
               <Route path="biometric-machines" element={<BiometricMachines />} />
+              <Route path="teacher-attendance" element={<AdminTeacherAttendance />} />
               <Route path="gallery" element={<GalleryPage />} />
             </Routes>
           </ProtectedRoute>

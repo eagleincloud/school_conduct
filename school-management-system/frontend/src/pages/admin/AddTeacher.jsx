@@ -37,6 +37,7 @@ const AddTeacher = () => {
     dob: "",
 
     employee_id: "",
+    rfid_code: "",
     subject_specialization: "",
     experience_years: "",
     joining_date: "",
@@ -199,6 +200,7 @@ const AddTeacher = () => {
         password: form.password,
         name: `${form.first_name} ${form.last_name}`.trim(),
         employee_id: employeeIdPreview,
+        rfid_code: form.rfid_code || '',
         subject_specialization: form.subject_specialization,
 
         // Extra fields (backend may ignore but UI requirements are satisfied)
@@ -224,6 +226,7 @@ const AddTeacher = () => {
         gender: "",
         dob: "",
         employee_id: "",
+        rfid_code: "",
         subject_specialization: "",
         experience_years: "",
         joining_date: "",
@@ -481,6 +484,19 @@ const AddTeacher = () => {
                 </div>
 
                 <div>
+                  <div style={labelStyle}>RFID Code (Optional)</div>
+                  <input
+                    type="text"
+                    value={form.rfid_code}
+                    onChange={(e) =>
+                      setForm({ ...form, rfid_code: e.target.value })
+                    }
+                    placeholder="Enter RFID code"
+                    style={inputStyle}
+                  />
+                </div>
+
+                <div>
                   <div style={labelStyle}>
                     Subject Specialization{" "}
                     <span style={{ color: "#dc2626" }}>*</span>
@@ -683,6 +699,7 @@ const AddTeacher = () => {
                   >
                     <option value="Subject Teacher">Subject Teacher</option>
                     <option value="Class Teacher">Class Teacher</option>
+                    <option value="Staff">Staff</option>
                   </select>
                 </div>
               </div>

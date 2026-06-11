@@ -123,3 +123,48 @@ class BiometricDevice(models.Model):
             return self.last_test_status
         return 'not_tested'
 
+
+class TeacherAttendance(models.Model):
+    """
+    Attendance record for teachers/staff, managed by the school admin.
+    Separate from the student Attendance model to avoid coupling.
+    """
+    STATUS_CHOICES = (
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+        ('late', 'Late'),
+    )
+    VIA_CHOICES = (
+        ('manual', 'Manual'),
+        ('rfid', 'RFID'),
+    )
+
+    teacher = models.ForeignKey(
+        'teachers.TeacherProfile',
+        on_delete=models.CASCADE,
+        related_name='attendance_records',
+    )
+    date = models.DateField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+    punch_in_time = models.DateTimeField(blank=True, null=True)
+    punch_out_time = models.DateTimeField(blank=True, null=True)
+    marked_via = models.CharField(max_length=10, choices=VIA_CHOICES, default='manual')
+    marked_by = models.ForeignKey(
+        'accounts.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='teacher_attendance_marked',
+    )
+    notes = models.TextField(blank=True, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('teacher', 'date')
+        indexes = [
+            models.Index(fields=['date']),
+        ]
+
+    def __str__(self):
+        return f"{self.teacher.user.name} - {self.date} ({self.status})"
+

@@ -26,6 +26,7 @@ class TeacherProfileSerializer(serializers.ModelSerializer):
             'role',
             'status',
             'profile_image_base64',
+            'rfid_code',
         ]
 
 

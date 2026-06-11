@@ -55,6 +55,7 @@ const Sidebar = () => {
     const teacherLinks = [
         { path: '/teacher/dashboard', label: 'Dashboard', icon: '📊' },
         { path: '/teacher/attendance', label: 'Mark Attendance', icon: '✅' },
+        { path: '/teacher/my-attendance', label: 'My Attendance', icon: '📋' },
         { path: '/teacher/upload-result', label: 'Upload Results', icon: '📤' },
         { path: '/teacher/assignment', label: 'Create Assignment', icon: '➕' },
         { path: '/teacher/assignments', label: 'Assignment List', icon: '📚' },
@@ -113,6 +114,7 @@ const Sidebar = () => {
 
 
         adminLinks.splice(adminLinks.length - 1, 0, { path: '/admin/biometric-machines', label: 'Biometric Machines', icon: 'Machine' });
+        adminLinks.splice(adminLinks.length - 1, 0, { path: '/admin/teacher-attendance', label: 'Staff Attendance', icon: '👨‍🏫' });
 
     const links = role === 'student' ? studentLinks : (role === 'teacher' ? teacherLinks : adminLinks);
 

@@ -23,6 +23,14 @@ from .views import (
     BiometricDevicePunchView,
     BiometricDeviceHeartbeatView,
 )
+from .teacher_attendance_views import (
+    AdminTeacherAttendanceSheetView,
+    AdminTeacherAttendanceBulkSaveView,
+    AdminTeacherAttendanceMarkView,
+    AdminTeacherAttendanceSummaryView,
+    TeacherMyAttendanceView,
+    TeacherBiometricPunchView,
+)
 
 urlpatterns = [
     path('devices/', BiometricDeviceListCreateView.as_view(), name='biometric-device-list-create'),
@@ -45,4 +53,12 @@ urlpatterns = [
     path('verification/decision/<int:attendance_id>/', TeacherAttendanceVerificationDecisionView.as_view(), name='teacher-attendance-verification-decision'),
     path('my-attendance/', MyAttendanceView.as_view(), name='my-attendance'),
     path('my/report/pdf/', MyAttendanceReportPDFView.as_view(), name='my-attendance-report-pdf'),
+
+    # Teacher/Staff Attendance (admin-managed)
+    path('staff/sheet/', AdminTeacherAttendanceSheetView.as_view(), name='staff-attendance-sheet'),
+    path('staff/save/', AdminTeacherAttendanceBulkSaveView.as_view(), name='staff-attendance-bulk-save'),
+    path('staff/mark/', AdminTeacherAttendanceMarkView.as_view(), name='staff-attendance-mark'),
+    path('staff/summary/', AdminTeacherAttendanceSummaryView.as_view(), name='staff-attendance-summary'),
+    path('staff/my-attendance/', TeacherMyAttendanceView.as_view(), name='staff-my-attendance'),
+    path('staff/biometric-punch/', TeacherBiometricPunchView.as_view(), name='staff-biometric-punch'),
 ]

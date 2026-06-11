@@ -29,10 +29,13 @@ function StatusBadge({ status }) {
   } else if (s === "absent") {
     bg = "#fee2e2";
     color = palette.absent;
+  } else if (s === "late") {
+    bg = "#fef3c7";
+    color = "#f59e0b";
   }
 
   const label =
-    s === "present" ? "Present" : s === "absent" ? "Absent" : "Unmarked";
+    s === "present" ? "Present" : s === "absent" ? "Absent" : s === "late" ? "Late" : "Unmarked";
   return (
     <span
       className="dashboard-shell" style={{
@@ -329,6 +332,14 @@ const MarkAttendance = () => {
               <div
                 style={{ color: palette.muted, fontWeight: 900, fontSize: 12 }}
               >
+                Late:{" "}
+                <span style={{ color: "#f59e0b", fontWeight: 1000 }}>
+                  {sheet?.summary?.late ?? 0}
+                </span>
+              </div>
+              <div
+                style={{ color: palette.muted, fontWeight: 900, fontSize: 12 }}
+              >
                 Marked:{" "}
                 <span style={{ color: "#111827", fontWeight: 1000 }}>
                   {sheet?.summary?.marked ?? 0}
@@ -508,7 +519,7 @@ const MarkAttendance = () => {
                               disabled={!isEditable}
                               style={{
                                 padding: "8px 12px",
-                                marginRight: 8,
+                                marginRight: 6,
                                 borderRadius: 10,
                                 border: "none",
                                 backgroundColor: "#16a34a",
@@ -528,6 +539,7 @@ const MarkAttendance = () => {
                               disabled={!isEditable}
                               style={{
                                 padding: "8px 12px",
+                                marginRight: 6,
                                 borderRadius: 10,
                                 border: "none",
                                 backgroundColor: "#ef4444",
@@ -538,6 +550,25 @@ const MarkAttendance = () => {
                               }}
                             >
                               A
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setStudentStatus(s.student_id, "late")
+                              }
+                              disabled={!isEditable}
+                              style={{
+                                padding: "8px 12px",
+                                borderRadius: 10,
+                                border: "none",
+                                backgroundColor: "#f59e0b",
+                                color: "#fff",
+                                fontWeight: 1000,
+                                cursor: !isEditable ? "not-allowed" : "pointer",
+                                opacity: !isEditable ? 0.6 : 1,
+                              }}
+                            >
+                              L
                             </button>
                           </td>
                         )}

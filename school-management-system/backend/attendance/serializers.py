@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Attendance, BiometricDevice, generate_device_secret_key
+from .models import Attendance, BiometricDevice, TeacherAttendance, generate_device_secret_key
 from tenants.models import School
 
 class AttendanceSerializer(serializers.ModelSerializer):
@@ -109,3 +109,25 @@ class BiometricDeviceSerializer(serializers.ModelSerializer):
         if secret_key == '':
             attrs['device_secret_key'] = generate_device_secret_key()
         return attrs
+
+
+class TeacherAttendanceSerializer(serializers.ModelSerializer):
+    teacher_name = serializers.CharField(source='teacher.user.name', read_only=True)
+    employee_id = serializers.CharField(source='teacher.employee_id', read_only=True)
+
+    class Meta:
+        model = TeacherAttendance
+        fields = [
+            'id',
+            'teacher',
+            'teacher_name',
+            'employee_id',
+            'date',
+            'status',
+            'punch_in_time',
+            'punch_out_time',
+            'marked_via',
+            'marked_by',
+            'notes',
+            'created_at',
+        ]

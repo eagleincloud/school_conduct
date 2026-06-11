@@ -32,8 +32,8 @@ class AttendanceMarkView(views.APIView):
         date_raw = request.data.get('date')
         status_value = (request.data.get('status') or '').lower()
 
-        if not student_id or not date_raw or status_value not in ('present', 'absent'):
-            return Response({'error': 'student, date and status(present/absent) are required'}, status=status.HTTP_400_BAD_REQUEST)
+        if not student_id or not date_raw or status_value not in ('present', 'absent', 'late'):
+            return Response({'error': 'student, date and status(present/absent/late) are required'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             target_date = date_type.fromisoformat(date_raw)
@@ -53,7 +53,7 @@ class AttendanceMarkView(views.APIView):
         if not teacher_can_mark_attendance(request.user.teacher_profile, student.class_section):
             return Response({'error': 'Only Class Teachers can mark attendance for this class section.'}, status=status.HTTP_403_FORBIDDEN)
 
-        verification_status = 'approved' if status_value == 'present' else 'rejected'
+        verification_status = 'approved' if status_value in ('present', 'late') else 'rejected'
         attendance, _ = Attendance.objects.update_or_create(
             student=student,
             date=target_date,
@@ -118,16 +118,19 @@ class TeacherAttendanceSheetView(views.APIView):
         rows = []
         present = 0
         absent = 0
+        late = 0
         marked = 0
         for idx, s in enumerate(students, start=1):
             rec = rec_by_student.get(s.id)
             st = rec.status if rec else None
-            if st in ('present', 'absent'):
+            if st in ('present', 'absent', 'late'):
                 marked += 1
                 if st == 'present':
                     present += 1
-                else:
+                elif st == 'absent':
                     absent += 1
+                elif st == 'late':
+                    late += 1
             rows.append(
                 {
                     'student_id': s.id,
@@ -150,6 +153,7 @@ class TeacherAttendanceSheetView(views.APIView):
                 'summary': {
                     'present': present,
                     'absent': absent,
+                    'late': late,
                     'marked': marked,
                     'total_students': len(students),
                 },
@@ -210,9 +214,9 @@ class TeacherAttendanceBulkSaveView(views.APIView):
                 status_value = (row.get('status') or '').lower()
                 if sid not in student_ids:
                     continue
-                if status_value not in ('present', 'absent'):
+                if status_value not in ('present', 'absent', 'late'):
                     continue
-                verification_status = 'approved' if status_value == 'present' else 'rejected'
+                verification_status = 'approved' if status_value in ('present', 'late') else 'rejected'
                 Attendance.objects.update_or_create(
                     student_id=sid,
                     date=target_date,
@@ -788,18 +792,24 @@ class BiometricDevicePunchView(views.APIView):
     """
     Local Bridge Script se biometric card / fingerprint punch data collect karne ke liye secure API.
     School-wise isolation is enforced by requiring the 'school_id' along with the 'rfid_code'.
+    
+    Supports both students and teachers via target_type field:
+      - target_type='student' (default) — existing student attendance flow
+      - target_type='teacher' — teacher attendance flow (punch-in / punch-out)
     """
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
         from django.conf import settings
-        from attendance.models import BiometricDevice
+        from attendance.models import BiometricDevice, TeacherAttendance
+        from teachers.models import TeacherProfile
         
         # Verify Token in headers
         api_key = request.headers.get('X-Device-Token')
         school_id = request.data.get('school_id')  # e.g., "school_01"
         rfid_code = request.data.get('rfid_code')
         punch_time_raw = request.data.get('punch_time')  # Format: "YYYY-MM-DD HH:MM:SS"
+        target_type = (request.data.get('target_type') or '').lower().strip()
         
         if not rfid_code or not school_id:
             return Response({'error': 'rfid_code and school_id are required'}, status=status.HTTP_400_BAD_REQUEST)
@@ -814,20 +824,7 @@ class BiometricDevicePunchView(views.APIView):
         if not device:
             return Response({'error': 'Unauthorized: Invalid Device Token or School mismatch'}, status=status.HTTP_401_UNAUTHORIZED)
 
-
-        # Find Student associated strictly with this rfid_code and school_id
-        student = StudentProfile.objects.select_related('class_section', 'user', 'school').filter(
-            rfid_code=rfid_code,
-            school__school_id=school_id
-        ).first()
-        
-        if not student:
-            return Response(
-                {'error': f'Student with RFID {rfid_code} not found in school {school_id}'},
-                status=status.HTTP_404_NOT_FOUND
-            )
-
-        # Parse punch time
+        # Parse punch time (shared logic for both target types)
         try:
             if punch_time_raw:
                 punch_dt = datetime_type.strptime(str(punch_time_raw), "%Y-%m-%d %H:%M:%S")
@@ -846,6 +843,87 @@ class BiometricDevicePunchView(views.APIView):
         device.last_test_message = 'Punch received by backend API.'
         device.save(update_fields=['last_seen_at', 'last_punch_at', 'last_test_status', 'last_test_message'])
 
+        # Resolve target_type dynamically if not specified or empty
+        resolved_target_type = target_type
+        student = None
+        teacher = None
+
+        if not resolved_target_type or resolved_target_type not in ('student', 'teacher'):
+            # Check if there is a student first
+            student = StudentProfile.objects.select_related('class_section', 'user', 'school').filter(
+                rfid_code=rfid_code,
+                school__school_id=school_id
+            ).first()
+            if student:
+                resolved_target_type = 'student'
+            else:
+                teacher = TeacherProfile.objects.select_related('user', 'school').filter(
+                    rfid_code=rfid_code,
+                    user__school__school_id=school_id,
+                ).first()
+                if teacher:
+                    resolved_target_type = 'teacher'
+                else:
+                    return Response(
+                        {'error': f'RFID {rfid_code} not found in school {school_id}'},
+                        status=status.HTTP_404_NOT_FOUND
+                    )
+        elif resolved_target_type == 'student':
+            student = StudentProfile.objects.select_related('class_section', 'user', 'school').filter(
+                rfid_code=rfid_code,
+                school__school_id=school_id
+            ).first()
+            if not student:
+                return Response(
+                    {'error': f'Student with RFID {rfid_code} not found in school {school_id}'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+        elif resolved_target_type == 'teacher':
+            teacher = TeacherProfile.objects.select_related('user', 'school').filter(
+                rfid_code=rfid_code,
+                user__school__school_id=school_id,
+            ).first()
+            if not teacher:
+                return Response(
+                    {'error': f'Teacher with RFID {rfid_code} not found in school {school_id}'},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+        # ─── TEACHER ATTENDANCE FLOW ───
+        if resolved_target_type == 'teacher':
+            attendance, created = TeacherAttendance.objects.get_or_create(
+                teacher=teacher,
+                date=target_date,
+                defaults={
+                    'status': 'present',
+                    'marked_via': 'rfid',
+                    'punch_in_time': punch_dt,
+                },
+            )
+
+            if not created:
+                if not attendance.punch_out_time or attendance.punch_out_time < punch_dt:
+                    attendance.punch_out_time = punch_dt
+                    attendance.save(update_fields=['punch_out_time'])
+
+                return Response({
+                    'message': 'Punch-out recorded',
+                    'target_type': 'teacher',
+                    'teacher_name': teacher.user.name or teacher.user.username,
+                    'school_name': teacher.school.name if teacher.school else '',
+                    'punch_in_time': attendance.punch_in_time.isoformat() if attendance.punch_in_time else None,
+                    'punch_out_time': attendance.punch_out_time.isoformat() if attendance.punch_out_time else None,
+                }, status=status.HTTP_200_OK)
+
+            return Response({
+                'message': 'Punch-in recorded successfully',
+                'target_type': 'teacher',
+                'teacher_name': teacher.user.name or teacher.user.username,
+                'school_name': teacher.school.name if teacher.school else '',
+                'punch_in_time': punch_dt.isoformat(),
+            }, status=status.HTTP_201_CREATED)
+
+        # ─── STUDENT ATTENDANCE FLOW ───
         # Create/Update attendance as pending
         attendance, created = Attendance.objects.select_related('student').get_or_create(
             student=student,
@@ -874,6 +952,7 @@ class BiometricDevicePunchView(views.APIView):
                 # If already marked present/approved, return 200 OK instead of 409 Conflict
                 return Response({
                     'message': 'Punch received: Attendance is already marked present/approved',
+                    'target_type': 'student',
                     'student_name': student.user.name or student.user.username,
                     'school_name': student.school.name,
                     'punch_time': attendance.punch_time.isoformat() if attendance.punch_time else punch_dt.isoformat()
@@ -905,10 +984,13 @@ class BiometricDevicePunchView(views.APIView):
 
         return Response({
             'message': 'Punch processed successfully',
+            'target_type': 'student',
             'student_name': student.user.name or student.user.username,
             'school_name': student.school.name,
             'punch_time': punch_dt.isoformat()
         }, status=status.HTTP_201_CREATED)
+
+
 
 
 class BiometricDeviceHeartbeatView(views.APIView):
