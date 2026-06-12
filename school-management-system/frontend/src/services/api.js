@@ -16,8 +16,13 @@ const getBaseURL = () => {
     const isNativeMobile = typeof window !== "undefined" && window.Capacitor && window.Capacitor.getPlatform() !== 'web';
     if (isNativeMobile) {
       url = "http://13.233.140.195/api/";
+    } else if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
+      // Browser dev fallback uses the local backend server
+      url = "http://127.0.0.1:8000/api/";
+    } else if (typeof window !== "undefined") {
+      // Production fallback uses the current hosted origin
+      url = `${window.location.origin}/api/`;
     } else {
-      // Browser fallback uses the local backend server in development.
       url = "http://127.0.0.1:8000/api/";
     }
   }
