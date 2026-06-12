@@ -1007,8 +1007,13 @@ export default function StudentDashboard() {
               fontSize: 22,
               boxShadow: "0 4px 14px rgba(37, 99, 235, 0.3)",
               flexShrink: 0,
+              overflow: "hidden",
             }}>
-              {profile?.name ? profile.name.slice(0, 1).toUpperCase() : "S"}
+              {profile?.photo_url ? (
+                <img src={profile.photo_url} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              ) : (
+                profile?.name ? profile.name.slice(0, 1).toUpperCase() : "S"
+              )}
             </div>
             <div>
               <div style={{
@@ -1218,21 +1223,23 @@ export default function StudentDashboard() {
             }}>
               {galleryImages[currentSlide]?.title}
             </p>
-            <div style={{ display: "flex", gap: 5 }}>
+            <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
               {galleryImages.map((_, idx) => (
                 <button
                   key={idx}
                   type="button"
                   onClick={() => setCurrentSlide(idx)}
                   style={{
-                    width: idx === currentSlide ? 18 : 7,
-                    height: 7,
-                    borderRadius: 99,
+                    width: idx === currentSlide ? 8 : 6,
+                    height: idx === currentSlide ? 8 : 6,
+                    borderRadius: "50%",
                     border: "none",
                     backgroundColor: idx === currentSlide ? "#fff" : "rgba(255,255,255,0.4)",
                     cursor: "pointer",
                     transition: "all 300ms ease",
                     padding: 0,
+                    minWidth: 0,
+                    minHeight: 0,
                   }}
                 />
               ))}

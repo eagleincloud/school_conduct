@@ -27,12 +27,30 @@ import {
 } from 'lucide-react';
 import authService from '../../services/authService';
 import useUIStore from '../../store/uiStore';
+import api from '../../services/api';
 
 const Sidebar = () => {
     const location = useLocation();
-    const { role, name } = authService.getCurrentUser();
+    const currentUser = authService.getCurrentUser();
+    const { role, name } = currentUser;
     const [openMenus, setOpenMenus] = useState({});
     const { isSidebarOpen, closeSidebar } = useUIStore();
+    const [profilePhoto, setProfilePhoto] = useState(currentUser.profile_photo);
+
+    useEffect(() => {
+        // Fetch base profile photo to sync if changed
+        api.get('auth/profile/')
+            .then(res => {
+                if (res.data && res.data.profile_photo) {
+                    setProfilePhoto(res.data.profile_photo);
+                    localStorage.setItem("user_profile_photo", res.data.profile_photo);
+                } else {
+                    setProfilePhoto(null);
+                    localStorage.removeItem("user_profile_photo");
+                }
+            })
+            .catch(() => { });
+    }, []);
 
     const studentLinks = [
         { path: '/student/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -301,8 +319,12 @@ const Sidebar = () => {
                 {/* User Footer */}
                 <div className="p-4 border-t border-slate-50 bg-slate-50/50">
                     <div className="flex items-center gap-3 p-2 rounded-xl">
-                        <div className="w-8 h-8 rounded-lg bg-school-blue/10 flex items-center justify-center text-school-blue font-bold text-xs uppercase">
-                            {name?.[0] || 'U'}
+                        <div className="w-8 h-8 rounded-lg bg-school-blue/10 flex items-center justify-center text-school-blue font-bold text-xs uppercase overflow-hidden flex-shrink-0">
+                            {profilePhoto ? (
+                                <img src={profilePhoto} alt="Profile" className="w-full h-full object-cover" />
+                            ) : (
+                                name?.[0] || 'U'
+                            )}
                         </div>
                         <div className="flex flex-col min-w-0">
                             <span className="text-xs font-bold text-school-text truncate">{name || 'User'}</span>
