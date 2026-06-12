@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useConfirm } from '../../context/ConfirmContext';
 import api from '../../services/api';
 
@@ -77,6 +78,9 @@ function toDateKey(date) {
 
 const AdminHolidays = () => {
     const confirm = useConfirm();
+    const [viewportWidth, setViewportWidth] = useState(() =>
+        typeof window === 'undefined' ? 1024 : window.innerWidth,
+    );
     const [tab, setTab] = useState('list'); // 'list' | 'calendar'
 
     const [holidays, setHolidays] = useState([]);
@@ -110,6 +114,14 @@ const AdminHolidays = () => {
         allClasses: true,
         applicable_class_ids: [],
     });
+    const isMobile = viewportWidth < 640;
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return undefined;
+        const handleResize = () => setViewportWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const openCreate = () => {
         setEditingId(null);
@@ -234,13 +246,11 @@ const AdminHolidays = () => {
     const daysInMonth = (y, m) => new Date(y, m, 0).getDate();
     const buildCalendarCells = () => {
         const first = new Date(calYear, calMonth - 1, 1);
-        // Monday=0 ... Sunday=6
-        const jsDay = first.getDay(); // 0 Sunday .. 6 Saturday
-        const mondayBased = (jsDay + 6) % 7;
+        const sundayBased = first.getDay(); // 0 Sunday .. 6 Saturday
         const totalDays = daysInMonth(calYear, calMonth);
 
         const cells = [];
-        for (let i = 0; i < mondayBased; i++) cells.push(null);
+        for (let i = 0; i < sundayBased; i++) cells.push(null);
         for (let d = 1; d <= totalDays; d++) {
             const key = toDateKey(new Date(calYear, calMonth - 1, d));
             cells.push(key);
@@ -250,8 +260,34 @@ const AdminHolidays = () => {
     };
 
     const calendarCells = useMemo(() => buildCalendarCells(), [calMonth, calYear]);
+    const calendarWeeks = useMemo(() => {
+        const weeks = [];
+        for (let i = 0; i < calendarCells.length; i += 7) {
+            weeks.push(calendarCells.slice(i, i + 7));
+        }
+        return weeks;
+    }, [calendarCells]);
 
     const classLabel = (hc) => (hc?.applicable_classes?.length ? hc.applicable_classes.map((c) => c.name).join(', ') : 'All Classes');
+    const visibleMonthLabel = `${MONTH_NAMES[calMonth - 1]} ${calYear}`;
+
+    const goToPreviousMonth = () => {
+        if (calMonth === 1) {
+            setCalMonth(12);
+            setCalYear((prev) => prev - 1);
+            return;
+        }
+        setCalMonth((prev) => prev - 1);
+    };
+
+    const goToNextMonth = () => {
+        if (calMonth === 12) {
+            setCalMonth(1);
+            setCalYear((prev) => prev + 1);
+            return;
+        }
+        setCalMonth((prev) => prev + 1);
+    };
 
     const submitHoliday = async (e) => {
         e.preventDefault();
@@ -322,26 +358,27 @@ const AdminHolidays = () => {
     };
 
     return (
-        <div style={{ padding: '20px' }}>
+        <div style={{ padding: isMobile ? '12px' : '20px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
                 <div>
-                    <h1 style={{ margin: 0, fontSize: '32px', fontWeight: 1000, color: '#0f172a' }}>Holidays & Events</h1>
+                    <h1 style={{ margin: 0, fontSize: isMobile ? '20px' : '32px', fontWeight: 1000, color: '#0f172a' }}>Holidays & Events</h1>
                     <p style={{ margin: '8px 0 0', color: '#6b7280', fontWeight: 800, fontSize: '13px' }}>Manage holidays and see them on a calendar.</p>
                 </div>
 
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', gap: '10px' }}>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'stretch', flexWrap: 'wrap', width: isMobile ? '100%' : 'auto' }}>
+                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', width: isMobile ? '100%' : 'auto' }}>
                         <button
                             type="button"
                             onClick={() => setTab('list')}
                             style={{
-                                padding: '10px 14px',
+                                padding: isMobile ? '10px 12px' : '10px 14px',
                                 borderRadius: '12px',
                                 border: '1px solid #e5e7eb',
                                 cursor: 'pointer',
                                 backgroundColor: tab === 'list' ? '#2563eb' : '#fff',
                                 color: tab === 'list' ? '#fff' : '#111827',
                                 fontWeight: 900,
+                                flex: isMobile ? '1 1 0' : '0 0 auto',
                             }}
                         >
                             Holiday List
@@ -350,13 +387,14 @@ const AdminHolidays = () => {
                             type="button"
                             onClick={() => setTab('calendar')}
                             style={{
-                                padding: '10px 14px',
+                                padding: isMobile ? '10px 12px' : '10px 14px',
                                 borderRadius: '12px',
                                 border: '1px solid #e5e7eb',
                                 cursor: 'pointer',
                                 backgroundColor: tab === 'calendar' ? '#2563eb' : '#fff',
                                 color: tab === 'calendar' ? '#fff' : '#111827',
                                 fontWeight: 900,
+                                flex: isMobile ? '1 1 0' : '0 0 auto',
                             }}
                         >
                             Calendar View
@@ -377,6 +415,7 @@ const AdminHolidays = () => {
                             height: '40px',
                             whiteSpace: 'nowrap',
                             boxShadow: '0 4px 12px rgba(37, 99, 235, 0.2)',
+                            width: isMobile ? '100%' : 'auto',
                         }}
                     >
                         + Add Holiday
@@ -389,7 +428,7 @@ const AdminHolidays = () => {
                     <div style={cardStyle}>
                         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between' }}>
                             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
-                                <div style={{ minWidth: '240px' }}>
+                                <div style={{ minWidth: isMobile ? '100%' : '240px', flex: isMobile ? '1 1 100%' : '0 1 auto' }}>
                                     <div style={labelStyle}>Search</div>
                                     <input
                                         value={search}
@@ -398,7 +437,7 @@ const AdminHolidays = () => {
                                         style={inputStyle}
                                     />
                                 </div>
-                                <div>
+                                <div style={{ minWidth: isMobile ? 'calc(50% - 6px)' : '0' }}>
                                     <div style={labelStyle}>Type</div>
                                     <select value={filterType} onChange={(e) => setFilterType(e.target.value)} style={inputStyle}>
                                         <option value="all">All</option>
@@ -407,7 +446,7 @@ const AdminHolidays = () => {
                                         <option value="Optional">Optional</option>
                                     </select>
                                 </div>
-                                <div>
+                                <div style={{ minWidth: isMobile ? 'calc(50% - 6px)' : '0' }}>
                                     <div style={labelStyle}>Month</div>
                                     <select value={filterMonth} onChange={(e) => setFilterMonth(e.target.value)} style={inputStyle}>
                                         <option value="">All</option>
@@ -417,20 +456,20 @@ const AdminHolidays = () => {
                                         })}
                                     </select>
                                 </div>
-                                <div>
+                                <div style={{ minWidth: isMobile ? '100%' : '0' }}>
                                     <div style={labelStyle}>Year</div>
                                     <input value={filterYear} onChange={(e) => setFilterYear(e.target.value)} type="number" style={inputStyle} />
                                 </div>
                             </div>
 
-                            <div>
+                            <div style={{ minWidth: isMobile ? 'calc(50% - 6px)' : '0' }}>
                                 <div style={labelStyle}>Sort</div>
                                 <select value={sortDir} onChange={(e) => setSortDir(e.target.value)} style={inputStyle}>
                                     <option value="asc">Oldest first</option>
                                     <option value="desc">Newest first</option>
                                 </select>
                             </div>
-                            <div>
+                            <div style={{ width: isMobile ? 'calc(50% - 6px)' : 'auto' }}>
                                 <div style={labelStyle}>&nbsp;</div>
                                 <button
                                     type="button"
@@ -444,6 +483,7 @@ const AdminHolidays = () => {
                                         color: '#334155',
                                         fontWeight: 900,
                                         height: '40px',
+                                        width: isMobile ? '100%' : 'auto',
                                     }}
                                 >
                                     Export CSV
@@ -542,80 +582,132 @@ const AdminHolidays = () => {
                 )}
 
                 {tab === 'calendar' && (
-                    <div style={cardStyle}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                            <div>
-                                <div style={labelStyle}>Calendar Month</div>
-                                <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
-                                    <select value={calMonth} onChange={(e) => setCalMonth(parseInt(e.target.value))} style={{ ...inputStyle, width: '160px' }}>
-                                        {MONTH_NAMES.map((name, idx) => {
-                                            const m = idx + 1;
-                                            return <option key={m} value={m}>{name}</option>;
-                                        })}
-                                    </select>
-                                    <input type="number" value={calYear} onChange={(e) => setCalYear(parseInt(e.target.value))} style={{ ...inputStyle, width: '160px' }} />
-                                </div>
-                            </div>
-                            <div style={{ color: '#6b7280', fontSize: '13px', fontWeight: 900 }}>
-                                Click a date to view holiday details
+                    <div style={{ ...cardStyle, padding: 0, overflow: 'hidden' }}>
+                        <div style={{ padding: isMobile ? '18px 20px 10px' : '24px 32px 12px' }}>
+                            <div style={{ fontSize: isMobile ? '44px' : '56px', lineHeight: 1, fontWeight: 1000, color: '#000' }}>
+                                {MONTH_NAMES[calMonth - 1]}
                             </div>
                         </div>
 
-                        <div style={{ marginTop: '14px', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(44px, 1fr))', gap: '10px', minWidth: '420px' }}>
-                                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
-                                    <div key={d} style={{ color: '#6b7280', fontWeight: 1000, fontSize: '12px', textTransform: 'uppercase' }}>
+                        <div style={{ borderTop: '1px solid #a1a1aa', borderBottom: '1px solid #a1a1aa', padding: isMobile ? '10px 12px' : '12px 18px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0, 1fr))', alignItems: 'center' }}>
+                                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, idx) => (
+                                    <div
+                                        key={`${d}-${idx}`}
+                                        style={{
+                                            textAlign: 'center',
+                                            color: idx === 0 || idx === 6 ? '#7a7a7a' : '#111827',
+                                            fontWeight: 900,
+                                            fontSize: isMobile ? '13px' : '15px',
+                                        }}
+                                    >
                                         {d}
                                     </div>
                                 ))}
-                                {calendarCells.map((key, idx) => {
-                                    if (!key) return <div key={`empty-${idx}`} style={{ height: '70px' }} />;
-                                    const dayHolidays = holidayByDay.map.get(key) || [];
-                                    const isHoliday = dayHolidays.length > 0;
-                                    const isToday = key === toDateKey(new Date());
-
-                                    return (
-                                        <button
-                                            key={key}
-                                            type="button"
-                                            onClick={() => {
-                                                if (!isHoliday) return;
-                                                setSelectedDate(key);
-                                                setDetailsOpen(true);
-                                            }}
-                                            style={{
-                                                height: '70px',
-                                                borderRadius: '14px',
-                                                border: `1px solid ${isHoliday ? '#7c3aed' : '#e5e7eb'}`,
-                                                backgroundColor: isHoliday ? '#f5f3ff' : '#fff',
-                                                cursor: isHoliday ? 'pointer' : 'default',
-                                                color: '#111827',
-                                                padding: '10px',
-                                                textAlign: 'left',
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                justifyContent: 'space-between',
-                                                alignItems: 'flex-start',
-                                                gap: '4px',
-                                            }}
-                                        >
-                                            <div style={{ fontWeight: 1000, fontSize: '13px', width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-                                                <span>{parseInt(key.slice(-2), 10)}</span>
-                                                {isToday ? (
-                                                    <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: 1000 }}>Today</span>
-                                                ) : null}
-                                            </div>
-                                            {isHoliday ? (
-                                                <div style={{ fontSize: '11px', fontWeight: 1000, color: '#4c1d95' }}>
-                                                    {dayHolidays[0].title}
-                                                </div>
-                                            ) : (
-                                                <div style={{ fontSize: '11px', fontWeight: 800, color: '#9ca3af' }}>&nbsp;</div>
-                                            )}
-                                        </button>
-                                    );
-                                })}
                             </div>
+                        </div>
+
+                        <div>
+                            {calendarWeeks.map((week, weekIndex) => (
+                                <div
+                                    key={`week-${weekIndex}`}
+                                    style={{
+                                        minHeight: isMobile ? '118px' : '138px',
+                                        borderBottom: weekIndex === calendarWeeks.length - 1 ? 'none' : '1px solid #e5e7eb',
+                                        paddingTop: weekIndex === 0 ? (isMobile ? '12px' : '16px') : 0,
+                                    }}
+                                >
+                                    {weekIndex === 0 ? (
+                                        <div style={{ padding: isMobile ? '0 20px 8px' : '0 30px 10px' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                                <div style={{ color: '#ff3b30', fontWeight: 1000, fontSize: isMobile ? '26px' : '30px', lineHeight: 1 }}>
+                                                    {MONTH_NAMES[calMonth - 1].slice(0, 3)}
+                                                </div>
+                                                <div style={{ flex: 1, height: '1px', backgroundColor: '#e5e7eb' }} />
+                                            </div>
+                                        </div>
+                                    ) : null}
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' }}>
+                                        {week.map((key, dayIndex) => {
+                                            if (!key) {
+                                                return <div key={`empty-${weekIndex}-${dayIndex}`} />;
+                                            }
+
+                                            const dayHolidays = holidayByDay.map.get(key) || [];
+                                            const isHoliday = dayHolidays.length > 0;
+                                            const isSelected = selectedDate === key && detailsOpen;
+
+                                            return (
+                                                <button
+                                                    key={key}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        if (!isHoliday) return;
+                                                        setSelectedDate(key);
+                                                        setDetailsOpen(true);
+                                                    }}
+                                                    style={{
+                                                        border: 'none',
+                                                        background: 'transparent',
+                                                        cursor: isHoliday ? 'pointer' : 'default',
+                                                        padding: isMobile ? '8px 4px 10px' : '10px 6px 12px',
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'flex-start',
+                                                        gap: isMobile ? '12px' : '14px',
+                                                        color: dayIndex === 0 || dayIndex === 6 ? '#8e8e93' : '#000',
+                                                    }}
+                                                >
+                                                    <div
+                                                        style={{
+                                                            width: isSelected ? (isMobile ? '50px' : '56px') : 'auto',
+                                                            height: isSelected ? (isMobile ? '50px' : '56px') : 'auto',
+                                                            borderRadius: '999px',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            backgroundColor: isSelected ? '#ff3b30' : 'transparent',
+                                                            color: isSelected ? '#fff' : dayIndex === 0 || dayIndex === 6 ? '#8e8e93' : '#000',
+                                                            fontWeight: 1000,
+                                                            fontSize: isMobile ? '24px' : '26px',
+                                                            lineHeight: 1,
+                                                        }}
+                                                    >
+                                                        {parseInt(key.slice(-2), 10)}
+                                                    </div>
+
+                                                    <div style={{ minHeight: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                                                        {dayHolidays.length === 1 ? (
+                                                            <span
+                                                                style={{
+                                                                    width: isMobile ? '10px' : '12px',
+                                                                    height: isMobile ? '10px' : '12px',
+                                                                    borderRadius: '999px',
+                                                                    backgroundColor: dayHolidays[0].type === 'Public' ? '#ececec' : dayHolidays[0].type === 'School' ? '#5ac8fa' : '#ffd60a',
+                                                                    opacity: 0.95,
+                                                                }}
+                                                            />
+                                                        ) : null}
+                                                        {dayHolidays.length >= 2 ? (
+                                                            <span
+                                                                style={{
+                                                                    width: isMobile ? '20px' : '24px',
+                                                                    height: isMobile ? '10px' : '12px',
+                                                                    borderRadius: '999px',
+                                                                    background: 'linear-gradient(90deg, #7bdcb5 0%, #5ac8fa 100%)',
+                                                                    opacity: 0.95,
+                                                                }}
+                                                            />
+                                                        ) : null}
+                                                    </div>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 )}

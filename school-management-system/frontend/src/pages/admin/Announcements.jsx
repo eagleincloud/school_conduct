@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { CalendarDays, Pin, X } from 'lucide-react';
 import { useConfirm } from '../../context/ConfirmContext';
 import api from '../../services/api';
 
@@ -378,7 +379,10 @@ const AdminAnnouncements = () => {
                                     checked={form.is_pinned}
                                     onChange={(e) => setForm({ ...form, is_pinned: e.target.checked })}
                                 />
-                                Pin 📌
+                                <span className="inline-flex items-center gap-1">
+                                    Pin
+                                    <Pin className="h-3.5 w-3.5" strokeWidth={2.5} />
+                                </span>
                             </label>
                         </div>
 
@@ -455,7 +459,10 @@ const AdminAnnouncements = () => {
                                                     <div className="flex flex-wrap items-center gap-2">
                                                         <h3 className="text-base font-black text-slate-900 break-words">{row.title}</h3>
                                                         {row.is_pinned ? (
-                                                            <span className="text-xs font-black text-school-blue">📌 Pinned</span>
+                                                            <span className="inline-flex items-center gap-1 text-xs font-black text-school-blue">
+                                                                <Pin className="h-3.5 w-3.5" strokeWidth={2.5} />
+                                                                Pinned
+                                                            </span>
                                                         ) : null}
                                                         <span className="rounded-full bg-violet-100 px-2.5 py-0.5 text-[11px] font-black uppercase text-violet-700">
                                                             {typeLabel(row.type)}
@@ -472,8 +479,9 @@ const AdminAnnouncements = () => {
                                                         ) : null}
                                                     </div>
                                                     <p className="mt-2 text-sm font-semibold text-slate-600 line-clamp-2">{row.description}</p>
-                                                    <div className="mt-2 text-xs font-bold text-slate-500">
-                                                        📅 {row.start_date} → {row.end_date} · {audienceLabel(row.target_audience)}
+                                                    <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs font-bold text-slate-500">
+                                                        <CalendarDays className="h-3.5 w-3.5" strokeWidth={2.4} />
+                                                        <span>{row.start_date} → {row.end_date} · {audienceLabel(row.target_audience)}</span>
                                                         {row.class_meta?.name ? ` · Class: ${row.class_meta.name}` : ''}
                                                     </div>
                                                 </div>
@@ -541,7 +549,7 @@ const AdminAnnouncements = () => {
                                 onClick={() => setViewRow(null)}
                                 className="rounded-lg px-2 py-1 text-sm font-bold text-slate-500 hover:bg-slate-100"
                             >
-                                ✕
+                                <X className="h-4 w-4" strokeWidth={2.5} />
                             </button>
                         </div>
                         <div className="mt-3 flex flex-wrap gap-2">
@@ -549,7 +557,10 @@ const AdminAnnouncements = () => {
                                 {typeLabel(viewRow.type)}
                             </span>
                             {viewRow.is_pinned ? (
-                                <span className="text-xs font-black text-school-blue">📌 Pinned</span>
+                                <span className="inline-flex items-center gap-1 text-xs font-black text-school-blue">
+                                    <Pin className="h-3.5 w-3.5" strokeWidth={2.5} />
+                                    Pinned
+                                </span>
                             ) : null}
                             {viewRow.is_important ? (
                                 <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-black text-amber-900">
@@ -559,8 +570,9 @@ const AdminAnnouncements = () => {
                         </div>
                         <p className="mt-4 whitespace-pre-wrap text-sm font-semibold text-slate-700">{viewRow.description}</p>
                         <div className="mt-4 space-y-2 text-sm font-bold text-slate-600">
-                            <div>
-                                📅 {viewRow.start_date} → {viewRow.end_date}
+                            <div className="flex items-center gap-2">
+                                <CalendarDays className="h-4 w-4 text-slate-400" strokeWidth={2.4} />
+                                <span>{viewRow.start_date} → {viewRow.end_date}</span>
                             </div>
                             <div>
                                 Audience: {audienceLabel(viewRow.target_audience)}

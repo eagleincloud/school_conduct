@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { Bell, ChevronDown, DoorOpen, Menu, School, UserRound } from 'lucide-react';
 import authService from '../../services/authService';
 import useAuthStore from '../../store/authStore';
 import useUIStore from '../../store/uiStore';
@@ -68,9 +69,7 @@ const Navbar = () => {
                         className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-600 transition-all"
                         aria-label="Toggle sidebar menu"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                        </svg>
+                        <Menu className="h-5 w-5" strokeWidth={2.5} />
                     </button>
                 )}
                 <div className="w-9 sm:w-11 h-9 sm:h-11 bg-school-navy rounded-2xl flex items-center justify-center text-white text-lg sm:text-2xl font-black shadow-xl shadow-school-navy/20 animate-in fade-in zoom-in duration-700 overflow-hidden">
@@ -115,7 +114,7 @@ const Navbar = () => {
                 {user.role === 'student' && (
                     <div className="flex items-center justify-end gap-1 sm:gap-3 min-w-0">
                         <div className="hidden md:flex px-4 py-1.5 bg-slate-50 border border-slate-100 rounded-xl items-center gap-2.5 shadow-sm hover:shadow-md transition-all group cursor-default">
-                            <span className="text-lg group-hover:scale-110 transition-transform">🏫</span>
+                            <School className="h-5 w-5 text-school-blue group-hover:scale-110 transition-transform" strokeWidth={2.3} />
                             <div className="flex flex-col">
                                 <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-none">Class</span>
                                 <span className="text-[12px] font-black text-school-navy leading-tight">{studentProfile?.class_section_display || '...'}</span>
@@ -138,11 +137,11 @@ const Navbar = () => {
                                 className="relative hidden sm:flex w-10 h-10 items-center justify-center rounded-xl bg-slate-50 text-slate-500 hover:bg-slate-100 transition-all group"
                                 aria-label="Notifications"
                             >
-                                <span className="text-xl group-hover:scale-110 transition-transform">🔔</span>
+                                <Bell className="h-5 w-5 group-hover:scale-110 transition-transform" strokeWidth={2.3} />
                             </Link>
                         ) : (
                             <button type="button" className="relative w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-slate-500 hover:bg-slate-100 transition-all group">
-                                <span className="text-xl group-hover:scale-110 transition-transform">🔔</span>
+                                <Bell className="h-5 w-5 group-hover:scale-110 transition-transform" strokeWidth={2.3} />
                             </button>
                         )}
                         <div className="h-8 w-px bg-slate-100 mx-1"></div>
@@ -171,7 +170,7 @@ const Navbar = () => {
                             </span>
                             <span className="text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-tight">{user.role}</span>
                         </div>
-                        <span className={`text-[8px] sm:text-[10px] text-slate-400 transition-transform duration-300 hidden sm:inline ${isProfileOpen ? 'rotate-180' : ''}`}>▼</span>
+                        <ChevronDown className={`hidden h-4 w-4 text-slate-400 transition-transform duration-300 sm:inline ${isProfileOpen ? 'rotate-180' : ''}`} strokeWidth={2.4} />
                     </button>
 
                     {/* Dropdown Menu */}
@@ -215,14 +214,18 @@ const Navbar = () => {
                                         className="flex items-center gap-2.5 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-school-navy rounded-2xl transition-all group"
                                         onClick={() => setIsProfileOpen(false)}
                                     >
-                                        <span className="w-7 sm:w-8 h-7 sm:h-8 rounded-lg bg-slate-100 flex items-center justify-center group-hover:scale-110 transition-transform text-sm">👤</span>
+                                        <span className="w-7 sm:w-8 h-7 sm:h-8 rounded-lg bg-slate-100 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <UserRound className="h-4 w-4" strokeWidth={2.3} />
+                                        </span>
                                         View Profile
                                     </Link>
                                     <button
                                         onClick={handleLogout}
                                         className="w-full flex items-center gap-2.5 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-red-500 hover:bg-red-50 rounded-2xl transition-all group"
                                     >
-                                        <span className="w-7 sm:w-8 h-7 sm:h-8 rounded-lg bg-red-100/50 flex items-center justify-center group-hover:scale-110 transition-transform text-sm">🚪</span>
+                                        <span className="w-7 sm:w-8 h-7 sm:h-8 rounded-lg bg-red-100/50 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <DoorOpen className="h-4 w-4" strokeWidth={2.3} />
+                                        </span>
                                         Sign Out
                                     </button>
                                 </div>

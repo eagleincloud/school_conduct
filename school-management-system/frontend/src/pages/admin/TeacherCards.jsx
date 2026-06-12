@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { X } from 'lucide-react';
 import { useConfirm } from '../../context/ConfirmContext';
 import api from '../../services/api';
 
@@ -145,7 +146,9 @@ const TeacherCards = ({ teachers, refreshTeachers }) => {
                                 <h3 className="text-xl font-bold">{viewTeacher ? 'Teacher Profile' : 'Edit Information'}</h3>
                                 <p className="text-xs text-slate-400 mt-0.5">{viewTeacher ? 'Comprehensive overview of faculty records' : 'Update the faculty profile details below'}</p>
                             </div>
-                            <button onClick={closeModal} className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">✕</button>
+                            <button onClick={closeModal} className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                                <X className="h-4 w-4" strokeWidth={2.5} />
+                            </button>
                                 </div>
 
                         <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">

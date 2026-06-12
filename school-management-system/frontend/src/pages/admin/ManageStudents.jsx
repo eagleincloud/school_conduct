@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Search } from 'lucide-react';
 import api from '../../services/api';
 
 const PAGE_SIZE = 8;
@@ -373,7 +374,7 @@ const ManageStudents = () => {
                 </div>
 
                 <div style={{ marginTop: 14, position: 'relative', maxWidth: 420 }}>
-                    <span style={{ position: 'absolute', left: 12, top: 10, color: '#94a3b8' }}>🔍</span>
+                    <Search size={16} strokeWidth={2.4} style={{ position: 'absolute', left: 12, top: 12, color: '#94a3b8' }} />
                     <input
                         value={draftFilters.search}
                         onChange={(e) => setDraftFilters((p) => ({ ...p, search: e.target.value }))}

@@ -1,5 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import {
+    Bell,
+    BookOpen,
+    CalendarDays,
+    ChartLine,
+    ChevronDown,
+    CircleCheck,
+    CirclePlus,
+    ClipboardCheck,
+    CreditCard,
+    FileText,
+    FileUp,
+    GraduationCap,
+    Images,
+    Info,
+    LayoutDashboard,
+    MessageCircle,
+    Network,
+    Store,
+    Umbrella,
+    UserCheck,
+    UserCog,
+    UserRound,
+    UsersRound,
+    Wallet,
+    X,
+} from 'lucide-react';
 import authService from '../../services/authService';
 import useUIStore from '../../store/uiStore';
 
@@ -10,10 +37,10 @@ const Sidebar = () => {
     const { isSidebarOpen, closeSidebar } = useUIStore();
 
     const studentLinks = [
-        { path: '/student/dashboard', label: 'Dashboard', icon: '📊' },
+        { path: '/student/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
         { 
             label: 'Academic', 
-            icon: '🎓',
+            Icon: GraduationCap,
             subLinks: [
                 { path: '/student/assignments', label: 'Assignment' },
                 { path: '/student/attendance', label: 'Attendance Status' },
@@ -30,7 +57,7 @@ const Sidebar = () => {
         },
         {
             label: 'Account',
-            icon: '💰',
+            Icon: Wallet,
             subLinks: [
                 { path: '/student/fees', label: 'Fees Receipt' },
                 { path: '/student/ledger', label: 'Student Ledgers' },
@@ -39,7 +66,7 @@ const Sidebar = () => {
         },
         {
             label: 'General Info',
-            icon: 'ℹ️',
+            Icon: Info,
             subLinks: [
                 { path: '/student/notifications', label: 'Notifications' },
                 { path: '/student/syllabus', label: 'Syllabus' },
@@ -47,33 +74,33 @@ const Sidebar = () => {
                 { path: '/student/messaging', label: 'Messaging' },
             ]
         },
-        { path: '/student/gallery', label: 'Gallery', icon: '🖼️' },
-        { path: '/student/shops', label: 'Shop Locations', icon: '🏪' },
-        { path: '/student/profile', label: 'Your Profile', icon: '🧑🏻‍🎓' },
+        { path: '/student/gallery', label: 'Gallery', Icon: Images },
+        { path: '/student/shops', label: 'Shop Locations', Icon: Store },
+        { path: '/student/profile', label: 'Your Profile', Icon: UserRound },
     ];
 
     const teacherLinks = [
-        { path: '/teacher/dashboard', label: 'Dashboard', icon: '📊' },
-        { path: '/teacher/attendance', label: 'Mark Attendance', icon: '✅' },
-        { path: '/teacher/my-attendance', label: 'My Attendance', icon: '📋' },
-        { path: '/teacher/upload-result', label: 'Upload Results', icon: '📤' },
-        { path: '/teacher/assignment', label: 'Create Assignment', icon: '➕' },
-        { path: '/teacher/assignments', label: 'Assignment List', icon: '📚' },
-        { path: '/teacher/syllabus', label: 'Syllabus', icon: '📄' },
-        { path: '/teacher/students', label: 'My Students', icon: '👥' },
-        { path: '/teacher/timetable', label: 'Time Table', icon: '📅' },
-        { path: '/teacher/messaging', label: 'Messaging', icon: '💬' },
-        { path: '/teacher/gallery', label: 'Gallery', icon: '🖼️' },
-        { path: '/teacher/notifications', label: 'Notifications', icon: '🔔' },
-        { path: '/teacher/Holidays', label: 'Holidays', icon: '🏝️' },
-        { path: '/teacher/Profile', label: 'Profile', icon: '🧑🏻‍💻' },
+        { path: '/teacher/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
+        { path: '/teacher/attendance', label: 'Mark Attendance', Icon: CircleCheck },
+        { path: '/teacher/my-attendance', label: 'My Attendance', Icon: ClipboardCheck },
+        { path: '/teacher/upload-result', label: 'Upload Results', Icon: FileUp },
+        { path: '/teacher/assignment', label: 'Create Assignment', Icon: CirclePlus },
+        { path: '/teacher/assignments', label: 'Assignment List', Icon: BookOpen },
+        { path: '/teacher/syllabus', label: 'Syllabus', Icon: FileText },
+        { path: '/teacher/students', label: 'My Students', Icon: UsersRound },
+        { path: '/teacher/timetable', label: 'Time Table', Icon: CalendarDays },
+        { path: '/teacher/messaging', label: 'Messaging', Icon: MessageCircle },
+        { path: '/teacher/gallery', label: 'Gallery', Icon: Images },
+        { path: '/teacher/notifications', label: 'Notifications', Icon: Bell },
+        { path: '/teacher/Holidays', label: 'Holidays', Icon: Umbrella },
+        { path: '/teacher/Profile', label: 'Profile', Icon: UserCog },
     ];
 
     const adminLinks = [
-        { path: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
+        { path: '/admin/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
         { 
             label: 'User Management', 
-            icon: '👥',
+            Icon: UsersRound,
             subLinks: [
                 { path: '/admin/add-teacher', label: 'Add Teacher' },
                 { path: '/admin/add-student', label: 'Add Student' },
@@ -84,7 +111,7 @@ const Sidebar = () => {
         },
         {
             label: 'Academic',
-            icon: '🎓',
+            Icon: GraduationCap,
             subLinks: [
                 { path: '/admin/classes', label: 'Classes & Sections' },
                 { path: '/admin/subjects', label: 'Subjects' },
@@ -99,22 +126,22 @@ const Sidebar = () => {
             ]
         },
 
-        { path: '/admin/gallery', label: 'Gallery', icon: '🖼️' },
+        { path: '/admin/gallery', label: 'Gallery', Icon: Images },
         {
             label: 'Finance',
-            icon: '💰',
+            Icon: CreditCard,
             subLinks: [
                 { path: '/admin/fees', label: 'Fee Management' },
                 { path: '/admin/finance-cards', label: 'Fee Cards' },
             ]
         },
-        { path: '/admin/reports', label: 'Reports', icon: '📈' },
-        { path: '/admin/shops', label: 'Shop Locations', icon: '🏪' },
+        { path: '/admin/reports', label: 'Reports', Icon: ChartLine },
+        { path: '/admin/shops', label: 'Shop Locations', Icon: Store },
     ];
 
 
-        adminLinks.splice(adminLinks.length - 1, 0, { path: '/admin/biometric-machines', label: 'Biometric Machines', icon: 'Machine' });
-        adminLinks.splice(adminLinks.length - 1, 0, { path: '/admin/teacher-attendance', label: 'Staff Attendance', icon: '👨‍🏫' });
+        adminLinks.splice(adminLinks.length - 1, 0, { path: '/admin/biometric-machines', label: 'Biometric Machines', Icon: Network });
+        adminLinks.splice(adminLinks.length - 1, 0, { path: '/admin/teacher-attendance', label: 'Staff Attendance', Icon: UserCheck });
 
     const links = role === 'student' ? studentLinks : (role === 'teacher' ? teacherLinks : adminLinks);
 
@@ -160,11 +187,14 @@ const Sidebar = () => {
         const hasSubLinks = item.subLinks && item.subLinks.length > 0;
         const isOpen = openMenus[item.label];
         const isActive = location.pathname === item.path;
+        const Icon = item.Icon;
         
         // Auto-open parent if child is active (simplified for 2 levels)
         const isChildActive = hasSubLinks && item.subLinks.some(sub => 
             sub.path === location.pathname || (sub.subLinks && sub.subLinks.some(ss => ss.path === location.pathname))
         );
+        const isExpanded = Boolean(isOpen);
+        const isHighlighted = Boolean(isOpen || isChildActive);
 
         return (
             <div className="flex flex-col">
@@ -179,27 +209,39 @@ const Sidebar = () => {
                         }`}
                         style={{ marginLeft: `${depth * 12}px` }}
                     >
-                        {item.icon && <span className="text-lg">{item.icon}</span>}
+                        {Icon && (
+                            <Icon
+                                className={`h-[18px] w-[18px] shrink-0 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-school-navy'}`}
+                                strokeWidth={2.3}
+                            />
+                        )}
                         <span>{item.label}</span>
                         {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white opacity-50"></div>}
                     </Link>
                 ) : (
                     <button
-                        onClick={() => toggleMenu(item.label, depth)}
+                        onClick={() => toggleMenu(item.label)}
+                        aria-expanded={isExpanded}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 group ${
-                            isChildActive ? 'text-school-navy' : 'text-school-body hover:bg-slate-50 hover:text-school-navy'
+                            isHighlighted ? 'text-school-navy' : 'text-school-body hover:bg-slate-50 hover:text-school-navy'
                         }`}
                         style={{ marginLeft: `${depth * 12}px` }}
                     >
-                        {item.icon && <span className="text-lg">{item.icon}</span>}
+                        {Icon && (
+                            <Icon
+                                className={`h-[18px] w-[18px] shrink-0 ${isHighlighted ? 'text-school-navy' : 'text-slate-400 group-hover:text-school-navy'}`}
+                                strokeWidth={2.3}
+                            />
+                        )}
                         <span>{item.label}</span>
-                        <span className={`ml-auto text-[10px] transition-transform duration-200 ${isOpen || isChildActive ? 'rotate-180' : ''}`}>
-                            ▼
-                        </span>
+                        <ChevronDown
+                            className={`ml-auto h-4 w-4 shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-180 text-school-navy' : 'text-slate-400 group-hover:text-school-navy'}`}
+                            strokeWidth={2.4}
+                        />
                     </button>
                 )}
 
-                {isOpen && hasSubLinks && (
+                {isExpanded && hasSubLinks && (
                     <div className="mt-1 space-y-1">
                         {item.subLinks.map((sub, i) => (
                             <NavItem key={i} item={sub} depth={depth + 1} />
@@ -233,9 +275,7 @@ const Sidebar = () => {
                         className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
                         aria-label="Close menu"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        <X className="h-4 w-4" strokeWidth={2.5} />
                     </button>
                 </div>
 
