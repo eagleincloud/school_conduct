@@ -116,21 +116,21 @@ const Login = () => {
               <img
                 src={school.logo}
                 alt={school.name}
-                className="w-16 h-16 rounded-2xl mx-auto mb-4 shadow-xl"
+                className="w-16 h-16 rounded-[2px] mx-auto mb-4 shadow-xl"
                 onError={(e) => {
                   e.target.style.display = "none";
                   e.target.nextSibling.style.display = "flex";
                 }}
               />
               <div
-                className="w-16 h-16 bg-school-navy rounded-2xl items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-xl shadow-school-navy/20"
+                className="w-16 h-16 bg-school-navy rounded-[2px] items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-xl shadow-school-navy/20"
                 style={{ display: "none" }}
               >
                 {school.name[0]}
               </div>
             </>
           ) : (
-            <div className="w-16 h-16 bg-school-navy rounded-2xl flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-xl shadow-school-navy/20">
+            <div className="w-16 h-16 bg-school-navy rounded-[2px] flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-xl shadow-school-navy/20">
               {school.name[0]}
             </div>
           )}

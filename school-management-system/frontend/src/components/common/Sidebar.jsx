@@ -29,6 +29,29 @@ import {
 } from 'lucide-react';
 import authService from '../../services/authService';
 import useUIStore from '../../store/uiStore';
+import { 
+    LayoutDashboard, 
+    GraduationCap, 
+    Wallet, 
+    Info, 
+    Image, 
+    Store, 
+    User,
+    CheckSquare,
+    ClipboardList,
+    UploadCloud,
+    Plus,
+    BookOpen,
+    FileText,
+    Users,
+    Calendar,
+    MessageSquare,
+    Bell,
+    CalendarX,
+    TrendingUp,
+    Fingerprint,
+    ClipboardCheck
+} from 'lucide-react';
 
 const Sidebar = () => {
     const location = useLocation();
@@ -37,10 +60,10 @@ const Sidebar = () => {
     const { isSidebarOpen, closeSidebar } = useUIStore();
 
     const studentLinks = [
-        { path: '/student/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
+        { path: '/student/dashboard', label: 'Dashboard', icon: LayoutDashboard },
         { 
             label: 'Academic', 
-            Icon: GraduationCap,
+            icon: GraduationCap,
             subLinks: [
                 { path: '/student/assignments', label: 'Assignment' },
                 { path: '/student/attendance', label: 'Attendance Status' },
@@ -57,7 +80,7 @@ const Sidebar = () => {
         },
         {
             label: 'Account',
-            Icon: Wallet,
+            icon: Wallet,
             subLinks: [
                 { path: '/student/fees', label: 'Fees Receipt' },
                 { path: '/student/ledger', label: 'Student Ledgers' },
@@ -66,7 +89,7 @@ const Sidebar = () => {
         },
         {
             label: 'General Info',
-            Icon: Info,
+            icon: Info,
             subLinks: [
                 { path: '/student/notifications', label: 'Notifications' },
                 { path: '/student/syllabus', label: 'Syllabus' },
@@ -74,33 +97,33 @@ const Sidebar = () => {
                 { path: '/student/messaging', label: 'Messaging' },
             ]
         },
-        { path: '/student/gallery', label: 'Gallery', Icon: Images },
-        { path: '/student/shops', label: 'Shop Locations', Icon: Store },
-        { path: '/student/profile', label: 'Your Profile', Icon: UserRound },
+        { path: '/student/gallery', label: 'Gallery', icon: Image },
+        { path: '/student/shops', label: 'Shop Locations', icon: Store },
+        { path: '/student/profile', label: 'Your Profile', icon: User },
     ];
 
     const teacherLinks = [
-        { path: '/teacher/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
-        { path: '/teacher/attendance', label: 'Mark Attendance', Icon: CircleCheck },
-        { path: '/teacher/my-attendance', label: 'My Attendance', Icon: ClipboardCheck },
-        { path: '/teacher/upload-result', label: 'Upload Results', Icon: FileUp },
-        { path: '/teacher/assignment', label: 'Create Assignment', Icon: CirclePlus },
-        { path: '/teacher/assignments', label: 'Assignment List', Icon: BookOpen },
-        { path: '/teacher/syllabus', label: 'Syllabus', Icon: FileText },
-        { path: '/teacher/students', label: 'My Students', Icon: UsersRound },
-        { path: '/teacher/timetable', label: 'Time Table', Icon: CalendarDays },
-        { path: '/teacher/messaging', label: 'Messaging', Icon: MessageCircle },
-        { path: '/teacher/gallery', label: 'Gallery', Icon: Images },
-        { path: '/teacher/notifications', label: 'Notifications', Icon: Bell },
-        { path: '/teacher/Holidays', label: 'Holidays', Icon: Umbrella },
-        { path: '/teacher/Profile', label: 'Profile', Icon: UserCog },
+        { path: '/teacher/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+        { path: '/teacher/attendance', label: 'Mark Attendance', icon: CheckSquare },
+        { path: '/teacher/my-attendance', label: 'My Attendance', icon: ClipboardList },
+        { path: '/teacher/upload-result', label: 'Upload Results', icon: UploadCloud },
+        { path: '/teacher/assignment', label: 'Create Assignment', icon: Plus },
+        { path: '/teacher/assignments', label: 'Assignment List', icon: BookOpen },
+        { path: '/teacher/syllabus', label: 'Syllabus', icon: FileText },
+        { path: '/teacher/students', label: 'My Students', icon: Users },
+        { path: '/teacher/timetable', label: 'Time Table', icon: Calendar },
+        { path: '/teacher/messaging', label: 'Messaging', icon: MessageSquare },
+        { path: '/teacher/gallery', label: 'Gallery', icon: Image },
+        { path: '/teacher/notifications', label: 'Notifications', icon: Bell },
+        { path: '/teacher/Holidays', label: 'Holidays', icon: CalendarX },
+        { path: '/teacher/Profile', label: 'Profile', icon: User },
     ];
 
     const adminLinks = [
-        { path: '/admin/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
+        { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
         { 
             label: 'User Management', 
-            Icon: UsersRound,
+            icon: Users,
             subLinks: [
                 { path: '/admin/add-teacher', label: 'Add Teacher' },
                 { path: '/admin/add-student', label: 'Add Student' },
@@ -111,7 +134,7 @@ const Sidebar = () => {
         },
         {
             label: 'Academic',
-            Icon: GraduationCap,
+            icon: GraduationCap,
             subLinks: [
                 { path: '/admin/classes', label: 'Classes & Sections' },
                 { path: '/admin/subjects', label: 'Subjects' },
@@ -126,22 +149,21 @@ const Sidebar = () => {
             ]
         },
 
-        { path: '/admin/gallery', label: 'Gallery', Icon: Images },
+        { path: '/admin/gallery', label: 'Gallery', icon: Image },
         {
             label: 'Finance',
-            Icon: CreditCard,
+            icon: Wallet,
             subLinks: [
                 { path: '/admin/fees', label: 'Fee Management' },
                 { path: '/admin/finance-cards', label: 'Fee Cards' },
             ]
         },
-        { path: '/admin/reports', label: 'Reports', Icon: ChartLine },
-        { path: '/admin/shops', label: 'Shop Locations', Icon: Store },
+        { path: '/admin/reports', label: 'Reports', icon: TrendingUp },
+        { path: '/admin/shops', label: 'Shop Locations', icon: Store },
     ];
 
-
-        adminLinks.splice(adminLinks.length - 1, 0, { path: '/admin/biometric-machines', label: 'Biometric Machines', Icon: Network });
-        adminLinks.splice(adminLinks.length - 1, 0, { path: '/admin/teacher-attendance', label: 'Staff Attendance', Icon: UserCheck });
+    adminLinks.splice(adminLinks.length - 1, 0, { path: '/admin/biometric-machines', label: 'Biometric Machines', icon: Fingerprint });
+    adminLinks.splice(adminLinks.length - 1, 0, { path: '/admin/teacher-attendance', label: 'Staff Attendance', icon: ClipboardCheck });
 
     const links = role === 'student' ? studentLinks : (role === 'teacher' ? teacherLinks : adminLinks);
 
@@ -209,11 +231,18 @@ const Sidebar = () => {
                         }`}
                         style={{ marginLeft: `${depth * 12}px` }}
                     >
-                        {Icon && (
-                            <Icon
-                                className={`h-[18px] w-[18px] shrink-0 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-school-navy'}`}
-                                strokeWidth={2.3}
-                            />
+                        {item.icon && (
+                            typeof item.icon === 'string' ? (
+                                <span className="text-lg">{item.icon}</span>
+                            ) : (
+                                <item.icon 
+                                    className={`w-5 h-5 transition-colors duration-200 ${
+                                        isActive 
+                                        ? 'text-white' 
+                                        : 'text-slate-400 group-hover:text-school-navy'
+                                    }`} 
+                                />
+                            )
                         )}
                         <span>{item.label}</span>
                         {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white opacity-50"></div>}
@@ -227,11 +256,18 @@ const Sidebar = () => {
                         }`}
                         style={{ marginLeft: `${depth * 12}px` }}
                     >
-                        {Icon && (
-                            <Icon
-                                className={`h-[18px] w-[18px] shrink-0 ${isHighlighted ? 'text-school-navy' : 'text-slate-400 group-hover:text-school-navy'}`}
-                                strokeWidth={2.3}
-                            />
+                        {item.icon && (
+                            typeof item.icon === 'string' ? (
+                                <span className="text-lg">{item.icon}</span>
+                            ) : (
+                                <item.icon 
+                                    className={`w-5 h-5 transition-colors duration-200 ${
+                                        isChildActive 
+                                        ? 'text-school-navy' 
+                                        : 'text-slate-400 group-hover:text-school-navy'
+                                    }`} 
+                                />
+                            )
                         )}
                         <span>{item.label}</span>
                         <ChevronDown
@@ -263,7 +299,7 @@ const Sidebar = () => {
             )}
 
             <aside className={`
-                fixed inset-y-0 left-0 z-50 w-[82vw] max-w-72 md:w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out
+                fixed top-14 bottom-0 left-0 z-50 w-[82vw] max-w-72 sm:top-16 md:top-auto md:bottom-auto md:w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out
                 md:relative md:translate-x-0
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
             `}>

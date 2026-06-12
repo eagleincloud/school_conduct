@@ -243,11 +243,11 @@ const UploadResult = () => {
     const selectedStudent = useMemo(() => students.find(s => String(s.id) === String(selectedStudentId)), [students, selectedStudentId]);
 
     return (
-        <div style={{ padding: '32px', maxWidth: '1280px', margin: '0 auto', minHeight: '100vh', backgroundColor: '#f9fafb' }}>
-            <div style={{ backgroundColor: '#fff', borderRadius: '32px', padding: '40px', boxShadow: '0 25px 70px rgba(0,0,0,0.07)', border: '1px solid #f0f0f0' }}>
+        <div className="teacher-upload-page" style={{ padding: '32px', maxWidth: '1280px', margin: '0 auto', minHeight: '100vh', backgroundColor: '#f9fafb' }}>
+            <div className="teacher-upload-surface" style={{ backgroundColor: '#fff', borderRadius: '32px', padding: '40px', boxShadow: '0 25px 70px rgba(0,0,0,0.07)', border: '1px solid #f0f0f0' }}>
                 
                 {/* Header & Toggle */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+                <div className="teacher-upload-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px', gap: '16px', flexWrap: 'wrap' }}>
                     <div>
                         <h1 style={{ fontSize: '32px', fontWeight: 900, color: '#111827', margin: 0, letterSpacing: '-0.025em' }}>Results Management</h1>
                         <p style={{ color: '#6b7280', marginTop: '12px', fontSize: '16px', fontWeight: 500 }}>
@@ -255,7 +255,7 @@ const UploadResult = () => {
                         </p>
                     </div>
                     
-                    <div style={{ display: 'flex', backgroundColor: '#f3f4f6', padding: '6px', borderRadius: '18px', border: '1px solid #e5e7eb' }}>
+                    <div className="teacher-upload-toggle" style={{ display: 'flex', backgroundColor: '#f3f4f6', padding: '6px', borderRadius: '18px', border: '1px solid #e5e7eb' }}>
                         <button
                             onClick={() => setView('form')}
                             style={{ 
@@ -366,10 +366,10 @@ const UploadResult = () => {
                             </div>
                         </div>
 
-                        <div style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '32px', border: '2px solid #f1f5f9' }}>
-                            <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                        <div className="teacher-page-card" style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '32px', border: '2px solid #f1f5f9' }}>
+                            <div className="teacher-toolbar" style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
                                 <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 800, color: '#1e293b' }}>Score Submission</h3>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '350px' }}>
+                                <div className="teacher-upload-student-select" style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '350px' }}>
                                     <select
                                         value={selectedStudentId}
                                         onChange={(e) => setSelectedStudentId(e.target.value)}
@@ -386,17 +386,17 @@ const UploadResult = () => {
                             </div>
 
                             {selectedStudent ? (
-                                <div style={{ backgroundColor: '#fdfdfd', borderRadius: '20px', border: '1px solid #f1f5f9', padding: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
+                                <div className="teacher-upload-score-card" style={{ backgroundColor: '#fdfdfd', borderRadius: '20px', border: '1px solid #f1f5f9', padding: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.02)', gap: '24px' }}>
                                     <div>
                                         <div style={{ fontWeight: 900, color: '#111827', fontSize: '20px' }}>{selectedStudent.name}</div>
                                         <div style={{ fontSize: '14px', color: '#6b7280', marginTop: '6px', fontWeight: 600 }}>Roll Code: {selectedStudent.roll_number || 'N/A'} | Status: Record Pending</div>
                                     </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-                                        <div style={{ textAlign: 'right' }}>
+                                    <div className="teacher-upload-score-body" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+                                        <div className="teacher-upload-meta" style={{ textAlign: 'right' }}>
                                             <div style={{ fontSize: '12px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '8px' }}>Weightage</div>
                                             <div style={{ fontSize: '20px', fontWeight: 900, color: '#1e293b' }}>{selectedExam?.total_marks || 100}</div>
                                         </div>
-                                        <div style={{ height: '40px', width: '1px', backgroundColor: '#e2e8f0' }}></div>
+                                        <div className="teacher-upload-score-divider" style={{ height: '40px', width: '1px', backgroundColor: '#e2e8f0' }}></div>
                                         <div>
                                             <input
                                                 type="number"
@@ -410,7 +410,7 @@ const UploadResult = () => {
                                     </div>
                                 </div>
                             ) : (
-                                <div style={{ textAlign: 'center', padding: '80px', border: '2px dashed #e2e8f0', borderRadius: '24px', color: '#94a3b8' }}>
+                                <div className="teacher-upload-empty" style={{ textAlign: 'center', padding: '80px', border: '2px dashed #e2e8f0', borderRadius: '24px', color: '#94a3b8' }}>
                                     <div style={{ fontSize: '40px', marginBottom: '16px' }}>✍️</div>
                                     <div style={{ fontWeight: 700, fontSize: '18px' }}>Ready to log scores?</div>
                                     <p style={{ marginTop: '8px' }}>Select a student from the menu above to start recording performance</p>
@@ -418,7 +418,7 @@ const UploadResult = () => {
                             )}
                         </div>
 
-                        <div style={{ marginTop: '48px', display: 'flex', justifyContent: 'flex-end', gap: '16px', alignItems: 'center' }}>
+                        <div className="teacher-upload-actions" style={{ marginTop: '48px', display: 'flex', justifyContent: 'flex-end', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
                              {isPublished && (
                                  <span style={{ 
                                      color: (['unit_test', 'class_test'].includes(selectedExam?.exam_type)) ? '#1d4ed8' : '#ef4444', 
@@ -459,7 +459,7 @@ const UploadResult = () => {
                     /* HISTORY LIST VIEW */
                     <div>
                         {/* List Filters */}
-                        <div style={{ display: 'flex', gap: '16px', marginBottom: '32px', flexWrap: 'wrap' }}>
+                        <div className="teacher-upload-filters" style={{ display: 'flex', gap: '16px', marginBottom: '32px', flexWrap: 'wrap' }}>
                             <div style={{ flex: 1, minWidth: '240px' }}>
                                 <input 
                                     type="text" 
@@ -540,7 +540,7 @@ const UploadResult = () => {
                                 </table>
                             </div>
                         ) : (
-                            <div style={{ textAlign: 'center', padding: '100px', backgroundColor: '#fff', borderRadius: '32px', border: '3px dashed #f1f5f9' }}>
+                            <div className="teacher-results-empty" style={{ textAlign: 'center', padding: '100px', backgroundColor: '#fff', borderRadius: '32px', border: '3px dashed #f1f5f9' }}>
                                 <div style={{ fontSize: '48px', marginBottom: '20px' }}>📁</div>
                                 <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#334155' }}>No match found</h3>
                                 <p style={{ color: '#64748b', marginTop: '10px' }}>Try adjusting your search query or filters.</p>

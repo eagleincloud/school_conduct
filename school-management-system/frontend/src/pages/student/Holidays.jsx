@@ -477,13 +477,7 @@ const StudentHolidays = () => {
             </div>
 
             <div style={{ marginTop: "14px", overflowX: "auto" }}>
-              <div
-                className="rg-calendar" style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
-                  gap: "10px",
-                }}
-              >
+              <div className="rg-calendar">
                 {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
                   <div
                     key={d}
@@ -500,7 +494,7 @@ const StudentHolidays = () => {
                 {calendarCells.map((key, idx) => {
                   if (!key)
                     return (
-                      <div key={`empty-${idx}`} style={{ height: "70px" }} />
+                      <div key={`empty-${idx}`} className="rg-calendar-cell empty" style={{ height: "70px" }} />
                     );
                   const list = holidayByDay.get(key) || [];
                   const isHoliday = list.length > 0;
@@ -510,6 +504,7 @@ const StudentHolidays = () => {
                       key={key}
                       type="button"
                       onClick={() => (isHoliday ? openDetails(key) : null)}
+                      className="rg-calendar-cell"
                       style={{
                         height: "70px",
                         borderRadius: "14px",
@@ -550,6 +545,7 @@ const StudentHolidays = () => {
                       </div>
                       {isHoliday ? (
                         <div
+                          className="calendar-status-text"
                           style={{
                             fontSize: "11px",
                             fontWeight: 1000,
@@ -559,7 +555,7 @@ const StudentHolidays = () => {
                           {list[0].title}
                         </div>
                       ) : (
-                        <div style={{ fontSize: "11px" }}>&nbsp;</div>
+                        <div className="calendar-status-text" style={{ fontSize: "11px" }}>&nbsp;</div>
                       )}
                     </button>
                   );

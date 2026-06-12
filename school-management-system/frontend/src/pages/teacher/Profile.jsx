@@ -398,6 +398,7 @@ const TeacherProfile = () => {
 
   return (
     <div
+      className="teacher-page teacher-profile-page"
       style={{
         padding: "24px",
         backgroundColor: colors.bg,
@@ -408,12 +409,25 @@ const TeacherProfile = () => {
         {`
                 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
                 .animate-up { animation: fadeIn 0.4s ease forwards; }
+                @media (max-width: 1024px) {
+                  .profile-grid-row > div[style*="gridColumn"] {
+                    grid-column: span 12 !important;
+                  }
+                  .profile-id-left { grid-column: span 12 !important; }
+                  .profile-id-right { grid-column: span 12 !important; }
+                }
+                @media (max-width: 768px) {
+                  .profile-grid { grid-template-columns: 1fr !important; }
+                  .profile-grid-row { grid-template-columns: 1fr !important; }
+                  .profile-id-left { grid-column: span 1 !important; }
+                  .profile-id-right { grid-column: span 1 !important; }
+                }
                 `}
       </style>
 
       {/* Premium Header Card */}
       <div
-        className="animate-up"
+        className="teacher-page-card animate-up"
         style={{
           backgroundColor: colors.card,
           padding: "28px",
@@ -475,7 +489,7 @@ const TeacherProfile = () => {
               security.
             </p>
           </div>
-          <div style={{ display: "flex", gap: 12 }}>
+          <div className="teacher-profile-actions" style={{ display: "flex", gap: 12 }}>
             <button
               type="button"
               onClick={handleSave}

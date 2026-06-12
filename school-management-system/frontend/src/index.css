@@ -195,4 +195,457 @@ table {
   .table-scroll-hint {
     display: block;
   }
+
+  .teacher-page,
+  .teacher-dashboard-page,
+  .teacher-upload-page {
+    padding: 12px !important;
+    min-height: auto !important;
+  }
+
+  .teacher-page-card,
+  .teacher-dashboard-card,
+  .teacher-upload-surface {
+    padding: 16px !important;
+    border-radius: 18px !important;
+  }
+
+  .teacher-page-header,
+  .teacher-dashboard-header,
+  .teacher-upload-header,
+  .teacher-toolbar,
+  .teacher-upload-actions,
+  .teacher-upload-filters,
+  .teacher-profile-actions,
+  .teacher-attendance-controls {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .teacher-header-search,
+  .teacher-inline-search,
+  .teacher-upload-toggle,
+  .teacher-upload-student-select,
+  .teacher-upload-meta,
+  .teacher-upload-score-card,
+  .teacher-upload-filters > *,
+  .teacher-attendance-controls > * {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .teacher-upload-toggle {
+    padding: 4px !important;
+  }
+
+  .teacher-upload-toggle > button {
+    flex: 1 1 0 !important;
+    width: 100% !important;
+    padding: 12px 16px !important;
+  }
+
+  .teacher-upload-score-card,
+  .teacher-upload-score-body {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .teacher-upload-score-body > * {
+    width: 100% !important;
+  }
+
+  .teacher-upload-score-divider {
+    display: none !important;
+  }
+
+  .teacher-upload-actions > * {
+    width: 100% !important;
+  }
+
+  .teacher-profile-actions > button,
+  .teacher-attendance-controls select,
+  .teacher-attendance-controls input {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .teacher-upload-empty,
+  .teacher-results-empty {
+    padding: 32px 16px !important;
+  }
+
+  .mobile-card-table {
+    display: block;
+    min-width: 0 !important;
+    overflow: visible !important;
+  }
+
+  .mobile-card-table thead {
+    display: none;
+  }
+
+  .mobile-card-table tbody,
+  .mobile-card-table tr,
+  .mobile-card-table td {
+    display: block;
+    width: 100%;
+    white-space: normal !important;
+  }
+
+  .mobile-card-table tr {
+    margin-bottom: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .mobile-card-table td {
+    padding: 10px 12px !important;
+    border: 0 !important;
+    text-align: left !important;
+  }
+
+  .mobile-card-table td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 4px;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .mobile-card-table td[data-label="Actions"]::before,
+  .mobile-card-table td[data-label="Action"]::before {
+    margin-bottom: 8px;
+  }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   Student Dashboard – Tile Grid
+   ═══════════════════════════════════════════════════════════════════ */
+
+.student-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+}
+
+/* Tile hover & active effects */
+.student-tile-item {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.student-tile-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+}
+
+.student-tile-item:active {
+  transform: translateY(-1px) scale(0.97);
+}
+
+/* Hover lift on icon container */
+.student-tile-item:hover > div:first-child {
+  transform: scale(1.08);
+}
+
+/* Skeleton pulse animation */
+@keyframes tilePulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+.student-tile-skeleton {
+  animation: tilePulse 1.6s ease-in-out infinite;
+}
+
+.student-tile-header-skeleton {
+  animation: tilePulse 1.6s ease-in-out infinite;
+}
+
+/* Button hover effects */
+.student-tile-btn-secondary:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.student-tile-btn-primary:hover {
+  opacity: 0.92;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* ── Responsive breakpoints ─────────────────────────────────────── */
+
+/* Small mobile (< 360px) — 3 columns, tighter */
+@media (max-width: 359px) {
+  .student-tile-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .student-tile-item {
+    padding: 14px 8px 12px !important;
+    min-height: 90px !important;
+    border-radius: 16px !important;
+  }
+}
+
+/* Mobile (360–599px) — 3 columns */
+@media (min-width: 360px) and (max-width: 599px) {
+  .student-tile-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .student-tile-item {
+    min-height: 100px !important;
+  }
+}
+
+/* Tablet (600–899px) — 4 columns */
+@media (min-width: 600px) and (max-width: 899px) {
+  .student-tile-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+}
+
+/* Desktop (900–1199px) — 5 columns */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .student-tile-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+  }
+}
+
+/* Large desktop (1200px+) — 6 columns */
+@media (min-width: 1200px) {
+  .student-tile-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 14px;
+  }
+}
+
+/* Ensure header stacks on small screens */
+@media (max-width: 599px) {
+  .student-tile-header {
+    padding: 16px !important;
+  }
+
+  .student-tile-header h1 {
+    font-size: 18px !important;
+  }
+
+  .student-tile-alerts {
+    display: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Attendance Page Responsive Layout
+   ═══════════════════════════════════════════════════════════════════ */
+.attendance-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.attendance-card-half {
+  grid-column: span 6;
+}
+
+.attendance-card-sixth {
+  grid-column: span 2;
+}
+
+.attendance-card-seventh {
+  grid-column: span 7;
+}
+
+.attendance-card-fifth {
+  grid-column: span 5;
+}
+
+.attendance-card-full {
+  grid-column: span 12;
+}
+
+/* Calendar base grid class (prevents matching the repeat(7) inline style override) */
+.rg-calendar {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+}
+
+.calendar-status-text {
+  display: block;
+}
+
+@media (max-width: 991px) {
+  .attendance-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  
+  .attendance-card-half,
+  .attendance-card-sixth,
+  .attendance-card-seventh,
+  .attendance-card-fifth,
+  .attendance-card-full {
+    grid-column: span 12 !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .rg-calendar {
+    gap: 4px !important;
+  }
+
+  .rg-calendar-cell {
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    padding: 3px 2px !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .rg-calendar-cell > div:first-child {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 11px !important;
+    font-weight: 1000 !important;
+    line-height: 1 !important;
+  }
+
+  .rg-calendar-cell > div:first-child span:last-child {
+    font-size: 7px !important; /* Today text */
+    line-height: 1 !important;
+    color: #2563eb !important;
+  }
+
+  .calendar-status-text {
+    font-size: 7px !important;
+    line-height: 1 !important;
+    margin-top: 1px !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    width: auto !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Time Table Mobile Tabbed Switcher
+   ═══════════════════════════════════════════════════════════════════ */
+.timetable-day-tabs {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  padding: 4px;
+  background-color: #f1f5f9;
+  border-radius: 16px;
+  scrollbar-width: none;
+}
+
+.timetable-day-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.timetable-day-tab-btn {
+  flex: 1 0 auto;
+  text-align: center;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+/* Hide secondary statistics and tables in mobile view (< 768px) */
+@media (max-width: 767px) {
+  .attendance-sec-metrics,
+  .attendance-sec-trend,
+  .attendance-sec-daily,
+  .attendance-sec-subjects,
+  .profile-sec-attendance,
+  .profile-sec-fees,
+  .profile-sec-assignments,
+  .profile-sec-academic,
+  .profile-sec-header {
+    display: none !important;
+  }
+}
+
+/* Global responsive grid classes (rg-autofit, rg-autofit-sm) */
+.rg-autofit {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+}
+
+.rg-autofit-sm {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) !important;
+}
+
+/* Global table scroll styling for mobile */
+.table-scroll {
+  width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.table-scroll table {
+  white-space: nowrap !important;
+}
+
+@media (max-width: 767px) {
+  .rg-autofit,
+  .rg-autofit-sm {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Messaging / Doubt Solving System Responsiveness
+   ═══════════════════════════════════════════════════════════════════ */
+.messaging-back-btn {
+  display: none !important;
+}
+
+.messaging-layout-grid {
+  margin-top: 20px;
+  display: grid !important;
+  grid-template-columns: 350px 1fr !important;
+  gap: 20px !important;
+  height: calc(100vh - 200px) !important;
+}
+
+@media (max-width: 767px) {
+  .messaging-back-btn {
+    display: inline-block !important;
+  }
+
+  .messaging-layout-grid {
+    grid-template-columns: 1fr !important;
+    height: calc(100vh - 120px) !important;
+    gap: 0px !important;
+    margin-top: 10px !important;
+  }
+
+  .messaging-mobile-hidden {
+    display: none !important;
+  }
+}
+
+

@@ -162,6 +162,10 @@ const TeacherDashboard = () => {
 
   const [shifts, setShifts] = useState([]);
   const [selectedShiftId, setSelectedShiftId] = useState("");
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [galleryLoading, setGalleryLoading] = useState(false);
+  const [currentGallerySlide, setCurrentGallerySlide] = useState(0);
+  const galleryToken = localStorage.getItem('access_token');
 
   useEffect(() => {
     setLoading(true);
@@ -233,6 +237,33 @@ const TeacherDashboard = () => {
       )
       .catch(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    const fetchGallery = async () => {
+      setGalleryLoading(true);
+      try {
+        const res = await api.get('gallery/');
+        setGalleryImages(Array.isArray(res?.data) ? res.data : []);
+      } catch (e) {
+        console.error('Gallery fetch error', e);
+        setGalleryImages([]);
+      } finally {
+        setGalleryLoading(false);
+      }
+    };
+    fetchGallery();
+  }, []);
+
+  useEffect(() => {
+    if (!galleryImages.length) {
+      setCurrentGallerySlide(0);
+      return undefined;
+    }
+    const timer = setInterval(() => {
+      setCurrentGallerySlide((prev) => (prev + 1) % galleryImages.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [galleryImages]);
 
   useEffect(() => {
     if (!selectedClassId) {
@@ -474,14 +505,76 @@ const TeacherDashboard = () => {
 
   return (
     <div
+      className="teacher-dashboard-page"
       style={{
         padding: 20,
         backgroundColor: palette.bg,
         minHeight: "calc(100vh - 60px)",
       }}
     >
+      <style>{`
+        @media (max-width: 1024px) {
+          .rg-split { 
+            grid-template-columns: 1fr !important; 
+          }
+          .rg-4 { 
+            grid-template-columns: repeat(2, 1fr) !important; 
+          }
+        }
+        @media (max-width: 768px) {
+          .rg-split { 
+            grid-template-columns: 1fr !important; 
+          }
+          .rg-4 { 
+            grid-template-columns: repeat(2, 1fr) !important; 
+          }
+          .dashboard-12col {
+            grid-template-columns: 1fr !important;
+          }
+          .dashboard-12col > div {
+            grid-column: span 1 !important;
+          }
+          .rg-2 {
+            grid-template-columns: 1fr !important;
+          }
+        }
+        @media (max-width: 640px) {
+          .rg-split { 
+            grid-template-columns: 1fr !important; 
+          }
+          .rg-4 { 
+            grid-template-columns: 1fr !important; 
+          }
+          .dashboard-12col {
+            grid-template-columns: 1fr !important;
+          }
+          .dashboard-12col > div {
+            grid-column: span 1 !important;
+          }
+          .rg-2 {
+            grid-template-columns: 1fr !important;
+          }
+          .teacher-dashboard-attendance-bar,
+          .teacher-dashboard-attendance-filters,
+          .teacher-dashboard-action-group,
+          .teacher-dashboard-timetable-row {
+            flex-direction: column !important;
+            align-items: stretch !important;
+          }
+          .teacher-dashboard-attendance-filters > *,
+          .teacher-dashboard-action-group > * {
+            width: 100% !important;
+            min-width: 0 !important;
+            margin-right: 0 !important;
+          }
+          .teacher-dashboard-timetable-meta {
+            text-align: left !important;
+          }
+        }
+      `}</style>
       {/* Top Header */}
       <Card
+        className="teacher-dashboard-card"
         style={{
           marginBottom: 12,
           background: "linear-gradient(135deg, #fff 0%, #f1f5f9 100%)",
@@ -503,6 +596,7 @@ const TeacherDashboard = () => {
           }}
         ></div>
         <div
+          className="teacher-dashboard-header"
           style={{
             position: "relative",
             zIndex: 1,
@@ -577,6 +671,7 @@ const TeacherDashboard = () => {
           </div>
 
           <div
+            className="teacher-toolbar"
             style={{
               display: "flex",
               gap: 10,
@@ -585,6 +680,7 @@ const TeacherDashboard = () => {
             }}
           >
             <input
+              className="teacher-header-search"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               placeholder="Search students..."
@@ -689,7 +785,7 @@ const TeacherDashboard = () => {
 
       {/* Summary cards */}
       <div
-        className="rg-12" style={{
+        className="dashboard-12col rg-12" style={{
           display: "grid",
           gridTemplateColumns: "repeat(12, minmax(0,1fr))",
           gap: 12,
@@ -802,7 +898,7 @@ const TeacherDashboard = () => {
       </div>
 
       <div
-        className="rg-12" style={{
+        className="dashboard-12col rg-12" style={{
           marginTop: 12,
           display: "grid",
           gridTemplateColumns: "repeat(12, minmax(0,1fr))",
@@ -812,6 +908,7 @@ const TeacherDashboard = () => {
         {/* Attendance Management + chart */}
         <Card style={{ gridColumn: "span 7" }}>
           <div
+            className="teacher-dashboard-attendance-bar"
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -835,7 +932,10 @@ const TeacherDashboard = () => {
                 Mark present/absent/late and track class performance.
               </div>
             </div>
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <div
+              className="teacher-dashboard-attendance-filters"
+              style={{ display: "flex", gap: 10, flexWrap: "wrap" }}
+            >
               <select
                 value={selectedClassId}
                 onChange={(e) => setSelectedClassId(e.target.value)}
@@ -883,7 +983,7 @@ const TeacherDashboard = () => {
               borderRadius: 12,
             }}
           >
-            <div className="table-scroll"><table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <div className="table-scroll"><table className="mobile-card-table" style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr style={{ backgroundColor: "#f1f5f9" }}>
                   <th style={{ padding: "10px", textAlign: "left" }}>
@@ -908,11 +1008,12 @@ const TeacherDashboard = () => {
                       backgroundColor: s.low_attendance ? "#fff7ed" : "#fff",
                     }}
                   >
-                    <td style={{ padding: "10px", fontWeight: 900 }}>
+                    <td data-label="Admission No" style={{ padding: "10px", fontWeight: 900 }}>
                       {s.admission_number}
                     </td>
-                    <td style={{ padding: "10px" }}>{s.name}</td>
+                    <td data-label="Name" style={{ padding: "10px" }}>{s.name}</td>
                     <td
+                      data-label="Status"
                       style={{
                         padding: "10px",
                         fontWeight: 900,
@@ -926,7 +1027,7 @@ const TeacherDashboard = () => {
                     >
                       {s.status ? s.status.toUpperCase() : "UNMARKED"}
                     </td>
-                    <td style={{ padding: "10px", fontWeight: 900 }}>
+                    <td data-label="Recent %" style={{ padding: "10px", fontWeight: 900 }}>
                       {s.recent_attendance_percentage}%
                       {s.low_attendance ? (
                         <span
@@ -940,7 +1041,11 @@ const TeacherDashboard = () => {
                         </span>
                       ) : null}
                     </td>
-                    <td style={{ padding: "10px", whiteSpace: "nowrap" }}>
+                    <td
+                      data-label="Actions"
+                      className="teacher-dashboard-action-group"
+                      style={{ padding: "10px", whiteSpace: "nowrap" }}
+                    >
                       <button
                         type="button"
                         onClick={() => markAttendance(s.id, "present")}
@@ -1238,6 +1343,7 @@ const TeacherDashboard = () => {
                     }}
                   >
                     <div
+                      className="teacher-dashboard-timetable-row"
                       style={{ display: "flex", alignItems: "center", gap: 12 }}
                     >
                       <div
@@ -1277,7 +1383,7 @@ const TeacherDashboard = () => {
                         </div>
                       </div>
                     </div>
-                    <div style={{ textAlign: "right" }}>
+                    <div className="teacher-dashboard-timetable-meta" style={{ textAlign: "right" }}>
                       <div
                         style={{
                           fontWeight: 1000,
@@ -1368,7 +1474,7 @@ const TeacherDashboard = () => {
             className="rg-2" style={{
               marginTop: 12,
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
               gap: 10,
             }}
           >
@@ -1380,10 +1486,20 @@ const TeacherDashboard = () => {
                   borderRadius: 14,
                   padding: 12,
                   backgroundColor: "#f8fafc",
+                  display: "flex",
+                  flexDirection: "column",
+                  minWidth: 0,
                 }}
               >
                 <div
-                  style={{ fontWeight: 900, fontSize: 14, color: palette.text }}
+                  style={{ 
+                    fontWeight: 900, 
+                    fontSize: 14, 
+                    color: palette.text,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
                 >
                   {s.name}
                 </div>
@@ -1393,6 +1509,9 @@ const TeacherDashboard = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
+                    gap: 8,
+                    minWidth: 0,
+                    flexWrap: "wrap",
                   }}
                 >
                   <span
@@ -1400,6 +1519,11 @@ const TeacherDashboard = () => {
                       color: palette.muted,
                       fontSize: 11,
                       fontWeight: 900,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      flex: 1,
+                      minWidth: 0,
                     }}
                   >
                     Class: {s.class_name}
@@ -1414,6 +1538,8 @@ const TeacherDashboard = () => {
                       fontSize: 9,
                       fontWeight: 1000,
                       color: palette.success,
+                      whiteSpace: "nowrap",
+                      flexShrink: 0,
                     }}
                   >
                     {s.status.toUpperCase()}
@@ -1434,6 +1560,131 @@ const TeacherDashboard = () => {
                 No active subjects found.
               </div>
             ) : null}
+          </div>
+        </Card>
+
+        {/* School Gallery Highlights */}
+        <Card style={{ gridColumn: "span 12" }}>
+          <div style={{ fontWeight: 1000, color: palette.text }}>
+            School Gallery Highlights
+          </div>
+          <div
+            style={{
+              marginTop: 4,
+              color: palette.muted,
+              fontSize: 12,
+              fontWeight: 900,
+            }}
+          >
+            Auto-rotating moments from your school gallery
+          </div>
+          <div
+            style={{
+              marginTop: 12,
+              height: 220,
+              borderRadius: 16,
+              border: `1px solid ${palette.border}`,
+              backgroundColor: "#f8fafc",
+              overflow: "hidden",
+              position: "relative",
+            }}
+          >
+            {galleryLoading ? (
+              <div
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: palette.muted,
+                  fontWeight: 1000,
+                }}
+              >
+                Loading gallery...
+              </div>
+            ) : galleryImages.length === 0 ? (
+              <div
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: palette.muted,
+                  fontWeight: 1000,
+                }}
+              >
+                <div style={{ fontSize: 36, marginBottom: 8, opacity: 0.3 }}>🖼️</div>
+                No gallery images uploaded yet.
+              </div>
+            ) : (
+              <>
+                {galleryImages.map((img, idx) => (
+                  <img
+                    key={img.id}
+                    src={`${img.image_url}${galleryToken ? `?token=${galleryToken}` : ''}`}
+                    alt={img.title}
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      transition: "opacity 700ms ease",
+                      opacity: idx === currentGallerySlide ? 1 : 0,
+                      userSelect: "none",
+                    }}
+                    onContextMenu={(e) => e.preventDefault()}
+                    onDragStart={(e) => e.preventDefault()}
+                  />
+                ))}
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: "auto 0 0 0",
+                    padding: 12,
+                    background: "linear-gradient(to top, rgba(0,0,0,0.55), transparent)",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  <p
+                    style={{
+                      color: "#fff",
+                      fontWeight: 1000,
+                      fontSize: 14,
+                      margin: 0,
+                      textShadow: "0 1px 4px rgba(0,0,0,0.4)",
+                    }}
+                  >
+                    {galleryImages[currentGallerySlide]?.title}
+                  </p>
+                  <div style={{ display: "flex", gap: 6 }}>
+                    {galleryImages.map((_, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setCurrentGallerySlide(idx)}
+                        style={{
+                          width: idx === currentGallerySlide ? 20 : 8,
+                          height: 8,
+                          borderRadius: 99,
+                          border: "none",
+                          backgroundColor:
+                            idx === currentGallerySlide
+                              ? "#fff"
+                              : "rgba(255,255,255,0.4)",
+                          cursor: "pointer",
+                          transition: "all 300ms ease",
+                          padding: 0,
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </Card>
       </div>

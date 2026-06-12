@@ -50,6 +50,7 @@ const Messaging = () => {
     const [resolving, setResolving] = useState(false);
 
     const [search, setSearch] = useState('');
+    const [sidebarVisible, setSidebarVisible] = useState(true);
     const chatEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -67,9 +68,9 @@ const Messaging = () => {
             setConversations(data);
 
             // Reset active selection if filters changed or list is empty
-            if (data.length > 0) {
+            if (data.length > 0 && window.innerWidth >= 768) {
                 setActiveConvId(data[0].id);
-            } else {
+            } else if (data.length === 0) {
                 setActiveConvId(null);
                 setActiveConv(null);
                 setMessages([]);
@@ -181,7 +182,7 @@ const Messaging = () => {
 
     return (
         <div style={{ padding: '20px', maxWidth: 1400, margin: '0 auto' }}>
-            <div style={{ ...cardStyle, padding: '20px' }}>
+            <div className={`messaging-header-container ${activeConvId ? 'messaging-mobile-hidden' : ''}`} style={{ ...cardStyle, padding: '20px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
                     <div>
                         <h1 style={{ margin: 0, fontSize: 24, fontWeight: 1000 }}>Student Doubts</h1>
@@ -214,9 +215,9 @@ const Messaging = () => {
                 </div>
             </div>
 
-            <div style={{ marginTop: 20, display: 'grid', gridTemplateColumns: '350px 1fr', gap: 20, height: 'calc(100vh - 200px)' }}>
+            <div className="messaging-layout-grid">
                 {/* Inbox */}
-                <div style={{ ...cardStyle, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <div className={`messaging-list-container ${activeConvId ? 'messaging-mobile-hidden' : ''}`} style={{ ...cardStyle, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                     <div style={{ padding: 16, borderBottom: '1px solid #e5e7eb' }}>
                         <input
                             value={search}
@@ -262,13 +263,31 @@ const Messaging = () => {
                 </div>
 
                 {/* Chat */}
-                <div style={{ ...cardStyle, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <div className={`messaging-chat-container ${!activeConvId ? 'messaging-mobile-hidden' : ''}`} style={{ ...cardStyle, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                     {activeConv ? (
                         <>
-                            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb', background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div>
-                                    <div style={{ fontWeight: 1000, fontSize: 16 }}>{activeConv.student_name}</div>
-                                    <div style={{ fontSize: 12, color: '#6b7280', fontWeight: 900 }}>Doubt: {activeConv.subject || 'General'}</div>
+                            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb', background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                    <button 
+                                        className="messaging-back-btn"
+                                        onClick={() => { setActiveConvId(null); setActiveConv(null); }}
+                                        style={{
+                                            border: 'none',
+                                            background: '#f3f4f6',
+                                            padding: '8px 12px',
+                                            borderRadius: 8,
+                                            cursor: 'pointer',
+                                            fontWeight: 1000,
+                                            fontSize: 13,
+                                            color: '#374151'
+                                        }}
+                                    >
+                                        ← Back
+                                    </button>
+                                    <div>
+                                        <div style={{ fontWeight: 1000, fontSize: 16 }}>{activeConv.student_name}</div>
+                                        <div style={{ fontSize: 12, color: '#6b7280', fontWeight: 900 }}>Doubt: {activeConv.subject || 'General'}</div>
+                                    </div>
                                 </div>
                                 {activeConv.is_active ? (
                                     <button

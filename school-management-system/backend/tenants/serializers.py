@@ -8,7 +8,8 @@ User = get_user_model()
 
 
 class PublicSchoolSerializer(serializers.ModelSerializer):
-
+    logo = serializers.SerializerMethodField()
+    hero_image = serializers.SerializerMethodField()
 
     class Meta:
         model = School
@@ -19,6 +20,20 @@ class PublicSchoolSerializer(serializers.ModelSerializer):
             'total_teachers_count', 'pass_percentage', 'show_facilities', 
             'show_events', 'show_testimonials'
         ]
+
+    def _get_file_url(self, file_field):
+        if not file_field:
+            return None
+        try:
+            return file_field.url
+        except Exception:
+            return None
+
+    def get_logo(self, obj):
+        return self._get_file_url(obj.logo)
+
+    def get_hero_image(self, obj):
+        return self._get_file_url(obj.hero_image)
 
 class SchoolAdminSerializer(serializers.ModelSerializer):
     user_count = serializers.IntegerField(read_only=True)

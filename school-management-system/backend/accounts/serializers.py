@@ -43,7 +43,10 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Build logo URL: use absolute URI so frontend can display it directly
         school_logo_url = None
         if not is_platform_role and user.school and user.school.logo:
-            school_logo_url = request.build_absolute_uri(user.school.logo.url)
+            try:
+                school_logo_url = request.build_absolute_uri(user.school.logo.url)
+            except Exception:
+                school_logo_url = None
 
         data['user'] = {
             'id': user.id,
@@ -54,8 +57,14 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             'school_id': getattr(user.school, 'school_id', None),
             'school_name': getattr(user.school, 'name', None),
             'school_logo': school_logo_url,
-            'profile_photo': request.build_absolute_uri(user.profile_photo.url) if user.profile_photo else None,
+            'profile_photo': None,
         }
+        # Build profile photo URL safely
+        if user.profile_photo:
+            try:
+                data['user']['profile_photo'] = request.build_absolute_uri(user.profile_photo.url)
+            except Exception:
+                data['user']['profile_photo'] = None
 
         if user.role == 'student':
             sp = getattr(user, 'student_profile', None)

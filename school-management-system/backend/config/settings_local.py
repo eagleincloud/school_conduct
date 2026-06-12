@@ -5,6 +5,9 @@ Override by setting: DJANGO_SETTINGS_MODULE=config.settings_local
 import os
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
+
+load_dotenv(override=True)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -85,11 +88,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Use SQLite for local development (no external DB needed)
+# Use PostgreSQL for local development via .env configuration
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', 'postgres'),
+        'USER': os.getenv('DB_USER', 'postgres'),
+        'PASSWORD': os.getenv('DB_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', '5432'),
+        'OPTIONS': {
+            'sslmode': os.getenv('DB_SSLMODE', 'require'),
+        },
     }
 }
 
@@ -134,8 +144,13 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# File storage - local filesystem (no Cloudinary for local dev)
-DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+# File storage - use Cloudinary with credentials from .env
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dj07pneil',
+    'API_KEY': '555982326456658',
+    'API_SECRET': 'ozZYzBQPZYX6bb-Wn45yFByZdTo',
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
