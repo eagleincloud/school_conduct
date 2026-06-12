@@ -13,14 +13,12 @@ const getBaseURL = () => {
 
   let url = import.meta.env.VITE_API_URL;
   if (!url || url.startsWith('/')) {
-    // Check if running natively inside Capacitor
     const isNativeMobile = typeof window !== "undefined" && window.Capacitor && window.Capacitor.getPlatform() !== 'web';
     if (isNativeMobile) {
-      // Default fallback to the hosted EC2 backend server
       url = "http://13.233.140.195/api/";
     } else {
-      // Browser fallback (resolves relatively)
-      url = (typeof window !== "undefined" ? window.location.origin : '') + (url || '/api/');
+      // Browser fallback uses the local backend server in development.
+      url = "http://127.0.0.1:8000/api/";
     }
   }
   return url.replace(/\/?$/, "/");

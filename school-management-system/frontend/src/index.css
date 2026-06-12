@@ -89,6 +89,19 @@ table {
   display: none;
 }
 
+.teacher-page,
+.teacher-dashboard-page,
+.teacher-upload-page {
+  width: 100%;
+  min-width: 0;
+}
+
+.teacher-upload-surface,
+.teacher-page-card,
+.teacher-dashboard-card {
+  min-width: 0;
+}
+
 @media (max-width: 767px) {
   .app-shell {
     min-height: 100dvh;
@@ -184,5 +197,130 @@ table {
 
   .table-scroll-hint {
     display: block;
+  }
+
+  .teacher-page,
+  .teacher-dashboard-page,
+  .teacher-upload-page {
+    padding: 12px !important;
+    min-height: auto !important;
+  }
+
+  .teacher-page-card,
+  .teacher-dashboard-card,
+  .teacher-upload-surface {
+    padding: 16px !important;
+    border-radius: 18px !important;
+  }
+
+  .teacher-page-header,
+  .teacher-dashboard-header,
+  .teacher-upload-header,
+  .teacher-toolbar,
+  .teacher-upload-actions,
+  .teacher-upload-filters,
+  .teacher-profile-actions,
+  .teacher-attendance-controls {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .teacher-header-search,
+  .teacher-inline-search,
+  .teacher-upload-toggle,
+  .teacher-upload-student-select,
+  .teacher-upload-meta,
+  .teacher-upload-score-card,
+  .teacher-upload-filters > *,
+  .teacher-attendance-controls > * {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .teacher-upload-toggle {
+    padding: 4px !important;
+  }
+
+  .teacher-upload-toggle > button {
+    flex: 1 1 0 !important;
+    width: 100% !important;
+    padding: 12px 16px !important;
+  }
+
+  .teacher-upload-score-card,
+  .teacher-upload-score-body {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .teacher-upload-score-body > * {
+    width: 100% !important;
+  }
+
+  .teacher-upload-score-divider {
+    display: none !important;
+  }
+
+  .teacher-upload-actions > * {
+    width: 100% !important;
+  }
+
+  .teacher-profile-actions > button,
+  .teacher-attendance-controls select,
+  .teacher-attendance-controls input {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .teacher-upload-empty,
+  .teacher-results-empty {
+    padding: 32px 16px !important;
+  }
+
+  .mobile-card-table {
+    display: block;
+    min-width: 0 !important;
+    overflow: visible !important;
+  }
+
+  .mobile-card-table thead {
+    display: none;
+  }
+
+  .mobile-card-table tbody,
+  .mobile-card-table tr,
+  .mobile-card-table td {
+    display: block;
+    width: 100%;
+    white-space: normal !important;
+  }
+
+  .mobile-card-table tr {
+    margin-bottom: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .mobile-card-table td {
+    padding: 10px 12px !important;
+    border: 0 !important;
+    text-align: left !important;
+  }
+
+  .mobile-card-table td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 4px;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .mobile-card-table td[data-label="Actions"]::before,
+  .mobile-card-table td[data-label="Action"]::before {
+    margin-bottom: 8px;
   }
 }

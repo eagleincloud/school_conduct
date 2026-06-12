@@ -141,6 +141,16 @@ export default function LandingPage() {
 
   const [contRef,   contInView]   = useInView(0.1);
 
+  // Default Assets
+  const defaultHero = 'https://images.unsplash.com/photo-1562774053-701939374585?w=1600&q=80&auto=format&fit=crop';
+  const defaultAbout = 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1200&q=80&auto=format&fit=crop';
+
+  const schoolName = school?.name || 'School';
+  const schoolInitial = schoolName.charAt(0) || 'S';
+  const schoolIdDisplay = school?.school_id || finalSchoolId || 'N/A';
+  const heroImage = school?.hero_image || defaultHero;
+  const schoolTagline = school?.tagline || 'Excellence in Education, Leadership in Innovation';
+  const schoolAbout = school?.about || `Welcome to ${schoolName}, where every student is mentored to reach their full potential. Our comprehensive curriculum is designed to balance academic rigor with creative exploration.`;
 
   const scrollTo = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -185,10 +195,6 @@ export default function LandingPage() {
     </div>
   );
 
-  // Default Assets
-  const defaultHero = 'https://images.unsplash.com/photo-1562774053-701939374585?w=1600&q=80&auto=format&fit=crop';
-  const defaultAbout = 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1200&q=80&auto=format&fit=crop';
-
   return (
     <div className="font-inter bg-white text-slate-900 min-h-screen overflow-x-hidden">
       
@@ -199,7 +205,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between">
           <div className="flex items-center gap-4 cursor-pointer group" onClick={() => scrollTo('hero')}>
             <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform overflow-hidden border border-slate-100">
-               {school.logo ? (
+               {school?.logo ? (
                  <img 
                    src={school.logo} 
                    alt="" 
@@ -207,13 +213,13 @@ export default function LandingPage() {
                    onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
                  />
                ) : null}
-               <div className="text-2xl font-black text-blue-600" style={{ display: school.logo ? 'none' : 'flex' }}>
-                 {school.name[0]}
+               <div className="text-2xl font-black text-blue-600" style={{ display: school?.logo ? 'none' : 'flex' }}>
+                 {schoolInitial}
                </div>
             </div>
             <div>
-              <p className="text-lg font-black tracking-tight leading-none text-slate-900">{school.name}</p>
-              <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mt-1">#{school.school_id}</p>
+              <p className="text-lg font-black tracking-tight leading-none text-slate-900">{schoolName}</p>
+              <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mt-1">#{schoolIdDisplay}</p>
             </div>
           </div>
 
@@ -307,14 +313,14 @@ export default function LandingPage() {
                    Official Academic Portal
                 </div>
                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black text-slate-900 leading-[1.1] mb-6 tracking-tight">
-                  {school.name.split(' ').slice(0, 2).join(' ')}<br />
-                  <span className="text-blue-600">{school.name.split(' ').slice(2).join(' ') || 'Institution'}</span>
+                  {schoolName.split(' ').slice(0, 2).join(' ')}<br />
+                  <span className="text-blue-600">{schoolName.split(' ').slice(2).join(' ') || 'Institution'}</span>
                 </h1>
                 <p className="text-base sm:text-lg lg:text-xl font-bold text-slate-600 mb-4">
-                  {school.tagline || 'Excellence in Education, Leadership in Innovation'}
+                  {schoolTagline}
                 </p>
                 <p className="text-base sm:text-lg text-slate-500 leading-relaxed mb-10">
-                  {school.about?.substring(0, 200) || `${school.name} is dedicated to fostering a nurturing environment that empowers students to achieve academic excellence and life-long learning skills.`}...
+                  {schoolAbout}...
                 </p>
                 
                 <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4">
@@ -329,7 +335,7 @@ export default function LandingPage() {
 
             <div className="hidden lg:block relative animate-float">
                <div className="w-full max-w-[480px] aspect-[4/5] bg-white rounded-[3rem] shadow-2xl p-6 border border-slate-100 overflow-hidden">
-                  <img src={school.hero_image || defaultHero} alt="" className="w-full h-full object-cover rounded-[2rem]" />
+                  <img src={heroImage} alt="" className="w-full h-full object-cover rounded-[2rem]" />
                </div>
                <div className="absolute -bottom-10 -left-10 bg-white rounded-3xl shadow-2xl p-8 border border-slate-50 max-w-[240px]">
                   <p className="text-4xl font-black text-blue-600 mb-1">{school.established_year || '1995'}</p>
@@ -490,9 +496,9 @@ export default function LandingPage() {
               <div className="md:col-span-2">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3 mb-6">
                       <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black text-xl">
-                         {school.name[0]}
+                         {schoolInitial}
                       </div>
-                      <p className="text-xl font-black text-slate-900 tracking-tight mt-3 sm:mt-0">{school.name}</p>
+                      <p className="text-xl font-black text-slate-900 tracking-tight mt-3 sm:mt-0">{schoolName}</p>
                   </div>
                   <p className="text-slate-500 font-medium leading-relaxed max-w-sm mb-8">
                      A premier educational institute committed to nurturing global leaders through academic excellence and holistic development.

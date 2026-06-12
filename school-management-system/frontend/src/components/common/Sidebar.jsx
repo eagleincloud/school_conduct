@@ -221,7 +221,7 @@ const Sidebar = () => {
             )}
 
             <aside className={`
-                fixed inset-y-0 left-0 z-50 w-[82vw] max-w-72 md:w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out
+                fixed top-14 bottom-0 left-0 z-50 w-[82vw] max-w-72 sm:top-16 md:top-auto md:bottom-auto md:w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out
                 md:relative md:translate-x-0
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
             `}>

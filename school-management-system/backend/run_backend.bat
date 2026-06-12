@@ -4,6 +4,8 @@ REM This script handles Windows PowerShell execution policy issues
 
 cd /d "%~dp0"
 
+if "%BACKEND_HOST%"=="" set "BACKEND_HOST=13.233.140.195"
+
 echo ============================================
 echo School Management System - Backend Setup
 echo ============================================
@@ -26,19 +28,22 @@ REM Install backend requirements, including PostgreSQL support
 
 echo.
 echo Running migrations...
-.venv\Scripts\python.exe manage.py migrate --settings=config.settings
+set "DJANGO_SETTINGS_MODULE=config.settings_local"
+.venv\Scripts\python.exe manage.py migrate --settings=config.settings_local
 
 echo.
 echo Creating superuser (optional) - Press Ctrl+C to skip
 echo.
-.venv\Scripts\python.exe manage.py createsuperuser --settings=config.settings
+.venv\Scripts\python.exe manage.py createsuperuser --settings=config.settings_local
 
 echo.
 echo ============================================
 echo Starting development server...
 echo ============================================
-echo Backend URL: http://localhost:8000
-echo Admin URL: http://localhost:8000/admin
+if "%BACKEND_HOST%"=="" set "BACKEND_HOST=13.233.140.195"
+echo Backend URL: http://%BACKEND_HOST%:8000
+echo Admin URL: http://%BACKEND_HOST%:8000/admin
 echo.
 
-.venv\Scripts\python.exe manage.py runserver 0.0.0.0:8000 --settings=config.settings
+set "DJANGO_SETTINGS_MODULE=config.settings_local"
+.venv\Scripts\python.exe manage.py runserver %BACKEND_HOST%:8000 --settings=config.settings_local

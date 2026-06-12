@@ -127,6 +127,7 @@ const Students = () => {
 
   return (
     <div
+      className="teacher-page"
       style={{
         padding: "24px",
         backgroundColor: palette.bg,
@@ -144,6 +145,7 @@ const Students = () => {
 
       {/* Header */}
       <div
+        className="teacher-page-card"
         style={{
           backgroundColor: palette.card,
           padding: "24px",
@@ -169,6 +171,7 @@ const Students = () => {
           }}
         ></div>
         <div
+          className="teacher-page-header"
           style={{
             position: "relative",
             zIndex: 1,
@@ -258,7 +261,7 @@ const Students = () => {
 
       {/* Class Selector */}
       <div
-        className="animate-up"
+        className="teacher-page-card animate-up"
         style={{
           backgroundColor: palette.card,
           borderRadius: "20px",
@@ -325,7 +328,7 @@ const Students = () => {
 
       {/* Students List */}
       <div
-        className="animate-up"
+        className="teacher-page-card animate-up"
         style={{
           backgroundColor: palette.card,
           borderRadius: "20px",
@@ -367,7 +370,7 @@ const Students = () => {
               {filteredStudents.length} Students registered
             </div>
           </div>
-          <div style={{ minWidth: "320px" }}>
+          <div className="teacher-inline-search" style={{ minWidth: "320px" }}>
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
