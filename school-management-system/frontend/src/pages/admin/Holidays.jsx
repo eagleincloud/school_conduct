@@ -246,11 +246,12 @@ const AdminHolidays = () => {
     const daysInMonth = (y, m) => new Date(y, m, 0).getDate();
     const buildCalendarCells = () => {
         const first = new Date(calYear, calMonth - 1, 1);
-        const sundayBased = first.getDay(); // 0 Sunday .. 6 Saturday
+        const jsDay = first.getDay();
+        const mondayBased = (jsDay + 6) % 7;
         const totalDays = daysInMonth(calYear, calMonth);
 
         const cells = [];
-        for (let i = 0; i < sundayBased; i++) cells.push(null);
+        for (let i = 0; i < mondayBased; i++) cells.push(null);
         for (let d = 1; d <= totalDays; d++) {
             const key = toDateKey(new Date(calYear, calMonth - 1, d));
             cells.push(key);
@@ -269,25 +270,6 @@ const AdminHolidays = () => {
     }, [calendarCells]);
 
     const classLabel = (hc) => (hc?.applicable_classes?.length ? hc.applicable_classes.map((c) => c.name).join(', ') : 'All Classes');
-    const visibleMonthLabel = `${MONTH_NAMES[calMonth - 1]} ${calYear}`;
-
-    const goToPreviousMonth = () => {
-        if (calMonth === 1) {
-            setCalMonth(12);
-            setCalYear((prev) => prev - 1);
-            return;
-        }
-        setCalMonth((prev) => prev - 1);
-    };
-
-    const goToNextMonth = () => {
-        if (calMonth === 12) {
-            setCalMonth(1);
-            setCalYear((prev) => prev + 1);
-            return;
-        }
-        setCalMonth((prev) => prev + 1);
-    };
 
     const submitHoliday = async (e) => {
         e.preventDefault();
@@ -582,132 +564,129 @@ const AdminHolidays = () => {
                 )}
 
                 {tab === 'calendar' && (
-                    <div style={{ ...cardStyle, padding: 0, overflow: 'hidden' }}>
-                        <div style={{ padding: isMobile ? '18px 20px 10px' : '24px 32px 12px' }}>
-                            <div style={{ fontSize: isMobile ? '44px' : '56px', lineHeight: 1, fontWeight: 1000, color: '#000' }}>
-                                {MONTH_NAMES[calMonth - 1]}
+                    <div style={{ ...cardStyle, padding: '24px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', flexWrap: 'wrap', marginBottom: '24px' }}>
+                            <div>
+                                <div style={labelStyle}>Calendar Month</div>
+                                <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+                                    <select
+                                        value={calMonth}
+                                        onChange={(e) => setCalMonth(parseInt(e.target.value))}
+                                        style={{ ...inputStyle, width: '160px' }}
+                                    >
+                                        {MONTH_NAMES.map((name, idx) => (
+                                            <option key={idx + 1} value={idx + 1}>
+                                                {name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <input
+                                        type="number"
+                                        value={calYear}
+                                        onChange={(e) => setCalYear(parseInt(e.target.value))}
+                                        style={{ ...inputStyle, width: '110px' }}
+                                    />
+                                </div>
+                            </div>
+                            <div style={{ color: '#6b7280', fontSize: '13px', fontWeight: 900 }}>
+                                Click a holiday date to view/manage details
                             </div>
                         </div>
 
-                        <div style={{ borderTop: '1px solid #a1a1aa', borderBottom: '1px solid #a1a1aa', padding: isMobile ? '10px 12px' : '12px 18px' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0, 1fr))', alignItems: 'center' }}>
-                                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, idx) => (
+                        <div style={{ marginTop: '14px', overflowX: 'auto' }}>
+                            <div className="rg-calendar">
+                                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
                                     <div
-                                        key={`${d}-${idx}`}
+                                        key={d}
                                         style={{
-                                            textAlign: 'center',
-                                            color: idx === 0 || idx === 6 ? '#7a7a7a' : '#111827',
-                                            fontWeight: 900,
-                                            fontSize: isMobile ? '13px' : '15px',
+                                            color: '#6b7280',
+                                            fontWeight: 1000,
+                                            fontSize: '12px',
+                                            textTransform: 'uppercase',
                                         }}
                                     >
                                         {d}
                                     </div>
                                 ))}
-                            </div>
-                        </div>
-
-                        <div>
-                            {calendarWeeks.map((week, weekIndex) => (
-                                <div
-                                    key={`week-${weekIndex}`}
-                                    style={{
-                                        minHeight: isMobile ? '118px' : '138px',
-                                        borderBottom: weekIndex === calendarWeeks.length - 1 ? 'none' : '1px solid #e5e7eb',
-                                        paddingTop: weekIndex === 0 ? (isMobile ? '12px' : '16px') : 0,
-                                    }}
-                                >
-                                    {weekIndex === 0 ? (
-                                        <div style={{ padding: isMobile ? '0 20px 8px' : '0 30px 10px' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                                <div style={{ color: '#ff3b30', fontWeight: 1000, fontSize: isMobile ? '26px' : '30px', lineHeight: 1 }}>
-                                                    {MONTH_NAMES[calMonth - 1].slice(0, 3)}
-                                                </div>
-                                                <div style={{ flex: 1, height: '1px', backgroundColor: '#e5e7eb' }} />
-                                            </div>
-                                        </div>
-                                    ) : null}
-
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' }}>
-                                        {week.map((key, dayIndex) => {
-                                            if (!key) {
-                                                return <div key={`empty-${weekIndex}-${dayIndex}`} />;
-                                            }
-
-                                            const dayHolidays = holidayByDay.map.get(key) || [];
-                                            const isHoliday = dayHolidays.length > 0;
-                                            const isSelected = selectedDate === key && detailsOpen;
-
-                                            return (
-                                                <button
-                                                    key={key}
-                                                    type="button"
-                                                    onClick={() => {
-                                                        if (!isHoliday) return;
-                                                        setSelectedDate(key);
-                                                        setDetailsOpen(true);
-                                                    }}
-                                                    style={{
-                                                        border: 'none',
-                                                        background: 'transparent',
-                                                        cursor: isHoliday ? 'pointer' : 'default',
-                                                        padding: isMobile ? '8px 4px 10px' : '10px 6px 12px',
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'flex-start',
-                                                        gap: isMobile ? '12px' : '14px',
-                                                        color: dayIndex === 0 || dayIndex === 6 ? '#8e8e93' : '#000',
-                                                    }}
-                                                >
-                                                    <div
+                                {calendarCells.map((key, idx) => {
+                                    if (!key)
+                                        return (
+                                            <div key={`empty-${idx}`} className="rg-calendar-cell empty" style={{ height: '70px' }} />
+                                        );
+                                    const dayHolidays = holidayByDay.map.get(key) || [];
+                                    const isHoliday = dayHolidays.length > 0;
+                                    const isToday = key === toDateKey(new Date());
+                                    const isSelected = selectedDate === key && detailsOpen;
+                                    return (
+                                        <button
+                                            key={key}
+                                            type="button"
+                                            onClick={() => {
+                                                if (!isHoliday) return;
+                                                setSelectedDate(key);
+                                                setDetailsOpen(true);
+                                            }}
+                                            className="rg-calendar-cell"
+                                            style={{
+                                                height: '70px',
+                                                borderRadius: '14px',
+                                                border: `1px solid ${isSelected ? '#ff3b30' : isHoliday ? '#2563eb' : '#e5e7eb'}`,
+                                                backgroundColor: isSelected
+                                                    ? '#ffebee'
+                                                    : isHoliday
+                                                        ? '#eff6ff'
+                                                        : '#fff',
+                                                cursor: isHoliday ? 'pointer' : 'default',
+                                                color: '#111827',
+                                                padding: '10px',
+                                                textAlign: 'left',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'flex-start',
+                                                gap: '4px',
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    fontWeight: 1000,
+                                                    fontSize: '13px',
+                                                    width: '100%',
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                }}
+                                            >
+                                                <span>{parseInt(key.slice(-2), 10)}</span>
+                                                {isToday ? (
+                                                    <span
                                                         style={{
-                                                            width: isSelected ? (isMobile ? '50px' : '56px') : 'auto',
-                                                            height: isSelected ? (isMobile ? '50px' : '56px') : 'auto',
-                                                            borderRadius: '999px',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            backgroundColor: isSelected ? '#ff3b30' : 'transparent',
-                                                            color: isSelected ? '#fff' : dayIndex === 0 || dayIndex === 6 ? '#8e8e93' : '#000',
+                                                            fontSize: '11px',
+                                                            color: '#16a34a',
                                                             fontWeight: 1000,
-                                                            fontSize: isMobile ? '24px' : '26px',
-                                                            lineHeight: 1,
                                                         }}
                                                     >
-                                                        {parseInt(key.slice(-2), 10)}
-                                                    </div>
-
-                                                    <div style={{ minHeight: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                                                        {dayHolidays.length === 1 ? (
-                                                            <span
-                                                                style={{
-                                                                    width: isMobile ? '10px' : '12px',
-                                                                    height: isMobile ? '10px' : '12px',
-                                                                    borderRadius: '999px',
-                                                                    backgroundColor: dayHolidays[0].type === 'Public' ? '#ececec' : dayHolidays[0].type === 'School' ? '#5ac8fa' : '#ffd60a',
-                                                                    opacity: 0.95,
-                                                                }}
-                                                            />
-                                                        ) : null}
-                                                        {dayHolidays.length >= 2 ? (
-                                                            <span
-                                                                style={{
-                                                                    width: isMobile ? '20px' : '24px',
-                                                                    height: isMobile ? '10px' : '12px',
-                                                                    borderRadius: '999px',
-                                                                    background: 'linear-gradient(90deg, #7bdcb5 0%, #5ac8fa 100%)',
-                                                                    opacity: 0.95,
-                                                                }}
-                                                            />
-                                                        ) : null}
-                                                    </div>
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            ))}
+                                                        Today
+                                                    </span>
+                                                ) : null}
+                                            </div>
+                                            {isHoliday ? (
+                                                <div
+                                                    className="calendar-status-text"
+                                                    style={{
+                                                        fontSize: '11px',
+                                                        fontWeight: 1000,
+                                                        color: '#2563eb',
+                                                    }}
+                                                >
+                                                    {dayHolidays[0].title}
+                                                </div>
+                                            ) : (
+                                                <div className="calendar-status-text" style={{ fontSize: '11px' }}>&nbsp;</div>
+                                            )}
+                                        </button>
+                                    );
+                                })}
+                            </div>
                         </div>
                     </div>
                 )}
