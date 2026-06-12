@@ -252,13 +252,24 @@ const AdminDashboard = () => {
                                         <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/50 to-transparent">
                                             <p className="text-white font-bold text-sm truncate">{galleryImages[currentSlide]?.title}</p>
                                         </div>
-                                        <div className="absolute bottom-3 right-3 flex gap-1.5">
+                                        <div className="absolute bottom-3 right-3 flex gap-1.5 items-center">
                                             {galleryImages.map((img, idx) => (
                                                 <button
                                                     key={img.id}
                                                     type="button"
                                                     onClick={() => setCurrentSlide(idx)}
-                                                    className={`w-2.5 h-2.5 rounded-full ${idx === currentSlide ? 'bg-white' : 'bg-white/50'}`}
+                                                    style={{
+                                                        width: idx === currentSlide ? "8px" : "6px",
+                                                        height: idx === currentSlide ? "8px" : "6px",
+                                                        borderRadius: "50%",
+                                                        border: "none",
+                                                        backgroundColor: idx === currentSlide ? "#fff" : "rgba(255,255,255,0.5)",
+                                                        cursor: "pointer",
+                                                        padding: 0,
+                                                        minWidth: 0,
+                                                        minHeight: 0,
+                                                        transition: "all 300ms ease",
+                                                    }}
                                                 />
                                             ))}
                                         </div>

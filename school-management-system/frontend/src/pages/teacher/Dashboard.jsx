@@ -1567,16 +1567,16 @@ const TeacherDashboard = () => {
                   >
                     {galleryImages[currentGallerySlide]?.title}
                   </p>
-                  <div style={{ display: "flex", gap: 6 }}>
+                  <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                     {galleryImages.map((_, idx) => (
                       <button
                         key={idx}
                         type="button"
                         onClick={() => setCurrentGallerySlide(idx)}
                         style={{
-                          width: idx === currentGallerySlide ? 20 : 8,
-                          height: 8,
-                          borderRadius: 99,
+                          width: idx === currentGallerySlide ? 8 : 6,
+                          height: idx === currentGallerySlide ? 8 : 6,
+                          borderRadius: "50%",
                           border: "none",
                           backgroundColor:
                             idx === currentGallerySlide

@@ -4,9 +4,35 @@ from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    profile_photo = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'name', 'role', 'phone', 'school', 'profile_photo']
+
+    def get_profile_photo(self, obj):
+        request = self.context.get('request')
+        photo = None
+        if obj.role == 'student':
+            sp = getattr(obj, 'student_profile', None)
+            if sp and sp.photo:
+                photo = sp.photo
+        elif obj.role == 'teacher':
+            tp = getattr(obj, 'teacher_profile', None)
+            if tp and tp.photo:
+                photo = tp.photo
+        
+        if not photo:
+            photo = obj.profile_photo
+
+        if photo:
+            try:
+                if request:
+                    return request.build_absolute_uri(photo.url)
+                return photo.url
+            except Exception:
+                return None
+        return None
 
 
 
@@ -48,6 +74,26 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             except Exception:
                 school_logo_url = None
 
+        photo = None
+        if user.role == 'student':
+            sp = getattr(user, 'student_profile', None)
+            if sp and sp.photo:
+                photo = sp.photo
+        elif user.role == 'teacher':
+            tp = getattr(user, 'teacher_profile', None)
+            if tp and tp.photo:
+                photo = tp.photo
+        
+        if not photo:
+            photo = user.profile_photo
+
+        profile_photo_url = None
+        if photo:
+            try:
+                profile_photo_url = request.build_absolute_uri(photo.url) if request else photo.url
+            except Exception:
+                profile_photo_url = None
+
         data['user'] = {
             'id': user.id,
             'username': user.username,
@@ -57,14 +103,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             'school_id': getattr(user.school, 'school_id', None),
             'school_name': getattr(user.school, 'name', None),
             'school_logo': school_logo_url,
-            'profile_photo': None,
+            'profile_photo': profile_photo_url,
         }
-        # Build profile photo URL safely
-        if user.profile_photo:
-            try:
-                data['user']['profile_photo'] = request.build_absolute_uri(user.profile_photo.url)
-            except Exception:
-                data['user']['profile_photo'] = None
 
         if user.role == 'student':
             sp = getattr(user, 'student_profile', None)
