@@ -18,7 +18,7 @@ const MONTH_NAMES = ["", "January", "February", "March", "April", "May", "June",
 
 function SummaryCard({ label, value, color, icon }) {
   return (
-    <div style={{
+    <div className="teacher-my-attendance-summary-card" style={{
       flex: "1 1 130px", minWidth: 130, background: palette.card,
       border: `1px solid ${palette.border}`, borderRadius: 16,
       padding: "18px 14px", boxShadow: palette.shadow, textAlign: "center",
@@ -106,6 +106,46 @@ const MyAttendance = () => {
 
   return (
     <div style={{ padding: 20, backgroundColor: palette.bg, minHeight: "calc(100vh - 60px)" }}>
+      <style>{`
+        .teacher-my-attendance-summary-strip {
+          display: flex;
+          gap: 12px;
+          flex-wrap: nowrap;
+          margin-bottom: 16px;
+          overflow-x: auto;
+          padding-bottom: 4px;
+          -webkit-overflow-scrolling: touch;
+        }
+        .teacher-my-attendance-summary-card {
+          flex: 1 1 0 !important;
+          min-width: 0 !important;
+        }
+        @media (max-width: 640px) {
+          .teacher-my-attendance-summary-strip {
+            gap: 8px !important;
+            margin-left: -2px;
+            margin-right: -2px;
+          }
+          .teacher-my-attendance-summary-card {
+            flex: 0 0 92px !important;
+            min-width: 92px !important;
+            padding: 10px 8px !important;
+            border-radius: 12px !important;
+          }
+          .teacher-my-attendance-summary-card > div:first-child {
+            font-size: 18px !important;
+            margin-bottom: 2px !important;
+          }
+          .teacher-my-attendance-summary-card > div:nth-child(2) {
+            font-size: 18px !important;
+          }
+          .teacher-my-attendance-summary-card > div:last-child {
+            font-size: 8px !important;
+            line-height: 1.15 !important;
+            letter-spacing: 0 !important;
+          }
+        }
+      `}</style>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
         <div>
@@ -141,7 +181,7 @@ const MyAttendance = () => {
       </div>
 
       {/* Summary Cards */}
-      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
+      <div className="teacher-my-attendance-summary-strip">
         <SummaryCard icon="✅" label="Present" value={summary.present ?? 0} color={palette.present} />
         <SummaryCard icon="❌" label="Absent" value={summary.absent ?? 0} color={palette.absent} />
         <SummaryCard icon="⏰" label="Late" value={summary.late ?? 0} color={palette.late} />

@@ -173,12 +173,79 @@ const MarkAttendance = () => {
 
   return (
     <div
+      className="teacher-page"
       style={{
         padding: 20,
         backgroundColor: palette.bg,
         minHeight: "calc(100vh - 60px)",
       }}
     >
+      <style>{`
+        @media (max-width: 640px) {
+          .teacher-attendance-summary,
+          .teacher-attendance-summary-actions,
+          .teacher-attendance-action-buttons {
+            flex-direction: column !important;
+            align-items: stretch !important;
+          }
+          .teacher-attendance-summary-actions > *,
+          .teacher-attendance-action-buttons > * {
+            width: 100% !important;
+            min-width: 0 !important;
+            margin-right: 0 !important;
+          }
+          .mobile-card-table td.teacher-attendance-row-actions {
+            white-space: nowrap !important;
+          }
+          .teacher-attendance-mobile-table tr {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1fr) minmax(108px, 42%) !important;
+            gap: 8px 10px !important;
+            padding: 10px 12px !important;
+            align-items: center !important;
+          }
+          .teacher-attendance-mobile-table td {
+            padding: 0 !important;
+          }
+          .teacher-attendance-mobile-table td::before {
+            margin-bottom: 2px !important;
+          }
+          .teacher-attendance-mobile-table td[data-label="Student Name"] {
+            grid-column: 1 !important;
+            grid-row: 1 !important;
+          }
+          .teacher-attendance-mobile-table td[data-label="Roll No"] {
+            grid-column: 1 !important;
+            grid-row: 2 !important;
+          }
+          .teacher-attendance-mobile-table td[data-label="Status"] {
+            grid-column: 2 !important;
+            grid-row: 1 !important;
+            justify-self: stretch !important;
+            text-align: right !important;
+          }
+          .teacher-attendance-mobile-table td[data-label="Status"]::before,
+          .teacher-attendance-mobile-table td[data-label="Action"]::before {
+            text-align: right !important;
+          }
+          .teacher-attendance-mobile-table td[data-label="Action"] {
+            grid-column: 2 !important;
+            grid-row: 2 !important;
+            justify-self: stretch !important;
+            text-align: right !important;
+          }
+          .mobile-card-table td.teacher-attendance-row-actions button {
+            width: calc((100% - 12px) / 3) !important;
+            min-width: 0 !important;
+            margin-right: 6px !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+          }
+          .mobile-card-table td.teacher-attendance-row-actions button:last-child {
+            margin-right: 0 !important;
+          }
+        }
+      `}</style>
       <div
         style={{
           display: "flex",
@@ -204,6 +271,7 @@ const MarkAttendance = () => {
           </div>
         </div>
         <div
+          className="teacher-attendance-controls"
           style={{
             display: "flex",
             gap: 10,
@@ -291,6 +359,7 @@ const MarkAttendance = () => {
           }}
         >
           <div
+            className="teacher-attendance-summary"
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -312,7 +381,10 @@ const MarkAttendance = () => {
                 {sheet?.class_display || "Select class to view sheet"}
               </div>
             </div>
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <div
+              className="teacher-attendance-summary-actions"
+              style={{ display: "flex", gap: 10, flexWrap: "wrap" }}
+            >
               <div
                 style={{ color: palette.muted, fontWeight: 900, fontSize: 12 }}
               >
@@ -346,7 +418,10 @@ const MarkAttendance = () => {
                 </span>
               </div>
               {sheet?.can_mark && (
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <div
+                  className="teacher-attendance-action-buttons"
+                  style={{ display: "flex", gap: 10, flexWrap: "wrap" }}
+                >
                   <button
                     type="button"
                     onClick={markAllPresent}
@@ -421,7 +496,7 @@ const MarkAttendance = () => {
           ) : null}
 
           <div style={{ marginTop: 12, overflowX: "auto" }}>
-            <div className="table-scroll"><table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <div className="table-scroll"><table className="mobile-card-table teacher-attendance-mobile-table" style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr style={{ backgroundColor: "#f1f5f9" }}>
                   <th
@@ -493,10 +568,11 @@ const MarkAttendance = () => {
                         key={s.student_id}
                         style={{ borderTop: `1px solid ${palette.border}` }}
                       >
-                        <td style={{ padding: 12, fontWeight: 1000 }}>
+                        <td data-label="Student Name" style={{ padding: 12, fontWeight: 1000 }}>
                           {s.name}
                         </td>
                         <td
+                          data-label="Roll No"
                           style={{
                             padding: 12,
                             fontWeight: 900,
@@ -506,11 +582,15 @@ const MarkAttendance = () => {
                         >
                           {s.roll_no || "—"}
                         </td>
-                        <td style={{ padding: 12 }}>
+                        <td data-label="Status" style={{ padding: 12 }}>
                           <StatusBadge status={s.status} />
                         </td>
                         {sheet?.can_mark && (
-                          <td style={{ padding: 12, whiteSpace: "nowrap" }}>
+                          <td
+                            data-label="Action"
+                            className="teacher-attendance-row-actions"
+                            style={{ padding: 12, whiteSpace: "nowrap" }}
+                          >
                             <button
                               type="button"
                               onClick={() =>

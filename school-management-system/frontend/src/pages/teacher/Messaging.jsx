@@ -50,6 +50,7 @@ const Messaging = () => {
     const [resolving, setResolving] = useState(false);
 
     const [search, setSearch] = useState('');
+    const [sidebarVisible, setSidebarVisible] = useState(true);
     const chatEndRef = useRef(null);
 
     const scrollToBottom = () => {
