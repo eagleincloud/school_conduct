@@ -423,11 +423,11 @@ const SubjectDetails = () => {
                                 </button>
                             </div>
 
-                            <div style={{ marginTop: '14px', overflowX: 'auto' }}>
+                            <div style={{ marginTop: '14px', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
                                 {marks.length === 0 ? (
                                     <p style={{ color: '#6b7280' }}>No marks found for this subject yet (from Exams Results).</p>
                                 ) : (
-                                    <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#fff' }}>
+                                    <table style={{ width: '100%', minWidth: '620px', borderCollapse: 'collapse', backgroundColor: '#fff' }}>
                                         <thead>
                                             <tr style={{ backgroundColor: '#f2f4f7' }}>
                                                 <th style={{ padding: '12px 10px', textAlign: 'left' }}>Student</th>
@@ -467,13 +467,14 @@ const SubjectDetails = () => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        padding: '18px',
+                        padding: '12px',
                         zIndex: 9999,
+                        overflowY: 'auto',
                     }}
                 >
                     <div
                         onClick={(e) => e.stopPropagation()}
-                        style={{ width: 'min(760px, 100%)', backgroundColor: '#fff', borderRadius: '16px', padding: '18px', border: '1px solid #e5e7eb' }}
+                        style={{ width: 'min(760px, 100%)', maxHeight: 'calc(100dvh - 24px)', overflowY: 'auto', backgroundColor: '#fff', borderRadius: '16px', padding: 'clamp(14px, 4vw, 18px)', border: '1px solid #e5e7eb' }}
                     >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
                             <h3 style={{ margin: 0 }}>Add Note</h3>
@@ -514,7 +515,7 @@ const SubjectDetails = () => {
                                 {noteForm.file_name ? <div style={{ marginTop: '6px', color: '#6b7280', fontSize: '13px' }}>Selected: {noteForm.file_name}</div> : null}
                             </div>
 
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', flexWrap: 'wrap' }}>
                                 <button type="button" onClick={() => setNoteModalOpen(false)} style={{ padding: '10px 14px', borderRadius: '12px', border: '1px solid #e5e7eb', backgroundColor: '#fff', cursor: 'pointer', fontWeight: 900 }}>
                                     Cancel
                                 </button>
@@ -538,11 +539,12 @@ const SubjectDetails = () => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        padding: '18px',
+                        padding: '12px',
                         zIndex: 9999,
+                        overflowY: 'auto',
                     }}
                 >
-                    <div style={{ width: 'min(760px, 100%)', backgroundColor: '#fff', borderRadius: '16px', padding: '18px', border: '1px solid #e5e7eb' }} onClick={(e) => e.stopPropagation()}>
+                    <div style={{ width: 'min(760px, 100%)', maxHeight: 'calc(100dvh - 24px)', overflowY: 'auto', backgroundColor: '#fff', borderRadius: '16px', padding: 'clamp(14px, 4vw, 18px)', border: '1px solid #e5e7eb' }} onClick={(e) => e.stopPropagation()}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
                             <h3 style={{ margin: 0 }}>Add Assignment</h3>
                             <button type="button" onClick={() => setAssignmentModalOpen(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '18px' }}>

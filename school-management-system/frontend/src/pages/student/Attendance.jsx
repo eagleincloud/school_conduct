@@ -73,7 +73,7 @@ function formatAttendanceStatus(rec) {
     if (st === "late") return "Late";
     return "Present";
   }
-  if (v === "rejected") return "Rejected";
+  if (v === "rejected") return "Absent";
   // Fallback for legacy records (no verification_status).
   return formatStatus(rec?.status);
 }
@@ -652,15 +652,8 @@ const StudentAttendance = () => {
         </div>
       ) : null}
 
-      <div
-        className="rg-12" style={{
-          marginTop: "16px",
-          display: "grid",
-          gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
-          gap: "12px",
-        }}
-      >
-        <div style={{ gridColumn: "span 6", ...cardStyle }}>
+      <div className="attendance-grid">
+        <div className="attendance-card-half" style={cardStyle}>
           <CircularProgress percentage={overview.attendancePercentage} />
           <div style={{ marginTop: 12 }}>
             <ProgressBar percentage={overview.attendancePercentage} />
@@ -674,17 +667,17 @@ const StudentAttendance = () => {
             }}
           >
             <div
-              style={{ color: colors.muted, fontWeight: 900, fontSize: "12px" }}
+              style={{ color: colors.primary, fontWeight: 900, fontSize: "12px" }}
             >
               Total Days: {overview.totalMarkedDays}
             </div>
             <div
-              style={{ color: colors.muted, fontWeight: 900, fontSize: "12px" }}
+              style={{ color: colors.present, fontWeight: 900, fontSize: "12px" }}
             >
               Present: {overview.presentDays}
             </div>
             <div
-              style={{ color: colors.muted, fontWeight: 900, fontSize: "12px" }}
+              style={{ color: colors.absent, fontWeight: 900, fontSize: "12px" }}
             >
               Absent: {overview.absentDays}
             </div>
@@ -701,7 +694,7 @@ const StudentAttendance = () => {
           </div>
         </div>
 
-        <div style={{ gridColumn: "span 2", ...cardStyle }}>
+        <div className="attendance-card-sixth attendance-sec-metrics" style={cardStyle}>
           <div style={{ ...labelStyle }}>Total Days</div>
           <div
             style={{
@@ -725,7 +718,7 @@ const StudentAttendance = () => {
           </div>
         </div>
 
-        <div style={{ gridColumn: "span 2", ...cardStyle }}>
+        <div className="attendance-card-sixth attendance-sec-metrics" style={cardStyle}>
           <div style={{ ...labelStyle }}>Total Present Days</div>
           <div
             style={{
@@ -749,7 +742,7 @@ const StudentAttendance = () => {
           </div>
         </div>
 
-        <div style={{ gridColumn: "span 2", ...cardStyle }}>
+        <div className="attendance-card-sixth attendance-sec-metrics" style={cardStyle}>
           <div style={{ ...labelStyle }}>Total Absent Days</div>
           <div
             style={{
@@ -773,7 +766,7 @@ const StudentAttendance = () => {
           </div>
         </div>
 
-        <div style={{ gridColumn: "span 2", ...cardStyle }}>
+        <div className="attendance-card-sixth attendance-sec-metrics" style={cardStyle}>
           <div style={{ ...labelStyle }}>Attendance %</div>
           <div
             style={{
@@ -800,7 +793,7 @@ const StudentAttendance = () => {
           </div>
         </div>
 
-        <div style={{ gridColumn: "span 12", ...cardStyle }}>
+        <div className="attendance-card-full attendance-sec-trend" style={cardStyle}>
           <div
             style={{
               display: "flex",
@@ -841,15 +834,8 @@ const StudentAttendance = () => {
         </div>
       </div>
 
-      <div
-        className="rg-12" style={{
-          marginTop: "16px",
-          display: "grid",
-          gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
-          gap: "12px",
-        }}
-      >
-        <div style={{ gridColumn: "span 7", ...cardStyle }}>
+      <div className="attendance-grid">
+        <div className="attendance-card-seventh attendance-sec-daily" style={cardStyle}>
           <div
             style={{
               display: "flex",
@@ -995,7 +981,7 @@ const StudentAttendance = () => {
           </div>
         </div>
 
-        <div style={{ gridColumn: "span 5", ...cardStyle }}>
+        <div className="attendance-card-fifth" style={cardStyle}>
           <div style={labelStyle}>Monthly Calendar</div>
           <div style={{ marginTop: 6, fontWeight: 1000, color: "#111827" }}>
             {calMonth}/{calYear}
@@ -1018,13 +1004,7 @@ const StudentAttendance = () => {
           </div>
 
           <div style={{ marginTop: 12, overflowX: "auto" }}>
-            <div
-              className="rg-calendar" style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
-                gap: "8px",
-              }}
-            >
+            <div className="rg-calendar">
               {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
                 <div
                   key={d}
@@ -1041,7 +1021,7 @@ const StudentAttendance = () => {
 
               {calendarCells.map((key, idx) => {
                 if (!key)
-                  return <div key={`empty-${idx}`} style={{ height: 46 }} />;
+                  return <div key={`empty-${idx}`} className="rg-calendar-cell empty" style={{ height: 46 }} />;
 
                 const rec = attendanceMap.get(key);
                 const isHoliday = holidayByDay.has(key);
@@ -1089,6 +1069,7 @@ const StudentAttendance = () => {
                 return (
                   <div
                     key={key}
+                    className="rg-calendar-cell"
                     style={{
                       height: 46,
                       borderRadius: 12,
@@ -1123,12 +1104,13 @@ const StudentAttendance = () => {
                       ) : null}
                     </div>
                     <div
+                      className="calendar-status-text"
                       style={{
-                        height: 14,
                         fontSize: 10,
                         fontWeight: 1000,
                         color: isHoliday ? colors.muted : borderColor,
-                        textAlign: "left",
+                        textAlign: "center",
+                        marginTop: 2,
                       }}
                     >
                       {text ? text : " "}
@@ -1140,7 +1122,7 @@ const StudentAttendance = () => {
           </div>
         </div>
 
-        <div style={{ gridColumn: "span 12", ...cardStyle }}>
+        <div className="attendance-card-full attendance-sec-subjects" style={cardStyle}>
           <div
             style={{
               display: "flex",
@@ -1274,7 +1256,7 @@ const StudentAttendance = () => {
           </div>
         </div>
 
-        <div style={{ gridColumn: "span 12", ...cardStyle }}>
+        <div className="attendance-card-full" style={cardStyle}>
           <div
             style={{
               display: "flex",

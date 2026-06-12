@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useConfirm } from '../../context/ConfirmContext';
+import useBreakpoint from '../../hooks/useBreakpoint';
 import api from '../../services/api';
 
 const inputStyle = {
@@ -44,6 +45,7 @@ const getApiErrorMessage = (err, fallback) => {
 
 const Classes = () => {
     const confirm = useConfirm();
+    const { isMobile } = useBreakpoint();
     const [classes, setClasses] = useState([]);
     const [sections, setSections] = useState([]);
     const [hierarchy, setHierarchy] = useState([]);
@@ -252,26 +254,26 @@ const Classes = () => {
     const sectionOptions = useMemo(() => sections, [sections]);
 
     return (
-        <div style={{ padding: '20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
-                <div>
-                    <h1 style={{ margin: 0, fontSize: '32px', fontWeight: 1000, color: '#0f172a' }}>Class & Section Management</h1>
+        <div style={{ padding: 'clamp(12px, 3vw, 20px)', maxWidth: '100%', overflowX: 'hidden' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', flexWrap: 'wrap' }}>
+                <div style={{ minWidth: 0, flex: '1 1 260px' }}>
+                    <h1 style={{ margin: 0, fontSize: 'clamp(22px, 6vw, 32px)', lineHeight: 1.12, fontWeight: 1000, color: '#0f172a' }}>Class & Section Management</h1>
                     <div style={{ marginTop: '6px', color: '#6b7280', fontSize: '13px', fontWeight: 700 }}>
                         Organize classes, sections, teachers, and student placement.
                     </div>
                 </div>
-                <div style={{ display: 'flex', gap: '10px' }}>
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', width: 'min(100%, 320px)' }}>
                     <button
                         type="button"
                         onClick={openAddClass}
-                        style={{ padding: '10px 14px', borderRadius: '12px', border: 'none', backgroundColor: '#16a34a', color: '#fff', fontWeight: 900, cursor: 'pointer' }}
+                        style={{ flex: '1 1 140px', padding: '10px 12px', borderRadius: '12px', border: 'none', backgroundColor: '#16a34a', color: '#fff', fontWeight: 900, cursor: 'pointer', whiteSpace: 'nowrap' }}
                     >
                         + Add Class
                     </button>
                     <button
                         type="button"
                         onClick={openAddSection}
-                        style={{ padding: '10px 14px', borderRadius: '12px', border: 'none', backgroundColor: '#2563eb', color: '#fff', fontWeight: 900, cursor: 'pointer' }}
+                        style={{ flex: '1 1 140px', padding: '10px 12px', borderRadius: '12px', border: 'none', backgroundColor: '#2563eb', color: '#fff', fontWeight: 900, cursor: 'pointer', whiteSpace: 'nowrap' }}
                     >
                         + Add Section
                     </button>
@@ -284,22 +286,22 @@ const Classes = () => {
                 </p>
             )}
 
-            <div style={{ marginTop: '18px', border: '1px solid #e5e7eb', borderRadius: '14px', backgroundColor: '#fff', padding: '14px' }}>
+            <div style={{ marginTop: '18px', border: '1px solid #e5e7eb', borderRadius: '14px', backgroundColor: '#fff', padding: 'clamp(12px, 3vw, 14px)', maxWidth: '100%', overflow: 'hidden' }}>
                 <h2 style={{ margin: '0 0 10px', fontSize: '17px' }}>Class Hierarchy</h2>
                 {loading ? (
                     <p style={{ color: '#6b7280' }}>Loading...</p>
                 ) : (
                     <div style={{ display: 'grid', gap: '10px' }}>
                         {hierarchy.map((c) => (
-                            <div key={c.id} style={{ border: '1px solid #eef2f7', borderRadius: '12px', padding: '10px' }}>
+                            <div key={c.id} style={{ border: '1px solid #eef2f7', borderRadius: '12px', padding: '10px', minWidth: 0 }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                                    <div>
+                                    <div style={{ minWidth: 0, flex: '1 1 180px' }}>
                                         <div style={{ fontWeight: 900 }}>{c.name}</div>
                                         <div style={{ fontSize: '12px', color: '#6b7280' }}>
                                             Code: {c.code || 'N/A'} {c.description ? `• ${c.description}` : ''}
                                         </div>
                                     </div>
-                                    <div style={{ display: 'flex', gap: '8px' }}>
+                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                                         <button
                                             type="button"
                                             onClick={() => openEditClass(c)}
@@ -316,7 +318,7 @@ const Classes = () => {
                                         </button>
                                     </div>
                                 </div>
-                                <ul style={{ marginTop: '8px', marginBottom: 0 }}>
+                                <ul style={{ marginTop: '8px', marginBottom: 0, paddingLeft: '18px' }}>
                                     {(c.sections || []).length === 0 ? (
                                         <li style={{ color: '#6b7280' }}>No sections</li>
                                     ) : (
@@ -338,10 +340,10 @@ const Classes = () => {
                 )}
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }}>
-                <div style={{ border: '1px solid #e5e7eb', borderRadius: '14px', backgroundColor: '#fff', padding: '14px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 420px), 1fr))', gap: '16px', marginTop: '16px' }}>
+                <div style={{ border: '1px solid #e5e7eb', borderRadius: '14px', backgroundColor: '#fff', padding: 'clamp(10px, 3vw, 14px)', minWidth: 0, overflow: 'hidden' }}>
                     <h2 style={{ margin: '0 0 10px', fontSize: '17px' }}>Section List</h2>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 180px', gap: '10px', marginBottom: '12px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: '10px', marginBottom: '12px' }}>
                         <input
                             value={sectionSearch}
                             onChange={(e) => setSectionSearch(e.target.value)}
@@ -357,64 +359,111 @@ const Classes = () => {
                             ))}
                         </select>
                     </div>
-                    <div style={{ overflowX: 'auto' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                            <thead>
-                                <tr style={{ backgroundColor: '#f2f4f7' }}>
-                                    <th style={{ padding: '10px', textAlign: 'left' }}>Class</th>
-                                    <th style={{ padding: '10px', textAlign: 'left' }}>Section</th>
-                                    <th style={{ padding: '10px', textAlign: 'left' }}>Shift</th>
-                                    <th style={{ padding: '10px', textAlign: 'left' }}>Teacher</th>
-                                    <th style={{ padding: '10px', textAlign: 'left' }}>Room</th>
-                                    <th style={{ padding: '10px', textAlign: 'left' }}>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {sections.map((s) => (
-                                    <tr key={s.id} style={{ borderTop: '1px solid #eef2f7' }}>
-                                        <td style={{ padding: '10px', fontWeight: 800 }}>{s.class_name}</td>
-                                        <td style={{ padding: '10px' }}>{s.section_name}</td>
-                                        <td style={{ padding: '10px' }}>
-                                            <span style={{ fontSize: '11px', fontWeight: 800, color: '#2563eb', backgroundColor: '#eff6ff', padding: '3px 8px', borderRadius: '6px' }}>
-                                                {s.shift_name || 'N/A'}
-                                            </span>
-                                        </td>
-                                        <td style={{ padding: '10px' }}>{s.class_teacher_name || 'N/A'}</td>
-                                        <td style={{ padding: '10px' }}>{s.room_number || 'N/A'}</td>
-                                        <td style={{ padding: '10px' }}>
-                                            <div style={{ display: 'flex', gap: '8px' }}>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => openEditSection(s)}
-                                                    style={{ padding: '6px 14px', borderRadius: '8px', border: 'none', backgroundColor: '#eff6ff', color: '#2563eb', fontWeight: 800, cursor: 'pointer' }}
-                                                >
-                                                    Edit
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => deleteSection(s.id)}
-                                                    style={{ padding: '6px 14px', borderRadius: '8px', border: 'none', backgroundColor: '#fef2f2', color: '#dc2626', fontWeight: 800, cursor: 'pointer' }}
-                                                >
-                                                    Delete
-                                                </button>
+                    {isMobile ? (
+                        <div style={{ display: 'grid', gap: '10px' }}>
+                            {sections.map((s) => (
+                                <div key={s.id} style={{ border: '1px solid #eef2f7', borderRadius: '12px', padding: '12px', backgroundColor: '#fff', minWidth: 0 }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start' }}>
+                                        <div style={{ minWidth: 0 }}>
+                                            <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: 800, textTransform: 'uppercase' }}>Class</div>
+                                            <div style={{ fontSize: '18px', color: '#111827', fontWeight: 900, lineHeight: 1.1 }}>
+                                                {s.class_name} - {s.section_name}
                                             </div>
-                                        </td>
+                                        </div>
+                                        <span style={{ flex: '0 0 auto', fontSize: '11px', fontWeight: 800, color: '#2563eb', backgroundColor: '#eff6ff', padding: '4px 8px', borderRadius: '6px' }}>
+                                            {s.shift_name || 'N/A'}
+                                        </span>
+                                    </div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '12px' }}>
+                                        <div>
+                                            <div style={{ fontSize: '11px', color: '#6b7280', fontWeight: 800 }}>Teacher</div>
+                                            <div style={{ fontSize: '13px', color: '#111827', fontWeight: 700, overflowWrap: 'anywhere' }}>{s.class_teacher_name || 'N/A'}</div>
+                                        </div>
+                                        <div>
+                                            <div style={{ fontSize: '11px', color: '#6b7280', fontWeight: 800 }}>Room</div>
+                                            <div style={{ fontSize: '13px', color: '#111827', fontWeight: 700 }}>{s.room_number || 'N/A'}</div>
+                                        </div>
+                                    </div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '12px' }}>
+                                        <button
+                                            type="button"
+                                            onClick={() => openEditSection(s)}
+                                            style={{ padding: '9px 10px', borderRadius: '10px', border: 'none', backgroundColor: '#eff6ff', color: '#2563eb', fontWeight: 900, cursor: 'pointer' }}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => deleteSection(s.id)}
+                                            style={{ padding: '9px 10px', borderRadius: '10px', border: 'none', backgroundColor: '#fef2f2', color: '#dc2626', fontWeight: 900, cursor: 'pointer' }}
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                            {!sections.length && <div style={{ padding: '12px', color: '#6b7280' }}>No sections found.</div>}
+                        </div>
+                    ) : (
+                        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', margin: '0 -10px', padding: '0 10px' }}>
+                            <table style={{ width: '100%', minWidth: '620px', borderCollapse: 'collapse' }}>
+                                <thead>
+                                    <tr style={{ backgroundColor: '#f2f4f7' }}>
+                                        <th style={{ padding: '10px', textAlign: 'left' }}>Class</th>
+                                        <th style={{ padding: '10px', textAlign: 'left' }}>Section</th>
+                                        <th style={{ padding: '10px', textAlign: 'left' }}>Shift</th>
+                                        <th style={{ padding: '10px', textAlign: 'left' }}>Teacher</th>
+                                        <th style={{ padding: '10px', textAlign: 'left' }}>Room</th>
+                                        <th style={{ padding: '10px', textAlign: 'left' }}>Actions</th>
                                     </tr>
-                                ))}
-                                {!sections.length && (
-                                    <tr>
-                                        <td colSpan={5} style={{ padding: '12px', color: '#6b7280' }}>
-                                            No sections found.
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody>
+                                    {sections.map((s) => (
+                                        <tr key={s.id} style={{ borderTop: '1px solid #eef2f7' }}>
+                                            <td style={{ padding: '10px', fontWeight: 800 }}>{s.class_name}</td>
+                                            <td style={{ padding: '10px' }}>{s.section_name}</td>
+                                            <td style={{ padding: '10px' }}>
+                                                <span style={{ fontSize: '11px', fontWeight: 800, color: '#2563eb', backgroundColor: '#eff6ff', padding: '3px 8px', borderRadius: '6px' }}>
+                                                    {s.shift_name || 'N/A'}
+                                                </span>
+                                            </td>
+                                            <td style={{ padding: '10px' }}>{s.class_teacher_name || 'N/A'}</td>
+                                            <td style={{ padding: '10px' }}>{s.room_number || 'N/A'}</td>
+                                            <td style={{ padding: '10px' }}>
+                                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => openEditSection(s)}
+                                                        style={{ padding: '6px 14px', borderRadius: '8px', border: 'none', backgroundColor: '#eff6ff', color: '#2563eb', fontWeight: 800, cursor: 'pointer' }}
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => deleteSection(s.id)}
+                                                        style={{ padding: '6px 14px', borderRadius: '8px', border: 'none', backgroundColor: '#fef2f2', color: '#dc2626', fontWeight: 800, cursor: 'pointer' }}
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {!sections.length && (
+                                        <tr>
+                                            <td colSpan={6} style={{ padding: '12px', color: '#6b7280' }}>
+                                                No sections found.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
                 </div>
 
-                <div style={{ border: '1px solid #e5e7eb', borderRadius: '14px', backgroundColor: '#fff', padding: '14px' }}>
-                    <h2 style={{ margin: '0 0 10px', fontSize: '17px' }}>Assign Student to Class & Section</h2>
+                <div style={{ border: '1px solid #e5e7eb', borderRadius: '14px', backgroundColor: '#fff', padding: 'clamp(10px, 3vw, 14px)', minWidth: 0, overflow: 'hidden' }}>
+                    <h2 style={{ margin: '0 0 10px', fontSize: 'clamp(16px, 4.5vw, 17px)', lineHeight: 1.25 }}>Assign Student to Class & Section</h2>
                     <form onSubmit={assignStudent} style={{ display: 'grid', gap: '12px' }}>
                         <div>
                             <div style={labelStyle}>Student</div>
@@ -440,7 +489,7 @@ const Classes = () => {
                         </div>
                         <button
                             type="submit"
-                            style={{ padding: '12px 14px', borderRadius: '12px', border: 'none', backgroundColor: '#2563eb', color: '#fff', fontWeight: 900, cursor: 'pointer' }}
+                            style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', border: 'none', backgroundColor: '#2563eb', color: '#fff', fontWeight: 900, cursor: 'pointer', whiteSpace: 'normal', overflowWrap: 'anywhere' }}
                         >
                             Assign Student
                         </button>
@@ -458,8 +507,9 @@ const Classes = () => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        padding: '18px',
+                        padding: '12px',
                         zIndex: 9999,
+                        overflowY: 'auto',
                     }}
                 >
                     <div
@@ -468,8 +518,10 @@ const Classes = () => {
                             width: 'min(640px, 100%)',
                             backgroundColor: '#fff',
                             borderRadius: '16px',
-                            padding: '18px',
+                            padding: 'clamp(14px, 4vw, 18px)',
                             border: '1px solid #e5e7eb',
+                            maxHeight: 'calc(100dvh - 24px)',
+                            overflowY: 'auto',
                         }}
                     >
                         <h3 style={{ marginTop: 0 }}>{editingClass ? 'Edit Class' : 'Add Class'}</h3>
@@ -486,9 +538,9 @@ const Classes = () => {
                                 <div style={labelStyle}>Description (optional)</div>
                                 <textarea value={classForm.description} onChange={(e) => setClassForm({ ...classForm, description: e.target.value })} style={{ ...inputStyle, minHeight: '90px', resize: 'vertical' }} />
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                                <button type="button" onClick={() => setClassModalOpen(false)} style={{ padding: '10px 12px', borderRadius: '10px', border: '1px solid #e5e7eb', backgroundColor: '#fff', fontWeight: 800, cursor: 'pointer' }}>Cancel</button>
-                                <button type="submit" style={{ padding: '10px 12px', borderRadius: '10px', border: 'none', backgroundColor: '#2563eb', color: '#fff', fontWeight: 900, cursor: 'pointer' }}>Save</button>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', flexWrap: 'wrap' }}>
+                                <button type="button" onClick={() => setClassModalOpen(false)} style={{ flex: '1 1 110px', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e5e7eb', backgroundColor: '#fff', fontWeight: 800, cursor: 'pointer' }}>Cancel</button>
+                                <button type="submit" style={{ flex: '1 1 110px', padding: '10px 12px', borderRadius: '10px', border: 'none', backgroundColor: '#2563eb', color: '#fff', fontWeight: 900, cursor: 'pointer' }}>Save</button>
                             </div>
                         </form>
                     </div>
@@ -505,8 +557,9 @@ const Classes = () => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        padding: '18px',
+                        padding: '12px',
                         zIndex: 9999,
+                        overflowY: 'auto',
                     }}
                 >
                     <div
@@ -515,8 +568,10 @@ const Classes = () => {
                             width: 'min(720px, 100%)',
                             backgroundColor: '#fff',
                             borderRadius: '16px',
-                            padding: '18px',
+                            padding: 'clamp(14px, 4vw, 18px)',
                             border: '1px solid #e5e7eb',
+                            maxHeight: 'calc(100dvh - 24px)',
+                            overflowY: 'auto',
                         }}
                     >
                         <h3 style={{ marginTop: 0 }}>{editingSection ? 'Edit Section' : 'Add Section'}</h3>
@@ -562,9 +617,9 @@ const Classes = () => {
                                 <div style={labelStyle}>Room Number (optional)</div>
                                 <input value={sectionForm.room_number} onChange={(e) => setSectionForm({ ...sectionForm, room_number: e.target.value })} style={inputStyle} />
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                                <button type="button" onClick={() => setSectionModalOpen(false)} style={{ padding: '10px 12px', borderRadius: '10px', border: '1px solid #e5e7eb', backgroundColor: '#fff', fontWeight: 800, cursor: 'pointer' }}>Cancel</button>
-                                <button type="submit" style={{ padding: '10px 12px', borderRadius: '10px', border: 'none', backgroundColor: '#2563eb', color: '#fff', fontWeight: 900, cursor: 'pointer' }}>Save</button>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', flexWrap: 'wrap' }}>
+                                <button type="button" onClick={() => setSectionModalOpen(false)} style={{ flex: '1 1 110px', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e5e7eb', backgroundColor: '#fff', fontWeight: 800, cursor: 'pointer' }}>Cancel</button>
+                                <button type="submit" style={{ flex: '1 1 110px', padding: '10px 12px', borderRadius: '10px', border: 'none', backgroundColor: '#2563eb', color: '#fff', fontWeight: 900, cursor: 'pointer' }}>Save</button>
                             </div>
                         </form>
                     </div>

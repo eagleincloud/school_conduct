@@ -73,7 +73,7 @@ const Navbar = () => {
                         </svg>
                     </button>
                 )}
-                <div className="w-9 sm:w-11 h-9 sm:h-11 bg-school-navy rounded-2xl flex items-center justify-center text-white text-lg sm:text-2xl font-black shadow-xl shadow-school-navy/20 animate-in fade-in zoom-in duration-700 overflow-hidden">
+                <div className="w-9 sm:w-11 h-9 sm:h-11 bg-school-navy rounded-[2px] flex items-center justify-center text-white text-lg sm:text-2xl font-black shadow-xl shadow-school-navy/20 animate-in fade-in zoom-in duration-700 overflow-hidden">
                     {user.role === 'superadmin' ? (
                         profilePhotoUrl ? (
                             <img src={profilePhotoUrl} alt="Logo" className="w-full h-full object-cover bg-white" />
@@ -83,7 +83,7 @@ const Navbar = () => {
                             <img
                                 src={user.school_logo}
                                 alt="Logo"
-                                className="w-full h-full object-contain bg-white rounded-xl border border-slate-100 shadow-sm transition-opacity duration-500"
+                                className="w-full h-full object-contain bg-white rounded-[2px] border border-slate-100 shadow-sm transition-opacity duration-500"
                                 onLoad={(e) => {
                                     e.target.style.opacity = '1';
                                 }}

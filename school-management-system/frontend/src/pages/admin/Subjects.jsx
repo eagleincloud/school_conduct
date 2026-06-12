@@ -170,8 +170,8 @@ const AdminSubjects = () => {
 
     const subjectTable = (items) => {
         return (
-            <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#fff' }}>
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                <table style={{ width: '100%', minWidth: '620px', borderCollapse: 'collapse', backgroundColor: '#fff' }}>
                     <thead>
                         <tr style={{ backgroundColor: '#f2f4f7' }}>
                             <th style={{ padding: '12px 10px', textAlign: 'left' }}>Subject</th>
@@ -393,8 +393,9 @@ const AdminSubjects = () => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        padding: '18px',
+                        padding: '12px',
                         zIndex: 9999,
+                        overflowY: 'auto',
                     }}
                 >
                     <div
@@ -403,8 +404,10 @@ const AdminSubjects = () => {
                             width: 'min(840px, 100%)',
                             backgroundColor: '#fff',
                             borderRadius: '16px',
-                            padding: '18px',
+                            padding: 'clamp(14px, 4vw, 18px)',
                             border: '1px solid #e5e7eb',
+                            maxHeight: 'calc(100dvh - 24px)',
+                            overflowY: 'auto',
                         }}
                     >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
@@ -419,7 +422,7 @@ const AdminSubjects = () => {
                         </div>
 
                         <form onSubmit={saveSubject} style={{ marginTop: '14px', display: 'grid', gap: '14px' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '12px' }}>
                                 <div>
                                     <div style={labelStyle}>Subject Name *</div>
                                     <input
@@ -442,7 +445,7 @@ const AdminSubjects = () => {
                                 </div>
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '12px' }}>
                                 <div>
                                     <div style={labelStyle}>Class *</div>
                                     <select

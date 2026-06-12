@@ -3,6 +3,23 @@ import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import useAuthStore from "../../store/authStore";
 import { useStudent } from "../../context/StudentContext";
+import { 
+  Clock, 
+  Award, 
+  Calendar, 
+  ClipboardList, 
+  FileText, 
+  BookOpen, 
+  User, 
+  IndianRupee, 
+  CreditCard, 
+  Receipt, 
+  Bell, 
+  MessageSquare, 
+  Umbrella, 
+  Store, 
+  Image 
+} from "lucide-react";
 
 const colors = {
   bg: "#f9fafb",
@@ -306,6 +323,10 @@ export default function StudentDashboard() {
   const [exams, setExams] = useState([]);
   const [results, setResults] = useState([]);
   const [feeRecords, setFeeRecords] = useState([]);
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [galleryLoading, setGalleryLoading] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const galleryToken = localStorage.getItem('access_token');
 
   const { selectedStudentId, setSelectedStudentId } = useStudent();
 
@@ -345,6 +366,33 @@ export default function StudentDashboard() {
   useEffect(() => {
     localStorage.setItem("theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    const fetchGallery = async () => {
+      setGalleryLoading(true);
+      try {
+        const res = await api.get('gallery/');
+        setGalleryImages(Array.isArray(res?.data) ? res.data : []);
+      } catch (e) {
+        console.error('Gallery fetch error', e);
+        setGalleryImages([]);
+      } finally {
+        setGalleryLoading(false);
+      }
+    };
+    fetchGallery();
+  }, []);
+
+  useEffect(() => {
+    if (!galleryImages.length) {
+      setCurrentSlide(0);
+      return undefined;
+    }
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % galleryImages.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [galleryImages]);
 
   const themeStyles = useMemo(() => {
     if (theme === "dark") {
@@ -696,28 +744,179 @@ export default function StudentDashboard() {
           padding: 20,
         };
 
+  /* ── tile definitions ────────────────────────────────────────────── */
+  const tileCategories = [
+    {
+      label: "Academics",
+      tiles: [
+        {
+          id: "attendance",
+          title: "Attendance",
+          route: "/student/attendance",
+          bg: "#eef2ff",
+          color: "#4f46e5",
+          badge: overallAttendance.total > 0 ? `${overallAttendance.percentage.toFixed(0)}%` : null,
+          icon: <Clock size={26} strokeWidth={2.2} />,
+        },
+        {
+          id: "results",
+          title: "Results",
+          route: "/student/results",
+          bg: "#fef3c7",
+          color: "#d97706",
+          icon: <Award size={26} strokeWidth={2.2} />,
+        },
+        {
+          id: "timetable",
+          title: "Time Table",
+          route: "/student/timetable",
+          bg: "#dbeafe",
+          color: "#2563eb",
+          badge: todayTimetable.length > 0 ? `${todayTimetable.length}` : null,
+          icon: <Calendar size={26} strokeWidth={2.2} />,
+        },
+        {
+          id: "assignments",
+          title: "Assignments",
+          route: "/student/assignments",
+          bg: "#fce7f3",
+          color: "#db2777",
+          badge: assignmentsWithStatus.filter((a) => a.status === "Pending").length > 0
+            ? `${assignmentsWithStatus.filter((a) => a.status === "Pending").length}`
+            : null,
+          icon: <ClipboardList size={26} strokeWidth={2.2} />,
+        },
+        {
+          id: "exams",
+          title: "Exams",
+          route: "/student/exams",
+          bg: "#fef9c3",
+          color: "#a16207",
+          badge: examsCount > 0 ? `${examsCount}` : null,
+          icon: <FileText size={26} strokeWidth={2.2} />,
+        },
+        {
+          id: "syllabus",
+          title: "Syllabus",
+          route: "/student/syllabus",
+          bg: "#e0e7ff",
+          color: "#4338ca",
+          icon: <BookOpen size={26} strokeWidth={2.2} />,
+        },
+        {
+          id: "profile",
+          title: "Profile",
+          route: "/student/profile",
+          bg: "#f0fdf4",
+          color: "#16a34a",
+          icon: <User size={26} strokeWidth={2.2} />,
+        },
+      ],
+    },
+    {
+      label: "Finance",
+      tiles: [
+        {
+          id: "fees",
+          title: "Fees",
+          route: "/student/fees",
+          bg: "#fef2f2",
+          color: "#dc2626",
+          badge: feeSummary && feeSummary.unpaid.status !== "paid" ? "Due" : null,
+          icon: <IndianRupee size={26} strokeWidth={2.2} />,
+        },
+        {
+          id: "finance-cards",
+          title: "Finance Cards",
+          route: "/student/finance-cards",
+          bg: "#f5f3ff",
+          color: "#7c3aed",
+          icon: <CreditCard size={26} strokeWidth={2.2} />,
+        },
+        {
+          id: "ledger",
+          title: "Ledger",
+          route: "/student/ledger",
+          bg: "#ecfdf5",
+          color: "#059669",
+          icon: <Receipt size={26} strokeWidth={2.2} />,
+        },
+      ],
+    },
+    {
+      label: "Communication",
+      tiles: [
+        {
+          id: "notifications",
+          title: "Notifications",
+          route: "/student/notifications",
+          bg: "#fff7ed",
+          color: "#ea580c",
+          badge: unreadNotices.length > 0 ? `${unreadNotices.length}` : null,
+          icon: <Bell size={26} strokeWidth={2.2} />,
+        },
+        {
+          id: "messaging",
+          title: "Messaging",
+          route: "/student/messaging",
+          bg: "#dbeafe",
+          color: "#1d4ed8",
+          icon: <MessageSquare size={26} strokeWidth={2.2} />,
+        },
+        {
+          id: "holidays",
+          title: "Holidays",
+          route: "/student/holidays",
+          bg: "#fdf4ff",
+          color: "#a855f7",
+          icon: <Umbrella size={26} strokeWidth={2.2} />,
+        },
+      ],
+    },
+    {
+      label: "More",
+      tiles: [
+        {
+          id: "shops",
+          title: "Shops",
+          route: "/student/shops",
+          bg: "#fff1f2",
+          color: "#e11d48",
+          icon: <Store size={26} strokeWidth={2.2} />,
+        },
+        {
+          id: "gallery",
+          title: "Gallery",
+          route: "/student/gallery",
+          bg: "#f0fdfa",
+          color: "#0d9488",
+          icon: <Image size={26} strokeWidth={2.2} />,
+        },
+      ],
+    },
+  ];
+
+  /* ── loading skeleton ──────────────────────────────────────────── */
   if (loading) {
     return (
       <div style={wrapperStyle}>
-        <div style={{ fontWeight: 1000, marginBottom: 12 }}>
-          Loading dashboard…
-        </div>
-        <div
-          className="rg-autofit-sm" style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-            gap: 12,
-          }}
-        >
+        <div className="student-tile-header-skeleton" style={{
+          height: 100,
+          borderRadius: 20,
+          backgroundColor: themeStyles.cardBg,
+          border: `1px solid ${themeStyles.cardBorder}`,
+          marginBottom: 24,
+        }} />
+        <div className="student-tile-grid">
           {Array.from({ length: 8 }).map((_, i) => (
             <div
               key={i}
+              className="student-tile-skeleton"
               style={{
-                height: 120,
-                borderRadius: 16,
-                border: `1px solid ${themeStyles.cardBorder}`,
+                height: 110,
+                borderRadius: 20,
                 backgroundColor: themeStyles.cardBg,
-                boxShadow: themeStyles.shadow,
+                border: `1px solid ${themeStyles.cardBorder}`,
               }}
             />
           ))}
@@ -726,1274 +925,338 @@ export default function StudentDashboard() {
     );
   }
 
-  const cardStyle = {
-    backgroundColor: themeStyles.cardBg,
-    border: `1px solid ${themeStyles.cardBorder}`,
-    boxShadow: themeStyles.shadow,
-    color: themeStyles.text,
-  };
-  const topCardStyle = { ...cardStyle, minHeight: 180 };
-  const midCardStyle = { ...cardStyle, minHeight: 370 };
-  const largeCardStyle = { ...cardStyle, minHeight: 420 };
-
+  /* ── main render ───────────────────────────────────────────────── */
   return (
     <div style={wrapperStyle}>
+      {/* ── Greeting Header ────────────────────────────────────── */}
       <div
+        className="student-tile-header"
         style={{
-          ...cardStyle,
-          padding: 24,
+          padding: "20px 24px",
           borderRadius: 20,
           marginBottom: 20,
-          background: "linear-gradient(135deg, #fff 0%, #f8fafc 100%)",
-          border: "none",
+          background: theme === "dark"
+            ? "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)"
+            : "linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%)",
+          border: `1px solid ${theme === "dark" ? "#23304a" : "#e0e7ff"}`,
+          boxShadow: theme === "dark"
+            ? "0 2px 12px rgba(0,0,0,0.3)"
+            : "0 2px 12px rgba(37, 99, 235, 0.06)",
           position: "relative",
-          overflow: "visible",
+          overflow: "hidden",
         }}
       >
-        <div
+        {/* decorative circle */}
+        <div style={{
+          position: "absolute",
+          top: -40,
+          right: -40,
+          width: 180,
+          height: 180,
+          background: theme === "dark"
+            ? "rgba(99, 102, 241, 0.06)"
+            : "rgba(37, 99, 235, 0.04)",
+          borderRadius: "50%",
+          pointerEvents: "none",
+        }} />
+
+        {/* theme toggle button (top right) */}
+        <button
+          type="button"
+          onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
+          className="student-tile-btn-secondary"
           style={{
             position: "absolute",
-            top: -30,
-            right: -30,
-            width: 200,
-            height: 200,
-            background: "rgba(37, 99, 235, 0.03)",
-            borderRadius: "50%",
-            zIndex: 0,
-          }}
-        ></div>
-        <div
-          style={{
-            position: "relative",
-            zIndex: 1,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: 12,
-            flexWrap: "wrap",
+            top: 16,
+            right: 16,
+            padding: "8px 12px",
+            borderRadius: 12,
+            border: `1px solid ${theme === "dark" ? "#334155" : "#e2e8f0"}`,
+            background: theme === "dark" ? "#1e293b" : "#fff",
+            cursor: "pointer",
+            fontWeight: 800,
+            fontSize: 13,
+            color: themeStyles.text,
+            transition: "all 0.2s ease",
+            zIndex: 10,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-            <div
-              style={{
-                width: 64,
-                height: 64,
-                borderRadius: 20,
-                backgroundColor: colors.primary,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontWeight: 1000,
-                color: "#fff",
-                fontSize: 24,
-                boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
-              }}
-            >
+          {theme === "dark" ? "☀️" : "🌙"}
+        </button>
+
+        <div style={{
+          position: "relative",
+          zIndex: 1,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 16,
+          flexWrap: "wrap",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <div style={{
+              width: 56,
+              height: 56,
+              borderRadius: 16,
+              background: "linear-gradient(135deg, #6366f1 0%, #2563eb 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: 900,
+              color: "#fff",
+              fontSize: 22,
+              boxShadow: "0 4px 14px rgba(37, 99, 235, 0.3)",
+              flexShrink: 0,
+            }}>
               {profile?.name ? profile.name.slice(0, 1).toUpperCase() : "S"}
             </div>
             <div>
-              <h1
-                style={{
-                  margin: 0,
-                  fontWeight: 1000,
-                  fontSize: 30,
-                  letterSpacing: "-0.02em",
-                  background:
-                    "linear-gradient(90deg, #1e293b 0%, #2563eb 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                Welcome Student Dashboard
+              <div style={{
+                fontSize: 11,
+                fontWeight: 800,
+                color: theme === "dark" ? "#818cf8" : "#6366f1",
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                marginBottom: 2,
+              }}>
+                Hello
+              </div>
+              <h1 style={{
+                margin: 0,
+                fontWeight: 900,
+                fontSize: 22,
+                color: themeStyles.text,
+                letterSpacing: "-0.01em",
+                lineHeight: 1.2,
+              }}>
+                {profile?.name || "Student"}
               </h1>
-              <p
-                style={{
-                  margin: "4px 0 0",
-                  color: themeStyles.muted,
-                  fontWeight: 900,
-                  fontSize: 16,
-                }}
-              >
-                Hello,{" "}
-                <span style={{ color: colors.primary }}>
-                  {profile?.name || "Student"}
-                </span>
-                !{" "}
-                {profile
-                  ? `(${profile.class_section_display || profile.class_name})`
-                  : ""}
+              <p style={{
+                margin: "2px 0 0",
+                color: themeStyles.muted,
+                fontWeight: 700,
+                fontSize: 13,
+              }}>
+                Class: {profile?.class_section_display || profile?.class_name || "—"}
+                {profile?.admission_number ? ` · Roll: ${profile.admission_number}` : ""}
               </p>
-
-              {profile?.admission_number ? (
-                <div
-                  style={{
-                    marginTop: 2,
-                    color: themeStyles.muted,
-                    fontWeight: 900,
-                    fontSize: 12,
-                    opacity: 0.8,
-                  }}
-                >
-                  Roll No: {profile.admission_number}
-                </div>
-              ) : null}
             </div>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              flexWrap: "wrap",
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
-              style={{
-                padding: "10px 12px",
-                borderRadius: 12,
-                border: `1px solid ${themeStyles.cardBorder}`,
-                background: theme === "dark" ? "#0f172a" : "#fff",
-                cursor: "pointer",
-                fontWeight: 1000,
-              }}
-            >
-              {theme === "dark" ? "Light" : "Dark"} Mode
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                logout();
-                localStorage.removeItem("selectedStudentId");
-                navigate("/login");
-              }}
-              style={{
-                padding: "10px 12px",
-                borderRadius: 12,
-                border: "none",
-                backgroundColor: colors.primary,
-                color: "#fff",
-                cursor: "pointer",
-                fontWeight: 1000,
-              }}
-            >
-              Logout
-            </button>
           </div>
         </div>
       </div>
 
-      <div
-        className="rg-12" style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
-          gap: 12,
-        }}
-      >
-        <div style={{ gridColumn: "span 6" }}>
-          <Card style={{ ...topCardStyle }}>
-            <SectionHeader
-              icon={
-                <Icon>
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M12 8v4l2 2" />
-                    <path d="M21 12a9 9 0 1 1-18 0a9 9 0 0 1 18 0z" />
-                  </svg>
-                </Icon>
-              }
-              title="Today’s Attendance"
-              subtitle="Today"
-            />
+      {/* ── Alerts Banner ──────────────────────────────────────── */}
+      {studentAlerts.length > 0 && (
+        <div className="student-tile-alerts" style={{
+          marginBottom: 20,
+          display: "flex",
+          gap: 10,
+          overflowX: "auto",
+          paddingBottom: 4,
+        }}>
+          {studentAlerts.slice(0, 3).map((alert, idx) => (
             <div
+              key={idx}
               style={{
-                marginTop: 12,
+                flex: "0 0 auto",
+                padding: "10px 16px",
+                borderRadius: 14,
+                backgroundColor: alert.kind === "warning"
+                  ? (theme === "dark" ? "#422006" : "#fff7ed")
+                  : alert.kind === "notice"
+                    ? (theme === "dark" ? "#1e3a5f" : "#eff6ff")
+                    : (theme === "dark" ? "#1e293b" : "#f8fafc"),
+                border: `1px solid ${
+                  alert.kind === "warning" ? "#fdba74"
+                  : alert.kind === "notice" ? "#93c5fd"
+                  : themeStyles.cardBorder
+                }`,
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between",
-                gap: 12,
-                flexWrap: "wrap",
+                gap: 8,
+                minWidth: 200,
+                maxWidth: 340,
               }}
             >
-              <div
-                style={{
-                  fontWeight: 1000,
-                  fontSize: 26,
-                  color: todayAttendance
-                    ? todayAttendance.verification_status?.toLowerCase() ===
-                      "rejected"
-                      ? colors.absent
-                      : todayAttendance.verification_status?.toLowerCase() ===
-                          "pending"
-                        ? colors.late
-                        : colors.present
-                    : themeStyles.muted,
-                }}
-              >
-                {todayPresence ||
-                  (todayAttendance?.verification_status?.toLowerCase() ===
-                  "pending"
-                    ? "Pending"
-                    : "—")}
-              </div>
-              <div
-                style={{
-                  width: 1,
-                  height: 36,
-                  backgroundColor: themeStyles.cardBorder,
-                  display: "none",
-                }}
-              />
-              <div
-                style={{
-                  color: themeStyles.muted,
-                  fontWeight: 900,
-                  fontSize: 13,
-                }}
-              >
-                Marked Via: {todayAttendance?.marked_via || "—"}
-                {todayIsLate ? (
-                  <span
-                    style={{
-                      marginLeft: 10,
-                      fontSize: 11,
-                      fontWeight: 1000,
-                      color: colors.late,
-                    }}
-                  >
-                    Late
-                  </span>
-                ) : null}
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        <div style={{ gridColumn: "span 6" }}>
-          <Card style={{ ...topCardStyle }}>
-            <SectionHeader
-              icon={
-                <Icon>
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M22 12h-4l-2 3-2-6-2 3H2" />
-                    <path d="M5 21h14" />
-                  </svg>
-                </Icon>
-              }
-              title="Overall Attendance"
-              subtitle="Progress"
-            />
-            <div style={{ marginTop: 10 }}>
-              <CircularProgress percentage={overallAttendance.percentage} />
-            </div>
-            <div style={{ marginTop: 12 }}>
-              <MiniProgress percentage={overallAttendance.percentage} />
-            </div>
-            {overallAttendance.total > 0 &&
-            overallAttendance.percentage < 75 ? (
-              <div
-                style={{
-                  marginTop: 12,
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  backgroundColor: colors.warnBg,
-                  border: `1px solid #fecaca`,
-                  color: colors.warnText,
-                  fontWeight: 900,
-                }}
-              >
-                Warning: attendance below 75%
-              </div>
-            ) : null}
-          </Card>
-        </div>
-      </div>
-
-      {/* Main grid */}
-      <div
-        className="rg-12" style={{
-          marginTop: 12,
-          display: "grid",
-          gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
-          gap: 12,
-        }}
-      >
-        <div style={{ gridColumn: "span 7" }}>
-          <Card style={{ ...largeCardStyle, height: "100%" }}>
-            <SectionHeader
-              icon={
-                <Icon>
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M21 10H3" />
-                    <path d="M21 6H3" />
-                    <path d="M21 14H3" />
-                    <path d="M21 18H3" />
-                  </svg>
-                </Icon>
-              }
-              title="Today's Timetable"
-              subtitle={todayDayName}
-            />
-            <div style={{ marginTop: 12, display: "grid", gap: 12 }}>
-              {todayTimetable.length ? (
-                <>
-                  {todayTimetable
-                    .slice()
-                    .sort((a, b) =>
-                      String(a.start_time).localeCompare(String(b.start_time)),
-                    )
-                    .map((t) => {
-                      const isCurrent =
-                        currentClass && currentClass.id === t.id;
-                      return (
-                        <div
-                          key={t.id}
-                          style={{
-                            padding: "16px",
-                            borderRadius: 16,
-                            border: `1px solid ${isCurrent ? colors.primary : themeStyles.cardBorder}`,
-                            backgroundColor: isCurrent
-                              ? theme === "dark"
-                                ? "#1e293b"
-                                : "#eff6ff"
-                              : themeStyles.cardBg,
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            gap: 12,
-                            position: "relative",
-                            transition: "transform 0.2s",
-                            boxShadow: isCurrent
-                              ? "0 4px 12px rgba(37, 99, 235, 0.1)"
-                              : "none",
-                          }}
-                        >
-                          {isCurrent && (
-                            <div
-                              style={{
-                                position: "absolute",
-                                left: 0,
-                                top: "20%",
-                                bottom: "20%",
-                                width: 4,
-                                backgroundColor: colors.primary,
-                                borderRadius: "0 4px 4px 0",
-                              }}
-                            ></div>
-                          )}
-                          <div style={{ flex: 1 }}>
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 8,
-                              }}
-                            >
-                              <div
-                                style={{
-                                  fontWeight: 1000,
-                                  color: isCurrent
-                                    ? colors.primary
-                                    : themeStyles.text,
-                                  fontSize: 15,
-                                }}
-                              >
-                                {t.subject || "—"}
-                              </div>
-                              {isCurrent && (
-                                <span
-                                  style={{
-                                    padding: "2px 8px",
-                                    borderRadius: 99,
-                                    backgroundColor: colors.primary,
-                                    color: "#fff",
-                                    fontSize: 10,
-                                    fontWeight: 1000,
-                                    textTransform: "uppercase",
-                                    animation: "pulse 2s infinite",
-                                  }}
-                                >
-                                  Live Now
-                                </span>
-                              )}
-                            </div>
-                            <div
-                              style={{
-                                marginTop: 4,
-                                color: themeStyles.muted,
-                                fontWeight: 900,
-                                fontSize: 13,
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 6,
-                              }}
-                            >
-                              <svg
-                                width="14"
-                                height="14"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              >
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
-                              </svg>
-                              {t.teacher_name || t.teacher || "—"}
-                            </div>
-                          </div>
-                          <div style={{ textAlign: "right" }}>
-                            <div
-                              style={{
-                                fontWeight: 1000,
-                                color: isCurrent
-                                  ? colors.primary
-                                  : themeStyles.text,
-                                fontSize: 14,
-                              }}
-                            >
-                              {t.start_time_display || t.start_time}
-                            </div>
-                            <div
-                              style={{
-                                color: themeStyles.muted,
-                                fontWeight: 900,
-                                fontSize: 12,
-                              }}
-                            >
-                              to {t.end_time_display || t.end_time}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  <button
-                    type="button"
-                    onClick={() => navigate("/student/timetable")}
-                    style={{
-                      marginTop: 8,
-                      width: "100%",
-                      padding: "12px",
-                      borderRadius: 14,
-                      border: `1px solid ${themeStyles.cardBorder}`,
-                      backgroundColor: "transparent",
-                      color: colors.primary,
-                      cursor: "pointer",
-                      fontWeight: 1000,
-                      fontSize: 13,
-                      transition: "all 0.2s",
-                    }}
-                    onMouseOver={(e) =>
-                      (e.target.style.backgroundColor = "#eff6ff")
-                    }
-                    onMouseOut={(e) =>
-                      (e.target.style.backgroundColor = "transparent")
-                    }
-                  >
-                    View Full Weekly Schedule
-                  </button>
-                </>
-              ) : (
-                <div
-                  style={{
-                    padding: "40px 20px",
-                    textAlign: "center",
-                    color: themeStyles.muted,
-                    backgroundColor: theme === "dark" ? "#0f172a" : "#f8fafc",
-                    borderRadius: 20,
-                    border: `2px dashed ${themeStyles.cardBorder}`,
-                  }}
-                >
-                  <div style={{ fontSize: 40, marginBottom: 12 }}>🗓️</div>
-                  <div style={{ fontWeight: 1000, color: themeStyles.text }}>
-                    No classes today
-                  </div>
-                  <div style={{ fontSize: 13, fontWeight: 900, marginTop: 4 }}>
-                    Enjoy your time or check other days
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => navigate("/student/timetable")}
-                    style={{
-                      marginTop: 16,
-                      padding: "8px 20px",
-                      borderRadius: 12,
-                      backgroundColor: colors.primary,
-                      color: "#fff",
-                      border: "none",
-                      fontWeight: 1000,
-                      cursor: "pointer",
-                    }}
-                  >
-                    Check Weekly Timetable
-                  </button>
+              <span style={{ fontSize: 16 }}>
+                {alert.kind === "warning" ? "⚠️" : alert.kind === "notice" ? "🔔" : "ℹ️"}
+              </span>
+              <div>
+                <div style={{ fontWeight: 800, fontSize: 12, color: themeStyles.text }}>
+                  {alert.title}
                 </div>
-              )}
-            </div>
-          </Card>
-        </div>
-
-        <div style={{ gridColumn: "span 5" }}>
-          <Card style={{ ...largeCardStyle }}>
-            <SectionHeader
-              icon={
-                <Icon>
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7" />
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                  </svg>
-                </Icon>
-              }
-              title="Notifications"
-              subtitle="Holidays, exams & school notices (same inbox)"
-            />
-            <div style={{ marginTop: 12, display: "grid", gap: 10 }}>
-              {latestNotices.length ? (
-                latestNotices.slice(0, 5).map((n) => {
-                  const isImportant = !n.is_read;
-                  return (
-                    <button
-                      key={n.id}
-                      type="button"
-                      onClick={() =>
-                        navigate(`/student/notifications#ntf-${n.id}`)
-                      }
-                      style={{
-                        textAlign: "left",
-                        padding: "12px 12px",
-                        borderRadius: 14,
-                        border: `1px solid ${isImportant ? "#f59e0b" : themeStyles.cardBorder}`,
-                        backgroundColor: isImportant
-                          ? "#fffbeb"
-                          : themeStyles.cardBg,
-                        cursor: "pointer",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          gap: 10,
-                          alignItems: "flex-start",
-                        }}
-                      >
-                        <div
-                          style={{
-                            fontWeight: 1000,
-                            color: themeStyles.text,
-                            lineHeight: 1.2,
-                          }}
-                        >
-                          {n.title}
-                          {isImportant ? (
-                            <div
-                              style={{
-                                marginTop: 6,
-                                fontSize: 11,
-                                fontWeight: 1000,
-                                color: "#b45309",
-                              }}
-                            >
-                              Unread
-                            </div>
-                          ) : null}
-                        </div>
-                        <div
-                          style={{
-                            color: themeStyles.muted,
-                            fontWeight: 900,
-                            fontSize: 12,
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          {new Date(n.created_at).toLocaleDateString()}
-                        </div>
-                      </div>
-                      <div
-                        style={{
-                          marginTop: 8,
-                          color: themeStyles.muted,
-                          fontWeight: 800,
-                          fontSize: 13,
-                        }}
-                      >
-                        {n.message.length > 90
-                          ? `${n.message.slice(0, 90)}…`
-                          : n.message}
-                      </div>
-                    </button>
-                  );
-                })
-              ) : (
-                <div
-                  style={{
-                    color: themeStyles.muted,
-                    fontWeight: 900,
-                    padding: 12,
-                  }}
-                >
-                  No notifications yet.
+                <div style={{ fontSize: 11, color: themeStyles.muted, fontWeight: 600, marginTop: 1 }}>
+                  {alert.message.length > 60 ? alert.message.slice(0, 60) + "…" : alert.message}
                 </div>
-              )}
-            </div>
-          </Card>
-        </div>
-
-        <div style={{ gridColumn: "span 7" }}>
-          <Card style={{ ...midCardStyle }}>
-            <SectionHeader
-              icon={
-                <Icon>
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                    <path d="M14 17v-4" />
-                    <path d="M9 17v-2" />
-                    <path d="M19 17v-7" />
-                    <path d="M3 17V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v11" />
-                  </svg>
-                </Icon>
-              }
-              title="Assignments"
-              subtitle="Recent"
-            />
-            <div style={{ marginTop: 12, display: "grid", gap: 10 }}>
-              {assignmentsWithStatus.length ? (
-                assignmentsWithStatus
-                  .slice()
-                  .sort((a, b) =>
-                    String(a.due_date).localeCompare(String(b.due_date)),
-                  )
-                  .slice(0, 5)
-                  .map((a) => {
-                    const isPending = a.status === "Pending";
-                    return (
-                      <div
-                        key={a.id}
-                        style={{
-                          border: `1px solid ${isPending && a.isPendingSoon ? "#f59e0b" : themeStyles.cardBorder}`,
-                          backgroundColor:
-                            isPending && a.isPendingSoon
-                              ? "#fffbeb"
-                              : themeStyles.cardBg,
-                          borderRadius: 14,
-                          padding: "12px 12px",
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            gap: 12,
-                            flexWrap: "wrap",
-                            alignItems: "flex-start",
-                          }}
-                        >
-                          <div>
-                            <div style={{ fontWeight: 1000 }}>{a.title}</div>
-                            <div
-                              style={{
-                                marginTop: 4,
-                                color: themeStyles.muted,
-                                fontWeight: 900,
-                                fontSize: 12,
-                              }}
-                            >
-                              Subject: {a.subject}
-                            </div>
-                          </div>
-                          <div style={{ textAlign: "right" }}>
-                            <div
-                              style={{
-                                color: themeStyles.muted,
-                                fontWeight: 900,
-                                fontSize: 12,
-                              }}
-                            >
-                              Due
-                            </div>
-                            <div style={{ fontWeight: 1000 }}>
-                              {a.due_date || "—"}
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          style={{
-                            marginTop: 10,
-                            display: "flex",
-                            gap: 10,
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            flexWrap: "wrap",
-                          }}
-                        >
-                          <span
-                            style={{
-                              display: "inline-block",
-                              padding: "6px 10px",
-                              borderRadius: 999,
-                              border: `1px solid ${isPending ? "#f59e0b" : "#16a34a"}`,
-                              backgroundColor: isPending
-                                ? "#fffbeb"
-                                : "#ecfdf5",
-                              color: isPending ? "#b45309" : colors.present,
-                              fontWeight: 1000,
-                              fontSize: 12,
-                            }}
-                          >
-                            {a.status}
-                          </span>
-                          {a.file_url ? (
-                            <a
-                              href={a.file_url}
-                              target="_blank"
-                              rel="noreferrer"
-                              style={{
-                                color: colors.primary,
-                                fontWeight: 1000,
-                                textDecoration: "none",
-                              }}
-                            >
-                              Download
-                            </a>
-                          ) : (
-                            <div
-                              style={{
-                                color: themeStyles.muted,
-                                fontWeight: 900,
-                                fontSize: 12,
-                              }}
-                            >
-                              No file
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })
-              ) : (
-                <div
-                  style={{
-                    color: themeStyles.muted,
-                    fontWeight: 900,
-                    padding: 12,
-                  }}
-                >
-                  No assignments yet.
-                </div>
-              )}
-            </div>
-          </Card>
-        </div>
-
-        <div style={{ gridColumn: "span 5" }}>
-          <Card style={{ ...midCardStyle }}>
-            <SectionHeader
-              icon={
-                <Icon>
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M21 15V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8" />
-                    <path d="M9 22h6" />
-                    <path d="M12 17v5" />
-                    <path d="M7 11l2 2 4-4" />
-                  </svg>
-                </Icon>
-              }
-              title="Attendance Summary"
-              subtitle="Mini"
-            />
-            <div style={{ marginTop: 12 }}>
-              <CircularProgress percentage={overallAttendance.percentage} />
-            </div>
-            <div style={{ marginTop: 12 }}>
-              <MiniProgress percentage={overallAttendance.percentage} />
-            </div>
-            <div
-              style={{
-                marginTop: 10,
-                display: "flex",
-                gap: 10,
-                justifyContent: "space-between",
-                flexWrap: "wrap",
-              }}
-            >
-              <div
-                style={{
-                  color: themeStyles.muted,
-                  fontWeight: 900,
-                  fontSize: 12,
-                }}
-              >
-                Present: {overallAttendance.present}
-              </div>
-              <div
-                style={{
-                  color: themeStyles.muted,
-                  fontWeight: 900,
-                  fontSize: 12,
-                }}
-              >
-                Absent: {overallAttendance.absent}
               </div>
             </div>
-            <div style={{ marginTop: 12 }}>
+          ))}
+        </div>
+      )}
+
+      {/* ── Tile Sections ──────────────────────────────────────── */}
+      {tileCategories.map((category) => (
+        <div key={category.label} style={{ marginBottom: 24 }}>
+          <h2 style={{
+            margin: "0 0 14px 4px",
+            fontSize: 16,
+            fontWeight: 900,
+            color: themeStyles.text,
+            letterSpacing: "-0.01em",
+          }}>
+            {category.label}
+          </h2>
+          <div className="student-tile-grid">
+            {category.tiles.map((tile) => (
               <button
+                key={tile.id}
                 type="button"
-                onClick={() => navigate("/student/attendance")}
+                className="student-tile-item"
+                onClick={() => navigate(tile.route)}
                 style={{
-                  width: "100%",
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  border: `1px solid ${themeStyles.cardBorder}`,
-                  backgroundColor: theme === "dark" ? "#111827" : "#fff",
-                  cursor: "pointer",
-                  fontWeight: 1000,
-                  color: colors.primary,
-                }}
-              >
-                View Full Attendance
-              </button>
-            </div>
-
-            <div style={{ marginTop: 16 }}>
-              <div
-                style={{
+                  background: theme === "dark" ? "#0f172a" : "#ffffff",
+                  border: `1px solid ${theme === "dark" ? "#1e293b" : "#f1f5f9"}`,
+                  borderRadius: 20,
+                  padding: "20px 12px 16px",
                   display: "flex",
-                  justifyContent: "space-between",
+                  flexDirection: "column",
                   alignItems: "center",
+                  justifyContent: "center",
                   gap: 10,
+                  cursor: "pointer",
+                  position: "relative",
+                  transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)",
+                  boxShadow: theme === "dark"
+                    ? "0 1px 4px rgba(0,0,0,0.3)"
+                    : "0 1px 6px rgba(0,0,0,0.04)",
+                  textDecoration: "none",
+                  minHeight: 110,
                 }}
               >
-                <div>
-                  <div style={{ fontWeight: 1000 }}>Attendance Trend</div>
-                  <div
-                    style={{
-                      color: themeStyles.muted,
-                      fontWeight: 900,
-                      fontSize: 12,
-                    }}
-                  >
-                    Last ~4 weeks
-                  </div>
-                </div>
-                <div
-                  style={{
-                    color: themeStyles.muted,
+                {/* Badge */}
+                {tile.badge && (
+                  <span style={{
+                    position: "absolute",
+                    top: 8,
+                    right: 8,
+                    padding: "2px 7px",
+                    borderRadius: 99,
+                    backgroundColor: tile.color,
+                    color: "#fff",
+                    fontSize: 10,
                     fontWeight: 900,
-                    fontSize: 12,
-                  }}
-                >
-                  SVG chart
+                    lineHeight: "16px",
+                  }}>
+                    {tile.badge}
+                  </span>
+                )}
+
+                {/* Icon Container */}
+                <div style={{
+                  width: 52,
+                  height: 52,
+                  borderRadius: 16,
+                  backgroundColor: theme === "dark"
+                    ? `${tile.color}18`
+                    : tile.bg,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: tile.color,
+                  transition: "transform 0.25s ease",
+                }}>
+                  {tile.icon}
                 </div>
-              </div>
-              <div style={{ marginTop: 10 }}>
-                <Sparkline points={attendanceTrendPoints} />
-              </div>
-            </div>
-          </Card>
+
+                {/* Label */}
+                <span style={{
+                  fontSize: 12,
+                  fontWeight: 800,
+                  color: themeStyles.text,
+                  textAlign: "center",
+                  lineHeight: 1.2,
+                }}>
+                  {tile.title}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
+      ))}
 
-        <div style={{ gridColumn: "span 7" }}>
-          <Card style={{ ...midCardStyle }}>
-            <SectionHeader
-              icon={
-                <Icon>
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7" />
-                  </svg>
-                </Icon>
-              }
-              title="Exams & Results Preview"
-              subtitle="Preview"
-            />
-            <div
-              className="rg-2" style={{
-                marginTop: 12,
-                display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                gap: 12,
-              }}
-            >
-              <div
-                style={{
-                  border: `1px solid ${themeStyles.cardBorder}`,
-                  borderRadius: 14,
-                  padding: 12,
-                  backgroundColor: themeStyles.cardBg,
-                }}
-              >
-                <div style={{ fontWeight: 1000 }}>Upcoming Exams</div>
-                <div style={{ marginTop: 6, display: "grid", gap: 10 }}>
-                  {upcomingExams.length ? (
-                    upcomingExams.slice(0, 3).map((e) => {
-                      const dt = e.start_date || e.date || e.end_date;
-                      return (
-                        <div
-                          key={e.id}
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            gap: 10,
-                          }}
-                        >
-                          <div>
-                            <div style={{ fontWeight: 1000, fontSize: 13 }}>
-                              {e.name}
-                            </div>
-                            <div
-                              style={{
-                                color: themeStyles.muted,
-                                fontWeight: 900,
-                                fontSize: 12,
-                              }}
-                            >
-                              {e.exam_type}
-                            </div>
-                          </div>
-                          <div
-                            style={{
-                              color: themeStyles.muted,
-                              fontWeight: 1000,
-                              fontSize: 12,
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {dt}
-                          </div>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    <div
-                      style={{
-                        color: themeStyles.muted,
-                        fontWeight: 900,
-                        fontSize: 12,
-                      }}
-                    >
-                      No upcoming exams.
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div
-                style={{
-                  border: `1px solid ${themeStyles.cardBorder}`,
-                  borderRadius: 14,
-                  padding: 12,
-                  backgroundColor: themeStyles.cardBg,
-                }}
-              >
-                <div style={{ fontWeight: 1000 }}>Latest Results</div>
-                <div style={{ marginTop: 6 }}>
-                  {latestResultsPreview ? (
-                    <>
-                      <div style={{ fontWeight: 1000, fontSize: 14 }}>
-                        {latestResultsPreview.exam_name}
-                      </div>
-                      <div
-                        style={{
-                          marginTop: 8,
-                          display: "flex",
-                          gap: 10,
-                          alignItems: "center",
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        <span
-                          style={{
-                            padding: "6px 10px",
-                            borderRadius: 999,
-                            backgroundColor: "#eef2ff",
-                            color: colors.primary,
-                            fontWeight: 1000,
-                            fontSize: 12,
-                          }}
-                        >
-                          Avg {latestResultsPreview.avg.toFixed(2)}%
-                        </span>
-                        <span
-                          style={{
-                            padding: "6px 10px",
-                            borderRadius: 999,
-                            backgroundColor: "#f3f4f6",
-                            color: themeStyles.text,
-                            fontWeight: 1000,
-                            fontSize: 12,
-                          }}
-                        >
-                          {latestResultsPreview.grade} ·{" "}
-                          {latestResultsPreview.statusText}
-                        </span>
-                      </div>
-                    </>
-                  ) : (
-                    <div
-                      style={{
-                        color: themeStyles.muted,
-                        fontWeight: 900,
-                        fontSize: 12,
-                      }}
-                    >
-                      No results published yet.
-                    </div>
-                  )}
-                </div>
-
-                <div style={{ marginTop: 12 }}>
-                  <div style={{ fontWeight: 1000, marginBottom: 6 }}>
-                    Marks Trend
-                  </div>
-                  <Sparkline
-                    points={resultsTrendPoints}
-                    color={colors.primary}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div
+      {/* ── Gallery Preview (compact) ──────────────────────────── */}
+      {galleryImages.length > 0 && (
+        <div style={{
+          marginTop: 4,
+          borderRadius: 20,
+          overflow: "hidden",
+          border: `1px solid ${theme === "dark" ? "#1e293b" : "#f1f5f9"}`,
+          boxShadow: theme === "dark"
+            ? "0 2px 10px rgba(0,0,0,0.3)"
+            : "0 2px 10px rgba(0,0,0,0.04)",
+          position: "relative",
+          height: 180,
+          background: theme === "dark" ? "#0f172a" : "#f8fafc",
+        }}>
+          {galleryImages.map((img, idx) => (
+            <img
+              key={img.id}
+              src={`${img.image_url}${galleryToken ? `?token=${galleryToken}` : ''}`}
+              alt={img.title}
               style={{
-                marginTop: 14,
-                display: "flex",
-                gap: 10,
-                flexWrap: "wrap",
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                transition: "opacity 700ms ease",
+                opacity: idx === currentSlide ? 1 : 0,
+                userSelect: "none",
               }}
-            >
-              <button
-                type="button"
-                onClick={() => navigate("/student/results")}
-                style={{
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  border: "1px solid " + themeStyles.cardBorder,
-                  backgroundColor: theme === "dark" ? "#111827" : "#fff",
-                  cursor: "pointer",
-                  fontWeight: 1000,
-                  color: colors.primary,
-                }}
-              >
-                View Results
-              </button>
-              <button
-                type="button"
-                onClick={() => navigate("/student/notifications")}
-                style={{
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  border: "none",
-                  backgroundColor: colors.primary,
-                  cursor: "pointer",
-                  fontWeight: 1000,
-                  color: "#fff",
-                }}
-              >
-                View Notifications
-              </button>
-            </div>
-          </Card>
-        </div>
-
-        <div style={{ gridColumn: "span 5" }}>
-          <Card style={{ ...midCardStyle }}>
-            <SectionHeader
-              icon={
-                <Icon>
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M12 1v22" />
-                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
-                  </svg>
-                </Icon>
-              }
-              title="Fees Status"
-              subtitle="Due"
+              onContextMenu={(e) => e.preventDefault()}
+              onDragStart={(e) => e.preventDefault()}
             />
-            <div style={{ marginTop: 12 }}>
-              {feeSummary ? (
-                <>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      gap: 12,
-                      alignItems: "flex-start",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    <div>
-                      <div
-                        style={{
-                          color: themeStyles.muted,
-                          fontWeight: 900,
-                          fontSize: 12,
-                          textTransform: "uppercase",
-                        }}
-                      >
-                        Due Amount
-                      </div>
-                      <div
-                        style={{
-                          marginTop: 6,
-                          fontWeight: 1000,
-                          fontSize: 26,
-                          color:
-                            feeSummary.unpaid.status === "paid"
-                              ? colors.present
-                              : colors.absent,
-                        }}
-                      >
-                        {formatMoneyMaybe(feeSummary.unpaid.due_amount)}
-                      </div>
-                    </div>
-                    <div style={{ textAlign: "right" }}>
-                      <div
-                        style={{
-                          color: themeStyles.muted,
-                          fontWeight: 900,
-                          fontSize: 12,
-                          textTransform: "uppercase",
-                        }}
-                      >
-                        Due Date
-                      </div>
-                      <div style={{ marginTop: 6, fontWeight: 1000 }}>
-                        {feeSummary.unpaid.due_date || "—"}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style={{ marginTop: 12 }}>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        padding: "8px 12px",
-                        borderRadius: 999,
-                        border: `1px solid ${feeSummary.unpaid.status === "paid" ? "#16a34a" : "#ef4444"}`,
-                        backgroundColor:
-                          feeSummary.unpaid.status === "paid"
-                            ? "#ecfdf5"
-                            : "#fee2e2",
-                        color:
-                          feeSummary.unpaid.status === "paid"
-                            ? colors.present
-                            : colors.absent,
-                        fontWeight: 1000,
-                        fontSize: 12,
-                      }}
-                    >
-                      {String(feeSummary.unpaid.status || "").toUpperCase()}
-                    </span>
-                  </div>
-                </>
-              ) : (
-                <div
+          ))}
+          <div style={{
+            position: "absolute",
+            inset: "auto 0 0 0",
+            padding: "10px 14px",
+            background: "linear-gradient(to top, rgba(0,0,0,0.6), transparent)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+          }}>
+            <p style={{
+              color: "#fff",
+              fontWeight: 900,
+              fontSize: 13,
+              margin: 0,
+              textShadow: "0 1px 4px rgba(0,0,0,0.5)",
+            }}>
+              {galleryImages[currentSlide]?.title}
+            </p>
+            <div style={{ display: "flex", gap: 5 }}>
+              {galleryImages.map((_, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setCurrentSlide(idx)}
                   style={{
-                    color: themeStyles.muted,
-                    fontWeight: 900,
-                    fontSize: 12,
+                    width: idx === currentSlide ? 18 : 7,
+                    height: 7,
+                    borderRadius: 99,
+                    border: "none",
+                    backgroundColor: idx === currentSlide ? "#fff" : "rgba(255,255,255,0.4)",
+                    cursor: "pointer",
+                    transition: "all 300ms ease",
+                    padding: 0,
                   }}
-                >
-                  No fee record found.
-                </div>
-              )}
+                />
+              ))}
             </div>
-            <div style={{ marginTop: 14 }}>
-              <button
-                type="button"
-                onClick={() => navigate("/student/fees")}
-                style={{
-                  width: "100%",
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  border: "1px solid " + themeStyles.cardBorder,
-                  backgroundColor: theme === "dark" ? "#111827" : "#fff",
-                  cursor: "pointer",
-                  fontWeight: 1000,
-                  color: colors.primary,
-                }}
-              >
-                View Fee Details
-              </button>
-            </div>
-          </Card>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

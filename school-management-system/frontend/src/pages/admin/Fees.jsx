@@ -358,8 +358,8 @@ const AdminFees = () => {
                     </div>
                 </form>
 
-                <div style={{ marginTop: '16px', overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <div style={{ marginTop: '16px', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                    <table style={{ width: '100%', minWidth: '760px', borderCollapse: 'collapse' }}>
                         <thead>
                             <tr style={{ backgroundColor: '#f2f4f7' }}>
                                 <th style={{ padding: '10px', textAlign: 'left' }}>Class</th>
@@ -453,8 +453,8 @@ const AdminFees = () => {
                         </div>
                     </div>
 
-                    <div style={{ marginTop: '14px', overflowX: 'auto' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <div style={{ marginTop: '14px', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                        <table style={{ width: '100%', minWidth: '900px', borderCollapse: 'collapse' }}>
                             <thead>
                                 <tr style={{ backgroundColor: '#f2f4f7' }}>
                                     <th style={{ padding: '10px', textAlign: 'left' }}>Select</th>
@@ -520,8 +520,8 @@ const AdminFees = () => {
                         {!selectedFeeId ? (
                             <p style={{ color: '#6b7280' }}>Select a student fee record to view transactions.</p>
                         ) : (
-                            <div style={{ overflowX: 'auto' }}>
-                                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                                <table style={{ width: '100%', minWidth: '680px', borderCollapse: 'collapse' }}>
                                     <thead>
                                         <tr style={{ backgroundColor: '#f2f4f7' }}>
                                             <th style={{ padding: '10px', textAlign: 'left' }}>Date</th>

@@ -11,7 +11,7 @@ from .models import GalleryImage
 
 
 def _can_view_gallery(user):
-    return user.is_authenticated and (user.role in {'admin', 'teacher', 'student'} or user.is_superuser)
+    return user.is_authenticated and (user.role in {'admin', 'teacher', 'student', 'superadmin', 'dealer'} or user.is_superuser)
 
 
 def _is_admin(user):
@@ -175,15 +175,33 @@ class GalleryImageProtectedView(views.APIView):
         if not obj.image:
             return Response({'error': 'No image file associated with this record'}, status=status.HTTP_404_NOT_FOUND)
 
-        file_path = obj.image.path
-        if not os.path.exists(file_path):
-            print(f"DEBUG [Gallery]: Physical file missing at {file_path}")
-            return Response({'error': 'Physical image file missing on server'}, status=status.HTTP_404_NOT_FOUND)
+        # ☁️ Cloudinary / External Storage Support:
+        # If the storage backend uses URLs (like Cloudinary or S3), redirect directly to the resource URL.
+        try:
+            url = obj.image.url
+            if url.startswith('http://') or url.startswith('https://'):
+                from django.http import HttpResponseRedirect
+                return HttpResponseRedirect(url)
+        except Exception as e:
+            print(f"DEBUG [Gallery]: Could not get image URL: {str(e)}")
 
-        content_type = mimetypes.guess_type(file_path)[0] or 'application/octet-stream'
-        response = FileResponse(open(file_path, 'rb'), content_type=content_type)
-        response['Content-Disposition'] = f'inline; filename="{obj.filename()}"'
-        response['X-Content-Type-Options'] = 'nosniff'
-        response['Cache-Control'] = 'private, max-age=3600'
-        return response
+        # 📁 Local Storage Fallback:
+        try:
+            file_path = obj.image.path
+            if not os.path.exists(file_path):
+                print(f"DEBUG [Gallery]: Physical file missing at {file_path}")
+                return Response({'error': 'Physical image file missing on server'}, status=status.HTTP_404_NOT_FOUND)
+
+            content_type = mimetypes.guess_type(file_path)[0] or 'application/octet-stream'
+            response = FileResponse(open(file_path, 'rb'), content_type=content_type)
+            response['Content-Disposition'] = f'inline; filename="{obj.filename()}"'
+            response['X-Content-Type-Options'] = 'nosniff'
+            response['Cache-Control'] = 'private, max-age=3600'
+            return response
+        except NotImplementedError:
+            from django.http import HttpResponseRedirect
+            return HttpResponseRedirect(obj.image.url)
+        except Exception as e:
+            print(f"DEBUG [Gallery]: Local file serving failed: {str(e)}")
+            return Response({'error': 'Failed to retrieve image file'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

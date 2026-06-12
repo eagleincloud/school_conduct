@@ -219,8 +219,8 @@ const AdminAnnouncements = () => {
     const formTitle = editingId ? 'Edit announcement' : 'New announcement';
 
     return (
-        <div className="min-h-screen bg-slate-50 p-4 md:p-8">
-            <div className="mx-auto max-w-4xl space-y-6">
+        <div className="min-h-screen bg-slate-50 p-3 sm:p-4 md:p-8 overflow-x-hidden">
+            <div className="mx-auto w-full max-w-4xl space-y-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                         <h1 className="text-2xl md:text-3xl font-black text-slate-900">Announcements</h1>
@@ -228,12 +228,12 @@ const AdminAnnouncements = () => {
                             Shown only inside <strong>Notifications</strong> for students & teachers
                         </p>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2 shrink-0">
+                    <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">
                         {showForm ? (
                             <button
                                 type="button"
                                 onClick={closeForm}
-                                className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50"
+                                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 sm:w-auto"
                             >
                                 Close
                             </button>
@@ -241,7 +241,7 @@ const AdminAnnouncements = () => {
                         <button
                             type="button"
                             onClick={openCreate}
-                            className="rounded-2xl bg-school-navy px-5 py-3 text-sm font-black text-white shadow-lg shadow-school-navy/20 hover:opacity-95"
+                            className="w-full rounded-2xl bg-school-navy px-5 py-3 text-sm font-black text-white shadow-lg shadow-school-navy/20 hover:opacity-95 sm:w-auto"
                         >
                             + Create announcement
                         </button>
@@ -260,9 +260,9 @@ const AdminAnnouncements = () => {
                 {showForm ? (
                     <form
                         onSubmit={submit}
-                        className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm space-y-4"
+                        className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm space-y-4 sm:p-6"
                     >
-                        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
                             <h2 className="text-lg font-black text-slate-900">{formTitle}</h2>
                             <button type="button" onClick={closeForm} className="text-sm font-bold text-slate-500 hover:text-slate-800">
                                 Cancel
@@ -382,18 +382,18 @@ const AdminAnnouncements = () => {
                             </label>
                         </div>
 
-                        <div className="flex flex-wrap gap-3 pt-2">
+                        <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:flex-wrap">
                             <button
                                 type="submit"
                                 disabled={saving}
-                                className="rounded-2xl bg-school-navy px-6 py-3 text-sm font-black text-white shadow-lg shadow-school-navy/20 hover:opacity-95 disabled:opacity-50"
+                                className="w-full rounded-2xl bg-school-navy px-6 py-3 text-sm font-black text-white shadow-lg shadow-school-navy/20 hover:opacity-95 disabled:opacity-50 sm:w-auto"
                             >
                                 {saving ? 'Saving…' : editingId ? 'Save changes' : 'Create + notify'}
                             </button>
                             <button
                                 type="button"
                                 onClick={closeForm}
-                                className="rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50"
+                                className="w-full rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 sm:w-auto"
                             >
                                 Cancel
                             </button>
@@ -409,19 +409,19 @@ const AdminAnnouncements = () => {
                                 placeholder="Search…"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold min-w-[180px] bg-white"
+                                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold md:w-auto md:min-w-[180px]"
                             />
                             <button
                                 type="button"
                                 onClick={searchNow}
-                                className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50"
+                                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50 md:w-auto"
                             >
                                 Search
                             </button>
                             <select
                                 value={filterType}
                                 onChange={(e) => setFilterType(e.target.value)}
-                                className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold bg-white"
+                                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold md:w-auto"
                             >
                                 <option value="all">All types</option>
                                 <option value="holiday">Holiday</option>
@@ -446,7 +446,7 @@ const AdminAnnouncements = () => {
                                     list.map((row) => (
                                         <div
                                             key={row.id}
-                                            className={`rounded-3xl border p-5 shadow-sm ${
+                                            className={`rounded-3xl border p-4 shadow-sm sm:p-5 ${
                                                 row.is_important ? 'border-amber-200 bg-amber-50/50' : 'border-slate-200 bg-white'
                                             }`}
                                         >
@@ -477,7 +477,7 @@ const AdminAnnouncements = () => {
                                                         {row.class_meta?.name ? ` · Class: ${row.class_meta.name}` : ''}
                                                     </div>
                                                 </div>
-                                                <div className="flex flex-wrap gap-2 shrink-0">
+                                                <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:shrink-0">
                                                     <button
                                                         type="button"
                                                         onClick={() => setViewRow(row)}
@@ -521,12 +521,12 @@ const AdminAnnouncements = () => {
 
             {viewRow ? (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm"
+                    className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-900/50 p-3 backdrop-blur-sm sm:p-4"
                     onClick={() => setViewRow(null)}
                     role="presentation"
                 >
                     <div
-                        className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl"
+                        className="w-full max-w-lg max-h-[calc(100dvh-1.5rem)] overflow-y-auto rounded-3xl border border-slate-200 bg-white p-4 shadow-2xl sm:p-6"
                         onClick={(e) => e.stopPropagation()}
                         role="dialog"
                         aria-modal="true"
@@ -578,7 +578,7 @@ const AdminAnnouncements = () => {
                                 Download attachment
                             </a>
                         ) : null}
-                        <div className="mt-6 flex flex-wrap gap-2">
+                        <div className="mt-6 grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
                             <button
                                 type="button"
                                 onClick={() => {

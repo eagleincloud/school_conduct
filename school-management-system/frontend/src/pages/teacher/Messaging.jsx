@@ -68,9 +68,9 @@ const Messaging = () => {
             setConversations(data);
 
             // Reset active selection if filters changed or list is empty
-            if (data.length > 0) {
+            if (data.length > 0 && window.innerWidth >= 768) {
                 setActiveConvId(data[0].id);
-            } else {
+            } else if (data.length === 0) {
                 setActiveConvId(null);
                 setActiveConv(null);
                 setMessages([]);
@@ -182,29 +182,7 @@ const Messaging = () => {
 
     return (
         <div style={{ padding: '20px', maxWidth: 1400, margin: '0 auto' }}>
-            <style>{`
-                @media (max-width: 768px) {
-                    .messaging-grid {
-                        grid-template-columns: 1fr !important;
-                        height: auto !important;
-                    }
-                    .messaging-sidebar {
-                        display: ${sidebarVisible ? 'flex' : 'none'} !important;
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        right: 0;
-                        bottom: auto;
-                        z-index: 10;
-                        max-height: 50vh;
-                        flex-direction: column;
-                    }
-                    .messaging-chat {
-                        min-height: 60vh;
-                    }
-                }
-            `}</style>
-            <div style={{ ...cardStyle, padding: '20px' }}>
+            <div className={`messaging-header-container ${activeConvId ? 'messaging-mobile-hidden' : ''}`} style={{ ...cardStyle, padding: '20px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
                     <div>
                         <h1 style={{ margin: 0, fontSize: 24, fontWeight: 1000 }}>Student Doubts</h1>
@@ -237,25 +215,9 @@ const Messaging = () => {
                 </div>
             </div>
 
-            <div className="messaging-grid" style={{ marginTop: 20, display: 'grid', gridTemplateColumns: '350px 1fr', gap: 20, height: 'calc(100vh - 200px)', position: 'relative' }}>
-                {/* Mobile Toggle Button */}
-                <div style={{ display: 'none', position: 'absolute', top: 10, left: 10, zIndex: 20 }}>
-                    <style>{`
-                        @media (max-width: 768px) {
-                            .mobile-toggle { display: block !important; }
-                        }
-                    `}</style>
-                    <button 
-                        className="mobile-toggle"
-                        onClick={() => setSidebarVisible(!sidebarVisible)}
-                        style={{ padding: '8px 12px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 900 }}
-                    >
-                        {sidebarVisible ? '✕ Close' : '☰ Chats'}
-                    </button>
-                </div>
-
+            <div className="messaging-layout-grid">
                 {/* Inbox */}
-                <div className="messaging-sidebar" style={{ ...cardStyle, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <div className={`messaging-list-container ${activeConvId ? 'messaging-mobile-hidden' : ''}`} style={{ ...cardStyle, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                     <div style={{ padding: 16, borderBottom: '1px solid #e5e7eb' }}>
                         <input
                             value={search}
@@ -301,13 +263,31 @@ const Messaging = () => {
                 </div>
 
                 {/* Chat */}
-                <div className="messaging-chat" style={{ ...cardStyle, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <div className={`messaging-chat-container ${!activeConvId ? 'messaging-mobile-hidden' : ''}`} style={{ ...cardStyle, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                     {activeConv ? (
                         <>
-                            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb', background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div>
-                                    <div style={{ fontWeight: 1000, fontSize: 16 }}>{activeConv.student_name}</div>
-                                    <div style={{ fontSize: 12, color: '#6b7280', fontWeight: 900 }}>Doubt: {activeConv.subject || 'General'}</div>
+                            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb', background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                    <button 
+                                        className="messaging-back-btn"
+                                        onClick={() => { setActiveConvId(null); setActiveConv(null); }}
+                                        style={{
+                                            border: 'none',
+                                            background: '#f3f4f6',
+                                            padding: '8px 12px',
+                                            borderRadius: 8,
+                                            cursor: 'pointer',
+                                            fontWeight: 1000,
+                                            fontSize: 13,
+                                            color: '#374151'
+                                        }}
+                                    >
+                                        ← Back
+                                    </button>
+                                    <div>
+                                        <div style={{ fontWeight: 1000, fontSize: 16 }}>{activeConv.student_name}</div>
+                                        <div style={{ fontSize: 12, color: '#6b7280', fontWeight: 900 }}>Doubt: {activeConv.subject || 'General'}</div>
+                                    </div>
                                 </div>
                                 {activeConv.is_active ? (
                                     <button
