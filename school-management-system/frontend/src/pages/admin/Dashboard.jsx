@@ -11,6 +11,7 @@ import {
 import api from '../../services/api';
 import StudentCards from './StudentCards';
 import TeacherCards from './TeacherCards';
+import { resolveImageUrl } from '../../utils/helpers';
 
 const AdminDashboard = () => {
     const navigate = useNavigate();
@@ -241,7 +242,7 @@ const AdminDashboard = () => {
                                         {galleryImages.map((img, idx) => (
                                             <img
                                                 key={img.id}
-                                                src={`${img.image_url}${token ? `?token=${token}` : ''}`}
+                                                src={`${resolveImageUrl(img.image_url)}${token ? `?token=${token}` : ''}`}
                                                 alt={img.title}
                                                 className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 select-none ${idx === currentSlide ? 'opacity-100' : 'opacity-0'}`}
                                                 onContextMenu={(e) => e.preventDefault()}

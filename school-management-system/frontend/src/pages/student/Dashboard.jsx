@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import useAuthStore from "../../store/authStore";
+import { resolveImageUrl } from "../../utils/helpers";
 import { useStudent } from "../../context/StudentContext";
 import { 
   Clock, 
@@ -1201,7 +1202,7 @@ export default function StudentDashboard() {
           {galleryImages.map((img, idx) => (
             <img
               key={img.id}
-              src={`${img.image_url}${galleryToken ? `?token=${galleryToken}` : ''}`}
+              src={`${resolveImageUrl(img.image_url)}${galleryToken ? `?token=${galleryToken}` : ''}`}
               alt={img.title}
               style={{
                 position: "absolute",

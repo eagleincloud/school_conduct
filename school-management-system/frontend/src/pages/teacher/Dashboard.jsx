@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { BookOpen, GraduationCap, ClipboardList, FileText, Award } from "lucide-react";
 import api from "../../services/api";
 import useAuthStore from "../../store/authStore";
+import { resolveImageUrl } from "../../utils/helpers";
 
 const palette = {
   bg: "#f8fafc",
@@ -1528,7 +1529,7 @@ const TeacherDashboard = () => {
                 {galleryImages.map((img, idx) => (
                   <img
                     key={img.id}
-                    src={`${img.image_url}${galleryToken ? `?token=${galleryToken}` : ''}`}
+                    src={`${resolveImageUrl(img.image_url)}${galleryToken ? `?token=${galleryToken}` : ''}`}
                     alt={img.title}
                     style={{
                       position: "absolute",
