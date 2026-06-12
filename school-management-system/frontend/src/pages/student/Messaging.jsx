@@ -66,7 +66,7 @@ const StudentMessaging = () => {
         try {
             const res = await api.get('communication/doubts/');
             setConversations(res.data || []);
-            if (res.data?.length && !activeConvId) {
+            if (res.data?.length && !activeConvId && window.innerWidth >= 768) {
                 setActiveConvId(res.data[0].id);
             }
         } catch (e) {
@@ -178,7 +178,7 @@ const StudentMessaging = () => {
 
     return (
         <div style={{ padding: '20px', maxWidth: 1400, margin: '0 auto' }}>
-            <div style={{ ...cardStyle, padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className={`messaging-header-container ${activeConvId ? 'messaging-mobile-hidden' : ''}`} style={{ ...cardStyle, padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                     <h1 style={{ margin: 0, fontSize: 24, fontWeight: 1000 }}>Doubt Solving System</h1>
                     <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: 14, fontWeight: 900 }}>Ask questions to your teachers and get solutions.</p>
@@ -191,9 +191,9 @@ const StudentMessaging = () => {
                 </button>
             </div>
 
-            <div style={{ marginTop: 20, display: 'grid', gridTemplateColumns: '350px 1fr', gap: 20, height: 'calc(100vh - 200px)' }}>
+            <div className="messaging-layout-grid">
                 {/* Conversations List */}
-                <div style={{ ...cardStyle, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <div className={`messaging-list-container ${activeConvId ? 'messaging-mobile-hidden' : ''}`} style={{ ...cardStyle, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                     <div style={{ padding: 16, borderBottom: '1px solid #e5e7eb', fontWeight: 1000, fontSize: 16 }}>My Doubts</div>
                     <div style={{ flex: 1, overflowY: 'auto', padding: 10 }}>
                         {conversations.map(c => (
@@ -236,13 +236,31 @@ const StudentMessaging = () => {
                 </div>
 
                 {/* Chat Window */}
-                <div style={{ ...cardStyle, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <div className={`messaging-chat-container ${!activeConvId ? 'messaging-mobile-hidden' : ''}`} style={{ ...cardStyle, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                     {activeConv ? (
                         <>
-                            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb', background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div>
-                                    <div style={{ fontWeight: 1000, fontSize: 16 }}>{activeConv.subject || 'General Doubt'}</div>
-                                    <div style={{ fontSize: 12, color: '#6b7280', fontWeight: 900 }}>With: {activeConv.teacher_name}</div>
+                            <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb', background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                    <button 
+                                        className="messaging-back-btn"
+                                        onClick={() => { setActiveConvId(null); setActiveConv(null); }}
+                                        style={{
+                                            border: 'none',
+                                            background: '#f3f4f6',
+                                            padding: '8px 12px',
+                                            borderRadius: 8,
+                                            cursor: 'pointer',
+                                            fontWeight: 1000,
+                                            fontSize: 13,
+                                            color: '#374151'
+                                        }}
+                                    >
+                                        ← Back
+                                    </button>
+                                    <div>
+                                        <div style={{ fontWeight: 1000, fontSize: 16 }}>{activeConv.subject || 'General Doubt'}</div>
+                                        <div style={{ fontSize: 12, color: '#6b7280', fontWeight: 900 }}>With: {activeConv.teacher_name}</div>
+                                    </div>
                                 </div>
                                 <div style={{ fontSize: 12, color: '#6b7280', fontWeight: 900 }}>Started: {new Date(activeConv.created_at).toLocaleDateString()}</div>
                             </div>

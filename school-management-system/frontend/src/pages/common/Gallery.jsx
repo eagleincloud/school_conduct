@@ -44,15 +44,6 @@ const GalleryCarousel = ({ images, token }) => {
                             alt={img.title}
                             className="w-full h-full object-cover"
                         />
-                        {/* Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 flex flex-col justify-end p-8 md:p-12">
-                            <h3 className="text-white text-2xl md:text-4xl font-black mb-2 drop-shadow-lg transform translate-y-0 transition-transform duration-500">
-                                {img.title}
-                            </h3>
-                            <p className="text-white/60 font-bold text-sm md:text-base uppercase tracking-widest">
-                                Moment Captured By {img.uploaded_by}
-                            </p>
-                        </div>
                     </div>
                 ))}
             </div>
