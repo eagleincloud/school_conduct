@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { BookOpen, GraduationCap, ClipboardList, FileText, Award } from "lucide-react";
 import api from "../../services/api";
 import useAuthStore from "../../store/authStore";
 
@@ -513,62 +514,269 @@ const TeacherDashboard = () => {
       }}
     >
       <style>{`
-        @media (max-width: 1024px) {
-          .rg-split { 
-            grid-template-columns: 1fr !important; 
-          }
-          .rg-4 { 
-            grid-template-columns: repeat(2, 1fr) !important; 
-          }
+        .col-span-2 { grid-column: span 2; }
+        .col-span-3 { grid-column: span 3; }
+        .col-span-4 { grid-column: span 4; }
+        .col-span-2 { grid-column: span 2; }
+        .col-span-3 { grid-column: span 3; }
+        .col-span-4 { grid-column: span 4; }
+        .col-span-5 { grid-column: span 5; }
+        .col-span-6 { grid-column: span 6; }
+        .col-span-7 { grid-column: span 7; }
+        .col-span-12 { grid-column: span 12; }
+
+        .teacher-summary-grid {
+          grid-template-columns: repeat(5, 1fr) !important;
         }
+
+        .teacher-tile-button {
+          background-color: #fff;
+          border: 1px solid #e5e7eb;
+          border-radius: 16px;
+          padding: 12px !important;
+          box-shadow: 0 1px 8px rgba(16,24,40,0.04);
+          cursor: pointer;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          outline: none;
+          width: 100%;
+          aspect-ratio: 1 / 1 !important;
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: center !important;
+          align-items: center !important;
+          text-align: center !important;
+          min-height: 0 !important;
+        }
+        .teacher-tile-button:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.04), 0 4px 12px -2px rgba(0, 0, 0, 0.02);
+          border-color: #cbd5e1;
+        }
+        .teacher-tile-icon-wrapper {
+          width: 36px !important;
+          height: 36px !important;
+          border-radius: 10px !important;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 6px !important;
+          transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .teacher-tile-button:hover .teacher-tile-icon-wrapper {
+          transform: scale(1.1) rotate(2deg);
+        }
+
+        .teacher-tile-button p.tile-label {
+          font-size: 9px !important;
+          font-weight: 800 !important;
+          color: #64748b !important;
+          text-transform: uppercase !important;
+          letter-spacing: 0.05em !important;
+          margin: 4px 0 0 0 !important;
+          line-height: 1.3 !important;
+        }
+        .teacher-tile-button p.tile-value {
+          font-size: 20px !important;
+          font-weight: 1000 !important;
+          color: #0f172a !important;
+          margin: 4px 0 0 0 !important;
+          line-height: 1 !important;
+        }
+        .teacher-tile-button p.tile-subtext {
+          font-size: 8px !important;
+          font-weight: 900 !important;
+          color: #64748b !important;
+          margin: 4px 0 0 0 !important;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: 100%;
+          line-height: 1.2 !important;
+        }
+
+        .bg-blue-50 { background-color: #eff6ff !important; }
+        .bg-indigo-50 { background-color: #eef2ff !important; }
+        .bg-emerald-50 { background-color: #ecfdf5 !important; }
+        .bg-amber-50 { background-color: #fffbeb !important; }
+        .bg-violet-50 { background-color: #f5f3ff !important; }
+
+        .text-blue-600 { color: #2563eb !important; }
+        .text-indigo-600 { color: #4f46e5 !important; }
+        .text-emerald-600 { color: #059669 !important; }
+        .text-amber-600 { color: #d97706 !important; }
+        .text-violet-600 { color: #7c3aed !important; }
+
         @media (max-width: 768px) {
+          .hide-on-mobile {
+            display: none !important;
+          }
+        }
+
+        .teacher-dashboard-action-group {
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          gap: 6px !important;
+          flex-wrap: nowrap !important;
+        }
+        .teacher-dashboard-action-group > button {
+          flex: 1 1 0% !important;
+          margin: 0 !important;
+          font-size: 11px !important;
+          padding: 8px 4px !important;
+          min-height: auto !important;
+          white-space: nowrap !important;
+          text-align: center !important;
+        }
+
+        .teacher-dashboard-timetable-row {
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          gap: 12px !important;
+        }
+
+        .teacher-dashboard-title {
+          margin: 0;
+          font-weight: 1000;
+          font-size: 28px;
+          letter-spacing: -0.02em;
+          background: linear-gradient(90deg, #1e293b 0%, #2563eb 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        @media (max-width: 1024px) {
+          .teacher-main-grid > div {
+            grid-column: span 12 !important;
+          }
           .rg-split { 
             grid-template-columns: 1fr !important; 
           }
           .rg-4 { 
             grid-template-columns: repeat(2, 1fr) !important; 
           }
-          .dashboard-12col {
-            grid-template-columns: 1fr !important;
+        }
+
+        @media (max-width: 768px) {
+          .teacher-main-grid > div {
+            grid-column: span 12 !important;
           }
-          .dashboard-12col > div {
+          .teacher-summary-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+          .teacher-summary-grid > * {
             grid-column: span 1 !important;
+          }
+          .teacher-quick-nav {
+            display: flex !important;
+            overflow-x: auto !important;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            gap: 8px !important;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+          }
+          .teacher-quick-nav::-webkit-scrollbar {
+            display: none;
+          }
+          .teacher-quick-nav > button {
+            flex: 0 0 auto !important;
+            white-space: nowrap !important;
+            min-width: max-content !important;
+            padding: 8px 12px !important;
+          }
+          .teacher-quick-nav-card {
+            padding: 10px !important;
+          }
+          .rg-split { 
+            grid-template-columns: 1fr !important; 
+          }
+          .rg-4 { 
+            grid-template-columns: repeat(2, 1fr) !important; 
           }
           .rg-2 {
             grid-template-columns: 1fr !important;
           }
         }
+
         @media (max-width: 640px) {
+          .teacher-main-grid > div {
+            grid-column: span 12 !important;
+          }
           .rg-split { 
             grid-template-columns: 1fr !important; 
           }
           .rg-4 { 
             grid-template-columns: 1fr !important; 
           }
-          .dashboard-12col {
-            grid-template-columns: 1fr !important;
-          }
-          .dashboard-12col > div {
-            grid-column: span 1 !important;
-          }
           .rg-2 {
             grid-template-columns: 1fr !important;
           }
-          .teacher-dashboard-attendance-bar,
-          .teacher-dashboard-attendance-filters,
-          .teacher-dashboard-action-group,
-          .teacher-dashboard-timetable-row {
+          .teacher-dashboard-title {
+            font-size: 20px !important;
+          }
+          .teacher-dashboard-attendance-bar {
             flex-direction: column !important;
             align-items: stretch !important;
+            gap: 8px !important;
           }
-          .teacher-dashboard-attendance-filters > *,
-          .teacher-dashboard-action-group > * {
+          .teacher-dashboard-attendance-filters {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 8px !important;
+            width: 100% !important;
+            margin-top: 4px;
+          }
+          .teacher-dashboard-attendance-filters > * {
+            width: 100% !important;
+            margin: 0 !important;
+            min-height: 38px !important;
+            padding: 8px 10px !important;
+          }
+          .teacher-toolbar {
+            width: 100% !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 8px !important;
+          }
+          .teacher-header-search {
+            width: 100% !important;
+          }
+          .teacher-toolbar-buttons {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 8px !important;
+            width: 100% !important;
+          }
+          .teacher-toolbar-buttons > button {
             width: 100% !important;
             min-width: 0 !important;
-            margin-right: 0 !important;
+            padding: 8px 4px !important;
+            font-size: 11px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            white-space: nowrap !important;
+            min-height: 38px !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .teacher-timetable-item-card {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 8px !important;
           }
           .teacher-dashboard-timetable-meta {
             text-align: left !important;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 8px;
+            margin-top: 4px;
           }
         }
       `}</style>
@@ -609,40 +817,12 @@ const TeacherDashboard = () => {
         >
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div
-                style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 14,
-                  background: palette.primary,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#fff",
-                  fontSize: 20,
-                }}
-              >
-                {profile?.user?.profile_photo ? (
-                  <img
-                    src={profile.user.profile_photo}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      borderRadius: 14,
-                      objectCover: "cover",
-                    }}
-                    alt="P"
-                  />
-                ) : (
-                  "👨‍🏫"
-                )}
-              </div>
               <div>
                 <h1
+                  className="teacher-dashboard-title"
                   style={{
                     margin: 0,
                     fontWeight: 1000,
-                    fontSize: 28,
                     letterSpacing: "-0.02em",
                     background:
                       "linear-gradient(90deg, #1e293b 0%, #2563eb 100%)",
@@ -650,7 +830,7 @@ const TeacherDashboard = () => {
                     WebkitTextFillColor: "transparent",
                   }}
                 >
-                  Welcome Teacher Dashboard
+                  Welcome <span style={{ color: palette.primary }}>{localStorage.getItem("user_name") || profile?.user?.name || profile?.employee_id || "Teacher"}</span>
                 </h1>
                 <p
                   style={{
@@ -660,11 +840,7 @@ const TeacherDashboard = () => {
                     fontSize: 15,
                   }}
                 >
-                  Hello,{" "}
-                  <span style={{ color: palette.primary }}>
-                    {profile?.user?.name || profile?.employee_id || "Teacher"}
-                  </span>
-                  ! Have a productive day.
+                  Have a productive day at school today.
                 </p>
               </div>
             </div>
@@ -693,60 +869,62 @@ const TeacherDashboard = () => {
                 backgroundColor: "#fff",
               }}
             />
-            <button
-              type="button"
-              onClick={() => navigate("/teacher/messaging")}
-              style={{
-                padding: "10px 12px",
-                borderRadius: 12,
-                border: `1px solid ${palette.border}`,
-                backgroundColor: "#fff",
-                cursor: "pointer",
-                fontWeight: 1000,
-              }}
-            >
-              Notifications ({messages.length})
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate("/teacher/profile")}
-              style={{
-                padding: "10px 12px",
-                borderRadius: 12,
-                border: `1px solid ${palette.border}`,
-                backgroundColor: "#fff",
-                cursor: "pointer",
-                fontWeight: 1000,
-              }}
-            >
-              Profile
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                logout();
-                navigate("/login");
-              }}
-              style={{
-                padding: "10px 12px",
-                borderRadius: 12,
-                border: "none",
-                backgroundColor: palette.primary,
-                color: "#fff",
-                cursor: "pointer",
-                fontWeight: 1000,
-              }}
-            >
-              Logout
-            </button>
+            <div className="teacher-toolbar-buttons">
+              <button
+                type="button"
+                onClick={() => navigate("/teacher/messaging")}
+                style={{
+                  padding: "10px 12px",
+                  borderRadius: 12,
+                  border: `1px solid ${palette.border}`,
+                  backgroundColor: "#fff",
+                  cursor: "pointer",
+                  fontWeight: 1000,
+                }}
+              >
+                Notifications ({messages.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("/teacher/profile")}
+                style={{
+                  padding: "10px 12px",
+                  borderRadius: 12,
+                  border: `1px solid ${palette.border}`,
+                  backgroundColor: "#fff",
+                  cursor: "pointer",
+                  fontWeight: 1000,
+                }}
+              >
+                Profile
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  logout();
+                  navigate("/login");
+                }}
+                style={{
+                  padding: "10px 12px",
+                  borderRadius: 12,
+                  border: "none",
+                  backgroundColor: palette.primary,
+                  color: "#fff",
+                  cursor: "pointer",
+                  fontWeight: 1000,
+                }}
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </Card>
 
       {/* Sidebar Menu (quick navigation strip) */}
-      <Card style={{ marginBottom: 12 }}>
+      <Card style={{ marginBottom: 12 }} className="teacher-quick-nav-card">
         <div
-          className="rg-autofit-sm" style={{
+          className="teacher-quick-nav rg-autofit-sm" style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
             gap: 10,
@@ -785,338 +963,64 @@ const TeacherDashboard = () => {
 
       {/* Summary cards */}
       <div
-        className="dashboard-12col rg-12" style={{
+        className="teacher-summary-grid" style={{
           display: "grid",
-          gridTemplateColumns: "repeat(12, minmax(0,1fr))",
           gap: 12,
         }}
       >
-        <Card style={{ gridColumn: "span 2" }}>
-          <div
-            style={{
-              fontSize: 12,
-              fontWeight: 900,
-              color: palette.muted,
-              textTransform: "uppercase",
-            }}
+        {[
+          { label: 'Total Classes', value: myClasses.length, Icon: BookOpen, bg: 'bg-blue-50', text: 'text-blue-600', link: '/teacher/students' },
+          { label: 'Total Students', value: totalStudents, Icon: GraduationCap, bg: 'bg-indigo-50', text: 'text-indigo-600', link: '/teacher/students' },
+          { label: "Today's Attendance %", value: attendanceSummary ? `${Number(attendanceSummary.attendance_percentage || 0).toFixed(1)}%` : "0.0%", Icon: ClipboardList, bg: 'bg-emerald-50', text: 'text-emerald-600', link: '/teacher/attendance', isAttendance: true },
+          { label: 'Pending Assignments', value: pendingAssignments, Icon: FileText, bg: 'bg-amber-50', text: 'text-amber-600', link: '/teacher/assignment' },
+          { label: 'Upcoming Exams', value: upcomingExams.length, Icon: Award, bg: 'bg-violet-50', text: 'text-violet-600', link: '/teacher/upload-result', isExams: true },
+        ].map((stat, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => navigate(stat.link)}
+            className="teacher-tile-button"
           >
-            Total Classes
-          </div>
-          <div style={{ marginTop: 8, fontWeight: 1000, fontSize: 24 }}>
-            {myClasses.length}
-          </div>
-        </Card>
-        <Card style={{ gridColumn: "span 2" }}>
-          <div
-            style={{
-              fontSize: 12,
-              fontWeight: 900,
-              color: palette.muted,
-              textTransform: "uppercase",
-            }}
-          >
-            Total Students
-          </div>
-          <div style={{ marginTop: 8, fontWeight: 1000, fontSize: 24 }}>
-            {totalStudents}
-          </div>
-        </Card>
-        <Card style={{ gridColumn: "span 3" }}>
-          <div
-            style={{
-              fontSize: 12,
-              fontWeight: 900,
-              color: palette.muted,
-              textTransform: "uppercase",
-            }}
-          >
-            Today's Attendance %
-          </div>
-          <div
-            style={{
-              marginTop: 8,
-              fontWeight: 1000,
-              fontSize: 24,
-              color:
-                (attendanceSummary?.attendance_percentage || 0) < 75
-                  ? palette.danger
-                  : palette.success,
-            }}
-          >
-            {attendanceSummary
-              ? `${Number(attendanceSummary.attendance_percentage || 0).toFixed(1)}%`
-              : "0.0%"}
-          </div>
-          <div style={{ marginTop: 8 }}>
-            <MiniProgress
-              value={attendanceSummary?.attendance_percentage || 0}
-            />
-          </div>
-        </Card>
-        <Card style={{ gridColumn: "span 2" }}>
-          <div
-            style={{
-              fontSize: 12,
-              fontWeight: 900,
-              color: palette.muted,
-              textTransform: "uppercase",
-            }}
-          >
-            Pending Assignments
-          </div>
-          <div style={{ marginTop: 8, fontWeight: 1000, fontSize: 24 }}>
-            {pendingAssignments}
-          </div>
-        </Card>
-        <Card style={{ gridColumn: "span 3" }}>
-          <div
-            style={{
-              fontSize: 12,
-              fontWeight: 900,
-              color: palette.muted,
-              textTransform: "uppercase",
-            }}
-          >
-            Upcoming Exams
-          </div>
-          <div style={{ marginTop: 8, fontWeight: 1000, fontSize: 24 }}>
-            {upcomingExams.length}
-          </div>
-          <div
-            style={{
-              marginTop: 8,
-              color: palette.muted,
-              fontWeight: 900,
-              fontSize: 12,
-            }}
-          >
-            {upcomingExams[0]
-              ? `${upcomingExams[0].name} on ${upcomingExams[0].start_date || upcomingExams[0].date}`
-              : "No upcoming exams"}
-          </div>
-        </Card>
+            <div className={`teacher-tile-icon-wrapper ${stat.bg}`}>
+              <stat.Icon className={`h-5 w-5 ${stat.text}`} strokeWidth={2.4} />
+            </div>
+            <p className="tile-label">{stat.label}</p>
+            <p
+              className="tile-value"
+              style={{
+                color: stat.isAttendance && (attendanceSummary?.attendance_percentage || 0) < 75 ? palette.danger : undefined
+              }}
+            >
+              {stat.value}
+            </p>
+            {stat.isAttendance && (
+              <div style={{ marginTop: 6, width: '100%' }}>
+                <MiniProgress value={attendanceSummary?.attendance_percentage || 0} />
+              </div>
+            )}
+            {stat.isExams && (
+              <p className="tile-subtext">
+                {upcomingExams[0]
+                  ? `${upcomingExams[0].name} on ${upcomingExams[0].start_date || upcomingExams[0].date}`
+                  : "No upcoming exams"}
+              </p>
+            )}
+          </button>
+        ))}
       </div>
 
       <div
-        className="dashboard-12col rg-12" style={{
+        className="teacher-main-grid" style={{
           marginTop: 12,
           display: "grid",
           gridTemplateColumns: "repeat(12, minmax(0,1fr))",
           gap: 12,
         }}
       >
-        {/* Attendance Management + chart */}
-        <Card style={{ gridColumn: "span 7" }}>
-          <div
-            className="teacher-dashboard-attendance-bar"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 12,
-              flexWrap: "wrap",
-            }}
-          >
-            <div>
-              <div style={{ fontWeight: 1000, color: palette.text }}>
-                Attendance Management
-              </div>
-              <div
-                style={{
-                  marginTop: 4,
-                  color: palette.muted,
-                  fontSize: 12,
-                  fontWeight: 900,
-                }}
-              >
-                Mark present/absent/late and track class performance.
-              </div>
-            </div>
-            <div
-              className="teacher-dashboard-attendance-filters"
-              style={{ display: "flex", gap: 10, flexWrap: "wrap" }}
-            >
-              <select
-                value={selectedClassId}
-                onChange={(e) => setSelectedClassId(e.target.value)}
-                style={{
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  border: `1px solid ${palette.border}`,
-                  backgroundColor: "#fff",
-                  fontWeight: 900,
-                }}
-              >
-                {myClasses.length === 0 ? (
-                  <option value="">No assigned classes</option>
-                ) : null}
-                {myClasses.map((c) => (
-                  <option key={c.id} value={String(c.id)}>
-                    {c.class_name} - {c.section_name}
-                  </option>
-                ))}
-              </select>
-              <input
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                style={{
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  border: `1px solid ${palette.border}`,
-                  backgroundColor: "#fff",
-                  fontWeight: 900,
-                }}
-              />
-            </div>
-          </div>
 
-          <div style={{ marginTop: 12 }}>
-            <Sparkline points={attendanceTrend} />
-          </div>
-
-          <div
-            style={{
-              marginTop: 12,
-              overflowX: "auto",
-              border: `1px solid ${palette.border}`,
-              borderRadius: 12,
-            }}
-          >
-            <div className="table-scroll"><table className="mobile-card-table" style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr style={{ backgroundColor: "#f1f5f9" }}>
-                  <th style={{ padding: "10px", textAlign: "left" }}>
-                    Admission No
-                  </th>
-                  <th style={{ padding: "10px", textAlign: "left" }}>Name</th>
-                  <th style={{ padding: "10px", textAlign: "left" }}>Status</th>
-                  <th style={{ padding: "10px", textAlign: "left" }}>
-                    Recent %
-                  </th>
-                  <th style={{ padding: "10px", textAlign: "left" }}>
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredStudents.map((s) => (
-                  <tr
-                    key={s.id}
-                    style={{
-                      borderTop: `1px solid ${palette.border}`,
-                      backgroundColor: s.low_attendance ? "#fff7ed" : "#fff",
-                    }}
-                  >
-                    <td data-label="Admission No" style={{ padding: "10px", fontWeight: 900 }}>
-                      {s.admission_number}
-                    </td>
-                    <td data-label="Name" style={{ padding: "10px" }}>{s.name}</td>
-                    <td
-                      data-label="Status"
-                      style={{
-                        padding: "10px",
-                        fontWeight: 900,
-                        color:
-                          s.status === "absent"
-                            ? palette.danger
-                            : s.status === "late" || s.status === "pending"
-                              ? palette.warn
-                              : palette.success,
-                      }}
-                    >
-                      {s.status ? s.status.toUpperCase() : "UNMARKED"}
-                    </td>
-                    <td data-label="Recent %" style={{ padding: "10px", fontWeight: 900 }}>
-                      {s.recent_attendance_percentage}%
-                      {s.low_attendance ? (
-                        <span
-                          style={{
-                            marginLeft: 8,
-                            color: palette.danger,
-                            fontSize: 11,
-                          }}
-                        >
-                          Low
-                        </span>
-                      ) : null}
-                    </td>
-                    <td
-                      data-label="Actions"
-                      className="teacher-dashboard-action-group"
-                      style={{ padding: "10px", whiteSpace: "nowrap" }}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => markAttendance(s.id, "present")}
-                        style={{
-                          padding: "6px 10px",
-                          marginRight: 6,
-                          borderRadius: 8,
-                          border: "none",
-                          backgroundColor: palette.success,
-                          color: "#fff",
-                          fontWeight: 900,
-                          cursor: "pointer",
-                        }}
-                      >
-                        Present
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => markAttendance(s.id, "absent")}
-                        style={{
-                          padding: "6px 10px",
-                          marginRight: 6,
-                          borderRadius: 8,
-                          border: "none",
-                          backgroundColor: palette.danger,
-                          color: "#fff",
-                          fontWeight: 900,
-                          cursor: "pointer",
-                        }}
-                      >
-                        Absent
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => markAttendance(s.id, "late")}
-                        style={{
-                          padding: "6px 10px",
-                          borderRadius: 8,
-                          border: "none",
-                          backgroundColor: palette.warn,
-                          color: "#111827",
-                          fontWeight: 900,
-                          cursor: "pointer",
-                        }}
-                      >
-                        Late
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-                {filteredStudents.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={5}
-                      style={{
-                        padding: 12,
-                        color: palette.muted,
-                        fontWeight: 900,
-                      }}
-                    >
-                      No students found for selected class/date.
-                    </td>
-                  </tr>
-                ) : null}
-              </tbody>
-            </table></div>
-          </div>
-        </Card>
 
         {/* Right pane quick modules */}
-        <Card style={{ gridColumn: "span 5" }}>
+        <Card className="col-span-5 hide-on-mobile">
           <div style={{ fontWeight: 1000, color: palette.text }}>
             Recent Activity
           </div>
@@ -1151,7 +1055,7 @@ const TeacherDashboard = () => {
           </div>
         </Card>
 
-        <Card style={{ gridColumn: "span 4" }}>
+        <Card className="col-span-4 hide-on-mobile">
           <div style={{ fontWeight: 1000, color: palette.text }}>
             My Classes
           </div>
@@ -1189,7 +1093,7 @@ const TeacherDashboard = () => {
           </div>
         </Card>
 
-        <Card style={{ gridColumn: "span 4" }}>
+        <Card className="col-span-4 hide-on-mobile">
           <div style={{ fontWeight: 1000, color: palette.text }}>
             Assignments
           </div>
@@ -1224,7 +1128,7 @@ const TeacherDashboard = () => {
           </div>
         </Card>
 
-        <Card style={{ gridColumn: "span 4" }}>
+        <Card className="col-span-4 hide-on-mobile">
           <div style={{ fontWeight: 1000, color: palette.text }}>
             Exams & Results
           </div>
@@ -1259,7 +1163,7 @@ const TeacherDashboard = () => {
           </div>
         </Card>
 
-        <Card style={{ gridColumn: "span 6" }} id="timetable">
+        <Card className="col-span-6" id="timetable">
           <div
             style={{
               display: "flex",
@@ -1326,9 +1230,11 @@ const TeacherDashboard = () => {
                 return (
                   <div
                     key={t.id}
+                    className="teacher-timetable-item-card"
                     style={{
                       display: "flex",
                       alignItems: "center",
+                      justifyContent: "space-between",
                       gap: 14,
                       padding: "12px 16px",
                       borderRadius: 16,
@@ -1466,7 +1372,7 @@ const TeacherDashboard = () => {
           </div>
         </Card>
 
-        <Card style={{ gridColumn: "span 6" }} id="study-material">
+        <Card className="col-span-6 hide-on-mobile" id="study-material">
           <div style={{ fontWeight: 1000, color: palette.text }}>
             Study Material (Subject-wise)
           </div>
@@ -1564,7 +1470,7 @@ const TeacherDashboard = () => {
         </Card>
 
         {/* School Gallery Highlights */}
-        <Card style={{ gridColumn: "span 12" }}>
+        <Card className="col-span-12">
           <div style={{ fontWeight: 1000, color: palette.text }}>
             School Gallery Highlights
           </div>

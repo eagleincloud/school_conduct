@@ -179,7 +179,7 @@ const AdminDashboard = () => {
                     <div className="flex items-center gap-6">
                         <div>
                             <h1 className="text-4xl font-poppins font-black text-school-text tracking-tight">
-                                Welcome <span className="text-transparent bg-clip-text bg-gradient-to-r from-school-navy to-school-blue">Admin Dashboard</span>
+                                Welcome <span className="text-transparent bg-clip-text bg-gradient-to-r from-school-navy to-school-blue">{localStorage.getItem("user_name") || "Admin"}</span>
                             </h1>
                             <p className="text-sm text-school-body font-bold mt-1 opacity-70">
                                 Management Overview & Academic Control Center • {new Date().toLocaleDateString('default', { weekday: 'long', month: 'long', day: 'numeric' })}
