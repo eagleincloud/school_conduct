@@ -1,34 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import {
-    Bell,
-    BookOpen,
-    CalendarDays,
-    ChartLine,
-    ChevronDown,
-    CircleCheck,
-    CirclePlus,
-    ClipboardCheck,
-    CreditCard,
-    FileText,
-    FileUp,
-    GraduationCap,
-    Images,
-    Info,
-    LayoutDashboard,
-    MessageCircle,
-    Network,
-    Store,
-    Umbrella,
-    UserCheck,
-    UserCog,
-    UserRound,
-    UsersRound,
-    Wallet,
-    X,
-} from 'lucide-react';
-import authService from '../../services/authService';
-import useUIStore from '../../store/uiStore';
 import { 
     LayoutDashboard, 
     GraduationCap, 
@@ -50,8 +21,12 @@ import {
     CalendarX,
     TrendingUp,
     Fingerprint,
-    ClipboardCheck
+    ClipboardCheck,
+    ChevronDown,
+    X
 } from 'lucide-react';
+import authService from '../../services/authService';
+import useUIStore from '../../store/uiStore';
 
 const Sidebar = () => {
     const location = useLocation();
