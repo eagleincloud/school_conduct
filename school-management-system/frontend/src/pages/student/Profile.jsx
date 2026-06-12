@@ -285,7 +285,7 @@ const Profile = () => {
 
       {/* Premium Header Card */}
       <div
-        className="animate-up"
+        className="animate-up profile-sec-header"
         style={{
           backgroundColor: "#fff",
           padding: "28px",
@@ -919,7 +919,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <div style={{ ...card, gridColumn: "span 6" }}>
+        <div className="profile-sec-academic" style={{ ...card, gridColumn: "span 6" }}>
           <div style={{ fontWeight: 1000, marginBottom: 10 }}>
             Academic Summary
           </div>
@@ -963,7 +963,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <div style={{ ...card, gridColumn: "span 6" }}>
+        <div className="profile-sec-attendance" style={{ ...card, gridColumn: "span 6" }}>
           <div style={{ fontWeight: 1000, marginBottom: 10 }}>
             Attendance Summary
           </div>
@@ -1007,7 +1007,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <div style={{ ...card, gridColumn: "span 6" }}>
+        <div className="profile-sec-fees" style={{ ...card, gridColumn: "span 6" }}>
           <div style={{ fontWeight: 1000, marginBottom: 10 }}>Fees Summary</div>
           <div
             className="rg-3" style={{
@@ -1066,7 +1066,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <div style={{ ...card, gridColumn: "span 12" }}>
+        <div className="profile-sec-assignments" style={{ ...card, gridColumn: "span 12" }}>
           <div style={{ fontWeight: 1000, fontSize: 16 }}>Assignments</div>
           <div
             style={{

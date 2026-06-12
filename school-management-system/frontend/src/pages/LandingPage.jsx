@@ -106,11 +106,7 @@ export default function LandingPage() {
     { label: 'Parent / Student', role: 'student' }
   ];
 
-  const navLinks = [
-    ['About', 'about'],
-    ['Academics', 'academics'],
-    ['Contact', 'contact']
-  ];
+  const navLinks = [];
 
   useEffect(() => {
     if (!finalSchoolId || finalSchoolId === 'undefined') {
@@ -193,12 +189,12 @@ export default function LandingPage() {
     <div className="font-inter bg-white text-slate-900 min-h-screen overflow-x-hidden">
       
       {/* ───── NAVBAR ───── */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? 'bg-white/95 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'
+      <header className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-7xl transition-all duration-500 bg-white/70 backdrop-blur-lg border border-white/20 shadow-lg rounded-2xl ${
+        scrolled ? 'py-3' : 'py-4'
       }`}>
         <div className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between">
           <div className="flex items-center gap-4 cursor-pointer group" onClick={() => scrollTo('hero')}>
-            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform overflow-hidden border border-slate-100">
+            <div className="w-12 h-12 bg-white rounded-[2px] flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform overflow-hidden border border-slate-100">
                {school.logo ? (
                  <img 
                    src={school.logo} 
@@ -234,7 +230,7 @@ export default function LandingPage() {
 
           <div className="flex items-center gap-4">
              <div className="hidden md:block relative group">
-                <button className="bg-slate-900 text-white px-8 py-3 rounded-2xl text-xs font-bold shadow-xl shadow-slate-900/20 hover:bg-blue-600 transition-all active:scale-95">
+                <button className="bg-blue-600 text-white px-8 py-3 rounded-2xl text-xs font-bold shadow-xl shadow-blue-600/20 hover:bg-blue-700 transition-all active:scale-95">
                   Secure Access
                 </button>
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-2xl border border-slate-100 py-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
@@ -274,7 +270,7 @@ export default function LandingPage() {
                   {label}
                 </button>
               ))}
-              <div className="my-3 h-px bg-slate-100" />
+              {navLinks.length > 0 && <div className="my-3 h-px bg-slate-100" />}
               {loginOptions.map(({ label, role }) => (
                 <button
                   key={role}
@@ -283,7 +279,7 @@ export default function LandingPage() {
                     setMenuOpen(false);
                     navigate(`/school/${school.school_id}/login?role=${role}`);
                   }}
-                  className="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-white bg-slate-900 hover:bg-blue-600 transition-colors"
+                  className="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors"
                 >
                   {label}
                 </button>
@@ -489,7 +485,7 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-12">
               <div className="md:col-span-2">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3 mb-6">
-                      <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black text-xl">
+                      <div className="w-10 h-10 bg-blue-600 rounded-[2px] flex items-center justify-center text-white font-black text-xl">
                          {school.name[0]}
                       </div>
                       <p className="text-xl font-black text-slate-900 tracking-tight mt-3 sm:mt-0">{school.name}</p>

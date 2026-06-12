@@ -58,7 +58,7 @@ export default function DealerLogin() {
 
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <div className="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-xl shadow-slate-900/20">
+          <div className="w-16 h-16 bg-slate-900 rounded-[2px] flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-xl shadow-slate-900/20">
             D
           </div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">

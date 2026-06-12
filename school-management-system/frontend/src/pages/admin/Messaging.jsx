@@ -66,9 +66,9 @@ const AdminMessaging = () => {
       setConversations(data);
 
       // If class or status changed, or list is empty, reset active selection
-      if (data.length > 0) {
+      if (data.length > 0 && window.innerWidth >= 768) {
         setActiveConvId(data[0].id);
-      } else {
+      } else if (data.length === 0) {
         setActiveConvId(null);
         setActiveConv(null);
         setMessages([]);
@@ -122,7 +122,7 @@ const AdminMessaging = () => {
 
   return (
     <div style={{ padding: "20px", maxWidth: 1400, margin: "0 auto" }}>
-      <div style={{ ...cardStyle, padding: "20px" }}>
+      <div className={`messaging-header-container ${activeConvId ? 'messaging-mobile-hidden' : ''}`} style={{ ...cardStyle, padding: "20px" }}>
         <div
           style={{
             display: "flex",
@@ -179,7 +179,7 @@ const AdminMessaging = () => {
       </div>
 
       <div
-        className="rg-sidebar" style={{
+        className="messaging-layout-grid" style={{
           marginTop: 20,
           display: "grid",
           gridTemplateColumns: "350px 1fr",
@@ -189,6 +189,7 @@ const AdminMessaging = () => {
       >
         {/* Inbox */}
         <div
+          className={`messaging-list-container ${activeConvId ? 'messaging-mobile-hidden' : ''}`}
           style={{
             ...cardStyle,
             display: "flex",
@@ -272,6 +273,7 @@ const AdminMessaging = () => {
 
         {/* Chat */}
         <div
+          className={`messaging-chat-container ${!activeConvId ? 'messaging-mobile-hidden' : ''}`}
           style={{
             ...cardStyle,
             display: "flex",
@@ -286,16 +288,37 @@ const AdminMessaging = () => {
                   padding: "16px 20px",
                   borderBottom: "1px solid #e5e7eb",
                   background: "#fff",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10
                 }}
               >
-                <div style={{ fontWeight: 1000, fontSize: 16 }}>
-                  {activeConv.student_name} ↔ {activeConv.teacher_name}
-                </div>
-                <div
-                  style={{ fontSize: 12, color: "#6b7280", fontWeight: 900 }}
+                <button 
+                  className="messaging-back-btn"
+                  onClick={() => { setActiveConvId(null); setActiveConv(null); }}
+                  style={{
+                    border: 'none',
+                    background: '#f3f4f6',
+                    padding: '8px 12px',
+                    borderRadius: 8,
+                    cursor: 'pointer',
+                    fontWeight: 1000,
+                    fontSize: 13,
+                    color: '#374151'
+                  }}
                 >
-                  Subject: {activeConv.subject || "General"} | Status:{" "}
-                  {activeConv.is_active ? "Active" : "Resolved"}
+                  ← Back
+                </button>
+                <div>
+                  <div style={{ fontWeight: 1000, fontSize: 16 }}>
+                    {activeConv.student_name} ↔ {activeConv.teacher_name}
+                  </div>
+                  <div
+                    style={{ fontSize: 12, color: "#6b7280", fontWeight: 900 }}
+                  >
+                    Subject: {activeConv.subject || "General"} | Status:{" "}
+                    {activeConv.is_active ? "Active" : "Resolved"}
+                  </div>
                 </div>
               </div>
 

@@ -49,6 +49,10 @@ const colors = {
 
 const TimetableGrid = ({ entries, isAdmin, isEditMode, handleCellClick, shift }) => {
     const currentDayNum = new Date().getDay();
+    // Default to Monday (1) if today is Sunday (0)
+    const initialDay = currentDayNum === 0 ? 1 : (currentDayNum > 6 ? 6 : currentDayNum);
+    const [activeDayTab, setActiveDayTab] = useState(initialDay);
+    
     const adjustedCurrentDay = currentDayNum === 0 ? 7 : currentDayNum;
     
     const periods = PERIODS;
@@ -81,68 +85,96 @@ const TimetableGrid = ({ entries, isAdmin, isEditMode, handleCellClick, shift })
 
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            {/* Mobile Day Tabs Selector */}
+            <div className="md:hidden p-3 bg-slate-50 border-b border-slate-100">
+                <div className="timetable-day-tabs">
+                    {DAYS.map(day => (
+                        <button
+                            key={day.id}
+                            type="button"
+                            onClick={() => setActiveDayTab(day.id)}
+                            className={`timetable-day-tab-btn ${
+                                activeDayTab === day.id
+                                    ? 'bg-school-blue text-white shadow-md shadow-blue-500/20'
+                                    : 'text-slate-600 bg-white border border-slate-200/60'
+                            }`}
+                        >
+                            {day.short}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
             <div className="md:hidden divide-y divide-slate-100">
-                {mobileRows.map(day => (
-                    <section key={day.id} className={day.id === adjustedCurrentDay ? 'bg-school-blue/[0.02]' : 'bg-white'}>
-                        <div className="sticky top-0 z-10 flex items-center justify-between bg-white/95 px-4 py-3 backdrop-blur border-b border-slate-100">
-                            <div>
-                                <h3 className={`text-sm font-black uppercase tracking-wide ${day.id === adjustedCurrentDay ? 'text-school-blue' : 'text-slate-800'}`}>
-                                    {day.name}
-                                </h3>
-                                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                                    {shift.name} shift
-                                </p>
+                {mobileRows
+                    .filter(day => day.id === activeDayTab)
+                    .map(day => (
+                        <section key={day.id} className="bg-white">
+                            <div className="sticky top-0 z-10 flex items-center justify-between bg-white/95 px-4 py-3 backdrop-blur border-b border-slate-100">
+                                <div>
+                                    <h3 className={`text-sm font-black uppercase tracking-wide ${day.id === adjustedCurrentDay ? 'text-school-blue' : 'text-slate-800'}`}>
+                                        {day.name}
+                                    </h3>
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                                        {shift.name} shift
+                                    </p>
+                                </div>
+                                {day.id === adjustedCurrentDay && (
+                                    <span className="rounded-full bg-school-blue/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-school-blue">
+                                        Today
+                                    </span>
+                                )}
                             </div>
-                            {day.id === adjustedCurrentDay && (
-                                <span className="rounded-full bg-school-blue/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-school-blue">
-                                    Today
-                                </span>
-                            )}
-                        </div>
 
-                        <div className="space-y-3 p-3">
-                            {day.entries.map(({ period, entry }) => (
-                                <button
-                                    type="button"
-                                    key={`${day.id}-${period}`}
-                                    onClick={() => handleCellClick(day.id, period)}
-                                    className={`w-full rounded-2xl border p-3 text-left transition-all ${entry
-                                        ? 'border-slate-100 bg-white shadow-sm active:scale-[0.99]'
-                                        : isEditMode && isAdmin
-                                            ? 'border-dashed border-slate-200 bg-slate-50/70 text-slate-400'
-                                            : 'border-slate-100 bg-slate-50/60 text-slate-400'
-                                        }`}
-                                >
-                                    <div className="flex items-start justify-between gap-3">
-                                        <div className="min-w-0">
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                                Period {period}
-                                            </p>
-                                            <h4 className="mt-1 truncate text-sm font-black text-slate-800">
-                                                {entry?.subject || (isEditMode && isAdmin ? 'Tap to add class' : 'No class scheduled')}
-                                            </h4>
-                                        </div>
-                                        {entry ? (
-                                            <span className="shrink-0 rounded-xl bg-school-blue/5 px-2 py-1 text-[10px] font-black text-school-blue">
-                                                {entry.start_time_display?.split(' ')[0] || entry.start_time}
-                                            </span>
-                                        ) : isEditMode && isAdmin ? (
-                                            <Plus className="mt-1 h-4 w-4 shrink-0 text-school-blue" />
-                                        ) : null}
+                            <div className="space-y-3 p-3">
+                                {day.entries.filter(({ entry }) => entry || (isEditMode && isAdmin)).length > 0 ? (
+                                    day.entries
+                                        .filter(({ entry }) => entry || (isEditMode && isAdmin))
+                                        .map(({ period, entry }) => (
+                                            <button
+                                                type="button"
+                                                key={`${day.id}-${period}`}
+                                                onClick={() => handleCellClick(day.id, period)}
+                                                className={`w-full rounded-2xl border p-3 text-left transition-all ${entry
+                                                    ? 'border-slate-100 bg-white shadow-sm active:scale-[0.99]'
+                                                    : 'border-dashed border-slate-200 bg-slate-50/70 text-slate-400'
+                                                    }`}
+                                            >
+                                                <div className="flex items-start justify-between gap-3">
+                                                    <div className="min-w-0">
+                                                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                                            Period {period}
+                                                        </p>
+                                                        <h4 className="mt-1 truncate text-sm font-black text-slate-800">
+                                                            {entry?.subject || 'Tap to add class'}
+                                                        </h4>
+                                                    </div>
+                                                    {entry ? (
+                                                        <span className="shrink-0 rounded-xl bg-school-blue/5 px-2 py-1 text-[10px] font-black text-school-blue">
+                                                            {entry.start_time_display?.split(' ')[0] || entry.start_time}
+                                                        </span>
+                                                    ) : (
+                                                        <Plus className="mt-1 h-4 w-4 shrink-0 text-school-blue" />
+                                                    )}
+                                                </div>
+
+                                                {entry && (
+                                                    <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] font-bold text-slate-500">
+                                                        <span className="truncate">{entry.class_name}-{entry.section}</span>
+                                                        <span className="truncate text-right">RM {entry.room || '-'}</span>
+                                                        <span className="col-span-2 truncate text-slate-600">{entry.teacher_name || 'Teacher not assigned'}</span>
+                                                    </div>
+                                                )}
+                                            </button>
+                                        ))
+                                ) : (
+                                    <div className="text-center py-10 px-4 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                                        <p className="text-slate-400 font-medium text-xs">No classes scheduled for this day</p>
                                     </div>
-
-                                    {entry && (
-                                        <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] font-bold text-slate-500">
-                                            <span className="truncate">{entry.class_name}-{entry.section}</span>
-                                            <span className="truncate text-right">RM {entry.room || '-'}</span>
-                                            <span className="col-span-2 truncate text-slate-600">{entry.teacher_name || 'Teacher not assigned'}</span>
-                                        </div>
-                                    )}
-                                </button>
-                            ))}
-                        </div>
-                    </section>
-                ))}
+                                )}
+                            </div>
+                        </section>
+                    ))}
             </div>
 
             <div className="hidden md:block overflow-x-auto">

@@ -20,6 +20,68 @@ const StudentFinanceCards = () => {
   const [myClass, setMyClass] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const downloadClassFeeCsv = (card) => {
+    if (!card) return;
+    const rows = [
+      ["Fee Type", "Amount"],
+      ["Class Name", card.class_name],
+      ["Registration Fee", `₹${card.registration_fee}`],
+      ["Admission Fee", `₹${card.admission_fee}`],
+      ["Tuition Fee", `₹${card.tuition_fee}`],
+      ["Computer Fee", `₹${card.computer_fee}`],
+      ["Annual Charges", `₹${card.annual_charges}`],
+      ["Science Fee", `₹${card.science_fee}`],
+      ["Sports Fee", `₹${card.sports_fee}`],
+      ["Total Fee", `₹${card.total_fee}`]
+    ];
+
+    const csv = rows
+      .map((r) =>
+        r.map((v) => `"${String(v ?? "").replace(/"/g, '""')}"`).join(","),
+      )
+      .join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `fee_structure_${card.class_name.replace(/\s+/g, "_")}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  const downloadAllFeeCardsCsv = () => {
+    if (!cards.length) return;
+    const rows = [
+      ["Class Name", "Registration Fee", "Admission Fee", "Tuition Fee", "Computer Fee", "Annual Charges", "Science Fee", "Sports Fee", "Total Fee"]
+    ];
+    cards.forEach((row) => {
+      rows.push([
+        row.class_name,
+        `₹${row.registration_fee}`,
+        `₹${row.admission_fee}`,
+        `₹${row.tuition_fee}`,
+        `₹${row.computer_fee}`,
+        `₹${row.annual_charges}`,
+        `₹${row.science_fee}`,
+        `₹${row.sports_fee}`,
+        `₹${row.total_fee}`
+      ]);
+    });
+
+    const csv = rows
+      .map((r) =>
+        r.map((v) => `"${String(v ?? "").replace(/"/g, '""')}"`).join(","),
+      )
+      .join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "all_classes_fee_structures.csv";
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   useEffect(() => {
     setLoading(true);
     api
@@ -165,18 +227,36 @@ const StudentFinanceCards = () => {
             <h3 style={{ margin: 0, fontSize: 20, color: "#0f172a" }}>
               {myCard.class_name}
             </h3>
-            <span
-              style={{
-                backgroundColor: "#1d4ed8",
-                color: "#fff",
-                borderRadius: 999,
-                padding: "6px 10px",
-                fontSize: 12,
-                fontWeight: 700,
-              }}
-            >
-              Your Class
-            </span>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <button
+                type="button"
+                onClick={() => downloadClassFeeCsv(myCard)}
+                style={{
+                  padding: "6px 12px",
+                  borderRadius: "8px",
+                  border: "1px solid #2563eb",
+                  backgroundColor: "#2563eb",
+                  color: "#fff",
+                  fontWeight: 800,
+                  fontSize: 12,
+                  cursor: "pointer",
+                }}
+              >
+                Download CSV
+              </button>
+              <span
+                style={{
+                  backgroundColor: "#1d4ed8",
+                  color: "#fff",
+                  borderRadius: 999,
+                  padding: "6px 10px",
+                  fontSize: 12,
+                  fontWeight: 700,
+                }}
+              >
+                Your Class
+              </span>
+            </div>
           </div>
 
           <div
@@ -248,8 +328,35 @@ const StudentFinanceCards = () => {
         </div>
       )}
 
-      <div style={{ ...panel, marginTop: 18, padding: 12 }}>
-        <h3 style={{ margin: "0 0 10px", color: "#111827" }}>All Fee Cards</h3>
+      <div style={{ ...panel, marginTop: 18, padding: 16 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "12px",
+            gap: 10,
+            flexWrap: "wrap",
+          }}
+        >
+          <h3 style={{ margin: 0, color: "#111827" }}>All Fee Cards</h3>
+          <button
+            type="button"
+            onClick={downloadAllFeeCardsCsv}
+            style={{
+              padding: "6px 12px",
+              borderRadius: "8px",
+              border: "1px solid #e5e7eb",
+              backgroundColor: "#fff",
+              color: "#111827",
+              fontWeight: 800,
+              fontSize: 13,
+              cursor: "pointer",
+            }}
+          >
+            Export CSV
+          </button>
+        </div>
         <div style={{ overflowX: "auto" }}>
           <div className="table-scroll"><table
             style={{
