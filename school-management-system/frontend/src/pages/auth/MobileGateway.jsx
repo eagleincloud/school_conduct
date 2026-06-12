@@ -116,7 +116,7 @@ const MobileGateway = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+            background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
             padding: '24px',
             fontFamily: 'sans-serif',
             position: 'relative'
@@ -125,52 +125,36 @@ const MobileGateway = () => {
                 position: 'relative',
                 width: '100%',
                 maxWidth: '400px',
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                backdropFilter: 'blur(16px)',
+                backgroundColor: '#ffffff',
                 borderRadius: '24px',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                border: '1px solid #e2e8f0',
                 padding: '40px 32px',
-                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
+                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.05)',
                 textAlign: 'center',
-                color: '#fff'
+                color: '#0f172a'
             }}>
-                {/* Settings Gear Icon */}
-                <button
-                    type="button"
-                    onClick={() => setShowSettings(true)}
-                    style={{
-                        position: 'absolute',
-                        top: '20px',
-                        right: '20px',
-                        background: 'transparent',
-                        border: 'none',
-                        color: '#94a3b8',
-                        fontSize: '20px',
-                        cursor: 'pointer',
-                        padding: '4px',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'all 0.2s ease',
-                    }}
-                    title="Configure Server URL"
-                >
-                    ⚙️
-                </button>
-
-                <div style={{
-                    fontSize: '48px',
-                    marginBottom: '16px',
-                    animation: 'pulse 2s infinite'
-                }}>🛡️</div>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+                    <img
+                        src="/SClogo.jpg"
+                        alt="School Logo"
+                        style={{
+                            width: '80px',
+                            height: '80px',
+                            borderRadius: '16px',
+                            objectFit: 'contain',
+                            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.05)',
+                            backgroundColor: '#fff',
+                            padding: '4px'
+                        }}
+                    />
+                </div>
                 
                 <h1 style={{
                     margin: '0 0 8px',
                     fontSize: '28px',
                     fontWeight: 800,
                     letterSpacing: '-0.02em',
-                    background: 'linear-gradient(to right, #60a5fa, #3b82f6)',
+                    background: 'linear-gradient(to right, #1e3a8a, #2563eb)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent'
                 }}>
@@ -179,7 +163,7 @@ const MobileGateway = () => {
                 
                 <p style={{
                     margin: '0 0 32px',
-                    color: '#94a3b8',
+                    color: '#64748b',
                     fontSize: '14px',
                     fontWeight: 500
                 }}>
@@ -192,7 +176,7 @@ const MobileGateway = () => {
                             display: 'block',
                             fontSize: '11px',
                             fontWeight: 700,
-                            color: '#94a3b8',
+                            color: '#64748b',
                             textTransform: 'uppercase',
                             letterSpacing: '0.05em',
                             marginBottom: '8px',
@@ -209,10 +193,10 @@ const MobileGateway = () => {
                             style={{
                                 width: '100%',
                                 padding: '14px 16px',
-                                backgroundColor: 'rgba(15, 23, 42, 0.6)',
-                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                backgroundColor: '#ffffff',
+                                border: '1px solid #cbd5e1',
                                 borderRadius: '12px',
-                                color: '#fff',
+                                color: '#0f172a',
                                 fontSize: '15px',
                                 outline: 'none',
                                 boxSizing: 'border-box',
@@ -246,14 +230,14 @@ const MobileGateway = () => {
                 {/* Connection Failed Helper Link */}
                 {connectionFailed && (
                     <div style={{ marginTop: '20px', fontSize: '13px' }}>
-                        <span style={{ color: '#f87171' }}>Connection failing? </span>
+                        <span style={{ color: '#ef4444' }}>Connection failing? </span>
                         <button
                             type="button"
                             onClick={() => setShowSettings(true)}
                             style={{
                                 background: 'none',
                                 border: 'none',
-                                color: '#60a5fa',
+                                color: '#2563eb',
                                 textDecoration: 'underline',
                                 cursor: 'pointer',
                                 fontWeight: 600,
@@ -285,25 +269,25 @@ const MobileGateway = () => {
                     <div style={{
                         width: '100%',
                         maxWidth: '440px',
-                        backgroundColor: '#1e293b',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        backgroundColor: '#ffffff',
+                        border: '1px solid #e2e8f0',
                         borderRadius: '24px',
                         padding: '32px',
-                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-                        color: '#fff',
+                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.1)',
+                        color: '#0f172a',
                         textAlign: 'left'
                     }}>
                         <h2 style={{
                             margin: '0 0 16px',
                             fontSize: '22px',
                             fontWeight: 800,
-                            color: '#60a5fa'
+                            color: '#2563eb'
                         }}>
                             Server Configuration
                         </h2>
                         <p style={{
                             fontSize: '13px',
-                            color: '#94a3b8',
+                            color: '#64748b',
                             lineHeight: '1.5',
                             margin: '0 0 20px'
                         }}>
@@ -312,14 +296,14 @@ const MobileGateway = () => {
                         </p>
                         
                         <div style={{ marginBottom: '20px' }}>
-                            <div style={{ fontSize: '11px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '8px' }}>
+                            <div style={{ fontSize: '11px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', marginBottom: '8px' }}>
                                 Current Active API URL
                             </div>
                             <code style={{
                                 display: 'block',
                                 padding: '10px 12px',
-                                backgroundColor: 'rgba(15, 23, 42, 0.4)',
-                                border: '1px solid rgba(255, 255, 255, 0.05)',
+                                backgroundColor: '#f1f5f9',
+                                border: '1px solid #e2e8f0',
                                 borderRadius: '8px',
                                 fontSize: '12px',
                                 color: '#10b981',
@@ -336,7 +320,7 @@ const MobileGateway = () => {
                                     display: 'block',
                                     fontSize: '11px',
                                     fontWeight: 700,
-                                    color: '#94a3b8',
+                                    color: '#64748b',
                                     textTransform: 'uppercase',
                                     letterSpacing: '0.05em',
                                     marginBottom: '8px'
@@ -351,10 +335,10 @@ const MobileGateway = () => {
                                     style={{
                                         width: '100%',
                                         padding: '12px 14px',
-                                        backgroundColor: 'rgba(15, 23, 42, 0.6)',
-                                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                                        backgroundColor: '#ffffff',
+                                        border: '1px solid #cbd5e1',
                                         borderRadius: '10px',
-                                        color: '#fff',
+                                        color: '#0f172a',
                                         fontSize: '14px',
                                         outline: 'none',
                                         boxSizing: 'border-box'
@@ -391,9 +375,9 @@ const MobileGateway = () => {
                                         style={{
                                             flex: 1,
                                             padding: '10px',
-                                            backgroundColor: '#334155',
-                                            color: '#e2e8f0',
-                                            border: 'none',
+                                            backgroundColor: '#f1f5f9',
+                                            color: '#334155',
+                                            border: '1px solid #cbd5e1',
                                             borderRadius: '10px',
                                             fontSize: '13px',
                                             fontWeight: 600,
@@ -409,8 +393,8 @@ const MobileGateway = () => {
                                             flex: 1,
                                             padding: '10px',
                                             backgroundColor: 'transparent',
-                                            color: '#94a3b8',
-                                            border: '1px solid #334155',
+                                            color: '#64748b',
+                                            border: '1px solid #e2e8f0',
                                             borderRadius: '10px',
                                             fontSize: '13px',
                                             fontWeight: 600,

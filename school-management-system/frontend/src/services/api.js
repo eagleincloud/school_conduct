@@ -69,14 +69,49 @@ api.interceptors.request.use(
 );
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      // Do not trigger global logout redirect if the 401 came from the login endpoint itself
-      if (!error.config.url.includes("auth/login")) {
-        // Auto logout if token expires or is invalid
+  async (error) => {
+    const originalRequest = error.config;
+    
+    // Check if request failed due to 401 Unauthorized and has not been retried yet
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      // Do not attempt token refresh for login or refresh requests themselves
+      if (!originalRequest.url.includes("auth/login") && !originalRequest.url.includes("auth/refresh")) {
+        originalRequest._retry = true;
+        const refreshToken = localStorage.getItem("refresh_token");
+        
+        if (refreshToken) {
+          try {
+            // Request a new access token using the refresh token
+            // Use axios directly instead of the 'api' instance to prevent recursive interceptor calls
+            const response = await axios.post(`${BASE_URL}auth/refresh/`, {
+              refresh: refreshToken,
+            });
+            
+            if (response.data && response.data.access) {
+              const newAccessToken = response.data.access;
+              localStorage.setItem("access_token", newAccessToken);
+              
+              // Update authorization header and retry original request
+              originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+              return axios(originalRequest);
+            }
+          } catch (refreshError) {
+            console.error("Token refresh failed:", refreshError);
+            // Refresh token is expired or invalid, fall through to logout
+          }
+        }
+      }
+      
+      // Auto logout if refresh failed or no refresh token is present
+      if (!originalRequest.url.includes("auth/login")) {
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
-        // Only redirect if not already on login page
+        localStorage.removeItem("user_role");
+        localStorage.removeItem("user_name");
+        localStorage.removeItem("school_id");
+        localStorage.removeItem("school_name");
+        localStorage.removeItem("school_logo");
+        
         if (window.location.pathname !== "/login") {
           window.location.href = "/login";
         }

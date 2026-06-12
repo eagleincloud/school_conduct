@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Capacitor } from "@capacitor/core";
 import Login from "../pages/auth/Login";
 import LandingPage from "../pages/LandingPage";
@@ -75,6 +75,28 @@ import DealerProfile from "../pages/dealer/Profile";
 
 const AppRoutes = () => {
   const isMobileApp = Capacitor.getPlatform() !== "web";
+  const location = useLocation();
+  const isAuthenticated = !!localStorage.getItem("access_token");
+  const role = localStorage.getItem("user_role");
+
+  if (isAuthenticated && role) {
+    const path = location.pathname;
+    const isGuestPage = 
+      path === "/" || 
+      path === "/login" ||
+      path === "/superadmin/login" ||
+      path === "/dealer-login" ||
+      path.match(/^\/school\/[^/]+\/?$/) ||
+      path.match(/^\/school\/[^/]+\/login\/?$/);
+
+    if (isGuestPage) {
+      if (role === "admin") return <Navigate to="/admin/dashboard" replace />;
+      if (role === "teacher") return <Navigate to="/teacher/dashboard" replace />;
+      if (role === "student") return <Navigate to="/student/dashboard" replace />;
+      if (role === "superadmin") return <Navigate to="/superadmin/dashboard" replace />;
+      if (role === "dealer") return <Navigate to="/dealer/dashboard" replace />;
+    }
+  }
 
   return (
     <Routes>
