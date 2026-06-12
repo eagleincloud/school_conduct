@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { CheckCircle, XCircle } from "lucide-react";
 import api from "../../services/api";
 
 const colors = {
@@ -340,7 +341,11 @@ export default function PublishResults() {
                             fontSize: "18px",
                           }}
                         >
-                          {sub.is_submitted ? "✅" : "❌"}
+                          {sub.is_submitted ? (
+                            <CheckCircle size={18} color={colors.success} strokeWidth={2.5} />
+                          ) : (
+                            <XCircle size={18} color={colors.danger} strokeWidth={2.5} />
+                          )}
                         </td>
                       ))}
                       <td style={{ padding: "16px", textAlign: "center" }}>

@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
 import { toast } from "react-hot-toast";
+import {
+  CalendarDays,
+  Download,
+  FileText,
+  Gauge,
+  LockKeyhole,
+  UsersRound,
+  Zap,
+} from "lucide-react";
 
 const Reports = () => {
   const [reportCat, setReportCat] = useState("attendance");
@@ -126,10 +135,10 @@ const Reports = () => {
                   </label>
                   <div className="grid grid-cols-2 gap-3">
                     {[
-                      { id: "attendance", label: "Attendance", icon: "📅" },
-                      { id: "marks", label: "Marks", icon: "📝" },
-                      { id: "students", label: "Students", icon: "👥" },
-                      { id: "teachers", label: "Teachers", icon: "🧑‍🏫" },
+                      { id: "attendance", label: "Attendance", Icon: CalendarDays },
+                      { id: "marks", label: "Marks", Icon: FileText },
+                      { id: "students", label: "Students", Icon: UsersRound },
+                      { id: "teachers", label: "Teachers", Icon: UsersRound },
                     ].map((cat) => (
                       <button
                         key={cat.id}
@@ -140,7 +149,7 @@ const Reports = () => {
                             : "border-slate-50 bg-slate-50/50 text-slate-500 hover:border-slate-200"
                         }`}
                       >
-                        <span className="text-xl">{cat.icon}</span>
+                        <cat.Icon className="h-5 w-5 shrink-0" strokeWidth={2.3} />
                         <span className="text-sm font-bold">{cat.label}</span>
                       </button>
                     ))}
@@ -280,7 +289,7 @@ const Reports = () => {
                     <div className="w-5 h-5 border-2 border-slate-300 border-t-slate-500 rounded-full animate-spin"></div>
                   ) : (
                     <>
-                      <span className="text-xl">📥</span>
+                      <Download className="h-5 w-5" strokeWidth={2.4} />
                       <span className="font-black uppercase tracking-wider text-xs">
                         Download CSV Report
                       </span>
@@ -308,15 +317,15 @@ const Reports = () => {
 
               <div className="space-y-4">
                 {[
-                  { label: "Data Latency", val: "< 200ms", icon: "⚡" },
-                  { label: "Record Limit", val: "Unlimited", icon: "📁" },
-                  { label: "Security", val: "E2E Encrypted", icon: "🔒" },
+                  { label: "Data Latency", val: "< 200ms", Icon: Zap },
+                  { label: "Record Limit", val: "Unlimited", Icon: Gauge },
+                  { label: "Security", val: "E2E Encrypted", Icon: LockKeyhole },
                 ].map((stat, i) => (
                   <div
                     key={i}
                     className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5"
                   >
-                    <span className="text-xl">{stat.icon}</span>
+                    <stat.Icon className="h-5 w-5 shrink-0 text-school-blue" strokeWidth={2.3} />
                     <div>
                       <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                         {stat.label}

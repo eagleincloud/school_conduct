@@ -51,6 +51,9 @@ const statusTone = (statusLabel) => {
   return "bg-amber-50 text-amber-700 border-amber-200";
 };
 
+const getTestMessage = (result, fallback) =>
+  result?.message || result?.device?.last_test_message || fallback;
+
 const SectionTitle = ({ icon: Icon, title, body }) => (
   <div className="flex items-start gap-3">
     <div className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-school-navy text-white shadow-lg shadow-school-navy/15">
@@ -229,7 +232,11 @@ export default function BiometricMachines() {
         device_port: Number(form.device_port),
       });
       setDraftProbe(result);
-      toast.success(result.ok ? "Machine is reachable" : "Machine is not reachable");
+      if (result.ok) {
+        toast.success(getTestMessage(result, "Machine is reachable"));
+      } else {
+        toast.error(getTestMessage(result, "Machine is not reachable"));
+      }
     } catch {
       toast.error("Connection probe failed");
     } finally {
@@ -240,7 +247,11 @@ export default function BiometricMachines() {
   const handleDeviceTest = async (deviceId) => {
     try {
       const result = await biometricDeviceService.testDevice(deviceId);
-      toast.success(result.ok ? "Live test passed" : "Live test failed");
+      if (result.ok) {
+        toast.success(getTestMessage(result, "Live test passed"));
+      } else {
+        toast.error(getTestMessage(result, "Live test failed"));
+      }
       await loadDevices();
       if (activePreviewId === deviceId) {
         const nextPreview = await biometricDeviceService.getBridgePreview(deviceId);

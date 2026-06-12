@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { CircleCheck, TriangleAlert } from 'lucide-react';
 import { useConfirm } from '../../context/ConfirmContext';
 import api from '../../services/api';
 
@@ -313,7 +314,11 @@ const AssignTeacher = () => {
                     gap: '8px',
                     maxWidth: 'fit-content'
                 }}>
-                    <span>{message.startsWith('Error:') ? '⚠️' : '✅'}</span>
+                    {message.startsWith('Error:') ? (
+                        <TriangleAlert size={16} strokeWidth={2.4} />
+                    ) : (
+                        <CircleCheck size={16} strokeWidth={2.4} />
+                    )}
                     {message}
                 </div>
             )}

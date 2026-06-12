@@ -1,5 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import {
+    Bell,
+    BookOpen,
+    CalendarDays,
+    ChartLine,
+    ChevronDown,
+    CircleCheck,
+    CirclePlus,
+    ClipboardCheck,
+    CreditCard,
+    FileText,
+    FileUp,
+    GraduationCap,
+    Images,
+    Info,
+    LayoutDashboard,
+    MessageCircle,
+    Network,
+    Store,
+    Umbrella,
+    UserCheck,
+    UserCog,
+    UserRound,
+    UsersRound,
+    Wallet,
+    X,
+} from 'lucide-react';
 import authService from '../../services/authService';
 import useUIStore from '../../store/uiStore';
 import { 
@@ -182,11 +209,14 @@ const Sidebar = () => {
         const hasSubLinks = item.subLinks && item.subLinks.length > 0;
         const isOpen = openMenus[item.label];
         const isActive = location.pathname === item.path;
+        const Icon = item.Icon;
         
         // Auto-open parent if child is active (simplified for 2 levels)
         const isChildActive = hasSubLinks && item.subLinks.some(sub => 
             sub.path === location.pathname || (sub.subLinks && sub.subLinks.some(ss => ss.path === location.pathname))
         );
+        const isExpanded = Boolean(isOpen);
+        const isHighlighted = Boolean(isOpen || isChildActive);
 
         return (
             <div className="flex flex-col">
@@ -219,9 +249,10 @@ const Sidebar = () => {
                     </Link>
                 ) : (
                     <button
-                        onClick={() => toggleMenu(item.label, depth)}
+                        onClick={() => toggleMenu(item.label)}
+                        aria-expanded={isExpanded}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 group ${
-                            isChildActive ? 'text-school-navy' : 'text-school-body hover:bg-slate-50 hover:text-school-navy'
+                            isHighlighted ? 'text-school-navy' : 'text-school-body hover:bg-slate-50 hover:text-school-navy'
                         }`}
                         style={{ marginLeft: `${depth * 12}px` }}
                     >
@@ -239,13 +270,14 @@ const Sidebar = () => {
                             )
                         )}
                         <span>{item.label}</span>
-                        <span className={`ml-auto text-[10px] transition-transform duration-200 ${isOpen || isChildActive ? 'rotate-180' : ''}`}>
-                            ▼
-                        </span>
+                        <ChevronDown
+                            className={`ml-auto h-4 w-4 shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-180 text-school-navy' : 'text-slate-400 group-hover:text-school-navy'}`}
+                            strokeWidth={2.4}
+                        />
                     </button>
                 )}
 
-                {isOpen && hasSubLinks && (
+                {isExpanded && hasSubLinks && (
                     <div className="mt-1 space-y-1">
                         {item.subLinks.map((sub, i) => (
                             <NavItem key={i} item={sub} depth={depth + 1} />
@@ -279,9 +311,7 @@ const Sidebar = () => {
                         className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors"
                         aria-label="Close menu"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        <X className="h-4 w-4" strokeWidth={2.5} />
                     </button>
                 </div>
 

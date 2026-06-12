@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
 import { useConfirm } from '../../context/ConfirmContext';
 import api from '../../services/api';
 
@@ -257,7 +258,7 @@ const BulkImport = () => {
                                 className="text-red-500 hover:text-red-700 font-bold px-2 py-1 bg-red-50 hover:bg-red-100 rounded"
                                 title="Remove row"
                               >
-                                ✕
+                                <X className="h-4 w-4" strokeWidth={2.5} />
                               </button>
                             </td>
                           </tr>

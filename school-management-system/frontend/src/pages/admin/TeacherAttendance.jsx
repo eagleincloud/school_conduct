@@ -1,4 +1,15 @@
 import React, { useEffect, useState, useMemo } from "react";
+import {
+  ChartNoAxesCombined,
+  CheckCircle,
+  ClipboardCheck,
+  Clock,
+  Save,
+  UserCheck,
+  UsersRound,
+  X,
+  XCircle,
+} from "lucide-react";
 import api from "../../services/api";
 
 const palette = {
@@ -30,14 +41,16 @@ function StatusBadge({ status }) {
   );
 }
 
-function SummaryCard({ label, value, color, icon }) {
+function SummaryCard({ label, value, color, Icon }) {
   return (
     <div style={{
       flex: "1 1 140px", minWidth: 140, background: palette.card,
       border: `1px solid ${palette.border}`, borderRadius: 16,
       padding: "18px 16px", boxShadow: palette.shadow, textAlign: "center",
     }}>
-      <div style={{ fontSize: 28, marginBottom: 4 }}>{icon}</div>
+      <div style={{ marginBottom: 4, display: "flex", justifyContent: "center", color: color || palette.primary }}>
+        <Icon size={28} strokeWidth={2.4} />
+      </div>
       <div style={{ fontSize: 28, fontWeight: 1000, color: color || "#111827" }}>{value}</div>
       <div style={{ fontSize: 12, fontWeight: 900, color: palette.muted, textTransform: "uppercase", letterSpacing: "0.03em", marginTop: 4 }}>{label}</div>
     </div>
@@ -142,7 +155,10 @@ const TeacherAttendance = () => {
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
         <div>
-          <h1 style={{ margin: 0, fontWeight: 1000 }}>👨‍🏫 Teacher & Staff Attendance</h1>
+          <h1 style={{ margin: 0, fontWeight: 1000, display: "flex", alignItems: "center", gap: 10 }}>
+            <UserCheck size={28} strokeWidth={2.4} />
+            Teacher & Staff Attendance
+          </h1>
           <div style={{ marginTop: 4, color: palette.muted, fontWeight: 900, fontSize: 13 }}>
             Mark attendance for teachers and staff. Past dates are view-only.
           </div>
@@ -160,18 +176,21 @@ const TeacherAttendance = () => {
             backgroundColor: showMonthly ? palette.primary : "#fff",
             color: showMonthly ? "#fff" : "#111827", fontWeight: 1000, cursor: "pointer",
           }}>
-            {showMonthly ? "✕ Close Summary" : "📊 Monthly Summary"}
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+              {showMonthly ? <X size={16} strokeWidth={2.5} /> : <ChartNoAxesCombined size={16} strokeWidth={2.5} />}
+              {showMonthly ? "Close Summary" : "Monthly Summary"}
+            </span>
           </button>
         </div>
       </div>
 
       {/* Summary Cards */}
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
-        <SummaryCard icon="👥" label="Total Staff" value={summary.total_teachers ?? 0} />
-        <SummaryCard icon="✅" label="Present" value={summary.present ?? 0} color={palette.present} />
-        <SummaryCard icon="❌" label="Absent" value={summary.absent ?? 0} color={palette.absent} />
-        <SummaryCard icon="⏰" label="Late" value={summary.late ?? 0} color={palette.late} />
-        <SummaryCard icon="📝" label="Marked" value={summary.marked ?? 0} />
+        <SummaryCard Icon={UsersRound} label="Total Staff" value={summary.total_teachers ?? 0} />
+        <SummaryCard Icon={CheckCircle} label="Present" value={summary.present ?? 0} color={palette.present} />
+        <SummaryCard Icon={XCircle} label="Absent" value={summary.absent ?? 0} color={palette.absent} />
+        <SummaryCard Icon={Clock} label="Late" value={summary.late ?? 0} color={palette.late} />
+        <SummaryCard Icon={ClipboardCheck} label="Marked" value={summary.marked ?? 0} />
       </div>
 
       {/* Monthly Summary Panel */}
@@ -181,7 +200,10 @@ const TeacherAttendance = () => {
           padding: 16, boxShadow: palette.shadow, marginBottom: 16,
         }}>
           <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap", marginBottom: 12 }}>
-            <h3 style={{ margin: 0, fontWeight: 1000 }}>📊 Monthly Summary</h3>
+            <h3 style={{ margin: 0, fontWeight: 1000, display: "flex", alignItems: "center", gap: 8 }}>
+              <ChartNoAxesCombined size={20} strokeWidth={2.4} />
+              Monthly Summary
+            </h3>
             <select value={monthlyMonth} onChange={(e) => setMonthlyMonth(Number(e.target.value))} style={{
               padding: "8px 12px", borderRadius: 10, border: `1px solid ${palette.border}`, fontWeight: 900,
             }}>
@@ -273,7 +295,12 @@ const TeacherAttendance = () => {
                   padding: "10px 14px", borderRadius: 10, border: "none",
                   backgroundColor: palette.primary, color: "#fff", fontWeight: 1000,
                   cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.6 : 1,
-                }}>{saving ? "Saving..." : "💾 Save Attendance"}</button>
+                }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                    {!saving && <Save size={16} strokeWidth={2.5} />}
+                    {saving ? "Saving..." : "Save Attendance"}
+                  </span>
+                </button>
               </>
             )}
             {saveStatus.message && (
@@ -283,7 +310,16 @@ const TeacherAttendance = () => {
                 color: saveStatus.type === "success" ? palette.present : palette.absent,
                 fontWeight: 900, fontSize: 12,
                 border: `1px solid ${saveStatus.type === "success" ? "#bbf7d0" : "#fecaca"}`,
-              }}>{saveStatus.type === "success" ? "✔️" : "❌"} {saveStatus.message}</span>
+              }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  {saveStatus.type === "success" ? (
+                    <CheckCircle size={15} strokeWidth={2.5} />
+                  ) : (
+                    <XCircle size={15} strokeWidth={2.5} />
+                  )}
+                  {saveStatus.message}
+                </span>
+              </span>
             )}
           </div>
         </div>

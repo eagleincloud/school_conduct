@@ -1,4 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import {
+    Building2,
+    CalendarDays,
+    GraduationCap,
+    Images,
+    LayoutDashboard,
+    School,
+    UsersRound,
+} from 'lucide-react';
 import api from '../../services/api';
 import StudentCards from './StudentCards';
 import TeacherCards from './TeacherCards';
@@ -163,12 +172,12 @@ const AdminDashboard = () => {
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
             {/* Header Section */}
-            <div className="relative overflow-hidden bg-white/80 backdrop-blur-xl p-10 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 mb-10 group transition-all duration-500 hover:shadow-2xl hover:shadow-school-blue/5">
+            <div className="relative overflow-hidden bg-white/80 backdrop-blur-xl p-10 rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/40 mb-10 group transition-all duration-500 hover:shadow-2xl hover:shadow-school-blue/5">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-school-blue/5 blur-3xl rounded-full -mr-32 -mt-32 transition-colors group-hover:bg-school-blue/10"></div>
                 <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="flex items-center gap-6">
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-school-navy to-school-blue flex items-center justify-center text-3xl shadow-xl shadow-school-navy/20">
-                            🛡️
+                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-school-navy to-school-blue flex items-center justify-center shadow-xl shadow-school-navy/20">
+                            <LayoutDashboard className="h-8 w-8 text-white" strokeWidth={2.4} />
                         </div>
                         <div>
                             <h1 className="text-4xl font-poppins font-black text-school-text tracking-tight">
@@ -189,16 +198,16 @@ const AdminDashboard = () => {
                     {/* Stats Cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {[
-                            { label: 'Total Students', value: studentsCount, icon: '🎓', color: 'from-blue-500 to-school-blue', shadow: 'shadow-blue-500/20' },
-                            { label: 'Total Teachers', value: teachersCount, icon: '👨‍🏫', color: 'from-indigo-600 to-violet-500', shadow: 'shadow-indigo-500/20' },
-                            { label: 'Active Classes', value: mainClasses.length, icon: '🏫', color: 'from-emerald-500 to-teal-400', shadow: 'shadow-emerald-500/20' },
-                            { label: 'Total Sections', value: mainSections.length, icon: '🏢', color: 'from-amber-500 to-orange-400', shadow: 'shadow-amber-500/20' },
+                            { label: 'Total Students', value: studentsCount, Icon: GraduationCap, color: 'from-blue-500 to-school-blue', shadow: 'shadow-blue-500/20' },
+                            { label: 'Total Teachers', value: teachersCount, Icon: UsersRound, color: 'from-indigo-600 to-violet-500', shadow: 'shadow-indigo-500/20' },
+                            { label: 'Active Classes', value: mainClasses.length, Icon: School, color: 'from-emerald-500 to-teal-400', shadow: 'shadow-emerald-500/20' },
+                            { label: 'Total Sections', value: mainSections.length, Icon: Building2, color: 'from-amber-500 to-orange-400', shadow: 'shadow-amber-500/20' },
                         ].map((stat, i) => (
-                            <div key={i} className="group relative bg-white/80 backdrop-blur-xl p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 hover:shadow-2xl hover:shadow-school-blue/10 transition-all duration-500 cursor-default hover:-translate-y-2 overflow-hidden">
+                            <div key={i} className="group relative bg-white/80 backdrop-blur-xl p-8 rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/40 hover:shadow-2xl hover:shadow-school-blue/10 transition-all duration-500 cursor-default hover:-translate-y-2 overflow-hidden">
                                 <div className={`absolute top-0 left-0 w-2 h-full bg-gradient-to-b ${stat.color} opacity-0 group-hover:opacity-100 transition-opacity`}></div>
                                 <div className="flex items-center gap-5 relative z-10">
                                     <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-2xl shadow-lg ${stat.shadow} group-hover:rotate-6 transition-transform duration-500`}>
-                                        {stat.icon}
+                                        <stat.Icon className="h-7 w-7 text-white" strokeWidth={2.25} />
                                     </div>
                                     <div>
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">{stat.label}</p>
@@ -212,11 +221,16 @@ const AdminDashboard = () => {
                     {/* Chart & Activity Grid */}
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                         {/* Dashboard Gallery Slider */}
-                        <div className="lg:col-span-8 bg-white/50 backdrop-blur-md p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/30">
+                        <div className="lg:col-span-8 bg-white/50 backdrop-blur-md p-8 rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/30">
                             <div className="flex items-start justify-between mb-8 gap-4 flex-wrap">
-                                <div>
-                                    <h3 className="font-poppins font-bold text-school-text text-lg">School Gallery Highlights</h3>
-                                    <p className="text-xs text-slate-400">Auto-rotating highlights from your secure gallery</p>
+                                <div className="flex items-start gap-3">
+                                    <span className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-xl bg-school-blue/10 text-school-blue">
+                                        <Images className="h-5 w-5" strokeWidth={2.4} />
+                                    </span>
+                                    <div>
+                                        <h3 className="font-poppins font-bold text-school-text text-lg">School Gallery Highlights</h3>
+                                        <p className="text-xs text-slate-400">Auto-rotating highlights from your secure gallery</p>
+                                    </div>
                                 </div>
                             </div>
                             <div className="h-72 rounded-2xl border border-slate-100 bg-white/70 p-3">
@@ -255,11 +269,13 @@ const AdminDashboard = () => {
                         </div>
 
                         {/* Recent Activity / Calendar Placeholder (Light Theme) */}
-                        <div className="lg:col-span-4 bg-white/80 backdrop-blur-xl p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 relative overflow-hidden group hover:shadow-2xl hover:shadow-school-blue/10 transition-all duration-500">
+                        <div className="lg:col-span-4 bg-white/80 backdrop-blur-xl p-8 rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/40 relative overflow-hidden group hover:shadow-2xl hover:shadow-school-blue/10 transition-all duration-500">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-school-blue/5 blur-3xl rounded-full -mr-16 -mt-16 group-hover:bg-school-blue/10 transition-colors"></div>
                             <h3 className="font-poppins font-bold text-school-text text-lg mb-8 flex items-center justify-between gap-2">
-                                <div className="flex items-center gap-2">
-                                    <span className="w-2 h-2 rounded-full bg-school-blue animate-pulse"></span>
+                                <div className="flex items-center gap-3">
+                                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-school-blue/10 text-school-blue">
+                                        <CalendarDays className="h-5 w-5" strokeWidth={2.4} />
+                                    </span>
                                     Academic Calendar
                                 </div>
                                 <span className="text-xs font-black text-school-navy bg-school-blue/5 px-3 py-1 rounded-full uppercase tracking-widest">
@@ -329,7 +345,7 @@ const AdminDashboard = () => {
                     <div className="p-8 bg-slate-900 text-white relative">
                         <h3 className="text-2xl font-bold">New Student Registration</h3>
                         <p className="text-slate-400 text-sm mt-1">Fill in the details to create a new student account.</p>
-                        <div className="absolute right-8 top-8 opacity-20 text-6xl">🎓</div>
+                        <GraduationCap className="absolute right-8 top-8 h-16 w-16 text-white opacity-20" strokeWidth={1.8} />
                     </div>
 
                     <form onSubmit={handleSubmit} className="p-8 space-y-8">

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { CalendarDays, ChartNoAxesCombined, Search, X } from 'lucide-react';
 import { useConfirm } from '../../context/ConfirmContext';
 import useBreakpoint from '../../hooks/useBreakpoint';
 import api from '../../services/api';
@@ -796,7 +797,8 @@ const Exams = () => {
                 {/* Overview widget */}
                 <div ref={reviewRef} style={{ ...card, minWidth: 0, overflow: 'hidden', scrollMarginTop: '96px' }}>
                     <div style={{ fontSize: '20px', fontWeight: 1000, color: colors.secondary, marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        📊 Global Overview
+                        <ChartNoAxesCombined size={22} strokeWidth={2.4} />
+                        Global Overview
                     </div>
                     <div style={{ display: 'grid', gap: '12px', marginBottom: '24px' }}>
                         <div>
@@ -840,7 +842,7 @@ const Exams = () => {
                         <div style={{ textAlign: 'center', padding: '40px', color: colors.textMuted, fontWeight: 700 }}>Synthesizing records...</div>
                     ) : overviewExams.length === 0 ? (
                         <div style={{ textAlign: 'center', padding: '40px', border: `2px dashed ${colors.border}`, borderRadius: '20px', color: colors.textMuted }}>
-                            <div style={{ fontSize: '24px', marginBottom: '10px' }}>🔍</div>
+                            <Search size={24} strokeWidth={2.4} style={{ margin: '0 auto 10px' }} />
                             <div style={{ fontWeight: 800 }}>No evaluations match your filters</div>
                         </div>
                     ) : (
@@ -877,8 +879,14 @@ const Exams = () => {
                                                 {e.class_section_display || `${e.class_name}-${e.section_name}`}
                                             </div>
                                             <div style={{ marginTop: '8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>📅 {e.start_date}</div>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>📊 {e.total_marks} Pts</div>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                    <CalendarDays size={14} strokeWidth={2.3} />
+                                                    {e.start_date}
+                                                </div>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                    <ChartNoAxesCombined size={14} strokeWidth={2.3} />
+                                                    {e.total_marks} Pts
+                                                </div>
                                             </div>
                                             <div style={{ marginTop: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                                                 <button onClick={() => setViewingExam(e)} style={{ flex: 1, padding: '8px', borderRadius: '10px', border: 'none', backgroundColor: '#f1f5f9', color: '#475569', fontSize: '12px', fontWeight: 900, cursor: 'pointer' }}>View</button>
@@ -897,7 +905,9 @@ const Exams = () => {
             {viewingExam && (
                 <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15, 23, 42, 0.7)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000, padding: '12px', overflowY: 'auto' }}>
                     <div style={{ ...card, width: 'min(900px, 100%)', maxHeight: 'calc(100dvh - 24px)', overflowY: 'auto', position: 'relative' }}>
-                        <button onClick={() => setViewingExam(null)} style={{ position: 'absolute', top: '14px', right: '14px', background: colors.primaryLight, border: 'none', width: '40px', height: '40px', borderRadius: '12px', cursor: 'pointer', fontSize: '20px', color: colors.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900 }}>×</button>
+                        <button onClick={() => setViewingExam(null)} style={{ position: 'absolute', top: '14px', right: '14px', background: colors.primaryLight, border: 'none', width: '40px', height: '40px', borderRadius: '12px', cursor: 'pointer', color: colors.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900 }}>
+                            <X size={18} strokeWidth={2.5} />
+                        </button>
                         
                         <div style={{ marginBottom: '32px' }}>
                             <span style={{ fontSize: '12px', fontWeight: 1000, color: colors.primary, backgroundColor: colors.primaryLight, padding: '6px 12px', borderRadius: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{viewingExam.exam_type}</span>
