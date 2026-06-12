@@ -89,6 +89,12 @@ table {
   display: none;
 }
 
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 @media (max-width: 767px) {
   .app-shell {
     min-height: 100dvh;
@@ -165,6 +171,10 @@ table {
 
   .app-content-surface table {
     min-width: 640px;
+  }
+
+  .table-scroll > table {
+    min-width: 720px;
   }
 
   .app-content-surface table,
