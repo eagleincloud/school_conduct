@@ -1,6 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 import api from "../../services/api";
 
+const formatShiftOption = (shift) => {
+  const type = shift.is_flexible ? "Flexible" : "Fixed";
+  return `${shift.name} (${type})`;
+};
+
 const AddTeacher = () => {
   const inputStyle = {
     width: "100%",
@@ -644,9 +649,11 @@ const AddTeacher = () => {
                     style={inputStyle}
                   >
                     <option value="">-- Select Shift --</option>
-                    {shifts.map((sh) => (
+                    {shifts
+                      .filter((sh) => !sh.applies_to || sh.applies_to === "teachers" || sh.applies_to === "both" || sh.applies_to === "academic")
+                      .map((sh) => (
                       <option key={sh.id} value={sh.id}>
-                        {sh.name}
+                        {formatShiftOption(sh)}
                       </option>
                     ))}
                   </select>
