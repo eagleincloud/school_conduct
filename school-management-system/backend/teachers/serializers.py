@@ -5,6 +5,7 @@ from accounts.serializers import UserSerializer
 class TeacherProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     employee_id = serializers.SerializerMethodField()
+    assigned_shift_name = serializers.ReadOnlyField(source='assigned_shift.name')
     
     def get_employee_id(self, obj):
         prefix = obj.school.school_id if obj.school else 'NS'
@@ -27,6 +28,8 @@ class TeacherProfileSerializer(serializers.ModelSerializer):
             'status',
             'profile_image_base64',
             'rfid_code',
+            'assigned_shift',
+            'assigned_shift_name',
         ]
 
 

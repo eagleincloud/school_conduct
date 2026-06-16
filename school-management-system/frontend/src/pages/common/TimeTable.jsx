@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { useConfirm } from '../../context/ConfirmContext';
 import api from '../../services/api';
 import authService from '../../services/authService';
@@ -513,6 +514,14 @@ const TimeTable = () => {
                                 <Edit2 className="w-4 h-4" />
                                 {isEditMode ? 'Finish' : 'Edit'}
                             </button>
+
+                            <button
+                                onClick={() => setIsShiftModalOpen(true)}
+                                className="flex w-full items-center justify-center gap-2 px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:border-school-blue hover:text-school-blue transition-all font-bold text-sm lg:w-auto"
+                            >
+                                <Clock className="w-4 h-4" />
+                                Manage Shifts
+                            </button>
                         </div>
                     )}
                 </div>
@@ -565,7 +574,7 @@ const TimeTable = () => {
                 />
             )}
 
-            {viewingEntry && (
+            {viewingEntry && createPortal(
                 <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-in fade-in zoom-in duration-300">
                     <div className="bg-white w-full max-w-md rounded-[40px] shadow-2xl overflow-hidden relative border border-slate-100">
                         <button onClick={() => setViewingEntry(null)} className="absolute top-6 right-6 p-2.5 bg-slate-50 hover:bg-slate-100 rounded-2xl text-slate-400 transition-all z-10">
@@ -604,6 +613,7 @@ const TimeTable = () => {
                                         <p className="font-bold text-slate-700 text-sm">{viewingEntry.teacher_name}</p>
                                     </div>
                                 </div>
+
 
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50/50 border border-slate-100/50">
@@ -644,7 +654,8 @@ const TimeTable = () => {
                             </button>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </div>
     );
@@ -736,7 +747,7 @@ const AdminModal = ({ entry, onClose, onSuccess, onDelete, meta, selectedShift }
 
     const isNew = !entry?.id;
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto p-3 sm:p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
             <div className="my-auto bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden border border-slate-100">
                 <div className="p-4 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
@@ -893,7 +904,8 @@ const AdminModal = ({ entry, onClose, onSuccess, onDelete, meta, selectedShift }
                     </div>
                 </form>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 
@@ -921,7 +933,7 @@ const ShiftManager = ({ shifts, onClose }) => {
         }
     };
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-[110] flex items-start justify-center overflow-y-auto p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm">
             <div className="my-auto bg-white w-full max-w-lg rounded-3xl shadow-2xl p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-6">
@@ -983,7 +995,8 @@ const ShiftManager = ({ shifts, onClose }) => {
                     ))}
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

@@ -7,8 +7,8 @@ const AddStudent = () => {
         first_name: '', last_name: '', name: '',
         admission_number: '',
         roll_number: '',
-        class_id: '', section_id: ''
-        ,
+        class_id: '', section_id: '',
+        assigned_shift: '',
         dob: '',
         gender: '',
         blood_group: '',
@@ -24,6 +24,7 @@ const AddStudent = () => {
     });
     const [mainClasses, setMainClasses] = useState([]);
     const [mainSections, setMainSections] = useState([]);
+    const [shifts, setShifts] = useState([]);
     const [message, setMessage] = useState('');
     const [students, setStudents] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -76,6 +77,7 @@ const AddStudent = () => {
     useEffect(() => {
         api.get('classes/main-classes/').then(res => setMainClasses(res.data)).catch(() => {});
         api.get('classes/main-sections/').then(res => setMainSections(res.data)).catch(() => {});
+        api.get('timetable/shifts/').then(res => setShifts(res.data)).catch(() => {});
     }, []);
 
     useEffect(() => {
@@ -133,6 +135,7 @@ const AddStudent = () => {
                 roll_number: '',
                 class_id: '',
                 section_id: '',
+                assigned_shift: '',
                 dob: '',
                 gender: '',
                 blood_group: '',
@@ -467,6 +470,20 @@ const AddStudent = () => {
                             onChange={(e) => setFormData({ ...formData, rfid_code: e.target.value })}
                             style={inputStyle}
                         />
+                    </div>
+
+                    <div>
+                        <div style={labelStyle}>Assigned Shift (Optional)</div>
+                        <select
+                            value={formData.assigned_shift}
+                            onChange={(e) => setFormData({ ...formData, assigned_shift: e.target.value })}
+                            style={inputStyle}
+                        >
+                            <option value="">-- Select Shift --</option>
+                            {shifts.map((sh) => (
+                                <option key={sh.id} value={sh.id}>{sh.name}</option>
+                            ))}
+                        </select>
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '12px' }}>

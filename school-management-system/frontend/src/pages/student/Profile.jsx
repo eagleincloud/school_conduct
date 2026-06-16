@@ -823,6 +823,9 @@ const Profile = () => {
             <div>
               <strong>Bus No.:</strong> {profile.bus_no || "N/A"}
             </div>
+            <div>
+              <strong>Assigned Shift:</strong> {profile.assigned_shift_name || "—"}
+            </div>
           </div>
         </div>
 
