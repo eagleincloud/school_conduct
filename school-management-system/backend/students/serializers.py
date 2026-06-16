@@ -10,6 +10,7 @@ class StudentProfileSerializer(serializers.ModelSerializer):
     has_photo = serializers.SerializerMethodField()
     name = serializers.CharField(source='user.name', read_only=True)
     phone = serializers.CharField(source='user.phone', read_only=True)
+    assigned_shift_name = serializers.ReadOnlyField(source='assigned_shift.name')
 
     class_section_display = serializers.SerializerMethodField()
 
@@ -55,4 +56,6 @@ class StudentProfileSerializer(serializers.ModelSerializer):
             'category',
             'photo_url',
             'has_photo',
+            'assigned_shift',
+            'assigned_shift_name',
         ]

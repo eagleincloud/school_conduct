@@ -37,6 +37,7 @@ class TeacherProfile(models.Model):
     profile_image_base64 = models.TextField(blank=True, null=True)
     photo = models.ImageField(upload_to=teacher_photo_path, blank=True, null=True, max_length=500)
     rfid_code = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    assigned_shift = models.ForeignKey('timetable.Shift', on_delete=models.SET_NULL, null=True, blank=True, related_name='teachers')
 
     class Meta:
         constraints = [

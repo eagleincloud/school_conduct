@@ -79,7 +79,11 @@ class TimeTableViewSet(viewsets.ModelViewSet):
             return queryset
         
         if user.role == 'teacher':
-            return queryset.filter(teacher=user, shift_ref__isnull=False).order_by('day', 'period_number')
+            qs = queryset.filter(teacher=user, shift_ref__isnull=False)
+            teacher_profile = getattr(user, 'teacher_profile', None)
+            if teacher_profile and teacher_profile.assigned_shift_id:
+                qs = qs.filter(shift_ref_id=teacher_profile.assigned_shift_id)
+            return qs.order_by('day', 'period_number')
         
         if user.role == 'student':
             from students.utils import get_requested_student
@@ -92,7 +96,9 @@ class TimeTableViewSet(viewsets.ModelViewSet):
                 )
 
                 # If student is assigned to a specific shift, filter by it
-                if student.class_section.assigned_shift_id:
+                if student.assigned_shift_id:
+                    qs = qs.filter(shift_ref_id=student.assigned_shift_id)
+                elif student.class_section.assigned_shift_id:
                     qs = qs.filter(shift_ref_id=student.class_section.assigned_shift_id)
                 return qs
             return queryset.none()
@@ -131,9 +137,15 @@ class TimeTableViewSet(viewsets.ModelViewSet):
         if user.role == 'student':
             from students.utils import get_requested_student
             student = get_requested_student(request)
-            if student and student.class_section:
-                return Response({'shift_id': student.class_section.assigned_shift_id})
+            if student:
+                if student.assigned_shift_id:
+                    return Response({'shift_id': student.assigned_shift_id})
+                elif student.class_section:
+                    return Response({'shift_id': student.class_section.assigned_shift_id})
         elif user.role == 'teacher':
+            teacher_profile = getattr(user, 'teacher_profile', None)
+            if teacher_profile and teacher_profile.assigned_shift_id:
+                return Response({'shift_id': teacher_profile.assigned_shift_id})
             # Optionally return the first shift where they have a class
             first_entry = TimeTableEntry.objects.filter(teacher=user).first()
             if first_entry:
