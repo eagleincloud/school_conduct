@@ -195,66 +195,25 @@ const TeacherHolidays = () => {
     >
       <style>
         {`
-                @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-                .holiday-animate { animation: fadeIn 0.4s ease forwards; }
-                .calendar-cell:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-                .teacher-holiday-calendar-wrap { overflow-x: auto; }
-                .teacher-holiday-calendar-inner { min-width: 700px; }
-                @media (max-width: 640px) {
-                  .teacher-holiday-page { padding: 12px !important; }
-                  .teacher-holiday-card { padding: 14px !important; border-radius: 16px !important; }
-                  .teacher-holiday-calendar-wrap { overflow-x: visible !important; }
-                  .teacher-holiday-calendar-inner { min-width: 0 !important; width: 100% !important; }
-                  .teacher-holiday-controls {
-                    display: grid !important;
-                    grid-template-columns: minmax(0, 1fr) 88px !important;
-                    gap: 8px !important;
-                    width: 100% !important;
-                  }
-                  .teacher-holiday-controls select,
-                  .teacher-holiday-controls input {
-                    width: 100% !important;
-                    min-width: 0 !important;
-                  }
-                  .teacher-holiday-weekdays,
-                  .teacher-holiday-days {
-                    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
-                    gap: 4px !important;
-                  }
-                  .teacher-holiday-weekday {
-                    font-size: 9px !important;
-                    letter-spacing: 0 !important;
-                  }
-                  .teacher-holiday-empty-day,
-                  .teacher-holiday-day {
-                    min-height: 42px !important;
-                  }
-                  .teacher-holiday-day {
-                    border-radius: 10px !important;
-                    padding: 4px !important;
-                    align-items: center !important;
-                    text-align: center !important;
-                  }
-                  .teacher-holiday-day-number {
-                    width: 22px !important;
-                    height: 22px !important;
-                    font-size: 12px !important;
-                    border-radius: 999px !important;
-                  }
-                  .teacher-holiday-today-label,
-                  .teacher-holiday-today-dot {
-                    display: none !important;
-                  }
-                  .teacher-holiday-title-chip {
-                    width: 6px !important;
-                    height: 6px !important;
-                    padding: 0 !important;
-                    border-radius: 999px !important;
-                    font-size: 0 !important;
-                    align-self: center !important;
-                  }
-                }
-                `}
+                 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+                 .holiday-animate { animation: fadeIn 0.4s ease forwards; }
+                 .calendar-cell:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+                 @media (max-width: 640px) {
+                   .teacher-holiday-page { padding: 12px !important; }
+                   .teacher-holiday-card { padding: 14px !important; border-radius: 16px !important; }
+                   .teacher-holiday-controls {
+                     display: grid !important;
+                     grid-template-columns: minmax(0, 1fr) 88px !important;
+                     gap: 8px !important;
+                     width: 100% !important;
+                   }
+                   .teacher-holiday-controls select,
+                   .teacher-holiday-controls input {
+                     width: 100% !important;
+                     min-width: 0 !important;
+                   }
+                 }
+                 `}
       </style>
 
       {/* Header */}
@@ -685,163 +644,90 @@ const TeacherHolidays = () => {
               </div>
             </div>
 
-            <div className="teacher-holiday-calendar-wrap">
-              <div className="teacher-holiday-calendar-inner">
-                <div
-                  className="rg-calendar teacher-holiday-weekdays" style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(7, 1fr)",
-                    gap: "12px",
-                    marginBottom: "12px",
-                  }}
-                >
-                  {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
-                    (d) => (
-                      <div
-                        className="teacher-holiday-weekday"
-                        key={d}
-                        style={{
-                          color: palette.muted,
-                          fontWeight: 1000,
-                          fontSize: "12px",
-                          textTransform: "uppercase",
-                          textAlign: "center",
-                          letterSpacing: "0.05em",
-                        }}
-                      >
-                        {d}
-                      </div>
-                    ),
-                  )}
-                </div>
-                <div
-                  className="rg-calendar teacher-holiday-days" style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(7, 1fr)",
-                    gap: "12px",
-                  }}
-                >
-                  {calendarCells.map((key, idx) => {
-                    if (!key)
-                      return (
-                        <div
-                          className="teacher-holiday-empty-day"
-                          key={`empty-${idx}`}
-                          style={{ minHeight: "90px" }}
-                        />
-                      );
-                    const list = holidayByDay.get(key) || [];
-                    const isHoliday = list.length > 0;
-                    const isToday = key === toDateKey(new Date());
+            <div style={{ marginTop: "14px", overflowX: "auto" }}>
+              <div className="rg-calendar">
+                {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
+                  <div
+                    key={d}
+                    style={{
+                      color: palette.muted,
+                      fontWeight: 1000,
+                      fontSize: "12px",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {d}
+                  </div>
+                ))}
+                {calendarCells.map((key, idx) => {
+                  if (!key)
                     return (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => (isHoliday ? openDetails(key) : null)}
-                        className="calendar-cell teacher-holiday-day"
+                      <div key={`empty-${idx}`} className="rg-calendar-cell empty" style={{ height: "70px" }} />
+                    );
+                  const list = holidayByDay.get(key) || [];
+                  const isHoliday = list.length > 0;
+                  const isToday = key === toDateKey(new Date());
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => (isHoliday ? openDetails(key) : null)}
+                      className="rg-calendar-cell"
+                      style={{
+                        height: "70px",
+                        borderRadius: "14px",
+                        border: `1px solid ${isHoliday ? palette.primary : palette.border}`,
+                        backgroundColor: isHoliday ? "#eff6ff" : "#fff",
+                        cursor: isHoliday ? "pointer" : "default",
+                        color: palette.text,
+                        padding: "10px",
+                        textAlign: "left",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                        gap: "4px",
+                      }}
+                    >
+                      <div
                         style={{
-                          minHeight: "100px",
-                          borderRadius: "18px",
-                          border: `1px solid ${isHoliday ? palette.primary : palette.border}`,
-                          backgroundColor: isHoliday
-                            ? "#eff6ff"
-                            : isToday
-                              ? "#fff"
-                              : "#fff",
-                          cursor: isHoliday ? "pointer" : "default",
-                          padding: "12px",
-                          textAlign: "left",
+                          fontWeight: 1000,
+                          fontSize: "13px",
+                          width: "100%",
                           display: "flex",
-                          flexDirection: "column",
                           justifyContent: "space-between",
-                          transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                          position: "relative",
                         }}
                       >
+                        <span>{parseInt(key.slice(-2), 10)}</span>
+                        {isToday ? (
+                          <span
+                            style={{
+                              fontSize: "11px",
+                              color: palette.primary,
+                              fontWeight: 1000,
+                            }}
+                          >
+                            Today
+                          </span>
+                        ) : null}
+                      </div>
+                      {isHoliday ? (
                         <div
+                          className="calendar-status-text"
                           style={{
-                            width: "100%",
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
+                            fontSize: "11px",
+                            fontWeight: 1000,
+                            color: palette.primary,
                           }}
                         >
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "6px",
-                            }}
-                          >
-                            <span
-                              className="teacher-holiday-day-number"
-                              style={{
-                                fontWeight: 1000,
-                                fontSize: "14px",
-                                color: isToday ? palette.primary : palette.text,
-                                width: "24px",
-                                height: "24px",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                borderRadius: "8px",
-                                backgroundColor: isToday
-                                  ? "#eff6ff"
-                                  : "transparent",
-                              }}
-                            >
-                              {parseInt(key.slice(-2), 10)}
-                            </span>
-                            {isToday && (
-                              <span
-                                className="teacher-holiday-today-label"
-                                style={{
-                                  fontSize: "10px",
-                                  color: palette.primary,
-                                  fontWeight: 1000,
-                                  textTransform: "uppercase",
-                                }}
-                              >
-                                Today
-                              </span>
-                            )}
-                          </div>
-                          {isToday && (
-                            <div
-                              className="teacher-holiday-today-dot"
-                              style={{
-                                width: 6,
-                                height: 6,
-                                borderRadius: "50%",
-                                backgroundColor: palette.primary,
-                              }}
-                            ></div>
-                          )}
+                          {list[0].title}
                         </div>
-                        {isHoliday && (
-                          <div
-                            className="teacher-holiday-title-chip"
-                            style={{
-                              fontSize: "10px",
-                              fontWeight: 1000,
-                              color: palette.primary,
-                              background: "#fff",
-                              padding: "4px 8px",
-                              borderRadius: "8px",
-                              border: `1px solid #bfdbfe`,
-                              width: "100%",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {list[0].title}
-                          </div>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
+                      ) : (
+                        <div className="calendar-status-text" style={{ fontSize: "11px" }}>&nbsp;</div>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>

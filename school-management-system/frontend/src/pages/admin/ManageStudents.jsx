@@ -65,6 +65,7 @@ const ManageStudents = () => {
     const [students, setStudents] = useState([]);
     const [classes, setClasses] = useState([]);
     const [sections, setSections] = useState([]);
+    const [shifts, setShifts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [busyDeleteId, setBusyDeleteId] = useState(null);
     const [page, setPage] = useState(1);
@@ -90,15 +91,17 @@ const ManageStudents = () => {
     const loadData = async () => {
         setLoading(true);
         try {
-            const [sRes, cRes, secRes] = await Promise.allSettled([
+            const [sRes, cRes, secRes, shRes] = await Promise.allSettled([
                 api.get('students/'),
                 api.get('classes/main-classes/'),
                 api.get('classes/main-sections/'),
+                api.get('timetable/shifts/'),
             ]);
 
             setStudents(sRes.status === 'fulfilled' ? (sRes.value?.data || []) : []);
             setClasses(cRes.status === 'fulfilled' ? (cRes.value?.data || []) : []);
             setSections(secRes.status === 'fulfilled' ? (secRes.value?.data || []) : []);
+            setShifts(shRes.status === 'fulfilled' ? (shRes.value?.data || []) : []);
         } finally {
             setLoading(false);
         }
@@ -205,6 +208,7 @@ const ManageStudents = () => {
             'Admission Number',
             'Category',
             'Region',
+            'Shift',
         ];
         const lines = [headers.map(csvValue).join(',')];
         rows.forEach((s) => {
@@ -224,6 +228,7 @@ const ManageStudents = () => {
                     s.admission_number || '',
                     s.category || '',
                     s.region || '',
+                    s.assigned_shift_name || '—',
                 ].map(csvValue).join(',')
             );
         });
@@ -278,6 +283,7 @@ const ManageStudents = () => {
                 mother_contact: editRow.mother_contact || '',
                 category: editRow.category || '',
                 rfid_code: editRow.rfid_code || '',
+                assigned_shift: editRow.assigned_shift || null,
             });
             setEditRow(null);
             await loadData();
@@ -412,6 +418,7 @@ const ManageStudents = () => {
                                     <th style={th}>Section</th>
                                     <th style={th}>Father Name</th>
                                     <th style={th}>Father Contact</th>
+                                    <th style={th}>Shift</th>
                                     <th style={th}>Status</th>
                                     <th style={th}>Action</th>
                             </tr>
@@ -434,6 +441,7 @@ const ManageStudents = () => {
                                         <td style={td}>{s.sectionLabel}</td>
                                         <td style={td}>{s.father_name || '—'}</td>
                                         <td style={td}>{s.father_contact || '—'}</td>
+                                        <td style={td}>{s.assigned_shift_name || '—'}</td>
                                         <td style={td}>
                                             <span
                                                 style={{
@@ -500,6 +508,7 @@ const ManageStudents = () => {
                             <div><b>RFID Code:</b> {viewRow.rfid_code || '—'}</div>
                             <div><b>Session:</b> {viewRow.sessionName}</div>
                             <div><b>Gender:</b> {viewRow.gender || 'Unknown'}</div>
+                            <div><b>Assigned Shift:</b> {viewRow.assigned_shift_name || '—'}</div>
                             <div><b>Class:</b> {viewRow.classLabel}</div>
                             <div><b>Section:</b> {viewRow.sectionLabel}</div>
                             <div><b>Bus No:</b> {viewRow.bus_no || 'N/A'}</div>
@@ -532,6 +541,12 @@ const ManageStudents = () => {
                                 <option value="Female">Female</option>
                                 <option value="Other">Other</option>
                             </select>
+                             <select value={editRow.assigned_shift || ''} onChange={(e) => setEditRow((p) => ({ ...p, assigned_shift: e.target.value }))} style={selectStyle}>
+                                 <option value="">Shift</option>
+                                 {shifts.map((sh) => (
+                                     <option key={sh.id} value={sh.id}>{sh.name}</option>
+                                 ))}
+                             </select>
                             <input value={editRow.father_name || ''} onChange={(e) => setEditRow((p) => ({ ...p, father_name: e.target.value }))} placeholder="Father's name" style={selectStyle} />
                             <input value={editRow.mother_name || ''} onChange={(e) => setEditRow((p) => ({ ...p, mother_name: e.target.value }))} placeholder="Mother's name" style={selectStyle} />
                             <input value={editRow.father_contact || ''} onChange={(e) => setEditRow((p) => ({ ...p, father_contact: e.target.value }))} placeholder="Father's contact" style={selectStyle} />

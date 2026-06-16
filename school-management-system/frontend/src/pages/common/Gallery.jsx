@@ -4,6 +4,7 @@ import api from '../../services/api';
 import authService from '../../services/authService';
 import { toast } from 'react-hot-toast';
 import { ChevronLeft, ChevronRight, X, Image as ImageIcon, Trash2, Maximize2 } from 'lucide-react';
+import { resolveImageUrl } from '../../utils/helpers';
 
 const GalleryCarousel = ({ images, token }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -40,7 +41,7 @@ const GalleryCarousel = ({ images, token }) => {
                 {images.map((img, idx) => (
                     <div key={img.id} className="min-w-full h-full relative">
                         <img
-                            src={`${img.image_url}${token ? `?token=${token}` : ''}`}
+                            src={`${resolveImageUrl(img.image_url)}${token ? `?token=${token}` : ''}`}
                             alt={img.title}
                             className="w-full h-full object-cover"
                         />
@@ -64,13 +65,23 @@ const GalleryCarousel = ({ images, token }) => {
                         <ChevronRight size={24} />
                     </button>
 
-                    {/* Indicators */}
-                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
+                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 items-center">
                         {images.map((_, idx) => (
                             <button
                                 key={idx}
                                 onClick={() => setCurrentIndex(idx)}
-                                className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? 'w-8 bg-white' : 'w-2 bg-white/30'}`}
+                                style={{
+                                    width: idx === currentIndex ? "8px" : "6px",
+                                    height: idx === currentIndex ? "8px" : "6px",
+                                    borderRadius: "50%",
+                                    border: "none",
+                                    backgroundColor: idx === currentIndex ? "#fff" : "rgba(255,255,255,0.3)",
+                                    cursor: "pointer",
+                                    padding: 0,
+                                    minWidth: 0,
+                                    minHeight: 0,
+                                    transition: "all 300ms ease",
+                                }}
                             />
                         ))}
                     </div>
@@ -353,7 +364,7 @@ const GalleryPage = () => {
                             <div key={img.id} className="group bg-white rounded-[2rem] border border-slate-100 p-3 shadow-xl shadow-slate-200/40 hover:shadow-2xl transition-all duration-500">
                                 <div className="aspect-square rounded-2xl overflow-hidden relative mb-4">
                                     <img
-                                        src={`${img.image_url}${token ? `?token=${token}` : ''}`}
+                                        src={`${resolveImageUrl(img.image_url)}${token ? `?token=${token}` : ''}`}
                                         alt={img.title}
                                         className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                                     />

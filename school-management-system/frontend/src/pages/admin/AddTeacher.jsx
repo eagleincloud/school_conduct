@@ -41,6 +41,7 @@ const AddTeacher = () => {
     subject_specialization: "",
     experience_years: "",
     joining_date: "",
+    assigned_shift: "",
 
     password: "",
     confirm_password: "",
@@ -61,6 +62,7 @@ const AddTeacher = () => {
   const [qualifications, setQualifications] = useState([""]);
 
   const [teachers, setTeachers] = useState([]);
+  const [shifts, setShifts] = useState([]);
 
   const fetchTeachers = async () => {
     try {
@@ -176,8 +178,7 @@ const AddTeacher = () => {
 
   useEffect(() => {
     fetchTeachers();
-    // fetchTeachers already sets loading states
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    api.get("timetable/shifts/").then(res => setShifts(res.data || [])).catch(() => {});
   }, []);
 
   const handleSubmit = async (e) => {
@@ -213,6 +214,7 @@ const AddTeacher = () => {
         role: form.role,
         status: form.status,
         profile_image_base64: form.profile_image_base64,
+        assigned_shift: form.assigned_shift || null,
       };
 
       await api.post("teachers/admin/create-teacher/", payload);
@@ -230,6 +232,7 @@ const AddTeacher = () => {
         subject_specialization: "",
         experience_years: "",
         joining_date: "",
+        assigned_shift: "",
         password: "",
         confirm_password: "",
         role: "Subject Teacher",
@@ -629,6 +632,24 @@ const AddTeacher = () => {
                     }
                     style={inputStyle}
                   />
+                </div>
+
+                <div>
+                  <div style={labelStyle}>Assigned Shift (Optional)</div>
+                  <select
+                    value={form.assigned_shift}
+                    onChange={(e) =>
+                      setForm({ ...form, assigned_shift: e.target.value })
+                    }
+                    style={inputStyle}
+                  >
+                    <option value="">-- Select Shift --</option>
+                    {shifts.map((sh) => (
+                      <option key={sh.id} value={sh.id}>
+                        {sh.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>

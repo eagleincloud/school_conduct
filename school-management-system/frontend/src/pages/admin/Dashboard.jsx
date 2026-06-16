@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     Building2,
     CalendarDays,
     GraduationCap,
     Images,
-    LayoutDashboard,
     School,
     UsersRound,
 } from 'lucide-react';
 import api from '../../services/api';
 import StudentCards from './StudentCards';
 import TeacherCards from './TeacherCards';
+import { resolveImageUrl } from '../../utils/helpers';
 
 const AdminDashboard = () => {
+    const navigate = useNavigate();
     const [recentStudents, setRecentStudents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
@@ -176,12 +178,9 @@ const AdminDashboard = () => {
                 <div className="absolute top-0 right-0 w-64 h-64 bg-school-blue/5 blur-3xl rounded-full -mr-32 -mt-32 transition-colors group-hover:bg-school-blue/10"></div>
                 <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="flex items-center gap-6">
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-school-navy to-school-blue flex items-center justify-center shadow-xl shadow-school-navy/20">
-                            <LayoutDashboard className="h-8 w-8 text-white" strokeWidth={2.4} />
-                        </div>
                         <div>
                             <h1 className="text-4xl font-poppins font-black text-school-text tracking-tight">
-                                Welcome <span className="text-transparent bg-clip-text bg-gradient-to-r from-school-navy to-school-blue">Admin Dashboard</span>
+                                Welcome <span className="text-transparent bg-clip-text bg-gradient-to-r from-school-navy to-school-blue">{localStorage.getItem("user_name") || "Admin"}</span>
                             </h1>
                             <p className="text-sm text-school-body font-bold mt-1 opacity-70">
                                 Management Overview & Academic Control Center • {new Date().toLocaleDateString('default', { weekday: 'long', month: 'long', day: 'numeric' })}
@@ -195,26 +194,26 @@ const AdminDashboard = () => {
             {/* Dashboard Stats & Overview */}
             {!isFormOpen && (
                 <div className="space-y-12 animate-in slide-in-from-bottom-4 duration-700">
-                    {/* Stats Cards */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {/* Stats Tiles */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         {[
-                            { label: 'Total Students', value: studentsCount, Icon: GraduationCap, color: 'from-blue-500 to-school-blue', shadow: 'shadow-blue-500/20' },
-                            { label: 'Total Teachers', value: teachersCount, Icon: UsersRound, color: 'from-indigo-600 to-violet-500', shadow: 'shadow-indigo-500/20' },
-                            { label: 'Active Classes', value: mainClasses.length, Icon: School, color: 'from-emerald-500 to-teal-400', shadow: 'shadow-emerald-500/20' },
-                            { label: 'Total Sections', value: mainSections.length, Icon: Building2, color: 'from-amber-500 to-orange-400', shadow: 'shadow-amber-500/20' },
+                            { label: 'Total Students', value: studentsCount, Icon: GraduationCap, color: 'from-blue-500 to-school-blue', bg: 'bg-blue-50', text: 'text-blue-600', link: '/admin/manage-students' },
+                            { label: 'Total Teachers', value: teachersCount, Icon: UsersRound, color: 'from-indigo-600 to-violet-500', bg: 'bg-indigo-50', text: 'text-indigo-600', link: '/admin/manage-teachers' },
+                            { label: 'Active Classes', value: mainClasses.length, Icon: School, color: 'from-emerald-500 to-teal-400', bg: 'bg-emerald-50', text: 'text-emerald-600', link: '/admin/classes' },
+                            { label: 'Total Sections', value: mainSections.length, Icon: Building2, color: 'from-amber-500 to-orange-400', bg: 'bg-amber-50', text: 'text-amber-600', link: '/admin/classes' },
                         ].map((stat, i) => (
-                            <div key={i} className="group relative bg-white/80 backdrop-blur-xl p-8 rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/40 hover:shadow-2xl hover:shadow-school-blue/10 transition-all duration-500 cursor-default hover:-translate-y-2 overflow-hidden">
-                                <div className={`absolute top-0 left-0 w-2 h-full bg-gradient-to-b ${stat.color} opacity-0 group-hover:opacity-100 transition-opacity`}></div>
-                                <div className="flex items-center gap-5 relative z-10">
-                                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-2xl shadow-lg ${stat.shadow} group-hover:rotate-6 transition-transform duration-500`}>
-                                        <stat.Icon className="h-7 w-7 text-white" strokeWidth={2.25} />
-                                    </div>
-                                    <div>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">{stat.label}</p>
-                                        <p className="text-3xl font-poppins font-black text-school-text">{studentsLoading ? '...' : stat.value}</p>
-                                    </div>
+                            <button
+                                key={i}
+                                type="button"
+                                onClick={() => navigate(stat.link)}
+                                className="group relative bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-slate-200/60 transition-all duration-300 cursor-pointer hover:-translate-y-1 overflow-hidden text-left w-full"
+                            >
+                                <div className={`w-12 h-12 rounded-xl ${stat.bg} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300`}>
+                                    <stat.Icon className={`h-6 w-6 ${stat.text}`} strokeWidth={2.25} />
                                 </div>
-                            </div>
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-1">{stat.label}</p>
+                                <p className="text-2xl font-poppins font-black text-school-text">{studentsLoading ? '...' : stat.value}</p>
+                            </button>
                         ))}
                     </div>
 
@@ -233,17 +232,17 @@ const AdminDashboard = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="h-72 rounded-2xl border border-slate-100 bg-white/70 p-3">
+                            <div className="aspect-video rounded-2xl border border-slate-100 bg-slate-900 overflow-hidden">
                                 {galleryLoading ? (
                                     <div className="h-full flex items-center justify-center text-slate-400 font-bold">Loading gallery...</div>
                                 ) : galleryImages.length === 0 ? (
                                     <div className="h-full flex items-center justify-center text-slate-400 font-bold">No gallery images uploaded yet.</div>
                                 ) : (
-                                    <div className="h-full relative rounded-xl overflow-hidden">
+                                    <div className="h-full relative overflow-hidden">
                                         {galleryImages.map((img, idx) => (
                                             <img
                                                 key={img.id}
-                                                src={`${img.image_url}${token ? `?token=${token}` : ''}`}
+                                                src={`${resolveImageUrl(img.image_url)}${token ? `?token=${token}` : ''}`}
                                                 alt={img.title}
                                                 className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 select-none ${idx === currentSlide ? 'opacity-100' : 'opacity-0'}`}
                                                 onContextMenu={(e) => e.preventDefault()}
@@ -253,13 +252,24 @@ const AdminDashboard = () => {
                                         <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/50 to-transparent">
                                             <p className="text-white font-bold text-sm truncate">{galleryImages[currentSlide]?.title}</p>
                                         </div>
-                                        <div className="absolute bottom-3 right-3 flex gap-1.5">
+                                        <div className="absolute bottom-3 right-3 flex gap-1.5 items-center">
                                             {galleryImages.map((img, idx) => (
                                                 <button
                                                     key={img.id}
                                                     type="button"
                                                     onClick={() => setCurrentSlide(idx)}
-                                                    className={`w-2.5 h-2.5 rounded-full ${idx === currentSlide ? 'bg-white' : 'bg-white/50'}`}
+                                                    style={{
+                                                        width: idx === currentSlide ? "8px" : "6px",
+                                                        height: idx === currentSlide ? "8px" : "6px",
+                                                        borderRadius: "50%",
+                                                        border: "none",
+                                                        backgroundColor: idx === currentSlide ? "#fff" : "rgba(255,255,255,0.5)",
+                                                        cursor: "pointer",
+                                                        padding: 0,
+                                                        minWidth: 0,
+                                                        minHeight: 0,
+                                                        transition: "all 300ms ease",
+                                                    }}
                                                 />
                                             ))}
                                         </div>

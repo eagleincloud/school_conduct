@@ -24,6 +24,13 @@ if [ -f "/home/ec2-user/backend.tar.gz" ]; then
     /home/ec2-user/school-app/venv/bin/python /home/ec2-user/school-app/backend/manage.py migrate
     /home/ec2-user/school-app/venv/bin/python /home/ec2-user/school-app/backend/manage.py collectstatic --no-input
     
+    # Update Gunicorn systemd service configuration if present
+    if [ -f "/home/ec2-user/school-app/backend/gunicorn.service" ]; then
+        echo "Updating Gunicorn service file in systemd..."
+        sudo cp /home/ec2-user/school-app/backend/gunicorn.service /etc/systemd/system/gunicorn.service
+        sudo systemctl daemon-reload
+    fi
+
     # Restart backend service
     sudo systemctl restart gunicorn
     echo "Backend deployed successfully."

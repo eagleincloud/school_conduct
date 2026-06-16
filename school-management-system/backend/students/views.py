@@ -83,6 +83,7 @@ class StudentListView(views.APIView):
                 'user',
                 'class_section__class_ref',
                 'class_section__section_ref',
+                'assigned_shift',
             )
         if not request.user.is_superuser:
             qs = qs.filter(user__school=school)
@@ -113,6 +114,8 @@ class StudentListView(views.APIView):
                 "date_of_admission": s.date_of_admission,
                 "category": s.category,
                 "rfid_code": s.rfid_code,
+                "assigned_shift": s.assigned_shift.id if s.assigned_shift else None,
+                "assigned_shift_name": s.assigned_shift.name if s.assigned_shift else "—",
                 "class_name": (
                     f"{s.class_section.class_ref.name} - {s.class_section.section_ref.name}"
                     if s.class_section else "N/A"
@@ -176,6 +179,7 @@ class StudentDetailView(views.APIView):
                 'user',
                 'class_section__class_ref',
                 'class_section__section_ref',
+                'assigned_shift',
             ).filter(id=student_id)
         if not request.user.is_superuser:
             qs = qs.filter(user__school=school)
@@ -208,6 +212,8 @@ class StudentDetailView(views.APIView):
                 "date_of_admission": s.date_of_admission,
                 "category": s.category,
                 "rfid_code": s.rfid_code,
+                "assigned_shift": s.assigned_shift.id if s.assigned_shift else None,
+                "assigned_shift_name": s.assigned_shift.name if s.assigned_shift else "—",
                 "class_name": (
                     f"{s.class_section.class_ref.name} - {s.class_section.section_ref.name}"
                     if s.class_section else "N/A"
@@ -284,6 +290,16 @@ class StudentUpdateView(views.APIView):
                 s.rfid_code = rfid_val if rfid_val else None
             else:
                 s.rfid_code = None
+        if 'assigned_shift' in data:
+            shift_val = data.get('assigned_shift')
+            if shift_val:
+                try:
+                    from timetable.models import Shift
+                    s.assigned_shift = Shift.objects.get(id=int(shift_val))
+                except (ValueError, Shift.DoesNotExist):
+                    s.assigned_shift = None
+            else:
+                s.assigned_shift = None
         s.save()
 
         return Response({"message": "Student updated successfully"}, status=status.HTTP_200_OK)
@@ -376,6 +392,15 @@ class AdminStudentCreateView(views.APIView):
                     school=school
                 )
 
+                shift_val = data.get('assigned_shift')
+                assigned_shift_obj = None
+                if shift_val:
+                    try:
+                        from timetable.models import Shift
+                        assigned_shift_obj = Shift.objects.get(id=int(shift_val))
+                    except (ValueError, Shift.DoesNotExist):
+                        pass
+
                 StudentProfile.objects.create(
                     user=user,
                     school=school,
@@ -383,6 +408,7 @@ class AdminStudentCreateView(views.APIView):
                     roll_number=roll_number,
                     rfid_code=rfid_code_cleaned,
                     class_section_id=class_section_id,
+                    assigned_shift=assigned_shift_obj,
                     parent=parent_obj,
                     dob=dob,
                     gender=data.get('gender'),

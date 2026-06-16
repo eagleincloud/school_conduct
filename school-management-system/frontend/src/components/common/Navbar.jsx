@@ -52,7 +52,7 @@ const Navbar = () => {
         ? studentProfile?.admission_number
         : user.role === 'teacher'
             ? teacherProfile?.employee_id
-            : user?.id;
+            : authProfile?.username || authProfile?.id;
 
     // Use the latest fetched photo, fallback to token photo, fallback to null
     const profilePhotoUrl = authProfile?.profile_photo || user.profile_photo;

@@ -23,6 +23,7 @@ class StudentProfile(models.Model):
     roll_number = models.CharField(max_length=20, null=True, blank=True)
     rfid_code = models.CharField(max_length=100, unique=True, blank=True, null=True)
     class_section = models.ForeignKey('classes.ClassSection', on_delete=models.SET_NULL, null=True, blank=True, related_name='students')
+    assigned_shift = models.ForeignKey('timetable.Shift', on_delete=models.SET_NULL, null=True, blank=True, related_name='students')
     parent = models.ForeignKey(Parent, on_delete=models.SET_NULL, null=True, blank=True, related_name='children')
     
     dob = models.DateField(null=True, blank=True)

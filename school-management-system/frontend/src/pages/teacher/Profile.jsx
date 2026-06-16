@@ -1345,6 +1345,21 @@ const TeacherProfile = () => {
                 {profile.role_label || "Teacher"}
               </div>
             </Field>
+
+            <Field label="Assigned Shift" error={null}>
+              <div
+                style={{
+                  border: `1px solid ${colors.border}`,
+                  borderRadius: 12,
+                  padding: 12,
+                  background: "#fafafa",
+                  fontWeight: 1000,
+                  color: colors.text,
+                }}
+              >
+                {profile.assigned_shift_name || "—"}
+              </div>
+            </Field>
           </div>
         </div>
 

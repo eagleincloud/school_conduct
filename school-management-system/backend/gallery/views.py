@@ -176,14 +176,26 @@ class GalleryImageProtectedView(views.APIView):
             return Response({'error': 'No image file associated with this record'}, status=status.HTTP_404_NOT_FOUND)
 
         # ☁️ Cloudinary / External Storage Support:
-        # If the storage backend uses URLs (like Cloudinary or S3), redirect directly to the resource URL.
+        # Instead of 302 redirect (which gets blocked on mobile due to HTTP -> HTTPS/CORS restrictions),
+        # proxy the file content directly from the storage URL.
         try:
             url = obj.image.url
             if url.startswith('http://') or url.startswith('https://'):
-                from django.http import HttpResponseRedirect
-                return HttpResponseRedirect(url)
+                import requests
+                from django.http import HttpResponse
+                img_res = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'}, timeout=15)
+                if img_res.status_code == 200:
+                    content_type = img_res.headers.get('Content-Type') or mimetypes.guess_type(url)[0] or 'image/jpeg'
+                    response = HttpResponse(img_res.content, content_type=content_type)
+                    response['Content-Disposition'] = f'inline; filename="{obj.filename()}"'
+                    response['X-Content-Type-Options'] = 'nosniff'
+                    response['Cache-Control'] = 'private, max-age=3600'
+                    return response
+                else:
+                    print(f"DEBUG [Gallery]: Cloudinary fetch failed with status {img_res.status_code}")
         except Exception as e:
-            print(f"DEBUG [Gallery]: Could not get image URL: {str(e)}")
+            print(f"DEBUG [Gallery]: Could not proxy image from URL: {str(e)}")
+
 
         # 📁 Local Storage Fallback:
         try:

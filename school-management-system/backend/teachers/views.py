@@ -323,7 +323,7 @@ class TeacherListView(views.APIView):
 
     def get(self, request):
         school = request.user.school
-        qs = TeacherProfile.objects.select_related('user')
+        qs = TeacherProfile.objects.select_related('user', 'assigned_shift')
         if not request.user.is_superuser:
             qs = qs.filter(user__school=school)
         profiles = qs.order_by('id')
@@ -347,6 +347,8 @@ class TeacherListView(views.APIView):
                 "joining_date": p.joining_date,
                 "role": p.role,
                 "rfid_code": p.rfid_code,
+                "assigned_shift": p.assigned_shift.id if p.assigned_shift else None,
+                "assigned_shift_name": p.assigned_shift.name if p.assigned_shift else "—",
                 "status": p.status,
             }
             for p in profiles
@@ -358,7 +360,7 @@ class TeacherDetailView(views.APIView):
 
     def get(self, request, teacher_id: int):
         school = request.user.school
-        qs = TeacherProfile.objects.select_related('user').filter(id=teacher_id)
+        qs = TeacherProfile.objects.select_related('user', 'assigned_shift').filter(id=teacher_id)
         if not request.user.is_superuser:
             qs = qs.filter(user__school=school)
             
@@ -385,6 +387,8 @@ class TeacherDetailView(views.APIView):
             "joining_date": p.joining_date,
             "role": p.role,
             "rfid_code": p.rfid_code,
+            "assigned_shift": p.assigned_shift.id if p.assigned_shift else None,
+            "assigned_shift_name": p.assigned_shift.name if p.assigned_shift else "—",
             "status": p.status,
             "profile_image_base64": p.profile_image_base64,
         })
@@ -474,6 +478,16 @@ class TeacherUpdateView(views.APIView):
         p.role = data.get('role', p.role)
         p.profile_image_base64 = data.get('profile_image_base64', p.profile_image_base64)
         p.rfid_code = clean_field(data.get('rfid_code'), p.rfid_code)
+        if 'assigned_shift' in data:
+            shift_val = data.get('assigned_shift')
+            if shift_val:
+                try:
+                    from timetable.models import Shift
+                    p.assigned_shift = Shift.objects.get(id=int(shift_val))
+                except (ValueError, Shift.DoesNotExist):
+                    p.assigned_shift = None
+            else:
+                p.assigned_shift = None
         p.save()
 
         return Response({"message": "Teacher updated successfully"}, status=status.HTTP_200_OK)
@@ -524,6 +538,15 @@ class AdminTeacherCreateView(views.APIView):
             def clean_field(val):
                 return val if val != "" else None
 
+            shift_val = data.get('assigned_shift')
+            assigned_shift_obj = None
+            if shift_val:
+                try:
+                    from timetable.models import Shift
+                    assigned_shift_obj = Shift.objects.get(id=int(shift_val))
+                except (ValueError, Shift.DoesNotExist):
+                    pass
+
             profile = TeacherProfile.objects.create(
                 user=user,
                 employee_id=employee_id,
@@ -539,6 +562,7 @@ class AdminTeacherCreateView(views.APIView):
                 status=data.get('status') or 'Active',
                 profile_image_base64=data.get('profile_image_base64'),
                 rfid_code=clean_field(data.get('rfid_code')),
+                assigned_shift=assigned_shift_obj,
             )
             return Response({"message": "Teacher created successfully"}, status=status.HTTP_201_CREATED)
         except Exception as e:

@@ -328,7 +328,7 @@ table {
 
 .student-tile-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
   gap: 12px;
 }
 
@@ -336,6 +336,36 @@ table {
 .student-tile-item {
   outline: none;
   -webkit-tap-highlight-color: transparent;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  aspect-ratio: 1 / 1 !important;
+  padding: 16px 12px !important;
+  box-sizing: border-box !important;
+  min-height: 0 !important;
+}
+
+.student-tile-icon-container {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease;
+}
+
+.student-tile-icon-container svg {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.student-tile-label {
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .student-tile-item:hover {
@@ -386,9 +416,23 @@ table {
   }
 
   .student-tile-item {
-    padding: 14px 8px 12px !important;
-    min-height: 90px !important;
+    padding: 10px 4px !important;
     border-radius: 16px !important;
+  }
+
+  .student-tile-icon-container {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+  }
+
+  .student-tile-icon-container svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .student-tile-label {
+    font-size: 10px;
   }
 }
 
@@ -400,7 +444,23 @@ table {
   }
 
   .student-tile-item {
-    min-height: 100px !important;
+    padding: 12px 6px !important;
+    border-radius: 16px !important;
+  }
+
+  .student-tile-icon-container {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+
+  .student-tile-icon-container svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .student-tile-label {
+    font-size: 11px;
   }
 }
 

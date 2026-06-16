@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import useAuthStore from "../../store/authStore";
+import { resolveImageUrl } from "../../utils/helpers";
 import { useStudent } from "../../context/StudentContext";
 import { 
   Clock, 
@@ -911,9 +912,8 @@ export default function StudentDashboard() {
           {Array.from({ length: 8 }).map((_, i) => (
             <div
               key={i}
-              className="student-tile-skeleton"
+              className="student-tile-skeleton student-tile-item"
               style={{
-                height: 110,
                 borderRadius: 20,
                 backgroundColor: themeStyles.cardBg,
                 border: `1px solid ${themeStyles.cardBorder}`,
@@ -1007,8 +1007,13 @@ export default function StudentDashboard() {
               fontSize: 22,
               boxShadow: "0 4px 14px rgba(37, 99, 235, 0.3)",
               flexShrink: 0,
+              overflow: "hidden",
             }}>
-              {profile?.name ? profile.name.slice(0, 1).toUpperCase() : "S"}
+              {profile?.photo_url ? (
+                <img src={profile.photo_url} alt="Profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              ) : (
+                profile?.name ? profile.name.slice(0, 1).toUpperCase() : "S"
+              )}
             </div>
             <div>
               <div style={{
@@ -1117,12 +1122,6 @@ export default function StudentDashboard() {
                   background: theme === "dark" ? "#0f172a" : "#ffffff",
                   border: `1px solid ${theme === "dark" ? "#1e293b" : "#f1f5f9"}`,
                   borderRadius: 20,
-                  padding: "20px 12px 16px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 10,
                   cursor: "pointer",
                   position: "relative",
                   transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)",
@@ -1130,7 +1129,6 @@ export default function StudentDashboard() {
                     ? "0 1px 4px rgba(0,0,0,0.3)"
                     : "0 1px 6px rgba(0,0,0,0.04)",
                   textDecoration: "none",
-                  minHeight: 110,
                 }}
               >
                 {/* Badge */}
@@ -1152,30 +1150,20 @@ export default function StudentDashboard() {
                 )}
 
                 {/* Icon Container */}
-                <div style={{
-                  width: 52,
-                  height: 52,
-                  borderRadius: 16,
-                  backgroundColor: theme === "dark"
-                    ? `${tile.color}18`
-                    : tile.bg,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: tile.color,
-                  transition: "transform 0.25s ease",
-                }}>
+                <div 
+                  className="student-tile-icon-container"
+                  style={{
+                    backgroundColor: theme === "dark"
+                      ? `${tile.color}18`
+                      : tile.bg,
+                    color: tile.color,
+                  }}
+                >
                   {tile.icon}
                 </div>
 
                 {/* Label */}
-                <span style={{
-                  fontSize: 12,
-                  fontWeight: 800,
-                  color: themeStyles.text,
-                  textAlign: "center",
-                  lineHeight: 1.2,
-                }}>
+                <span className="student-tile-label" style={{ color: themeStyles.text }}>
                   {tile.title}
                 </span>
               </button>
@@ -1201,7 +1189,7 @@ export default function StudentDashboard() {
           {galleryImages.map((img, idx) => (
             <img
               key={img.id}
-              src={`${img.image_url}${galleryToken ? `?token=${galleryToken}` : ''}`}
+              src={`${resolveImageUrl(img.image_url)}${galleryToken ? `?token=${galleryToken}` : ''}`}
               alt={img.title}
               style={{
                 position: "absolute",
@@ -1235,21 +1223,23 @@ export default function StudentDashboard() {
             }}>
               {galleryImages[currentSlide]?.title}
             </p>
-            <div style={{ display: "flex", gap: 5 }}>
+            <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
               {galleryImages.map((_, idx) => (
                 <button
                   key={idx}
                   type="button"
                   onClick={() => setCurrentSlide(idx)}
                   style={{
-                    width: idx === currentSlide ? 18 : 7,
-                    height: 7,
-                    borderRadius: 99,
+                    width: idx === currentSlide ? 8 : 6,
+                    height: idx === currentSlide ? 8 : 6,
+                    borderRadius: "50%",
                     border: "none",
                     backgroundColor: idx === currentSlide ? "#fff" : "rgba(255,255,255,0.4)",
                     cursor: "pointer",
                     transition: "all 300ms ease",
                     padding: 0,
+                    minWidth: 0,
+                    minHeight: 0,
                   }}
                 />
               ))}

@@ -1,14 +1,43 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, useLocation, useNavigate } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes';
 import MainLayout from './layouts/MainLayout';
 import useAuthStore from './store/authStore';
+import { App as CapApp } from '@capacitor/app';
 
 import { Toaster, toast } from 'react-hot-toast';
 
 const AppContent = () => {
   const { isAuthenticated } = useAuthStore();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const isAppPluginAvailable = typeof window !== 'undefined' && window.Capacitor && window.Capacitor.isPluginAvailable('App');
+    if (!isAppPluginAvailable) return;
+
+    const backButtonListener = CapApp.addListener('backButton', () => {
+      const path = location.pathname;
+      const isRootPage = 
+        path === '/' || 
+        path === '/login' ||
+        path === '/student/dashboard' ||
+        path === '/teacher/dashboard' ||
+        path === '/admin/dashboard' ||
+        path === '/superadmin/dashboard' ||
+        path.match(/^\/school\/[^/]+\/login\/?$/);
+
+      if (isRootPage) {
+        CapApp.exitApp();
+      } else {
+        navigate(-1);
+      }
+    });
+
+    return () => {
+      backButtonListener.then((listener) => listener.remove());
+    };
+  }, [location, navigate]);
   
   // Define public routes that should never have the dashboard layout
   const isPublicRoute = 

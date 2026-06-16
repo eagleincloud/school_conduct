@@ -31,6 +31,7 @@ const csvValue = (value) => {
 const ManageTeachers = () => {
     const confirm = useConfirm();
     const [teachers, setTeachers] = useState([]);
+    const [shifts, setShifts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [busyDeleteId, setBusyDeleteId] = useState(null);
     const [page, setPage] = useState(1);
@@ -52,10 +53,15 @@ const ManageTeachers = () => {
     const loadTeachers = async () => {
         setLoading(true);
         try {
-            const res = await api.get('teachers/');
-            setTeachers(res.data || []);
+            const [tRes, shRes] = await Promise.allSettled([
+                api.get('teachers/'),
+                api.get('timetable/shifts/'),
+            ]);
+            setTeachers(tRes.status === 'fulfilled' ? (tRes.value?.data || []) : []);
+            setShifts(shRes.status === 'fulfilled' ? (shRes.value?.data || []) : []);
         } catch {
             setTeachers([]);
+            setShifts([]);
         } finally {
             setLoading(false);
         }
@@ -145,6 +151,7 @@ const ManageTeachers = () => {
             'Qualification',
             'Experience',
             'Joining Date',
+            'Shift',
             'Status',
         ];
         const lines = [headers.map(csvValue).join(',')];
@@ -162,6 +169,7 @@ const ManageTeachers = () => {
                     t.qualificationLabel || '',
                     t.experience_years ?? '',
                     formatDate(t.joining_date),
+                    t.assigned_shift_name || '—',
                     t.statusLabel || '',
                 ].map(csvValue).join(',')
             );
@@ -212,6 +220,7 @@ const ManageTeachers = () => {
                 joining_date: editRow.joining_date || null,
                 role: editRow.role || 'Subject Teacher',
                 status: editRow.status || 'Active',
+                assigned_shift: editRow.assigned_shift || null,
             });
             setEditRow(null);
             await loadTeachers();
@@ -344,13 +353,14 @@ const ManageTeachers = () => {
                                     <th style={th}>Experience</th>
                                     <th style={th}>Joining Date</th>
                                     <th style={th}>Role</th>
+                                    <th style={th}>Shift</th>
                                     <th style={th}>Status</th>
                                     <th style={th}>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                                 {pagedRows.length === 0 ? (
-                                    <tr><td colSpan={15} style={{ ...td, textAlign: 'center', padding: 20 }}>No teachers found.</td></tr>
+                                    <tr><td colSpan={16} style={{ ...td, textAlign: 'center', padding: 20 }}>No teachers found.</td></tr>
                                 ) : pagedRows.map((t, idx) => (
                                     <tr key={t.id} style={{ background: idx % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
                                         <td style={td}>{start + idx + 1}</td>
@@ -380,6 +390,7 @@ const ManageTeachers = () => {
                                                 {t.role || 'Subject Teacher'}
                                             </span>
                                         </td>
+                                        <td style={td}>{t.assigned_shift_name || '—'}</td>
                                         <td style={td}>
                                             <span
                                                 style={{
@@ -450,6 +461,7 @@ const ManageTeachers = () => {
                             <div><b>Qualification:</b> {viewRow.qualificationLabel}</div>
                             <div><b>Experience:</b> {viewRow.experience_years ?? '—'}</div>
                             <div><b>Role:</b> {viewRow.role || 'Subject Teacher'}</div>
+                            <div><b>Assigned Shift:</b> {viewRow.assigned_shift_name || '—'}</div>
                             <div><b>Status:</b> {viewRow.statusLabel}</div>
                         </div>
                         <div style={{ marginTop: 16, textAlign: 'right' }}>
@@ -488,6 +500,12 @@ const ManageTeachers = () => {
                                 <option value="Subject Teacher">Subject Teacher</option>
                                 <option value="Class Teacher">Class Teacher</option>
                                 <option value="Staff">Staff</option>
+                            </select>
+                            <select value={editRow.assigned_shift || ''} onChange={(e) => setEditRow((p) => ({ ...p, assigned_shift: e.target.value || null }))} style={selectStyle}>
+                                <option value="">Shift</option>
+                                {shifts.map((sh) => (
+                                    <option key={sh.id} value={sh.id}>{sh.name}</option>
+                                ))}
                             </select>
                         </div>
                         <div style={{ marginTop: 14, display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
