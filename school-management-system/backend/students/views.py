@@ -9,6 +9,7 @@ from accounts.models import User
 from accounts.utils import get_unique_username
 from .models import StudentProfile, Parent
 from .pdf_id_card import build_student_id_card_pdf
+from core.utils import get_safe_image_source
 from .utils import get_requested_student
 from core.permissions import IsAdmin
 from classes.models import ClassSection, MainClass, MainSection
@@ -558,8 +559,8 @@ class StudentIdCardPdfView(views.APIView):
                 or getattr(settings, 'SCHOOL_EMAIL', '')
             ),
             school_website=getattr(settings, 'SCHOOL_WEBSITE', ''),
-            logo_path=school_obj.logo.path if school_obj and school_obj.logo and os.path.exists(school_obj.logo.path) else None,
-            hero_image_path=school_obj.hero_image.path if school_obj and school_obj.hero_image and os.path.exists(school_obj.hero_image.path) else None,
+            logo_path=get_safe_image_source(school_obj.logo) if school_obj else None,
+            hero_image_path=get_safe_image_source(school_obj.hero_image) if school_obj else None,
         )
         filename = f"id-card-{s.admission_number or s.id}.pdf"
         response = HttpResponse(pdf_bytes, content_type='application/pdf')

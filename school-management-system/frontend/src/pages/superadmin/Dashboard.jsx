@@ -320,7 +320,7 @@ export default function SuperAdminDashboard() {
     setUtilState((prev) => ({ ...prev, busy: true }));
     try {
       const resp = await api.post(
-        "/schools/bulk-id-cards/",
+        "/schools/tools/bulk-id-cards/",
         {
           school_id: utilState.school_id,
           user_type: utilState.user_type,
@@ -1584,16 +1584,31 @@ export default function SuperAdminDashboard() {
                     <label className="text-xs font-black uppercase tracking-widest text-slate-400">
                       Selected Institution
                     </label>
-                    <div className="w-full bg-slate-50 rounded-2xl px-6 py-4 border border-slate-100">
-                      <p className="text-sm font-bold text-slate-900">
-                        {utilState.school_name || "No school selected"}
+                    <select
+                      value={utilState.school_id}
+                      onChange={(e) => {
+                        const selectedId = e.target.value;
+                        const selectedSchool = schools.find((s) => String(s.id) === String(selectedId));
+                        setUtilState((prev) => ({
+                          ...prev,
+                          school_id: selectedId,
+                          school_name: selectedSchool ? selectedSchool.name : "",
+                        }));
+                      }}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-5 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:bg-white transition-all cursor-pointer"
+                    >
+                      <option value="">No school selected</option>
+                      {schools.map((school) => (
+                        <option key={school.id} value={school.id}>
+                          {school.name}
+                        </option>
+                      ))}
+                    </select>
+                    {utilState.school_id && (
+                      <p className="text-[10px] text-blue-600 font-mono font-black mt-1 uppercase">
+                        Infrastructure Active
                       </p>
-                      {utilState.school_id && (
-                        <p className="text-[10px] text-blue-600 font-mono font-black mt-1 uppercase">
-                          Infrastructure Active
-                        </p>
-                      )}
-                    </div>
+                    )}
                   </div>
 
                   <div className="space-y-3">

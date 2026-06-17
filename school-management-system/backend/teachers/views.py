@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from accounts.models import User
 from .models import TeacherProfile, TeacherDocument
 from .pdf_id_card import build_teacher_id_card_pdf
+from core.utils import get_safe_image_source
 from .serializers import TeacherProfileSerializer, TeacherDocumentSerializer
 from core.permissions import IsAdmin, IsTeacher
 from classes.models import ClassSection
@@ -260,8 +261,8 @@ class TeacherIdCardPdfView(views.APIView):
                 or getattr(settings, 'SCHOOL_EMAIL', '')
             ),
             school_website=getattr(settings, 'SCHOOL_WEBSITE', ''),
-            logo_path=school_obj.logo.path if school_obj and school_obj.logo and os.path.exists(school_obj.logo.path) else None,
-            hero_image_path=school_obj.hero_image.path if school_obj and school_obj.hero_image and os.path.exists(school_obj.hero_image.path) else None,
+            logo_path=get_safe_image_source(school_obj.logo) if school_obj else None,
+            hero_image_path=get_safe_image_source(school_obj.hero_image) if school_obj else None,
         )
 
         prefix = profile.school.school_id if profile.school else 'NS'
