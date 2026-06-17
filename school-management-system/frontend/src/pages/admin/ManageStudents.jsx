@@ -4,6 +4,11 @@ import api from '../../services/api';
 
 const PAGE_SIZE = 8;
 
+const formatShiftOption = (shift) => {
+    const type = shift.is_flexible ? 'Flexible' : 'Fixed';
+    return `${shift.name} (${type})`;
+};
+
 const parseClassSection = (className) => {
     if (!className || className === 'N/A') return { classLabel: 'N/A', sectionLabel: 'N/A' };
     const [classLabel, sectionLabel] = String(className).split('-').map((p) => p?.trim());
@@ -543,8 +548,10 @@ const ManageStudents = () => {
                             </select>
                              <select value={editRow.assigned_shift || ''} onChange={(e) => setEditRow((p) => ({ ...p, assigned_shift: e.target.value }))} style={selectStyle}>
                                  <option value="">Shift</option>
-                                 {shifts.map((sh) => (
-                                     <option key={sh.id} value={sh.id}>{sh.name}</option>
+                                 {shifts
+                                     .filter((sh) => !sh.applies_to || sh.applies_to === 'students' || sh.applies_to === 'both' || sh.applies_to === 'academic')
+                                     .map((sh) => (
+                                     <option key={sh.id} value={sh.id}>{formatShiftOption(sh)}</option>
                                  ))}
                              </select>
                             <input value={editRow.father_name || ''} onChange={(e) => setEditRow((p) => ({ ...p, father_name: e.target.value }))} placeholder="Father's name" style={selectStyle} />

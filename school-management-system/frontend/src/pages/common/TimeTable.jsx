@@ -31,6 +31,12 @@ const DAYS = [
 
 const PERIODS = [1, 2, 3, 4, 5, 6, 7, 8];
 
+const formatShiftLabel = (shift) => {
+    if (!shift) return '';
+    const flexible = shift.is_flexible ? 'Flexible' : 'Fixed';
+    return `${shift.name} (${flexible})`;
+};
+
 const colors = {
     primary: '#2563eb',
     primaryLight: '#eff6ff',
@@ -465,7 +471,7 @@ const TimeTable = () => {
                                     : 'text-slate-600 hover:text-school-blue'
                                     }`}
                             >
-                                {opt.name}
+                                {formatShiftLabel(opt)}
                             </button>
                         ))}
                     </div>
@@ -912,7 +918,8 @@ const AdminModal = ({ entry, onClose, onSuccess, onDelete, meta, selectedShift }
 const ShiftManager = ({ shifts, onClose }) => {
     const [loading, setLoading] = useState(false);
     const [editingShift, setEditingShift] = useState(null);
-    const [form, setForm] = useState({ name: '', start_time: '08:00', end_time: '14:00' });
+    const emptyForm = { name: '', start_time: '08:00', end_time: '14:00', is_flexible: false, applies_to: 'both' };
+    const [form, setForm] = useState(emptyForm);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -923,7 +930,7 @@ const ShiftManager = ({ shifts, onClose }) => {
             } else {
                 await api.post('timetable/shifts/', form);
             }
-            setForm({ name: '', start_time: '08:00', end_time: '14:00' });
+            setForm(emptyForm);
             setEditingShift(null);
             onClose();
         } catch (err) {
@@ -975,6 +982,28 @@ const ShiftManager = ({ shifts, onClose }) => {
                                 required
                             />
                         </div>
+                        <div>
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 block">Applies To</label>
+                            <select
+                                value={form.applies_to}
+                                onChange={e => setForm({ ...form, applies_to: e.target.value })}
+                                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-bold"
+                            >
+                                <option value="both">Students & Teachers</option>
+                                <option value="academic">Academic</option>
+                                <option value="students">Students Only</option>
+                                <option value="teachers">Teachers Only</option>
+                            </select>
+                        </div>
+                        <label className="flex items-center gap-3 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-700">
+                            <input
+                                type="checkbox"
+                                checked={Boolean(form.is_flexible)}
+                                onChange={e => setForm({ ...form, is_flexible: e.target.checked })}
+                                className="h-4 w-4 accent-blue-600"
+                            />
+                            Flexible shift
+                        </label>
                     </div>
                     <button type="submit" disabled={loading} className="w-full py-3 bg-school-blue text-white rounded-xl font-bold shadow-lg shadow-school-blue/20">
                         {loading ? 'Saving...' : editingShift ? 'Update Shift' : 'Add New Shift'}
@@ -987,9 +1016,12 @@ const ShiftManager = ({ shifts, onClose }) => {
                             <div>
                                 <h4 className="font-black text-slate-800 uppercase tracking-tight text-sm">{s.name}</h4>
                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">{s.start_time} - {s.end_time}</p>
+                                <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mt-1">
+                                    {s.is_flexible ? 'Flexible' : 'Fixed'} - {s.applies_to_display || 'Students & Teachers'}
+                                </p>
                             </div>
                             <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
-                                <button onClick={() => { setEditingShift(s); setForm({ name: s.name, start_time: s.start_time, end_time: s.end_time }); }} className="p-2 text-slate-400 hover:text-school-blue hover:bg-school-blue/10 rounded-xl transition-all"><Edit2 className="w-4 h-4" /></button>
+                                <button onClick={() => { setEditingShift(s); setForm({ name: s.name, start_time: s.start_time, end_time: s.end_time, is_flexible: Boolean(s.is_flexible), applies_to: s.applies_to || 'both' }); }} className="p-2 text-slate-400 hover:text-school-blue hover:bg-school-blue/10 rounded-xl transition-all"><Edit2 className="w-4 h-4" /></button>
                             </div>
                         </div>
                     ))}

@@ -6,10 +6,23 @@ from datetime import time
 User = get_user_model()
 
 class Shift(models.Model):
+    APPLIES_TO_STUDENTS = 'students'
+    APPLIES_TO_TEACHERS = 'teachers'
+    APPLIES_TO_BOTH = 'both'
+    APPLIES_TO_ACADEMIC = 'academic'
+    APPLIES_TO_CHOICES = (
+        (APPLIES_TO_STUDENTS, 'Students'),
+        (APPLIES_TO_TEACHERS, 'Teachers'),
+        (APPLIES_TO_BOTH, 'Students & Teachers'),
+        (APPLIES_TO_ACADEMIC, 'Academic'),
+    )
+
     school = models.ForeignKey('tenants.School', on_delete=models.CASCADE, null=True, blank=True, related_name='shifts')
     name = models.CharField(max_length=50)
     start_time = models.TimeField()
     end_time = models.TimeField()
+    is_flexible = models.BooleanField(default=False)
+    applies_to = models.CharField(max_length=20, choices=APPLIES_TO_CHOICES, default=APPLIES_TO_BOTH)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

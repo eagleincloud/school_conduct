@@ -2,9 +2,19 @@ from rest_framework import serializers
 from .models import TimeTableEntry, Shift
 
 class ShiftSerializer(serializers.ModelSerializer):
+    applies_to_display = serializers.CharField(source='get_applies_to_display', read_only=True)
+
     class Meta:
         model = Shift
-        fields = ['id', 'name', 'start_time', 'end_time']
+        fields = [
+            'id',
+            'name',
+            'start_time',
+            'end_time',
+            'is_flexible',
+            'applies_to',
+            'applies_to_display',
+        ]
 
 class TimeTableEntrySerializer(serializers.ModelSerializer):
     teacher_name = serializers.ReadOnlyField(source='teacher.name')

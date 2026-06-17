@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../services/api';
 
+const formatShiftOption = (shift) => {
+    const type = shift.is_flexible ? 'Flexible' : 'Fixed';
+    return `${shift.name} (${type})`;
+};
+
 const AddStudent = () => {
     const [formData, setFormData] = useState({
         email: '', password: '', confirm_password: '',
@@ -480,8 +485,10 @@ const AddStudent = () => {
                             style={inputStyle}
                         >
                             <option value="">-- Select Shift --</option>
-                            {shifts.map((sh) => (
-                                <option key={sh.id} value={sh.id}>{sh.name}</option>
+                            {shifts
+                                .filter((sh) => !sh.applies_to || sh.applies_to === 'students' || sh.applies_to === 'both' || sh.applies_to === 'academic')
+                                .map((sh) => (
+                                <option key={sh.id} value={sh.id}>{formatShiftOption(sh)}</option>
                             ))}
                         </select>
                     </div>
