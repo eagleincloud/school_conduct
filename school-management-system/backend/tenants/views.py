@@ -10,6 +10,7 @@ from .serializers import PublicSchoolSerializer, SchoolAdminSerializer
 from .bulk_id_service import generate_bulk_pdf
 from students.models import StudentProfile
 from teachers.models import TeacherProfile
+from core.utils import get_safe_image_source
 
 class SchoolDetailView(APIView):
     """
@@ -105,7 +106,7 @@ class BulkIDCardGenerationView(APIView):
                 users_data.append({
                     'type_label': 'STUDENT ID CARD',
                     'name': p.user.name or p.user.username,
-                    'photo_path': p.photo.path if p.photo and os.path.exists(p.photo.path) else None,
+                    'photo_path': get_safe_image_source(p.photo),
                     'details': details
                 })
         elif user_type == 'teacher':
@@ -121,7 +122,7 @@ class BulkIDCardGenerationView(APIView):
                 users_data.append({
                     'type_label': 'TEACHER ID CARD',
                     'name': p.user.name or p.user.username,
-                    'photo_path': p.photo.path if p.photo and os.path.exists(p.photo.path) else None,
+                    'photo_path': get_safe_image_source(p.photo),
                     'details': details
                 })
         else:
@@ -133,8 +134,8 @@ class BulkIDCardGenerationView(APIView):
         school_info = {
             'name': school.name,
             'address': school.address or school.location,
-            'hero_image_path': school.hero_image.path if school.hero_image and os.path.exists(school.hero_image.path) else None,
-            'logo_path': school.logo.path if school.logo and os.path.exists(school.logo.path) else None,
+            'hero_image_path': get_safe_image_source(school.hero_image),
+            'logo_path': get_safe_image_source(school.logo),
         }
 
         pdf_bytes = generate_bulk_pdf(users_data, school_info)

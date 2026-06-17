@@ -9,6 +9,7 @@ from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 
 from .models import TeacherProfile
+from core.utils import get_safe_image_source
 
 
 def _header_title(school_name: str) -> str:
@@ -25,8 +26,14 @@ def _clip(s: str, n: int) -> str:
     return s if len(s) <= n else s[: n - 1] + '…'
 
 
-def _draw_photo_cover_box(canv, image_path: str, x: float, y: float, box_w: float, box_h: float) -> None:
-    ir = ImageReader(image_path)
+def _draw_photo_cover_box(canv, image_source, x: float, y: float, box_w: float, box_h: float) -> None:
+    if not image_source:
+        return
+    if isinstance(image_source, str):
+        if not (image_source.startswith('http://') or image_source.startswith('https://')):
+            if not os.path.exists(image_source):
+                return
+    ir = ImageReader(image_source)
     iw, ih = ir.getSize()
     if iw <= 0 or ih <= 0:
         return
@@ -69,7 +76,7 @@ def build_teacher_id_card_pdf(
     c.roundRect(m, m, W - 2 * m, H - 2 * m, 3.5, stroke=1, fill=0)
 
     # background hero watermark
-    if hero_image_path and os.path.exists(hero_image_path):
+    if hero_image_path:
         try:
             c.saveState()
             p = c.beginPath()
@@ -89,7 +96,7 @@ def build_teacher_id_card_pdf(
 
     # Logo (Header Left)
     logo_w = 0
-    if logo_path and os.path.exists(logo_path):
+    if logo_path:
         try:
             lw, lh = 9 * mm, 9 * mm
             lx = m + 4 * mm
@@ -153,9 +160,10 @@ def build_teacher_id_card_pdf(
     py = m + 5 * mm
     photo_h = max(30 * mm, photo_top_y - py)
 
-    if teacher.photo and teacher.photo.name:
+    photo_source = get_safe_image_source(teacher.photo)
+    if photo_source:
         try:
-            _draw_photo_cover_box(c, teacher.photo.path, rx, py, photo_w, photo_h)
+            _draw_photo_cover_box(c, photo_source, rx, py, photo_w, photo_h)
         except Exception:
             pass
 

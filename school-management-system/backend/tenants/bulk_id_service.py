@@ -35,8 +35,11 @@ MARGIN_Y = (PAGE_H - TOTAL_H) / 2
 def _draw_photo(canv, image_path, x, y, w, h):
     """Draws photo with object-fit: cover logic."""
     try:
-        if not image_path or not os.path.exists(image_path):
+        if not image_path:
             return
+        if isinstance(image_path, str) and not (image_path.startswith('http://') or image_path.startswith('https://')):
+            if not os.path.exists(image_path):
+                return
         ir = ImageReader(image_path)
         iw, ih = ir.getSize()
         scale = max(w / float(iw), h / float(ih))
@@ -71,7 +74,14 @@ def draw_single_card(c, x, y, user_data, school_info):
     
     # --- 1.5 Background Hero Image (Subtle watermark) ---
     hero_path = school_info.get('hero_image_path')
-    if hero_path and os.path.exists(hero_path):
+    is_hero_valid = False
+    if hero_path:
+        if isinstance(hero_path, str) and not (hero_path.startswith('http://') or hero_path.startswith('https://')):
+            is_hero_valid = os.path.exists(hero_path)
+        else:
+            is_hero_valid = True
+            
+    if is_hero_valid:
         try:
             c.saveState()
             # Create clipping path for the card base (rounded corners)
@@ -109,7 +119,14 @@ def draw_single_card(c, x, y, user_data, school_info):
     # Logo (Top Left of Header)
     logo_path = school_info.get('logo_path')
     logo_w = 0
-    if logo_path and os.path.exists(logo_path):
+    is_logo_valid = False
+    if logo_path:
+        if isinstance(logo_path, str) and not (logo_path.startswith('http://') or logo_path.startswith('https://')):
+            is_logo_valid = os.path.exists(logo_path)
+        else:
+            is_logo_valid = True
+            
+    if is_logo_valid:
         try:
             logo_w = 8 * mm
             logo_h = 8 * mm

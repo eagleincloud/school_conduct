@@ -107,7 +107,7 @@ const AddStudent = () => {
             // `name` kept for backward compatibility; backend also uses first/last.
             const payload = { ...formData };
 
-            // Backend requires `username`, but UI me username input nahi hai.
+            // Backend requires `username`, but there is no username input in the UI.
             // Generate username from first/last; fallback to email local-part.
             const first = (formData.first_name || '').trim();
             const last = (formData.last_name || '').trim();

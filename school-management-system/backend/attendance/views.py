@@ -790,7 +790,7 @@ class MyAttendanceReportPDFView(views.APIView):
 
 class BiometricDevicePunchView(views.APIView):
     """
-    Local Bridge Script se biometric card / fingerprint punch data collect karne ke liye secure API.
+    Secure API to collect biometric card / fingerprint punch data from the Local Bridge Script.
     School-wise isolation is enforced by requiring the 'school_id' along with the 'rfid_code'.
     
     Supports both students and teachers via target_type field:
