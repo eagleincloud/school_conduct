@@ -3,6 +3,11 @@ import { useConfirm } from '../../context/ConfirmContext';
 import useBreakpoint from '../../hooks/useBreakpoint';
 import api from '../../services/api';
 
+const formatShiftOption = (shift) => {
+    const type = shift.is_flexible ? 'Flexible' : 'Fixed';
+    return `${shift.name} (${type}, ${shift.start_time} - ${shift.end_time})`;
+};
+
 const inputStyle = {
     width: '100%',
     padding: '10px 12px',
@@ -608,7 +613,7 @@ const Classes = () => {
                                     <option value="">-- No Shift --</option>
                                     {shifts.map((sh) => (
                                         <option key={sh.id} value={sh.id}>
-                                            {sh.name} ({sh.start_time} - {sh.end_time})
+                                            {formatShiftOption(sh)}
                                         </option>
                                     ))}
                                 </select>
