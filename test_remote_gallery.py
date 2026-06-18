@@ -1,7 +1,7 @@
 import requests
 
 def main():
-    base_url = "http://13.233.140.195/api/"
+    base_url = "http://13.201.53.169/api/"
     
     # 1. Login
     print("Logging in to remote server...")

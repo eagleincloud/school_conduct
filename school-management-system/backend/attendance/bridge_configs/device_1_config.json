@@ -5,6 +5,6 @@
   "device_password": 0,
   "machine_number": 1,
   "school_id": "DEFAULT",
-  "server_url": "http://13.233.140.195/api/attendance/biometric-punch/",
+  "server_url": "http://13.201.53.169/api/attendance/biometric-punch/",
   "device_secret_key": "xK9rRROQnQjNI2Rit6wZ9vFhavW307Ui"
 }
