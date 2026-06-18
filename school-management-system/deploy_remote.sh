@@ -15,10 +15,26 @@ if [ -f "/home/ec2-user/backend.tar.gz" ]; then
     tar -xzf /home/ec2-user/backend.tar.gz -C /home/ec2-user/school-app/backend
     
     # Restore configuration
-    if [ -f "/home/ec2-user/school-app/backend_backup_$TIMESTAMP/.env" ]; then
+    if [ -f "/home/ec2-user/backend.env" ]; then
+        mv /home/ec2-user/backend.env /home/ec2-user/school-app/backend/.env
+    elif [ -f "/home/ec2-user/school-app/backend_backup_$TIMESTAMP/.env" ]; then
         cp /home/ec2-user/school-app/backend_backup_$TIMESTAMP/.env /home/ec2-user/school-app/backend/
     fi
     
+    # Ensure virtual environment exists and uses Python 3.11
+    if [ -d "/home/ec2-user/school-app/venv" ]; then
+        VENV_VERSION=$(/home/ec2-user/school-app/venv/bin/python -c "import sys; print(sys.version_info[1])" 2>/dev/null || echo "0")
+        if [ "$VENV_VERSION" -ne 11 ]; then
+            echo "Removing old virtual environment (version 3.$VENV_VERSION)..."
+            rm -rf /home/ec2-user/school-app/venv
+        fi
+    fi
+
+    if [ ! -d "/home/ec2-user/school-app/venv" ]; then
+        echo "Creating virtual environment with Python 3.11..."
+        python3.11 -m venv /home/ec2-user/school-app/venv
+    fi
+
     # Run migrations and collect static
     /home/ec2-user/school-app/venv/bin/pip install -r /home/ec2-user/school-app/backend/requirements.txt
     /home/ec2-user/school-app/venv/bin/python /home/ec2-user/school-app/backend/manage.py migrate
@@ -47,11 +63,29 @@ if [ -f "/home/ec2-user/frontend.tar.gz" ]; then
     sudo tar -xzf /home/ec2-user/frontend.tar.gz -C /var/www/school-frontend
     sudo chown -R nginx:nginx /var/www/school-frontend
     
-    sudo systemctl reload nginx
+    # Nginx reload/restart is handled in the Configure Nginx section below
+    # sudo systemctl reload nginx
     echo "Frontend deployed successfully."
 fi
 
-# Cleanup uploaded archives
+# 3. Configure Nginx
+if [ -f "/home/ec2-user/nginx.conf" ]; then
+    echo "Updating main Nginx configuration..."
+    sudo mv /home/ec2-user/nginx.conf /etc/nginx/nginx.conf
+fi
+if [ -f "/home/ec2-user/school.conf" ]; then
+    echo "Updating site configuration..."
+    sudo mv /home/ec2-user/school.conf /etc/nginx/conf.d/school.conf
+fi
+
+echo "Starting and enabling Nginx..."
+sudo systemctl enable nginx
+sudo systemctl restart nginx
+
+# Cleanup uploaded archives and configurations
 rm -f /home/ec2-user/backend.tar.gz
 rm -f /home/ec2-user/frontend.tar.gz
+rm -f /home/ec2-user/nginx.conf
+rm -f /home/ec2-user/school.conf
+
 echo "Deployment completed successfully!"

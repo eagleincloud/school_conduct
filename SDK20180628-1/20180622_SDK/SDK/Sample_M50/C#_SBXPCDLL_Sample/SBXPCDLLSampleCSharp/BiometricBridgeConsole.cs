@@ -21,7 +21,7 @@ namespace SBXPCDLLSampleCSharp
             public int DevicePassword = 0;
             public int MachineNumber = 1;
             public string SchoolId = "DEFAULT";
-            public string ServerUrl = "http://13.233.140.195/api/attendance/biometric-punch/";
+            public string ServerUrl = "http://13.201.53.169/api/attendance/biometric-punch/"; //put here server url here
             public string DeviceSecretKey = "y0ur_Sup3r_S3cr3t_B1om3tr1c_K3y_987";
         }
 

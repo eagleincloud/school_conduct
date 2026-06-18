@@ -4,7 +4,7 @@ REM This script handles Windows PowerShell execution policy issues
 
 cd /d "%~dp0"
 
-if "%BACKEND_HOST%"=="" set "BACKEND_HOST=13.233.140.195"
+if "%BACKEND_HOST%"=="" set "BACKEND_HOST=13.201.53.169"
 
 echo ============================================
 echo School Management System - Backend Setup
@@ -40,7 +40,7 @@ echo.
 echo ============================================
 echo Starting development server...
 echo ============================================
-if "%BACKEND_HOST%"=="" set "BACKEND_HOST=13.233.140.195"
+if "%BACKEND_HOST%"=="" set "BACKEND_HOST=13.201.53.169"
 echo Backend URL: http://%BACKEND_HOST%:8000
 echo Admin URL: http://%BACKEND_HOST%:8000/admin
 echo.

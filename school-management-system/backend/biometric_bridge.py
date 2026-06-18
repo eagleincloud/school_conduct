@@ -15,7 +15,7 @@ except ImportError as exc:
 DEVICE_IP = '192.168.0.150'
 DEVICE_PORT = 4370         # Z500V2 custom TCP Port (from machine settings)
 SCHOOL_ID = 'DEFAULT'            # !!! UNIQUE SCHOOL ID (e.g. 'school_01', 'school_02' etc. as per DB)
-SERVER_URL = 'http://13.233.140.195/api/attendance/biometric-punch/'
+SERVER_URL = 'http://13.201.53.169/api/attendance/biometric-punch/'  #put the server url here
 DEVICE_SECRET_KEY = 'y0ur_Sup3r_S3cr3t_B1om3tr1c_K3y_987'  # Must match the configured key in Django settings
 # =========================================================================
 
