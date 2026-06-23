@@ -450,6 +450,52 @@ class StudentProfileView(views.APIView):
         
         return Response(data)
 
+    def patch(self, request):
+        if request.user.role != 'student':
+            return Response({"error": "Only students can update their profile"}, status=status.HTTP_403_FORBIDDEN)
+            
+        s = StudentProfile.objects.filter(user=request.user).first()
+        if not s:
+            return Response({"error": "Student profile not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data
+        u = s.user
+        
+        # Updatable user fields
+        if 'email' in data:
+            u.email = data.get('email', u.email)
+        if 'phone' in data:
+            u.phone = data.get('phone', u.phone)
+        u.save()
+
+        # Updatable profile fields
+        if 'dob' in data:
+            dob_val = data.get('dob')
+            s.dob = dob_val if dob_val else None
+        if 'gender' in data:
+            s.gender = data.get('gender')
+        if 'blood_group' in data:
+            s.blood_group = data.get('blood_group')
+        if 'father_name' in data:
+            s.father_name = data.get('father_name')
+        if 'mother_name' in data:
+            s.mother_name = data.get('mother_name')
+        if 'father_contact' in data:
+            s.father_contact = data.get('father_contact')
+        if 'mother_contact' in data:
+            s.mother_contact = data.get('mother_contact')
+        if 'address' in data:
+            s.address = data.get('address')
+        s.save()
+
+        from .serializers import StudentProfileSerializer
+        serializer = StudentProfileSerializer(s, context={'request': request})
+        res_data = serializer.data
+        if s.school:
+             res_data["admission_number"] = f"{s.school.school_id}-{s.admission_number}"
+             
+        return Response({"message": "Profile updated successfully", "profile": res_data}, status=status.HTTP_200_OK)
+
 
 _ALLOWED_PHOTO_CT = frozenset(
     {
