@@ -18,6 +18,14 @@ const Login = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // First time login state variables
+  const [showFirstLoginResetModal, setShowFirstLoginResetModal] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [resetError, setResetError] = useState("");
+  const [isResetting, setIsResetting] = useState(false);
+  const [tempUser, setTempUser] = useState(null);
+
   const { setUser, logout } = useAuthStore();
   const { setSelectedStudentId } = useStudent();
   const {
@@ -35,6 +43,64 @@ const Login = () => {
     fetchSchoolInfo(finalSchoolId);
     return () => clearSchool();
   }, [finalSchoolId, fetchSchoolInfo, clearSchool, navigate]);
+
+  // Check if already authenticated but is_first_login is true
+  useEffect(() => {
+    const activeUser = authService.getCurrentUser();
+    if (activeUser && activeUser.is_first_login && (activeUser.role === "student" || activeUser.role === "teacher")) {
+      setTempUser(activeUser);
+      setShowFirstLoginResetModal(true);
+    }
+  }, []);
+
+  const handleFirstLoginResetPassword = async (e) => {
+    e.preventDefault();
+    setResetError("");
+    setIsResetting(true);
+
+    if (newPassword !== confirmPassword) {
+      setResetError("Passwords do not match.");
+      setIsResetting(false);
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setResetError("Password must be at least 6 characters.");
+      setIsResetting(false);
+      return;
+    }
+
+    try {
+      await authService.resetPasswordFirstLogin(newPassword, confirmPassword);
+      // Update local storage flag
+      localStorage.setItem("is_first_login", "false");
+      
+      // Update useAuthStore user state
+      const updatedUser = { ...tempUser, is_first_login: false };
+      setUser(updatedUser);
+
+      // Redirect to correct dashboard
+      if (updatedUser.role === "teacher") {
+        navigate("/teacher/dashboard");
+      } else {
+        if (updatedUser.student_profile_id) {
+          setSelectedStudentId(updatedUser.student_profile_id);
+        }
+        navigate("/student/dashboard");
+      }
+      
+      // Reset state
+      setShowFirstLoginResetModal(false);
+    } catch (err) {
+      const errorMsg =
+        err.response?.data?.detail ||
+        err.response?.data?.error ||
+        "Failed to reset password. Please try again.";
+      setResetError(errorMsg);
+    } finally {
+      setIsResetting(false);
+    }
+  };
 
   // Get the expected role from URL (e.g., /school/:id/login?role=admin)
   const expectedRole = searchParams.get("role") || "student";
@@ -65,6 +131,13 @@ const Login = () => {
           setError(`Access Denied: You do not belong to this school portal.`);
           authService.logout();
           logout();
+          setIsLoading(false);
+          return;
+        }
+
+        if (user.is_first_login && (user.role === "student" || user.role === "teacher")) {
+          setTempUser(user);
+          setShowFirstLoginResetModal(true);
           setIsLoading(false);
           return;
         }
@@ -234,6 +307,95 @@ const Login = () => {
           System.
         </p>
       </div>
+
+      {showFirstLoginResetModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 animate-in fade-in duration-300">
+          <div className="bg-white rounded-3xl border border-slate-100 shadow-2xl shadow-slate-900/10 w-full max-w-md p-8 md:p-10 animate-in zoom-in-95 duration-300 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-school-navy via-school-blue to-teal-500"></div>
+            
+            <div className="mb-6 text-center">
+              <div className="w-14 h-14 bg-blue-50 text-school-blue rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 shadow-sm">
+                🔑
+              </div>
+              <h2 className="text-xl font-bold text-slate-800 tracking-tight">
+                Security Configuration
+              </h2>
+              <p className="text-xs text-slate-500 mt-1.5 max-w-[280px] mx-auto">
+                This is your first login. Please configure a new password to secure your account.
+              </p>
+            </div>
+
+            <form onSubmit={handleFirstLoginResetPassword} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-slate-500 ml-1 uppercase tracking-wider">
+                  New Password
+                </label>
+                <div className="relative group">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-school-blue transition-colors">
+                    🔒
+                  </span>
+                  <input
+                    type="password"
+                    placeholder="Minimum 6 characters"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/10 focus:bg-white focus:border-school-blue/20 transition-all font-medium"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-slate-500 ml-1 uppercase tracking-wider">
+                  Confirm Password
+                </label>
+                <div className="relative group">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-school-blue transition-colors">
+                    🔒
+                  </span>
+                  <input
+                    type="password"
+                    placeholder="Confirm your password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/10 focus:bg-white focus:border-school-blue/20 transition-all font-medium"
+                  />
+                </div>
+              </div>
+
+              {resetError && (
+                <div className="bg-red-50 border border-red-100 text-red-600 p-3 rounded-2xl text-xs font-bold flex items-center gap-2.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <span>⚠️</span>
+                  {resetError}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isResetting}
+                className={`w-full py-3.5 rounded-2xl text-sm font-bold text-white shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2 mt-2
+                  ${isResetting ? "bg-slate-400 cursor-not-allowed" : "bg-school-navy hover:bg-school-blue shadow-school-navy/20"}`}
+              >
+                {isResetting ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                    Saving Password...
+                  </>
+                ) : (
+                  "Secure Account"
+                )}
+              </button>
+            </form>
+
+            <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-center gap-1.5">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                Protected by SSL Encryption
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

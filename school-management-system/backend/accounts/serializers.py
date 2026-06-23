@@ -104,6 +104,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             'school_name': getattr(user.school, 'name', None),
             'school_logo': school_logo_url,
             'profile_photo': profile_photo_url,
+            'is_first_login': user.is_first_login,
         }
 
         if user.role == 'student':

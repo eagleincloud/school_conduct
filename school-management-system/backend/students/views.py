@@ -82,6 +82,7 @@ class StudentListView(views.APIView):
         school = request.user.school
         qs = StudentProfile.objects.select_related(
                 'user',
+                'school',
                 'class_section__class_ref',
                 'class_section__section_ref',
                 'assigned_shift',
@@ -139,7 +140,7 @@ class StudentsByClassSectionView(views.APIView):
             return Response({"error": "Not allowed"}, status=status.HTTP_403_FORBIDDEN)
 
         school = request.user.school
-        qs = StudentProfile.objects.select_related('user').filter(class_section_id=class_section_id)
+        qs = StudentProfile.objects.select_related('user', 'school').filter(class_section_id=class_section_id)
         if not request.user.is_superuser:
             qs = qs.filter(user__school=school)
 

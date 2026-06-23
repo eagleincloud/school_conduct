@@ -11,6 +11,7 @@ const authService = {
       const userData = response.data.user;
       localStorage.setItem("user_role", userData.role);
       localStorage.setItem("user_name", userData.name);
+      localStorage.setItem("is_first_login", userData.is_first_login ? "true" : "false");
       // Always clear school fields first to prevent stale data from previous sessions
       localStorage.removeItem("school_id");
       localStorage.removeItem("school_name");
@@ -39,6 +40,7 @@ const authService = {
     localStorage.removeItem("school_id");
     localStorage.removeItem("school_name");
     localStorage.removeItem("school_logo");
+    localStorage.removeItem("is_first_login");
   },
 
   getCurrentUser: () => {
@@ -49,7 +51,16 @@ const authService = {
       school_id: localStorage.getItem("school_id"),
       school_name: localStorage.getItem("school_name"),
       school_logo: localStorage.getItem("school_logo"),
+      is_first_login: localStorage.getItem("is_first_login") === "true",
     };
+  },
+
+  resetPasswordFirstLogin: async (newPassword, confirmPassword) => {
+    const response = await api.post("auth/reset-password-first-login/", {
+      new_password: newPassword,
+      confirm_password: confirmPassword,
+    });
+    return response.data;
   },
 };
 

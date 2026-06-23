@@ -85,8 +85,39 @@ class ChangePasswordView(views.APIView):
             return Response({'error': 'Old password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
 
         request.user.set_password(new_password)
+        request.user.is_first_login = False
         request.user.save()
         return Response({'message': 'Password updated successfully'}, status=status.HTTP_200_OK)
+
+
+class FirstLoginResetPasswordView(views.APIView):
+    """
+    Reset password on first login. Requires the user to be authenticated.
+    Expected payload: { new_password, confirm_password }
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        new_password = request.data.get('new_password')
+        confirm_password = request.data.get('confirm_password')
+
+        if not new_password or not confirm_password:
+            return Response({'error': 'new_password and confirm_password are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if new_password != confirm_password:
+            return Response({'error': 'New password and confirm password do not match'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if len(new_password) < 6:
+            return Response({'error': 'Password must be at least 6 characters'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = request.user
+        if not user.is_first_login:
+            return Response({'error': 'This is not your first login or password already reset'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new_password)
+        user.is_first_login = False
+        user.save()
+        return Response({'message': 'Password reset successfully'}, status=status.HTTP_200_OK)
 
 
 class AdminDashboardStatsView(views.APIView):

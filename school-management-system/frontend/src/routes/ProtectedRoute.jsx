@@ -10,6 +10,11 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     return <Navigate to="/login" replace />;
   }
 
+  // Enforce password reset on first login for student and teacher
+  if (user.is_first_login && (user.role === "student" || user.role === "teacher")) {
+    return <Navigate to="/login" replace />;
+  }
+
   // Role not allowed? Redirect to their own dashboard (or error page)
   if (allowedRoles && !allowedRoles.includes(user.role)) {
     return <Navigate to={`/${user.role}/dashboard`} replace />;

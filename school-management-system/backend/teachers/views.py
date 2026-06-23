@@ -324,7 +324,7 @@ class TeacherListView(views.APIView):
 
     def get(self, request):
         school = request.user.school
-        qs = TeacherProfile.objects.select_related('user', 'assigned_shift')
+        qs = TeacherProfile.objects.select_related('user', 'school', 'assigned_shift')
         if not request.user.is_superuser:
             qs = qs.filter(user__school=school)
         profiles = qs.order_by('id')

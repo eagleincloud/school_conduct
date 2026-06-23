@@ -21,6 +21,58 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [photoBusy, setPhotoBusy] = useState(false);
+
+  // Password change states
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [changePasswordError, setChangePasswordError] = useState("");
+  const [changePasswordSuccess, setChangePasswordSuccess] = useState("");
+  const [isChanging, setIsChanging] = useState(false);
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    setChangePasswordError("");
+    setChangePasswordSuccess("");
+    setIsChanging(true);
+
+    if (newPassword !== confirmPassword) {
+      setChangePasswordError("New password and confirm password do not match.");
+      setIsChanging(false);
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setChangePasswordError("Password must be at least 6 characters.");
+      setIsChanging(false);
+      return;
+    }
+
+    try {
+      await api.patch("auth/change-password/", {
+        old_password: oldPassword,
+        new_password: newPassword,
+        confirm_password: confirmPassword,
+      });
+      setChangePasswordSuccess("Password changed successfully!");
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setTimeout(() => {
+        setShowChangePasswordModal(false);
+        setChangePasswordSuccess("");
+      }, 1500);
+    } catch (err) {
+      const errorMsg =
+        err.response?.data?.detail ||
+        err.response?.data?.error ||
+        "Failed to change password. Please verify your old password.";
+      setChangePasswordError(errorMsg);
+    } finally {
+      setIsChanging(false);
+    }
+  };
   const [photoError, setPhotoError] = useState("");
   const [idCardBusy, setIdCardBusy] = useState(false);
   const [fullPhotoOpen, setFullPhotoOpen] = useState(false);
@@ -46,7 +98,7 @@ const Profile = () => {
       api.get("assignments/my-submissions/"),
       api.get("attendance/my-attendance/"),
       api.get("fees/my/"),
-      api.get("tenants/common/school-info/"),
+      api.get("schools/common/info/"),
     ])
       .then(
         ([
@@ -493,6 +545,22 @@ const Profile = () => {
                 </button>
               </>
             )}
+            <button
+              type="button"
+              onClick={() => setShowChangePasswordModal(true)}
+              style={{
+                padding: "8px 14px",
+                borderRadius: 10,
+                border: "1px solid #dc2626",
+                background: "#fef2f2",
+                color: "#b91c1c",
+                fontWeight: 900,
+                cursor: "pointer",
+                fontSize: 13,
+              }}
+            >
+              🔑 Change Password
+            </button>
           </div>
           {photoError ? (
             <div
@@ -1200,6 +1268,170 @@ const Profile = () => {
           </div>
         </div>
       </div>
+
+      {showChangePasswordModal && (
+        <div style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 10000,
+          backgroundColor: "rgba(15, 23, 42, 0.6)",
+          backdropFilter: "blur(4px)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 20,
+        }}>
+          <div style={{
+            background: "#fff",
+            borderRadius: 24,
+            border: "1px solid #e5e7eb",
+            boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+            width: "100%",
+            maxWidth: 400,
+            padding: 32,
+            position: "relative",
+            fontFamily: "Inter, sans-serif"
+          }}>
+            <button
+              type="button"
+              onClick={() => {
+                setShowChangePasswordModal(false);
+                setChangePasswordError("");
+                setChangePasswordSuccess("");
+              }}
+              style={{
+                position: "absolute",
+                top: 16,
+                right: 16,
+                background: "none",
+                border: "none",
+                fontSize: 20,
+                cursor: "pointer",
+                color: "#94a3b8"
+              }}
+            >
+              ✕
+            </button>
+            <h3 style={{ margin: "0 0 6px 0", fontSize: 18, fontWeight: 800, color: "#1e293b" }}>
+              Change Password
+            </h3>
+            <p style={{ margin: "0 0 20px 0", fontSize: 13, color: "#64748b", fontWeight: 500 }}>
+              Update your account credentials to keep it secure.
+            </p>
+
+            <form onSubmit={handleChangePassword} style={{ display: "grid", gap: 14 }}>
+              <div style={{ display: "grid", gap: 4 }}>
+                <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  Current Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                  required
+                  style={{
+                    padding: "10px 14px",
+                    borderRadius: 10,
+                    border: "1px solid #e2e8f0",
+                    fontSize: 14,
+                    outline: "none",
+                    background: "#f8fafc"
+                  }}
+                />
+              </div>
+
+              <div style={{ display: "grid", gap: 4 }}>
+                <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="Minimum 6 characters"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                  style={{
+                    padding: "10px 14px",
+                    borderRadius: 10,
+                    border: "1px solid #e2e8f0",
+                    fontSize: 14,
+                    outline: "none",
+                    background: "#f8fafc"
+                  }}
+                />
+              </div>
+
+              <div style={{ display: "grid", gap: 4 }}>
+                <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  Confirm New Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  style={{
+                    padding: "10px 14px",
+                    borderRadius: 10,
+                    border: "1px solid #e2e8f0",
+                    fontSize: 14,
+                    outline: "none",
+                    background: "#f8fafc"
+                  }}
+                />
+              </div>
+
+              {changePasswordError && (
+                <div style={{
+                  padding: 10,
+                  background: "#fef2f2",
+                  border: "1px solid #fee2e2",
+                  color: "#b91c1c",
+                  borderRadius: 10,
+                  fontSize: 12,
+                  fontWeight: 700
+                }}>
+                  ⚠️ {changePasswordError}
+                </div>
+              )}
+
+              {changePasswordSuccess && (
+                <div style={{
+                  padding: 10,
+                  background: "#f0fdf4",
+                  border: "1px solid #dcfce7",
+                  color: "#166534",
+                  borderRadius: 10,
+                  fontSize: 12,
+                  fontWeight: 700
+                }}>
+                  ✓ {changePasswordSuccess}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isChanging}
+                style={{
+                  padding: "12px",
+                  borderRadius: 10,
+                  border: "none",
+                  background: isChanging ? "#cbd5e1" : "#2563eb",
+                  color: "#fff",
+                  fontWeight: 700,
+                  cursor: isChanging ? "not-allowed" : "pointer",
+                  fontSize: 14,
+                  marginTop: 6
+                }}
+              >
+                {isChanging ? "Updating..." : "Update Password"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

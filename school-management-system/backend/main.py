@@ -199,10 +199,54 @@ def login(data: LoginSchema):
                 "name": user.name or user.username,
                 "school_id": getattr(user.school, 'school_id', None) if getattr(user, 'school', None) else None,
                 "school_name": getattr(user.school, 'name', None) if getattr(user, 'school', None) else None,
-                "school_logo": f"/media/{user.school.logo.name}" if getattr(user, 'school', None) and user.school.logo else None
+                "school_logo": f"/media/{user.school.logo.name}" if getattr(user, 'school', None) and user.school.logo else None,
+                "is_first_login": user.is_first_login
             }
         }
     raise HTTPException(status_code=401, detail="Invalid credentials")
+
+
+class ResetPasswordFirstLoginSchema(BaseModel):
+    new_password: str
+    confirm_password: str
+
+
+class ChangePasswordSchema(BaseModel):
+    old_password: str
+    new_password: str
+    confirm_password: str
+
+
+@app.post("/api/auth/reset-password-first-login/", tags=["Auth"])
+def reset_password_first_login(data: ResetPasswordFirstLoginSchema, user: User = Depends(get_current_user)):
+    if not user.is_first_login:
+        raise HTTPException(status_code=400, detail="This is not your first login or password already reset.")
+    if data.new_password != data.confirm_password:
+        raise HTTPException(status_code=400, detail="Passwords do not match")
+    if len(data.new_password) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+    
+    user.set_password(data.new_password)
+    user.is_first_login = False
+    user.save()
+    return {"success": True, "message": "Password reset successfully"}
+
+
+@app.patch("/api/accounts/change-password/", tags=["Accounts"])
+@app.patch("/api/auth/change-password/", tags=["Auth"])
+def change_password(data: ChangePasswordSchema, user: User = Depends(get_current_user)):
+    if not user.check_password(data.old_password):
+        raise HTTPException(status_code=400, detail="Old password is incorrect")
+    if data.new_password != data.confirm_password:
+        raise HTTPException(status_code=400, detail="Passwords do not match")
+    if len(data.new_password) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+    
+    user.set_password(data.new_password)
+    user.is_first_login = False
+    user.save()
+    return {"success": True, "message": "Password changed successfully"}
+
 
 @app.get("/api/accounts/profile/", tags=["Accounts"])
 def get_profile():

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useConfirm } from '../../context/ConfirmContext';
 import api from '../../services/api';
 
@@ -425,30 +425,54 @@ const ManageTeachers = () => {
                     </div>
                 )}
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap', padding: 14, borderTop: '1px solid #e2e8f0', background: '#fff' }}>
-                    <button type="button" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1} style={{ ...selectStyle, minWidth: 95, cursor: 'pointer', opacity: currentPage === 1 ? 0.5 : 1 }}>Previous</button>
-                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
-                        {pageNumbers.map((n) => (
-                            <button
-                                key={n}
-                                type="button"
-                                onClick={() => setPage(n)}
-                                style={{
-                                    width: 34,
-                                    height: 34,
-                                    borderRadius: 8,
-                                    border: n === currentPage ? '1px solid #2563eb' : '1px solid #d1d5db',
-                                    background: n === currentPage ? '#2563eb' : '#fff',
-                                    color: n === currentPage ? '#fff' : '#334155',
-                                    fontWeight: 700,
-                                    cursor: 'pointer',
-                                }}
-                            >
-                                {n}
-                            </button>
-                        ))}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 16, padding: '12px 24px', borderTop: '1px solid #e2e8f0', background: '#fff' }}>
+                    <span style={{ fontSize: 14, color: '#475569', fontWeight: 600 }}>
+                        {filtered.length > 0 ? `${start + 1}–${Math.min(start + PAGE_SIZE, filtered.length)}` : '0'} of {filtered.length}
+                    </span>
+                    <div style={{ display: 'flex', gap: 4 }}>
+                        <button
+                            type="button"
+                            onClick={() => setPage((p) => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: 32,
+                                height: 32,
+                                borderRadius: 6,
+                                border: '1px solid #e2e8f0',
+                                background: '#fff',
+                                color: currentPage === 1 ? '#cbd5e1' : '#475569',
+                                cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                                transition: 'all 0.2s',
+                            }}
+                            title="Previous Page"
+                        >
+                            <ChevronLeft size={16} strokeWidth={2.5} />
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                            disabled={currentPage === totalPages}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: 32,
+                                height: 32,
+                                borderRadius: 6,
+                                border: '1px solid #e2e8f0',
+                                background: '#fff',
+                                color: currentPage === totalPages ? '#cbd5e1' : '#475569',
+                                cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                                transition: 'all 0.2s',
+                            }}
+                            title="Next Page"
+                        >
+                            <ChevronRight size={16} strokeWidth={2.5} />
+                        </button>
                     </div>
-                    <button type="button" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} style={{ ...selectStyle, minWidth: 95, cursor: 'pointer', opacity: currentPage === totalPages ? 0.5 : 1 }}>Next</button>
                 </div>
             </div>
 

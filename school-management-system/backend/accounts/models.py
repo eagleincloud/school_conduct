@@ -44,6 +44,7 @@ class User(AbstractUser):
     phone = models.CharField(max_length=15, blank=True, null=True)
     school = models.ForeignKey('tenants.School', on_delete=models.CASCADE, null=True, blank=True)
     profile_photo = models.ImageField(upload_to=user_profile_photo_path, null=True, blank=True, max_length=500)
+    is_first_login = models.BooleanField(default=True)
 
 
     REQUIRED_FIELDS = []
