@@ -3,17 +3,13 @@ import axios from "axios";
 // Centralized API Configuration
 // Supports both Vite (import.meta.env) and Vercel/CRA (process.env)
 const getBaseURL = () => {
-  // Check if a custom mobile API URL has been set in localStorage
-  if (typeof window !== "undefined") {
-    const savedMobileUrl = localStorage.getItem("mobile_api_url");
-    if (savedMobileUrl) {
-      return savedMobileUrl.replace(/\/?$/, "/");
-    }
-  }
-
   let url = import.meta.env.VITE_API_URL;
   if (!url || url.startsWith('/')) {
-    const isNativeMobile = typeof window !== "undefined" && window.Capacitor && window.Capacitor.getPlatform() !== 'web';
+    const isNativeMobile = typeof window !== "undefined" && (
+      (window.Capacitor && window.Capacitor.getPlatform() !== 'web') ||
+      (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) && 
+       (window.location.hostname === "localhost" || window.location.protocol === "capacitor:"))
+    );
     if (isNativeMobile) {
       url = "http://13.201.53.169/api/";
     } else if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
@@ -26,8 +22,7 @@ const getBaseURL = () => {
       url = "http://127.0.0.1:8000/api/";
     }
   }
-  return url.replace(/\/?$/, "/");
-};
+  return url.replace(/\/?$/, "/");};
 
 export const BASE_URL = getBaseURL();
 

@@ -63,6 +63,7 @@ urlpatterns = [
 
     # Modular Apps URLs
     path('api/auth/', include('accounts.urls')),
+    path('api/accounts/', include('accounts.urls')),
     path('api/schools/', include('tenants.urls')), # Kept clean, removed duplicate api/tenants/
     path('api/dealers/', include('dealers.urls')),
     path('api/students/', include('students.urls')),

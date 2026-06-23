@@ -137,7 +137,7 @@ const TeacherProfile = () => {
     Promise.all([
       api.get("teachers/profile/"),
       api.get("teachers/profile/documents/"),
-      api.get("tenants/common/school-info/").catch(() => ({ data: null })),
+      api.get("schools/common/info/").catch(() => ({ data: null })),
     ])
       .then(([pRes, dRes, sRes]) => {
         const p = pRes.data || null;

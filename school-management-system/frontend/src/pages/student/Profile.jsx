@@ -21,6 +21,120 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [photoBusy, setPhotoBusy] = useState(false);
+
+  // Password change states
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [changePasswordError, setChangePasswordError] = useState("");
+  const [changePasswordSuccess, setChangePasswordSuccess] = useState("");
+  const [isChanging, setIsChanging] = useState(false);
+
+  // Edit Profile details states
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [editForm, setEditForm] = useState({
+    phone: "",
+    email: "",
+    dob: "",
+    gender: "",
+    blood_group: "",
+    father_name: "",
+    father_contact: "",
+    mother_name: "",
+    mother_contact: "",
+    address: "",
+  });
+  const [editProfileError, setEditProfileError] = useState("");
+  const [editProfileSuccess, setEditProfileSuccess] = useState("");
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    setChangePasswordError("");
+    setChangePasswordSuccess("");
+    setIsChanging(true);
+
+    if (newPassword !== confirmPassword) {
+      setChangePasswordError("New password and confirm password do not match.");
+      setIsChanging(false);
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setChangePasswordError("Password must be at least 6 characters.");
+      setIsChanging(false);
+      return;
+    }
+
+    try {
+      await api.patch("auth/change-password/", {
+        old_password: oldPassword,
+        new_password: newPassword,
+        confirm_password: confirmPassword,
+      });
+      setChangePasswordSuccess("Password changed successfully!");
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setTimeout(() => {
+        setShowChangePasswordModal(false);
+        setChangePasswordSuccess("");
+      }, 1500);
+    } catch (err) {
+      const errorMsg =
+        err.response?.data?.detail ||
+        err.response?.data?.error ||
+        "Failed to change password. Please verify your old password.";
+      setChangePasswordError(errorMsg);
+    } finally {
+      setIsChanging(false);
+    }
+  };
+
+  const handleOpenEditModal = () => {
+    setEditForm({
+      phone: profile?.phone || "",
+      email: profile?.email || "",
+      dob: profile?.dob || "",
+      gender: profile?.gender || "",
+      blood_group: profile?.blood_group || "",
+      father_name: profile?.father_name || "",
+      father_contact: profile?.father_contact || "",
+      mother_name: profile?.mother_name || "",
+      mother_contact: profile?.mother_contact || "",
+      address: profile?.address || "",
+    });
+    setEditProfileError("");
+    setEditProfileSuccess("");
+    setShowEditProfileModal(true);
+  };
+
+  const handleEditProfileSubmit = async (e) => {
+    e.preventDefault();
+    setEditProfileError("");
+    setEditProfileSuccess("");
+    setIsSavingProfile(true);
+
+    try {
+      const res = await api.patch("students/profile/", editForm);
+      setProfile(res.data.profile);
+      setEditProfileSuccess("Profile details updated successfully!");
+      setTimeout(() => {
+        setShowEditProfileModal(false);
+        setEditProfileSuccess("");
+      }, 1500);
+    } catch (err) {
+      const errorMsg =
+        err.response?.data?.detail ||
+        err.response?.data?.error ||
+        "Failed to update profile details. Please try again.";
+      setEditProfileError(errorMsg);
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
+
   const [photoError, setPhotoError] = useState("");
   const [idCardBusy, setIdCardBusy] = useState(false);
   const [fullPhotoOpen, setFullPhotoOpen] = useState(false);
@@ -46,7 +160,7 @@ const Profile = () => {
       api.get("assignments/my-submissions/"),
       api.get("attendance/my-attendance/"),
       api.get("fees/my/"),
-      api.get("tenants/common/school-info/"),
+      api.get("schools/common/info/"),
     ])
       .then(
         ([
@@ -493,6 +607,22 @@ const Profile = () => {
                 </button>
               </>
             )}
+            <button
+              type="button"
+              onClick={() => setShowChangePasswordModal(true)}
+              style={{
+                padding: "8px 14px",
+                borderRadius: 10,
+                border: "1px solid #dc2626",
+                background: "#fef2f2",
+                color: "#b91c1c",
+                fontWeight: 900,
+                cursor: "pointer",
+                fontSize: 13,
+              }}
+            >
+              🔑 Change Password
+            </button>
           </div>
           {photoError ? (
             <div
@@ -896,6 +1026,21 @@ const Profile = () => {
             >
               {idCardBusy ? "Preparing…" : "View ID Card (PDF)"}
             </button>
+            <button
+              type="button"
+              onClick={handleOpenEditModal}
+              style={{
+                padding: "10px 12px",
+                borderRadius: 10,
+                border: "none",
+                background: "#f0fdf4",
+                color: "#166534",
+                fontWeight: 900,
+                cursor: "pointer",
+              }}
+            >
+              📝 Edit Profile Details
+            </button>
           </div>
         </div>
 
@@ -1200,6 +1345,480 @@ const Profile = () => {
           </div>
         </div>
       </div>
+
+      {showChangePasswordModal && (
+        <div style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 10000,
+          backgroundColor: "rgba(15, 23, 42, 0.6)",
+          backdropFilter: "blur(4px)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 20,
+        }}>
+          <div style={{
+            background: "#fff",
+            borderRadius: 24,
+            border: "1px solid #e5e7eb",
+            boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+            width: "100%",
+            maxWidth: 400,
+            padding: 32,
+            position: "relative",
+            fontFamily: "Inter, sans-serif"
+          }}>
+            <button
+              type="button"
+              onClick={() => {
+                setShowChangePasswordModal(false);
+                setChangePasswordError("");
+                setChangePasswordSuccess("");
+              }}
+              style={{
+                position: "absolute",
+                top: 16,
+                right: 16,
+                background: "none",
+                border: "none",
+                fontSize: 20,
+                cursor: "pointer",
+                color: "#94a3b8"
+              }}
+            >
+              ✕
+            </button>
+            <h3 style={{ margin: "0 0 6px 0", fontSize: 18, fontWeight: 800, color: "#1e293b" }}>
+              Change Password
+            </h3>
+            <p style={{ margin: "0 0 20px 0", fontSize: 13, color: "#64748b", fontWeight: 500 }}>
+              Update your account credentials to keep it secure.
+            </p>
+
+            <form onSubmit={handleChangePassword} style={{ display: "grid", gap: 14 }}>
+              <div style={{ display: "grid", gap: 4 }}>
+                <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  Current Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                  required
+                  style={{
+                    padding: "10px 14px",
+                    borderRadius: 10,
+                    border: "1px solid #e2e8f0",
+                    fontSize: 14,
+                    outline: "none",
+                    background: "#f8fafc"
+                  }}
+                />
+              </div>
+
+              <div style={{ display: "grid", gap: 4 }}>
+                <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="Minimum 6 characters"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                  style={{
+                    padding: "10px 14px",
+                    borderRadius: 10,
+                    border: "1px solid #e2e8f0",
+                    fontSize: 14,
+                    outline: "none",
+                    background: "#f8fafc"
+                  }}
+                />
+              </div>
+
+              <div style={{ display: "grid", gap: 4 }}>
+                <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  Confirm New Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  style={{
+                    padding: "10px 14px",
+                    borderRadius: 10,
+                    border: "1px solid #e2e8f0",
+                    fontSize: 14,
+                    outline: "none",
+                    background: "#f8fafc"
+                  }}
+                />
+              </div>
+
+              {changePasswordError && (
+                <div style={{
+                  padding: 10,
+                  background: "#fef2f2",
+                  border: "1px solid #fee2e2",
+                  color: "#b91c1c",
+                  borderRadius: 10,
+                  fontSize: 12,
+                  fontWeight: 700
+                }}>
+                  ⚠️ {changePasswordError}
+                </div>
+              )}
+
+              {changePasswordSuccess && (
+                <div style={{
+                  padding: 10,
+                  background: "#f0fdf4",
+                  border: "1px solid #dcfce7",
+                  color: "#166534",
+                  borderRadius: 10,
+                  fontSize: 12,
+                  fontWeight: 700
+                }}>
+                  ✓ {changePasswordSuccess}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isChanging}
+                style={{
+                  padding: "12px",
+                  borderRadius: 10,
+                  border: "none",
+                  background: isChanging ? "#cbd5e1" : "#2563eb",
+                  color: "#fff",
+                  fontWeight: 700,
+                  cursor: isChanging ? "not-allowed" : "pointer",
+                  fontSize: 14,
+                  marginTop: 6
+                }}
+              >
+                {isChanging ? "Updating..." : "Update Password"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showEditProfileModal && (
+        <div style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 10000,
+          backgroundColor: "rgba(15, 23, 42, 0.6)",
+          backdropFilter: "blur(4px)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 20,
+        }}>
+          <div style={{
+            background: "#fff",
+            borderRadius: 24,
+            border: "1px solid #e5e7eb",
+            boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+            width: "100%",
+            maxWidth: 600,
+            padding: 32,
+            position: "relative",
+            fontFamily: "Inter, sans-serif",
+            maxHeight: "90vh",
+            overflowY: "auto",
+          }}>
+            <button
+              type="button"
+              onClick={() => setShowEditProfileModal(false)}
+              style={{
+                position: "absolute",
+                top: 16,
+                right: 16,
+                background: "none",
+                border: "none",
+                fontSize: 20,
+                cursor: "pointer",
+                color: "#94a3b8"
+              }}
+            >
+              ✕
+            </button>
+            <h3 style={{ margin: "0 0 6px 0", fontSize: 18, fontWeight: 800, color: "#1e293b" }}>
+              Edit Profile Details
+            </h3>
+            <p style={{ margin: "0 0 20px 0", fontSize: 13, color: "#64748b", fontWeight: 500 }}>
+              Update your personal and parent contact details below.
+            </p>
+
+            <form onSubmit={handleEditProfileSubmit} style={{ display: "grid", gap: 14 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12 }}>
+                
+                {/* Phone */}
+                <div style={{ display: "grid", gap: 4 }}>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Phone Number
+                  </label>
+                  <input
+                    type="text"
+                    value={editForm.phone}
+                    onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: 10,
+                      border: "1px solid #e2e8f0",
+                      fontSize: 14,
+                      outline: "none",
+                      background: "#f8fafc"
+                    }}
+                  />
+                </div>
+
+                {/* Email */}
+                <div style={{ display: "grid", gap: 4 }}>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={editForm.email}
+                    onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: 10,
+                      border: "1px solid #e2e8f0",
+                      fontSize: 14,
+                      outline: "none",
+                      background: "#f8fafc"
+                    }}
+                  />
+                </div>
+
+                {/* DOB */}
+                <div style={{ display: "grid", gap: 4 }}>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Date of Birth
+                  </label>
+                  <input
+                    type="date"
+                    value={editForm.dob}
+                    onChange={(e) => setEditForm({ ...editForm, dob: e.target.value })}
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: 10,
+                      border: "1px solid #e2e8f0",
+                      fontSize: 14,
+                      outline: "none",
+                      background: "#f8fafc"
+                    }}
+                  />
+                </div>
+
+                {/* Gender */}
+                <div style={{ display: "grid", gap: 4 }}>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Gender
+                  </label>
+                  <select
+                    value={editForm.gender}
+                    onChange={(e) => setEditForm({ ...editForm, gender: e.target.value })}
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: 10,
+                      border: "1px solid #e2e8f0",
+                      fontSize: 14,
+                      outline: "none",
+                      background: "#f8fafc"
+                    }}
+                  >
+                    <option value="">— Select Gender —</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                {/* Blood Group */}
+                <div style={{ display: "grid", gap: 4 }}>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Blood Group
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. A+, O-, B+"
+                    value={editForm.blood_group}
+                    onChange={(e) => setEditForm({ ...editForm, blood_group: e.target.value })}
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: 10,
+                      border: "1px solid #e2e8f0",
+                      fontSize: 14,
+                      outline: "none",
+                      background: "#f8fafc"
+                    }}
+                  />
+                </div>
+
+                {/* Father's Name */}
+                <div style={{ display: "grid", gap: 4 }}>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Father's Name
+                  </label>
+                  <input
+                    type="text"
+                    value={editForm.father_name}
+                    onChange={(e) => setEditForm({ ...editForm, father_name: e.target.value })}
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: 10,
+                      border: "1px solid #e2e8f0",
+                      fontSize: 14,
+                      outline: "none",
+                      background: "#f8fafc"
+                    }}
+                  />
+                </div>
+
+                {/* Father's Contact */}
+                <div style={{ display: "grid", gap: 4 }}>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Father's Contact
+                  </label>
+                  <input
+                    type="text"
+                    value={editForm.father_contact}
+                    onChange={(e) => setEditForm({ ...editForm, father_contact: e.target.value })}
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: 10,
+                      border: "1px solid #e2e8f0",
+                      fontSize: 14,
+                      outline: "none",
+                      background: "#f8fafc"
+                    }}
+                  />
+                </div>
+
+                {/* Mother's Name */}
+                <div style={{ display: "grid", gap: 4 }}>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Mother's Name
+                  </label>
+                  <input
+                    type="text"
+                    value={editForm.mother_name}
+                    onChange={(e) => setEditForm({ ...editForm, mother_name: e.target.value })}
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: 10,
+                      border: "1px solid #e2e8f0",
+                      fontSize: 14,
+                      outline: "none",
+                      background: "#f8fafc"
+                    }}
+                  />
+                </div>
+
+                {/* Mother's Contact */}
+                <div style={{ display: "grid", gap: 4 }}>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Mother's Contact
+                  </label>
+                  <input
+                    type="text"
+                    value={editForm.mother_contact}
+                    onChange={(e) => setEditForm({ ...editForm, mother_contact: e.target.value })}
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: 10,
+                      border: "1px solid #e2e8f0",
+                      fontSize: 14,
+                      outline: "none",
+                      background: "#f8fafc"
+                    }}
+                  />
+                </div>
+
+              </div>
+
+              {/* Address */}
+              <div style={{ display: "grid", gap: 4 }}>
+                <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  Address
+                </label>
+                <textarea
+                  rows={2}
+                  value={editForm.address}
+                  onChange={(e) => setEditForm({ ...editForm, address: e.target.value })}
+                  style={{
+                    padding: "10px 14px",
+                    borderRadius: 10,
+                    border: "1px solid #e2e8f0",
+                    fontSize: 14,
+                    outline: "none",
+                    background: "#f8fafc",
+                    fontFamily: "inherit",
+                    resize: "vertical"
+                  }}
+                />
+              </div>
+
+              {editProfileError && (
+                <div style={{
+                  padding: 10,
+                  background: "#fef2f2",
+                  border: "1px solid #fee2e2",
+                  color: "#b91c1c",
+                  borderRadius: 10,
+                  fontSize: 12,
+                  fontWeight: 700
+                }}>
+                  ⚠️ {editProfileError}
+                </div>
+              )}
+
+              {editProfileSuccess && (
+                <div style={{
+                  padding: 10,
+                  background: "#f0fdf4",
+                  border: "1px solid #dcfce7",
+                  color: "#166534",
+                  borderRadius: 10,
+                  fontSize: 12,
+                  fontWeight: 700
+                }}>
+                  ✓ {editProfileSuccess}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isSavingProfile}
+                style={{
+                  padding: "12px",
+                  borderRadius: 10,
+                  border: "none",
+                  background: isSavingProfile ? "#cbd5e1" : "#2563eb",
+                  color: "#fff",
+                  fontWeight: 700,
+                  cursor: isSavingProfile ? "not-allowed" : "pointer",
+                  fontSize: 14,
+                  marginTop: 6
+                }}
+              >
+                {isSavingProfile ? "Saving changes..." : "Save Details"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

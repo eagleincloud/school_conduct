@@ -1,0 +1,10 @@
+{
+  "device_name": "class room 1",
+  "device_ip": "192.168.0.150",
+  "device_port": 4370,
+  "device_password": 123,
+  "machine_number": 1,
+  "school_id": "DEFAULT",
+  "server_url": "http://13.201.53.169/api/attendance/biometric-punch/",
+  "device_secret_key": "7JjT-aWs5KAqnV9HGN-YryP8RuamWzia"
+}
