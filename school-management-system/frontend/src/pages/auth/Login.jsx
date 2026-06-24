@@ -4,6 +4,7 @@ import authService from "../../services/authService";
 import useAuthStore from "../../store/authStore";
 import useSchoolStore from "../../store/schoolStore";
 import { useStudent } from "../../context/StudentContext";
+import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const { schoolId: rawSchoolId } = useParams();
@@ -15,6 +16,7 @@ const Login = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -22,6 +24,8 @@ const Login = () => {
   const [showFirstLoginResetModal, setShowFirstLoginResetModal] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [resetError, setResetError] = useState("");
   const [isResetting, setIsResetting] = useState(false);
   const [tempUser, setTempUser] = useState(null);
@@ -257,13 +261,20 @@ const Login = () => {
                   🔒
                 </span>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-school-navy/10 focus:bg-white focus:border-school-navy/20 transition-all font-medium"
+                  className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3.5 pl-12 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-school-navy/10 focus:bg-white focus:border-school-navy/20 transition-all font-medium"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
             </div>
 
@@ -335,13 +346,20 @@ const Login = () => {
                     🔒
                   </span>
                   <input
-                    type="password"
+                    type={showNewPassword ? "text" : "password"}
                     placeholder="Minimum 6 characters"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     required
-                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/10 focus:bg-white focus:border-school-blue/20 transition-all font-medium"
+                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 pl-11 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/10 focus:bg-white focus:border-school-blue/20 transition-all font-medium"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors"
+                  >
+                    {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
                 </div>
               </div>
 
@@ -354,13 +372,20 @@ const Login = () => {
                     🔒
                   </span>
                   <input
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm your password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
-                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/10 focus:bg-white focus:border-school-blue/20 transition-all font-medium"
+                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-3 pl-11 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-school-blue/10 focus:bg-white focus:border-school-blue/20 transition-all font-medium"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors"
+                  >
+                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
                 </div>
               </div>
 
