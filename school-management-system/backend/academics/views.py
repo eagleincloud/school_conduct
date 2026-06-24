@@ -503,7 +503,8 @@ class PublishResultView(views.APIView):
             return Response({'error': 'Exam not found'}, status=status.HTTP_404_NOT_FOUND)
         
         exam_type_slug = exam.exam_type.lower().replace(' ', '_')
-        publish = request.data.get('publish', True)
+        publish_val = request.data.get('publish', True)
+        publish = publish_val not in (False, 'false', 'False', 0, '0')
 
         # Role-based restriction: Teachers can only publish unit_test and class_test
         if request.user.role == 'teacher':
@@ -534,10 +535,14 @@ class PublishResultView(views.APIView):
             }
         )
         
-        # Also lock the individual marks if publishing
+        # Sync the specific exam model field
+        exam.result_published = publish
+        exam.save()
+        
+        # Also lock or unlock the individual marks depending on publish status
+        Marks.objects.filter(class_section=exam.class_section, exam_type=exam_type_slug).update(is_locked=publish)
+        
         if publish:
-            Marks.objects.filter(class_section=exam.class_section, exam_type=exam_type_slug).update(is_locked=True)
-            
             # Send notifications
             _notify_class_students(
                 exam.class_section_id,
@@ -769,6 +774,10 @@ class MyResultsView(views.APIView):
             is_published=True
         ).values_list('exam_type', flat=True)
         
+        # Exclude MST results for Standard Public School
+        if profile.school and profile.school.name.lower() == "standard public school":
+            published_types = [t for t in published_types if t != 'mst']
+            
         if not published_types:
             return Response([])
 
@@ -797,7 +806,8 @@ class MyResultMarksheetPDFView(views.APIView):
 
         # Check if published
         res_status = ResultStatus.objects.filter(class_section=profile.class_section, exam_type=exam_type_slug, is_published=True).first()
-        if not res_status:
+        is_mst_blocked = profile.school and profile.school.name.lower() == "standard public school" and exam_type_slug == "mst"
+        if not res_status or is_mst_blocked:
             return Response({'error': 'Results for this exam are not published yet'}, status=status.HTTP_403_FORBIDDEN)
 
         student_marks = Marks.objects.select_related('subject').filter(
@@ -834,11 +844,15 @@ class MyResultMarksheetPDFView(views.APIView):
 
         percentage = (total_obt / total_max * 100.0) if total_max > 0 else 0.0
         overall_grade = _pct_to_grade(percentage)
-        final_result = 'Pass' if total_obt >= passing_marks else 'Fail'
+        final_result = 'Pass' if percentage >= 33.0 else 'Fail'
 
         academic_year = f"{exam.start_date.year}" if exam.start_date else '—'
         class_label = f"{profile.class_section.class_ref.name}-{profile.class_section.section_ref.name}"
-        school_name = getattr(settings, 'SCHOOL_NAME', 'School Management System')
+        school_name = (
+            profile.school.name
+            if profile and profile.school
+            else getattr(settings, 'SCHOOL_NAME', 'School Management System')
+        )
         declaration_date = str(res_status.published_at.date()) if res_status.published_at else str(timezone.now().date())
 
         pdf_bytes = build_student_marksheet_pdf(
