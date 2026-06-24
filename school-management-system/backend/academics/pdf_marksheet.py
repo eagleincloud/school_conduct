@@ -3,6 +3,7 @@ from __future__ import annotations
 from io import BytesIO
 
 from reportlab.lib import colors
+colors.hexColor = colors.HexColor
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
@@ -189,11 +190,11 @@ def build_student_marksheet_pdf(
         # Subtle school name watermark
         canvas.setFont('Helvetica-Bold', 60)
         canvas.setStrokeColor(colors.hexColor('#f1f5f9'))
-        canvas.setFillOpacity(0.05)
+        canvas.setFillAlpha(0.05)
         # Note: we can't easily rotate and center perfectly here without more code, 
         # but a simple footer is better for "Standard Public School"
         canvas.setFont('Helvetica', 8)
-        canvas.setFillOpacity(1)
+        canvas.setFillAlpha(1)
         canvas.setFillColor(colors.hexColor('#94a3b8'))
         canvas.drawCentredString(A4[0]/2, 30, f"This is an official document of {school_name}. Generated on {declaration_date}.")
         canvas.restoreState()
