@@ -26,10 +26,14 @@ const defaultForm = {
   name: "",
   site_label: "",
   device_type: "hybrid",
+  integration_mode: "bridge_pull",
   device_ip: "",
-  device_port: 4370,
+  device_port: 5005,
   device_password: 0,
   machine_number: 1,
+  device_serial_number: "",
+  terminal_id: "",
+  allowed_source_ip: "",
   bridge_server_url: "",
   notes: "",
   is_active: true,
@@ -53,6 +57,34 @@ const statusTone = (statusLabel) => {
 
 const getTestMessage = (result, fallback) =>
   result?.message || result?.device?.last_test_message || fallback;
+
+const getApiErrorMessage = (detail, fallback) => {
+  if (!detail) return fallback;
+  if (typeof detail === "string") return detail;
+  if (detail.error) return detail.error;
+
+  for (const value of Object.values(detail)) {
+    if (Array.isArray(value) && value[0]) return value[0];
+    if (typeof value === "string" && value) return value;
+  }
+
+  return fallback;
+};
+
+const normalizeIpAddress = (value) => {
+  const raw = (value || "").trim();
+  if (!raw) return raw;
+
+  const ipv4Parts = raw.split(".");
+  if (ipv4Parts.length === 4 && ipv4Parts.every((part) => /^\d+$/.test(part))) {
+    const normalized = ipv4Parts.map((part) => String(Number(part))).join(".");
+    if (normalized.split(".").every((part) => Number(part) >= 0 && Number(part) <= 255)) {
+      return normalized;
+    }
+  }
+
+  return raw;
+};
 
 const SectionTitle = ({ icon: Icon, title, body }) => (
   <div className="flex items-start gap-3">
@@ -158,10 +190,14 @@ export default function BiometricMachines() {
       name: device.name || "",
       site_label: device.site_label || "",
       device_type: device.device_type || "hybrid",
+      integration_mode: device.integration_mode || "bridge_pull",
       device_ip: device.device_ip || "",
-      device_port: device.device_port || 4370,
+      device_port: device.device_port || 5005,
       device_password: device.device_password ?? 0,
       machine_number: device.machine_number || 1,
+      device_serial_number: device.device_serial_number || "",
+      terminal_id: device.terminal_id || "",
+      allowed_source_ip: device.allowed_source_ip || "",
       bridge_server_url: device.bridge_server_url || "",
       notes: device.notes || "",
       is_active: !!device.is_active,
@@ -175,10 +211,14 @@ export default function BiometricMachines() {
     try {
       const payload = {
         ...form,
+        device_ip: normalizeIpAddress(form.device_ip),
         device_port: Number(form.device_port),
         device_password: Number(form.device_password),
         machine_number: Number(form.machine_number),
       };
+      if (!payload.allowed_source_ip) {
+        payload.allowed_source_ip = null;
+      }
       if (!isSuperadmin) {
         delete payload.school;
       }
@@ -194,13 +234,7 @@ export default function BiometricMachines() {
       await loadDevices();
     } catch (error) {
       const detail = error.response?.data;
-      toast.error(
-        detail?.error ||
-          detail?.school?.[0] ||
-          detail?.device_port?.[0] ||
-          detail?.machine_number?.[0] ||
-          "Failed to save machine",
-      );
+      toast.error(getApiErrorMessage(detail, "Failed to save machine"));
     } finally {
       setSaving(false);
     }
@@ -228,7 +262,7 @@ export default function BiometricMachines() {
     setDraftProbe(null);
     try {
       const result = await biometricDeviceService.probeConnection({
-        device_ip: form.device_ip,
+        device_ip: normalizeIpAddress(form.device_ip),
         device_port: Number(form.device_port),
       });
       setDraftProbe(result);
@@ -495,6 +529,19 @@ export default function BiometricMachines() {
                 </label>
 
                 <label>
+                  <span className="text-xs font-black uppercase tracking-wide text-slate-500">Integration mode</span>
+                  <select
+                    className="mt-1 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold outline-none"
+                    value={form.integration_mode}
+                    onChange={(event) => setForm((prev) => ({ ...prev, integration_mode: event.target.value }))}
+                  >
+                    <option value="bridge_pull">Bridge pull</option>
+                    <option value="tcp_xml_push">TCP XML push</option>
+                    <option value="http_push">HTTP push</option>
+                  </select>
+                </label>
+
+                <label>
                   <span className="text-xs font-black uppercase tracking-wide text-slate-500">Machine number</span>
                   <input
                     type="number"
@@ -511,6 +558,9 @@ export default function BiometricMachines() {
                     className="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold outline-none"
                     value={form.device_ip}
                     onChange={(event) => setForm((prev) => ({ ...prev, device_ip: event.target.value }))}
+                    onBlur={(event) =>
+                      setForm((prev) => ({ ...prev, device_ip: normalizeIpAddress(event.target.value) }))
+                    }
                     placeholder="192.168.0.150"
                     required
                   />
@@ -535,6 +585,36 @@ export default function BiometricMachines() {
                     className="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold outline-none"
                     value={form.device_password}
                     onChange={(event) => setForm((prev) => ({ ...prev, device_password: event.target.value }))}
+                  />
+                </label>
+
+                <label>
+                  <span className="text-xs font-black uppercase tracking-wide text-slate-500">Device serial number</span>
+                  <input
+                    className="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold outline-none"
+                    value={form.device_serial_number}
+                    onChange={(event) => setForm((prev) => ({ ...prev, device_serial_number: event.target.value }))}
+                    placeholder="T230700006"
+                  />
+                </label>
+
+                <label>
+                  <span className="text-xs font-black uppercase tracking-wide text-slate-500">Terminal ID</span>
+                  <input
+                    className="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold outline-none"
+                    value={form.terminal_id}
+                    onChange={(event) => setForm((prev) => ({ ...prev, terminal_id: event.target.value }))}
+                    placeholder="Optional device terminal ID"
+                  />
+                </label>
+
+                <label>
+                  <span className="text-xs font-black uppercase tracking-wide text-slate-500">Allowed source IP</span>
+                  <input
+                    className="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold outline-none"
+                    value={form.allowed_source_ip}
+                    onChange={(event) => setForm((prev) => ({ ...prev, allowed_source_ip: event.target.value }))}
+                    placeholder="Optional public IP allowlist"
                   />
                 </label>
 
@@ -611,10 +691,10 @@ export default function BiometricMachines() {
             <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
               <h3 className="text-lg font-black text-slate-900">Setup flow</h3>
               <div className="mt-4 space-y-3 text-sm font-semibold text-slate-600">
-                <p>1. Register a machine for the school or office entry point and test the LAN IP/port.</p>
-                <p>2. Click Launch all bridges to start one worker per active registered machine in this school scope.</p>
-                <p>3. Download the bridge config JSON for any single machine only when you need to inspect or debug its exact payload.</p>
-                <p>4. Watch the machine card for last seen and last punch updates after live scans begin.</p>
+                <p>1. For bridge mode, register the machine LAN IP/port and use connection testing from the server side.</p>
+                <p>2. For TCP XML push mode, register the device serial and optional source IP allowlist, then configure the machine once with the public server IP and TCP port.</p>
+                <p>3. Launch bridges only for legacy bridge-pull machines. TCP push machines report in directly and do not need a customer-side worker.</p>
+                <p>4. Watch the machine card for last seen, last event, and last punch updates after live scans begin.</p>
               </div>
             </div>
           </div>
@@ -649,6 +729,9 @@ export default function BiometricMachines() {
                           <span className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-slate-500">
                             {device.device_type}
                           </span>
+                          <span className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-slate-500">
+                            {device.integration_mode?.replaceAll("_", " ")}
+                          </span>
                           {device.school_name ? (
                             <span className="rounded-full border border-school-blue/20 bg-school-blue/5 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-school-blue">
                               {device.school_name}
@@ -659,7 +742,10 @@ export default function BiometricMachines() {
                         <div className="grid grid-cols-1 gap-3 text-sm font-semibold text-slate-600 md:grid-cols-2">
                           <p><span className="font-black text-slate-800">Location:</span> {device.site_label || "Unspecified"}</p>
                           <p><span className="font-black text-slate-800">Network:</span> {device.device_ip}:{device.device_port}</p>
+                          <p><span className="font-black text-slate-800">Serial:</span> {device.device_serial_number || "Not set"}</p>
+                          <p><span className="font-black text-slate-800">Allowed source:</span> {device.allowed_source_ip || "Any"}</p>
                           <p><span className="font-black text-slate-800">Machine No:</span> {device.machine_number}</p>
+                          <p><span className="font-black text-slate-800">Last event:</span> {device.last_event_type || "Never"}</p>
                           <p><span className="font-black text-slate-800">Last punch:</span> {fmtDateTime(device.last_punch_at)}</p>
                           <p><span className="font-black text-slate-800">Last seen:</span> {fmtDateTime(device.last_seen_at)}</p>
                           <p><span className="font-black text-slate-800">Last test:</span> {fmtDateTime(device.last_tested_at)}</p>
@@ -761,6 +847,9 @@ export default function BiometricMachines() {
                   <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm font-semibold text-slate-600">
                     <p><span className="font-black text-slate-900">Device:</span> {preview.device.name}</p>
                     <p className="mt-1"><span className="font-black text-slate-900">Target API:</span> {preview.config.server_url}</p>
+                    {preview.tcp_listener ? (
+                      <p className="mt-1"><span className="font-black text-slate-900">TCP listener:</span> {preview.tcp_listener.host}:{preview.tcp_listener.port}</p>
+                    ) : null}
                     <p className="mt-1"><span className="font-black text-slate-900">Launch note:</span> {preview.launch_note}</p>
                   </div>
                   <pre className="overflow-x-auto rounded-2xl bg-slate-950 p-4 text-xs font-semibold text-emerald-200">

@@ -32,10 +32,21 @@ function StatusBadge({ status }) {
   } else if (s === "late") {
     bg = "#fef3c7";
     color = "#f59e0b";
+  } else if (s === "pending") {
+    bg = "#dbeafe";
+    color = "#1d4ed8";
   }
 
   const label =
-    s === "present" ? "Present" : s === "absent" ? "Absent" : s === "late" ? "Late" : "Unmarked";
+    s === "present"
+      ? "Present"
+      : s === "absent"
+        ? "Absent"
+        : s === "late"
+          ? "Late"
+          : s === "pending"
+            ? "Pending"
+            : "Unmarked";
   return (
     <span
       className="dashboard-shell" style={{
@@ -66,6 +77,7 @@ const MarkAttendance = () => {
 
   const isEditable = !!sheet?.is_editable && !!sheet?.can_mark;
   const isSubjectTeacher = !!sheet?.is_editable && sheet?.can_mark === false;
+  const tableColumnCount = sheet?.can_mark ? 5 : 4;
 
   const loadTeacherClasses = async () => {
     const res = await api.get("classes/teaching-sections/");
@@ -532,6 +544,17 @@ const MarkAttendance = () => {
                   >
                     Status
                   </th>
+                  <th
+                    style={{
+                      padding: 12,
+                      textAlign: "left",
+                      color: palette.muted,
+                      fontWeight: 1000,
+                      fontSize: 12,
+                    }}
+                  >
+                    Source
+                  </th>
                   {sheet?.can_mark && (
                     <th
                       style={{
@@ -551,7 +574,7 @@ const MarkAttendance = () => {
                 {loading ? (
                   <tr>
                     <td
-                      colSpan={4}
+                      colSpan={tableColumnCount}
                       style={{
                         padding: 14,
                         color: palette.muted,
@@ -584,6 +607,35 @@ const MarkAttendance = () => {
                         </td>
                         <td data-label="Status" style={{ padding: 12 }}>
                           <StatusBadge status={s.status} />
+                        </td>
+                        <td data-label="Source" style={{ padding: 12 }}>
+                          {s.marked_via === "rfid" ? (
+                            <div style={{ display: "grid", gap: 4 }}>
+                              <span
+                                style={{
+                                  display: "inline-block",
+                                  padding: "6px 10px",
+                                  borderRadius: 999,
+                                  backgroundColor: "#ede9fe",
+                                  border: `1px solid ${palette.border}`,
+                                  color: "#7c3aed",
+                                  fontWeight: 900,
+                                  fontSize: 12,
+                                }}
+                              >
+                                Biometric
+                              </span>
+                              {s.punch_time ? (
+                                <span style={{ color: palette.muted, fontSize: 12, fontWeight: 800 }}>
+                                  {formatTime(s.punch_time)}
+                                </span>
+                              ) : null}
+                            </div>
+                          ) : (
+                            <span style={{ color: palette.muted, fontSize: 12, fontWeight: 900 }}>
+                              Manual
+                            </span>
+                          )}
                         </td>
                         {sheet?.can_mark && (
                           <td
@@ -658,7 +710,7 @@ const MarkAttendance = () => {
                 ) : (
                   <tr>
                     <td
-                      colSpan={4}
+                      colSpan={tableColumnCount}
                       style={{
                         padding: 14,
                         color: palette.muted,

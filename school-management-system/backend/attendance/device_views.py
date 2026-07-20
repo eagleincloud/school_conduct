@@ -1,6 +1,7 @@
 import json
 import socket
 import time
+from datetime import timedelta
 from urllib.parse import urlparse
 
 from django.http import HttpResponse
@@ -63,8 +64,64 @@ def _probe_device_tcp(device_ip, device_port, timeout_seconds=3.0):
     return latency_ms
 
 
+def _probe_local_tcp_listener(device_port, timeout_seconds=3.0):
+    started = timezone.now()
+    with socket.create_connection(("127.0.0.1", int(device_port)), timeout=timeout_seconds):
+        latency_ms = max(1, int((timezone.now() - started).total_seconds() * 1000))
+    return latency_ms
+
+
+def _should_refresh_connectivity(device, cooldown_seconds=15):
+    if not device.is_active:
+        return False
+    if not device.device_ip or not device.device_port:
+        return device.integration_mode == 'tcp_xml_push'
+    if not device.last_tested_at:
+        return True
+    return device.last_tested_at < timezone.now() - timedelta(seconds=cooldown_seconds)
+
+
+def _refresh_device_connectivity(device, timeout_seconds=1.5):
+    if device.integration_mode in {'tcp_xml_push', 'http_push'}:
+        listener = _tcp_listener_config()
+        try:
+            latency_ms = _probe_local_tcp_listener(listener['port'], timeout_seconds=timeout_seconds)
+            message = (
+                f"EC2 TCP listener {listener['host']}:{listener['port']} is ready. "
+                "Waiting for the biometric machine to push attendance."
+            )
+            device.mark_test_result(True, message)
+            return True, latency_ms
+        except Exception as exc:
+            message = f"EC2 TCP listener {listener['host']}:{listener['port']} is not reachable locally. {exc}"
+            device.mark_test_result(False, message)
+            return False, None
+
+    try:
+        latency_ms = _probe_device_tcp(device.device_ip, device.device_port, timeout_seconds=timeout_seconds)
+        device.mark_test_result(True, f'TCP connectivity to {device.device_ip}:{device.device_port} is working.')
+        return True, latency_ms
+    except Exception as exc:
+        device.mark_test_result(False, f'Could not reach {device.device_ip}:{device.device_port}. {exc}')
+        return False, None
+
+
+def _refresh_queryset_connectivity(devices, cooldown_seconds=15, timeout_seconds=1.5):
+    for device in devices:
+        if _should_refresh_connectivity(device, cooldown_seconds=cooldown_seconds):
+            _refresh_device_connectivity(device, timeout_seconds=timeout_seconds)
+
+
 def _default_bridge_url(request):
     return f"{settings.PUBLIC_API_BASE_URL}/api/attendance/biometric-punch/"
+
+
+def _tcp_listener_config():
+    return {
+        'host': settings.BIOMETRIC_TCP_HOST,
+        'port': settings.BIOMETRIC_TCP_PORT,
+        'ack_message': settings.BIOMETRIC_TCP_ACK_MESSAGE,
+    }
 
 
 class BiometricDeviceListCreateView(views.APIView):
@@ -79,7 +136,9 @@ class BiometricDeviceListCreateView(views.APIView):
         if school_scope is not None:
             queryset = queryset.filter(school=school_scope)
 
-        serializer = BiometricDeviceSerializer(queryset.order_by('school__name', 'name', 'id'), many=True)
+        devices = list(queryset.order_by('school__name', 'name', 'id'))
+        _refresh_queryset_connectivity(devices)
+        serializer = BiometricDeviceSerializer(devices, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -131,9 +190,36 @@ class BiometricDeviceConnectionProbeView(views.APIView):
         device_ip = request.data.get('device_ip')
         device_port = request.data.get('device_port', 4370)
         timeout_seconds = float(request.data.get('timeout_seconds') or 3)
+        integration_mode = request.data.get('integration_mode') or 'bridge_pull'
 
-        if not device_ip:
+        if integration_mode != 'tcp_xml_push' and not device_ip:
             return Response({'error': 'device_ip is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if integration_mode in {'tcp_xml_push', 'http_push'}:
+            listener = _tcp_listener_config()
+            try:
+                latency_ms = _probe_local_tcp_listener(listener['port'], timeout_seconds=timeout_seconds)
+            except Exception as exc:
+                return Response(
+                    {
+                        'ok': False,
+                        'message': f"EC2 TCP listener {listener['host']}:{listener['port']} is not ready. {exc}",
+                        'listener': listener,
+                    },
+                    status=status.HTTP_200_OK,
+                )
+
+            return Response(
+                {
+                    'ok': True,
+                    'message': (
+                        f"EC2 TCP listener {listener['host']}:{listener['port']} is ready. "
+                        "This does not confirm whether the biometric device has started pushing yet."
+                    ),
+                    'latency_ms': latency_ms,
+                    'listener': listener,
+                }
+            )
 
         try:
             latency_ms = _probe_device_tcp(device_ip, device_port, timeout_seconds=timeout_seconds)
@@ -168,6 +254,38 @@ class BiometricDeviceTestView(views.APIView):
             return Response({'error': 'Not authorized'}, status=status.HTTP_403_FORBIDDEN)
 
         device = get_object_or_404(_device_queryset_for_user(request.user), id=device_id)
+        if device.integration_mode in {'tcp_xml_push', 'http_push'}:
+            listener = _tcp_listener_config()
+            try:
+                latency_ms = _probe_local_tcp_listener(listener['port'])
+                message = (
+                    f"EC2 TCP listener {listener['host']}:{listener['port']} is ready. "
+                    "Waiting for the biometric machine to push attendance."
+                )
+                device.mark_test_result(True, message)
+                return Response(
+                    {
+                        'ok': True,
+                        'message': message,
+                        'latency_ms': latency_ms,
+                        'device': BiometricDeviceSerializer(device).data,
+                        'listener': listener,
+                        'note': 'For direct push devices, online status depends on recent punch events received by EC2.',
+                    }
+                )
+            except Exception as exc:
+                message = f"EC2 TCP listener {listener['host']}:{listener['port']} is not ready. {exc}"
+                device.mark_test_result(False, message)
+                return Response(
+                    {
+                        'ok': False,
+                        'message': message,
+                        'device': BiometricDeviceSerializer(device).data,
+                        'listener': listener,
+                    },
+                    status=status.HTTP_200_OK,
+                )
+
         try:
             latency_ms = _probe_device_tcp(device.device_ip, device.device_port)
             message = f'TCP connectivity to {device.device_ip}:{device.device_port} is working.'
@@ -239,6 +357,10 @@ class BiometricDeviceBridgePreviewView(views.APIView):
         server_url = device.get_effective_server_url(_default_bridge_url(request))
         parsed = urlparse(server_url)
         serializer = BiometricDeviceSerializer(device)
+        listener = _tcp_listener_config()
+        setup_note = 'Use this config file with the C# bridge executable on the same network as the biometric machine.'
+        if device.integration_mode in {'tcp_xml_push', 'http_push'}:
+            setup_note = 'Configure the biometric machine to push attendance directly to this public listener.'
         return Response(
             {
                 'device': serializer.data,
@@ -249,7 +371,8 @@ class BiometricDeviceBridgePreviewView(views.APIView):
                     'port': parsed.port,
                     'path': parsed.path,
                 },
-                'launch_note': 'Use this config file with the C# bridge executable on the same network as the biometric machine.',
+                'tcp_listener': listener,
+                'launch_note': setup_note,
             }
         )
 
@@ -268,7 +391,10 @@ class BiometricBridgeLaunchView(views.APIView):
         visible = bool(request.data.get('visible'))
         restart = bool(request.data.get('restart', True))
 
-        queryset = _device_queryset_for_user(request.user).filter(is_active=True).select_related('school')
+        queryset = _device_queryset_for_user(request.user).filter(
+            is_active=True,
+            integration_mode='bridge_pull',
+        ).select_related('school')
         school_scope = _get_school_scope(request)
         if school_scope is not None:
             queryset = queryset.filter(school=school_scope)
@@ -349,8 +475,10 @@ class BiometricDeviceStatusStreamView(View):
                 queryset = _device_queryset_for_user(user)
                 if school_scope is not None:
                     queryset = queryset.filter(school=school_scope)
+                devices = list(queryset.order_by('school__name', 'name', 'id'))
+                _refresh_queryset_connectivity(devices)
                 serializer = BiometricDeviceSerializer(
-                    queryset.order_by('school__name', 'name', 'id'),
+                    devices,
                     many=True,
                 )
                 payload = {

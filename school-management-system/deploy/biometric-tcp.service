@@ -1,0 +1,17 @@
+[Unit]
+Description=School Management Biometric TCP XML Listener
+After=network.target
+
+[Service]
+User=ec2-user
+Group=ec2-user
+WorkingDirectory=/home/ec2-user/school-app/backend
+EnvironmentFile=/home/ec2-user/school-app/backend/.env
+ExecStart=/home/ec2-user/school-app/venv/bin/python manage.py run_biometric_tcp_server --host 0.0.0.0 --port 5555
+Restart=always
+RestartSec=5
+StandardOutput=append:/home/ec2-user/school-app/logs/biometric-tcp.log
+StandardError=append:/home/ec2-user/school-app/logs/biometric-tcp-error.log
+
+[Install]
+WantedBy=multi-user.target

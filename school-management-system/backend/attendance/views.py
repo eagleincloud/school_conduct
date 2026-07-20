@@ -17,6 +17,7 @@ from .pdf_report import build_student_attendance_report_pdf
 from django.http import HttpResponse
 from classes.models import ClassSection
 from classes.teacher_access import teacher_teaches_class_section, teacher_can_mark_attendance
+from .services import process_biometric_event
 from students.models import StudentProfile
 from students.utils import get_requested_student
 from django.utils import timezone
@@ -137,6 +138,9 @@ class TeacherAttendanceSheetView(views.APIView):
                     'name': s.user.name or s.user.username,
                     'roll_no': s.roll_number or s.admission_number or str(idx),
                     'status': st,
+                    'verification_status': rec.verification_status if rec else None,
+                    'marked_via': rec.marked_via if rec else None,
+                    'punch_time': rec.punch_time.isoformat() if rec and rec.punch_time else None,
                 }
             )
 
@@ -238,16 +242,22 @@ class TeacherAttendanceBulkSaveView(views.APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        return Response({'message': 'Attendance saved', 'saved': save_count}, status=status.HTTP_200_OK)
+        return Response(
+            {
+                'message': 'Attendance saved',
+                'saved': save_count,
+            },
+            status=status.HTTP_200_OK,
+        )
 
 
 class StudentPunchAttendanceView(views.APIView):
     """
     Student punches attendance from biometric/RFID machine.
     Creates Attendance with:
-      - verification_status='pending'
+      - verification_status='approved'
       - punch_time (server time by default)
-      - status='present' as placeholder until teacher verifies
+      - status='present' immediately on successful punch
     """
 
     permission_classes = [IsStudent]
@@ -281,37 +291,20 @@ class StudentPunchAttendanceView(views.APIView):
             date=target_date,
             defaults={
                 'status': 'present',
-                'verification_status': 'pending',
+                'verification_status': 'approved',
                 'marked_via': 'rfid',
                 'punch_time': punch_dt,
             },
         )
 
-        if not created and attendance.verification_status != 'pending':
-            return Response({'error': 'Attendance already verified for this date'}, status=status.HTTP_409_CONFLICT)
-
-        # If already pending, allow updating punch_time (e.g., multiple punches).
         attendance.status = 'present'
-        attendance.verification_status = 'pending'
+        attendance.verification_status = 'approved'
         attendance.marked_via = 'rfid'
         attendance.punch_time = punch_dt
         attendance.marked_by = None
         attendance.verified_by = None
-        attendance.verified_at = None
+        attendance.verified_at = timezone.now()
         attendance.save()
-
-        # Notify assigned class teacher to verify (only on first record creation).
-        if created:
-            class_section = student_profile.class_section
-            if class_section and class_section.class_teacher:
-                teacher_user = class_section.class_teacher.user
-                Notification.objects.create(
-                    user=teacher_user,
-                    target_role=teacher_user.role,
-                    title='Attendance Verification Pending',
-                    message=f"{student_profile.user.name or student_profile.user.username} punched attendance for {target_date.isoformat()}. Please verify (Approve/Reject).",
-                    is_read=False,
-                )
 
         return Response(AttendanceSerializer(attendance).data, status=status.HTTP_201_CREATED)
 
@@ -800,6 +793,24 @@ class BiometricDevicePunchView(views.APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
+        result = process_biometric_event(
+            protocol='http',
+            payload=request.data,
+            raw_payload=str(request.data),
+            source_ip=request.META.get('REMOTE_ADDR'),
+            api_key=request.headers.get('X-Device-Token'),
+        )
+
+        if result['status'] == 'unauthorized':
+            return Response({'error': result['message']}, status=status.HTTP_401_UNAUTHORIZED)
+        if result['status'] == 'unmatched':
+            return Response({'error': result['message']}, status=status.HTTP_404_NOT_FOUND)
+        if result['status'] == 'failed':
+            return Response({'error': result['message']}, status=status.HTTP_400_BAD_REQUEST)
+        if result['status'] in {'duplicate', 'ignored'}:
+            return Response(result, status=status.HTTP_200_OK)
+        return Response(result, status=status.HTTP_201_CREATED)
+
         from django.conf import settings
         from attendance.models import BiometricDevice, TeacherAttendance
         from teachers.models import TeacherProfile
@@ -924,63 +935,40 @@ class BiometricDevicePunchView(views.APIView):
             }, status=status.HTTP_201_CREATED)
 
         # ─── STUDENT ATTENDANCE FLOW ───
-        # Create/Update attendance as pending
+        # Create/Update attendance as approved on successful biometric punch
         attendance, created = Attendance.objects.select_related('student').get_or_create(
             student=student,
             date=target_date,
             defaults={
                 'status': 'present',
-                'verification_status': 'pending',
+                'verification_status': 'approved',
                 'marked_via': 'rfid',
                 'punch_time': punch_dt,
                 'class_section': student.class_section
             },
         )
 
-        if not created and attendance.verification_status != 'pending':
-            # If student was marked absent (or rejected), but now scans finger, override to present (pending verification)
-            if attendance.status == 'absent' or attendance.verification_status == 'rejected':
-                attendance.status = 'present'
-                attendance.verification_status = 'pending'
-                attendance.marked_via = 'rfid'
+        if not created and attendance.verification_status == 'approved' and attendance.status in ('present', 'late'):
+            if not attendance.punch_time or attendance.punch_time < punch_dt:
                 attendance.punch_time = punch_dt
-                attendance.marked_by = None
-                attendance.verified_by = None
-                attendance.verified_at = None
-                attendance.save()
-            else:
-                # If already marked present/approved, return 200 OK instead of 409 Conflict
-                return Response({
-                    'message': 'Punch received: Attendance is already marked present/approved',
-                    'target_type': 'student',
-                    'student_name': student.user.name or student.user.username,
-                    'school_name': student.school.name,
-                    'punch_time': attendance.punch_time.isoformat() if attendance.punch_time else punch_dt.isoformat()
-                }, status=status.HTTP_200_OK)
+                attendance.save(update_fields=['punch_time'])
+            return Response({
+                'message': 'Punch received: Attendance is already marked present/approved',
+                'target_type': 'student',
+                'student_name': student.user.name or student.user.username,
+                'school_name': student.school.name,
+                'punch_time': attendance.punch_time.isoformat() if attendance.punch_time else punch_dt.isoformat()
+            }, status=status.HTTP_200_OK)
         else:
-            # Update punch details for multiple punches on the same day (for pending records)
             attendance.status = 'present'
-            attendance.verification_status = 'pending'
+            attendance.verification_status = 'approved'
             attendance.marked_via = 'rfid'
             attendance.punch_time = punch_dt
             attendance.class_section = student.class_section
             attendance.marked_by = None
             attendance.verified_by = None
-            attendance.verified_at = None
+            attendance.verified_at = timezone.now()
             attendance.save()
-
-        # Notify Class Teacher
-        if created:
-            class_section = student.class_section
-            if class_section and class_section.class_teacher:
-                teacher_user = class_section.class_teacher.user
-                Notification.objects.create(
-                    user=teacher_user,
-                    target_role=teacher_user.role,
-                    title='Attendance Verification Pending',
-                    message=f"{student.user.name or student.user.username} punched attendance for {target_date.isoformat()}. Please verify (Approve/Reject).",
-                    is_read=False,
-                )
 
         return Response({
             'message': 'Punch processed successfully',

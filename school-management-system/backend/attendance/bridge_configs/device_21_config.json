@@ -1,0 +1,14 @@
+{
+  "device_name": "MAIN",
+  "integration_mode": "tcp_xml_push",
+  "device_ip": "192.168.0.224",
+  "device_port": 5005,
+  "device_password": 0,
+  "machine_number": 4,
+  "device_serial_number": "T230700006",
+  "terminal_id": "",
+  "allowed_source_ip": null,
+  "school_id": "DEFAULT",
+  "server_url": "http://127.0.0.1:8000/api/attendance/biometric-punch/",
+  "device_secret_key": "0UUlgF_hjpYkHaDmOu4h6eWLNf_qTZJC"
+}

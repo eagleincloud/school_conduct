@@ -1,5 +1,6 @@
 import os
 import re
+import codecs
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
@@ -16,6 +17,12 @@ DEVICE_SECRET_KEY = os.getenv('DEVICE_SECRET_KEY', 'y0ur_Sup3r_S3cr3t_B1om3tr1c_
 DEBUG = os.getenv('DEBUG', 'False').strip().lower() == 'true'
 USE_POSTGRES = os.getenv('USE_POSTGRES', 'False').strip().lower() == 'true'
 PUBLIC_API_BASE_URL = os.getenv('PUBLIC_API_BASE_URL', 'http://127.0.0.1:8000').rstrip('/')
+BIOMETRIC_TCP_HOST = os.getenv('BIOMETRIC_TCP_HOST', '0.0.0.0')
+BIOMETRIC_TCP_PORT = int(os.getenv('BIOMETRIC_TCP_PORT', '5005'))
+BIOMETRIC_TCP_SOCKET_TIMEOUT = int(os.getenv('BIOMETRIC_TCP_SOCKET_TIMEOUT', '15'))
+BIOMETRIC_TCP_MAX_PAYLOAD_BYTES = int(os.getenv('BIOMETRIC_TCP_MAX_PAYLOAD_BYTES', '65536'))
+BIOMETRIC_TCP_ACK_MESSAGE = codecs.decode(os.getenv('BIOMETRIC_TCP_ACK_MESSAGE', 'OK\\r\\n'), 'unicode_escape')
+BIOMETRIC_TCP_CLOSE_AFTER_ACK = os.getenv('BIOMETRIC_TCP_CLOSE_AFTER_ACK', 'False').strip().lower() == 'true'
 raw_hosts = os.getenv('ALLOWED_HOSTS', '*')
 if raw_hosts:
     # Clean brackets and quotes in case they were written as a list string in .env

@@ -9,6 +9,6 @@
   "terminal_id": "",
   "allowed_source_ip": null,
   "school_id": "NORTH",
-  "server_url": "http://127.0.0.1:8000/api/attendance/biometric-punch/",
-  "device_secret_key": "EP91G0xFLl1nSF5NbKAQSjtI1xDZBBAB"
+  "server_url": "http://13.201.53.169/api/attendance/biometric-punch/",
+  "device_secret_key": "upUl_1zp-Sve8IGMhYRXIqnIvU64AIUQ"
 }
