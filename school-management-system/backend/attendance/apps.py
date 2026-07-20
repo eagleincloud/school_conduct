@@ -41,7 +41,12 @@ class AttendanceConfig(AppConfig):
             return
 
         try:
-            active_devices = list(BiometricDevice.objects.filter(is_active=True).select_related('school'))
+            active_devices = list(
+                BiometricDevice.objects.filter(
+                    is_active=True,
+                    integration_mode='bridge_pull',
+                ).select_related('school')
+            )
         except Exception:
             # Silent return if database tables aren't created yet (e.g. during migrations)
             return

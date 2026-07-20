@@ -1,10 +1,27 @@
+from unittest import mock
+
 from django.urls import reverse
+from django.test import SimpleTestCase, TestCase, override_settings
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from accounts.models import User
-from attendance.models import BiometricDevice
+from attendance.direct_push import decode_secureye_json_body, normalize_secureye_http_event
+from attendance.management.commands.run_biometric_tcp_server import BiometricTCPRequestHandler
+from attendance.models import Attendance, BiometricDevice
+from attendance.services import (
+    compute_event_fingerprint,
+    extract_message_frames,
+    parse_tcp_xml_payload,
+    process_biometric_event,
+    resolve_direct_push_device,
+    resolve_tcp_device,
+)
+from classes.models import ClassSection, MainClass, MainSection
+from students.models import StudentProfile
 from tenants.models import School
+from teachers.models import TeacherProfile
 
 
 class BiometricDeviceApiTests(APITestCase):
@@ -62,3 +79,474 @@ class BiometricDeviceApiTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['id'], device_one.id)
+
+
+class BiometricTcpHelpersTests(SimpleTestCase):
+    def test_extract_message_frames_handles_multiple_messages_and_remainder(self):
+        buffer = (
+            "<Message><DeviceSerialNo>A1</DeviceSerialNo></Message>"
+            "<Message><DeviceSerialNo>A2</DeviceSerialNo></Message><Mess"
+        )
+        frames, remainder = extract_message_frames(buffer)
+
+        self.assertEqual(len(frames), 2)
+        self.assertTrue(frames[0].endswith("</Message>"))
+        self.assertEqual(remainder, "<Mess")
+
+    def test_parse_tcp_xml_payload_and_fingerprint_are_stable(self):
+        raw_payload = (
+            "<Message><DeviceSerialNo>T230700006</DeviceSerialNo>"
+            "<Event>TimeLog</Event><UserID>2</UserID><Year>2026</Year>"
+            "<Month>06</Month><Day>25</Day><Hour>16</Hour><Minute>04</Minute>"
+            "<Second>22</Second></Message>"
+        )
+        payload = parse_tcp_xml_payload(raw_payload)
+
+        self.assertEqual(payload['DeviceSerialNo'], 'T230700006')
+        self.assertEqual(payload['Event'], 'TimeLog')
+        self.assertEqual(
+            compute_event_fingerprint('tcp_xml', payload),
+            compute_event_fingerprint('tcp_xml', payload),
+        )
+
+    @override_settings(BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n', BIOMETRIC_TCP_SOCKET_TIMEOUT=1, BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536)
+    def test_request_handler_processes_all_messages_in_same_connection(self):
+        class FakeSocket:
+            def __init__(self, chunks):
+                self._chunks = list(chunks)
+                self.sent = []
+                self.timeout = None
+
+            def settimeout(self, value):
+                self.timeout = value
+
+            def recv(self, _size):
+                if self._chunks:
+                    return self._chunks.pop(0)
+                return b''
+
+            def sendall(self, data):
+                self.sent.append(data)
+
+        payload = (
+            "<Message><DeviceSerialNo>T230700006</DeviceSerialNo><TerminalID>4</TerminalID>"
+            "<Event>TimeLog</Event><UserID>3</UserID><Year>2026</Year><Month>06</Month>"
+            "<Day>29</Day><Hour>10</Hour><Minute>10</Minute><Second>04</Second></Message>"
+            "<Message><DeviceSerialNo>T230700006</DeviceSerialNo><TerminalID>4</TerminalID>"
+            "<Event>TimeLog</Event><UserID>4</UserID><Year>2026</Year><Month>06</Month>"
+            "<Day>29</Day><Hour>10</Hour><Minute>11</Minute><Second>25</Second></Message>"
+        ).encode('utf-8')
+        fake_socket = FakeSocket([payload, b''])
+
+        with mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
+            return_value={'status': 'processed'},
+        ) as process_event_mock:
+            BiometricTCPRequestHandler(fake_socket, ('103.106.31.187', 50000), mock.Mock())
+
+        self.assertEqual(process_event_mock.call_count, 2)
+        self.assertEqual(fake_socket.sent, [b'OK\r\n', b'OK\r\n'])
+
+    @override_settings(BIOMETRIC_TCP_SOCKET_TIMEOUT=1, BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536)
+    def test_request_handler_processes_secureye_http_push(self):
+        class FakeSocket:
+            def __init__(self, chunks):
+                self._chunks = list(chunks)
+                self.sent = []
+                self.timeout = None
+
+            def settimeout(self, value):
+                self.timeout = value
+
+            def recv(self, _size):
+                if self._chunks:
+                    return self._chunks.pop(0)
+                return b''
+
+            def sendall(self, data):
+                self.sent.append(data)
+
+        body_json = b'{"fk_bin_data_lib":"FKDATAHS101","user_id":"1","verify_mode":"33","io_mode":"0","io_time":"20260701171545"}'
+        body = len(body_json).to_bytes(4, byteorder='little') + body_json + b'\x00'
+        request = (
+            b"POST / HTTP/1.1\r\n"
+            b"Host: 13.201.53.169\r\n"
+            b"Content-Type: application/octet-stream\r\n"
+            b"Content-Length: " + str(len(body)).encode("ascii") + b"\r\n"
+            b"request_code: realtime_glog\r\n"
+            b"dev_id: 2508031064\r\n"
+            b"trans_id: 0\r\n"
+            b"\r\n" + body
+        )
+        fake_socket = FakeSocket([request, b''])
+
+        device = mock.Mock()
+        with mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.resolve_direct_push_device',
+            return_value=device,
+        ), mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
+            return_value={'status': 'processed'},
+        ) as process_event_mock:
+            BiometricTCPRequestHandler(fake_socket, ('103.106.31.187', 50000), mock.Mock())
+
+        self.assertEqual(process_event_mock.call_count, 1)
+        payload = process_event_mock.call_args.kwargs['payload']
+        self.assertEqual(payload['DeviceSerialNo'], '2508031064')
+        self.assertEqual(payload['Event'], 'TimeLog')
+        self.assertEqual(payload['UserID'], '1')
+        self.assertTrue(fake_socket.sent[0].startswith(b'HTTP/1.1 200 OK'))
+
+
+class BiometricTcpDeviceResolutionTests(TestCase):
+    def setUp(self):
+        self.school = School.objects.create(name='North Campus', school_id='NORTH')
+
+    def test_resolves_by_serial_first(self):
+        device = BiometricDevice.objects.create(
+            school=self.school,
+            name='Main Gate',
+            integration_mode='tcp_xml_push',
+            device_serial_number='T230700006',
+            terminal_id='4',
+        )
+
+        resolved = resolve_tcp_device(
+            {'DeviceSerialNo': 'T230700006', 'TerminalID': '4'},
+            source_ip='103.106.31.187',
+        )
+
+        self.assertEqual(resolved, device)
+
+    def test_resolves_by_terminal_id_only_with_source_ip_allowlist(self):
+        device = BiometricDevice.objects.create(
+            school=self.school,
+            name='Main Gate',
+            integration_mode='tcp_xml_push',
+            terminal_id='4',
+            allowed_source_ip='103.106.31.187',
+        )
+
+        resolved = resolve_tcp_device(
+            {'DeviceSerialNo': 'WRONG-SERIAL', 'TerminalID': '4'},
+            source_ip='103.106.31.187',
+        )
+
+        self.assertEqual(resolved, device)
+
+    def test_terminal_id_fallback_requires_matching_source_ip(self):
+        BiometricDevice.objects.create(
+            school=self.school,
+            name='Main Gate',
+            integration_mode='tcp_xml_push',
+            terminal_id='4',
+            allowed_source_ip='103.106.31.187',
+        )
+
+        with self.assertRaises(LookupError):
+            resolve_tcp_device(
+                {'DeviceSerialNo': 'WRONG-SERIAL', 'TerminalID': '4'},
+                source_ip='103.187.100.70',
+            )
+
+    def test_http_push_device_resolves_by_serial_number(self):
+        device = BiometricDevice.objects.create(
+            school=self.school,
+            name='Office Gate',
+            integration_mode='http_push',
+            device_serial_number='2508031064',
+        )
+
+        resolved = resolve_direct_push_device(
+            {'DeviceSerialNo': '2508031064'},
+            source_ip='103.106.31.187',
+            integration_modes=('http_push',),
+            lookup_label='HTTP push',
+        )
+
+        self.assertEqual(resolved, device)
+
+
+class TeacherManualAttendanceOverrideTests(APITestCase):
+    def setUp(self):
+        self.school = School.objects.create(name='North Campus', school_id='NORTH')
+        self.teacher_user = User.objects.create_user(
+            username='class-teacher',
+            password='pass1234',
+            role='teacher',
+            school=self.school,
+            email='teacher@example.com',
+        )
+        self.teacher_profile = TeacherProfile.objects.create(
+            user=self.teacher_user,
+            school=self.school,
+            employee_id='T-001',
+            role='Class Teacher',
+        )
+        self.main_class = MainClass.objects.create(school=self.school, name='10')
+        self.main_section = MainSection.objects.create(school=self.school, name='A')
+        self.class_section = ClassSection.objects.create(
+            school=self.school,
+            class_ref=self.main_class,
+            section_ref=self.main_section,
+            class_teacher=self.teacher_profile,
+        )
+        self.student_user = User.objects.create_user(
+            username='student-one',
+            password='pass1234',
+            role='student',
+            school=self.school,
+            email='student@example.com',
+        )
+        self.student_profile = StudentProfile.objects.create(
+            user=self.student_user,
+            school=self.school,
+            admission_number='ADM-001',
+            roll_number='1',
+            rfid_code='RFID-001',
+            class_section=self.class_section,
+        )
+        self.client.force_authenticate(self.teacher_user)
+
+    def test_manual_mark_endpoint_allows_overriding_biometric_attendance_row(self):
+        today = timezone.localdate()
+        attendance = Attendance.objects.create(
+            student=self.student_profile,
+            class_section=self.class_section,
+            date=today,
+            status='present',
+            verification_status='approved',
+            marked_via='rfid',
+        )
+
+        response = self.client.post(
+            reverse('mark-attendance'),
+            {
+                'student': self.student_profile.id,
+                'date': attendance.date.isoformat(),
+                'status': 'absent',
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        attendance.refresh_from_db()
+        self.assertEqual(attendance.marked_via, 'manual')
+        self.assertEqual(attendance.status, 'absent')
+        self.assertEqual(attendance.verification_status, 'rejected')
+
+    def test_bulk_save_allows_overriding_biometric_attendance_rows(self):
+        today = timezone.localdate()
+        Attendance.objects.create(
+            student=self.student_profile,
+            class_section=self.class_section,
+            date=today,
+            status='present',
+            verification_status='approved',
+            marked_via='rfid',
+        )
+
+        response = self.client.post(
+            reverse('teacher-attendance-bulk-save'),
+            {
+                'class_section_id': self.class_section.id,
+                'date': today.isoformat(),
+                'rows': [
+                    {
+                        'student_id': self.student_profile.id,
+                        'status': 'absent',
+                    }
+                ],
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['saved'], 1)
+
+        attendance = Attendance.objects.get(student=self.student_profile, date=today)
+        self.assertEqual(attendance.marked_via, 'manual')
+        self.assertEqual(attendance.status, 'absent')
+        self.assertEqual(attendance.verification_status, 'rejected')
+
+
+class BiometricPunchApprovalTests(TestCase):
+    def setUp(self):
+        self.school = School.objects.create(name='North Campus', school_id='NORTH')
+        self.teacher_user = User.objects.create_user(
+            username='class-teacher-two',
+            password='pass1234',
+            role='teacher',
+            school=self.school,
+            email='teacher2@example.com',
+        )
+        self.teacher_profile = TeacherProfile.objects.create(
+            user=self.teacher_user,
+            school=self.school,
+            employee_id='T-002',
+            role='Class Teacher',
+        )
+        self.main_class = MainClass.objects.create(school=self.school, name='9')
+        self.main_section = MainSection.objects.create(school=self.school, name='B')
+        self.class_section = ClassSection.objects.create(
+            school=self.school,
+            class_ref=self.main_class,
+            section_ref=self.main_section,
+            class_teacher=self.teacher_profile,
+        )
+        self.student_user = User.objects.create_user(
+            username='student-two',
+            password='pass1234',
+            role='student',
+            school=self.school,
+            email='student2@example.com',
+        )
+        self.student_profile = StudentProfile.objects.create(
+            user=self.student_user,
+            school=self.school,
+            admission_number='ADM-002',
+            roll_number='2',
+            rfid_code='3',
+            class_section=self.class_section,
+        )
+        self.device = BiometricDevice.objects.create(
+            school=self.school,
+            name='Main Gate',
+            integration_mode='tcp_xml_push',
+            device_serial_number='T230700006',
+            terminal_id='4',
+            allowed_source_ip='103.106.31.187',
+        )
+
+    def test_tcp_biometric_punch_marks_student_present_immediately(self):
+        now = timezone.now()
+        payload = {
+            'DeviceSerialNo': 'T230700006',
+            'TerminalID': '4',
+            'Event': 'TimeLog',
+            'UserID': '3',
+            'Year': str(now.year),
+            'Month': str(now.month),
+            'Day': str(now.day),
+            'Hour': str(now.hour),
+            'Minute': str(now.minute),
+            'Second': str(now.second),
+        }
+
+        result = process_biometric_event(
+            protocol='tcp_xml',
+            payload=payload,
+            raw_payload='<Message />',
+            source_ip='103.106.31.187',
+        )
+
+        self.assertTrue(result['ok'])
+        self.assertEqual(result['status'], 'processed')
+
+        attendance = Attendance.objects.get(student=self.student_profile, date=timezone.localdate())
+        self.assertEqual(attendance.status, 'present')
+        self.assertEqual(attendance.verification_status, 'approved')
+        self.assertEqual(attendance.marked_via, 'rfid')
+
+
+class SecureyeNormalizationTests(SimpleTestCase):
+    def test_decodes_and_normalizes_secureye_http_payload(self):
+        body_json = b'{"fk_bin_data_lib":"FKDATAHS101","user_id":"1","verify_mode":"33","io_mode":"0","io_time":"20260701171545"}'
+        body = len(body_json).to_bytes(4, byteorder='little') + body_json + b'\x00'
+        http_request = {
+            'headers': {
+                'request_code': 'realtime_glog',
+                'dev_id': '2508031064',
+                'trans_id': '0',
+            },
+            'body': body,
+        }
+
+        decoded = decode_secureye_json_body(body)
+        normalized, body_data = normalize_secureye_http_event(http_request, source_ip='103.106.31.187')
+
+        self.assertEqual(decoded['user_id'], '1')
+        self.assertEqual(body_data['fk_bin_data_lib'], 'FKDATAHS101')
+        self.assertEqual(normalized['DeviceSerialNo'], '2508031064')
+        self.assertEqual(normalized['Event'], 'TimeLog')
+        self.assertEqual(normalized['UserID'], '1')
+        self.assertEqual(normalized['punch_time'], '2026-07-01 17:15:45')
+
+
+class BiometricEventSanitizationTests(TestCase):
+    def setUp(self):
+        self.school = School.objects.create(name='North Campus', school_id='NORTH')
+        self.teacher_user = User.objects.create_user(
+            username='class-teacher-sanitize',
+            password='pass1234',
+            role='teacher',
+            school=self.school,
+            email='teacher-sanitize@example.com',
+        )
+        self.teacher_profile = TeacherProfile.objects.create(
+            user=self.teacher_user,
+            school=self.school,
+            employee_id='T-003',
+            role='Class Teacher',
+        )
+        self.main_class = MainClass.objects.create(school=self.school, name='8')
+        self.main_section = MainSection.objects.create(school=self.school, name='C')
+        self.class_section = ClassSection.objects.create(
+            school=self.school,
+            class_ref=self.main_class,
+            section_ref=self.main_section,
+            class_teacher=self.teacher_profile,
+        )
+        self.student_user = User.objects.create_user(
+            username='student-sanitize',
+            password='pass1234',
+            role='student',
+            school=self.school,
+            email='student-sanitize@example.com',
+        )
+        self.student_profile = StudentProfile.objects.create(
+            user=self.student_user,
+            school=self.school,
+            admission_number='ADM-003',
+            roll_number='3',
+            rfid_code='1',
+            class_section=self.class_section,
+        )
+        self.device = BiometricDevice.objects.create(
+            school=self.school,
+            name='Office Gate',
+            integration_mode='http_push',
+            device_serial_number='2508031064',
+        )
+
+    def test_process_biometric_event_strips_nul_bytes_before_saving(self):
+        payload = {
+            'DeviceSerialNo': '2508031064',
+            'Event': 'TimeLog',
+            'UserID': '1\x00',
+            'VerifMode': '33',
+            'AttendStat': '0',
+            'TransID': '0',
+            'terminal_id': '1',
+            'push_vendor': 'secureye_http',
+            'body_json': {
+                'user_id': '1\x00',
+                'fk_name': 'S-B251CB/WiFi\x00',
+            },
+            'punch_time': timezone.now().strftime('%Y-%m-%d %H:%M:%S'),
+        }
+
+        result = process_biometric_event(
+            protocol='http',
+            payload=payload,
+            raw_payload='POST /\x00 HTTP/1.0\r\nbody\x00',
+            source_ip='106.222.215.173',
+            device=self.device,
+        )
+
+        self.assertTrue(result['ok'])
+        event_log = self.device.event_logs.latest('id')
+        self.assertNotIn('\x00', event_log.raw_payload)
+        self.assertEqual(event_log.user_identifier, '1')
+        self.assertEqual(event_log.normalized_payload['UserID'], '1')
+        self.assertEqual(event_log.normalized_payload['body_json']['user_id'], '1')
