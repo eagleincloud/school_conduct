@@ -1,14 +1,14 @@
 {
-  "device_name": "Main Gate",
-  "integration_mode": "bridge_pull",
-  "device_ip": "192.168.0.50",
-  "device_port": 4370,
+  "device_name": "Main",
+  "integration_mode": "tcp_xml_push",
+  "device_ip": "192.168.1.165",
+  "device_port": 5005,
   "device_password": 0,
-  "machine_number": 1,
-  "device_serial_number": "",
+  "machine_number": 4,
+  "device_serial_number": "T230700350",
   "terminal_id": "",
   "allowed_source_ip": null,
-  "school_id": "NORTH",
+  "school_id": "SVIS",
   "server_url": "http://13.201.53.169/api/attendance/biometric-punch/",
-  "device_secret_key": "o0p_o6uDmsJR9w8TRqySN1dXq_v0bviV"
+  "device_secret_key": "q-q_5CINmKgb-Qo7KE3x8VtfpOZNtoT3"
 }
