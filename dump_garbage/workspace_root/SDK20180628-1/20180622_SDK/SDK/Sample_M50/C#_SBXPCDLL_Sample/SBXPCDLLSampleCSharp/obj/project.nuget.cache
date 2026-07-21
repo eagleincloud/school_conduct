@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "XAfQVnNHAP0=",
+  "success": true,
+  "projectFilePath": "c:\\Users\\User\\Desktop\\school_conduct\\student_teacher_conduct\\SDK20180628-1\\20180622_SDK\\SDK\\Sample_M50\\C#_SBXPCDLL_Sample\\SBXPCDLLSampleCSharp\\SBXPCDLLSampleCSharp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\User\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.3\\microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net48\\1.0.3\\microsoft.netframework.referenceassemblies.net48.1.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
