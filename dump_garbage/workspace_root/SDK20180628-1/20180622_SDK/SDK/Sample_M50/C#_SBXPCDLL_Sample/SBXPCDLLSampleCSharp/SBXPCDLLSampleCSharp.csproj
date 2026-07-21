@@ -1,0 +1,183 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ProjectGuid>{DDEB1112-DA10-4CF7-B8ED-46EAECFA21AE}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>SBXPCSampleCSharp</RootNamespace>
+    <AssemblyName>SBXPCSampleCSharp</AssemblyName>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Platforms>AnyCPU;x86</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="frmAccessTz.resx">
+      <DependentUpon>frmAccessTz.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmBellInfo.resx">
+      <DependentUpon>frmBellInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmCommParam.resx">
+      <DependentUpon>frmCommParam.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmDaigong.resx">
+      <DependentUpon>frmDaigong.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmDepartment.resx">
+      <DependentUpon>frmDepartment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmEnroll.resx">
+      <DependentUpon>frmEnroll.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmEvent.resx">
+      <DependentUpon>frmEvent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmLockCrl.resx">
+      <DependentUpon>frmLockCrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmLog.resx">
+      <DependentUpon>frmLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmLogServerSetting.resx">
+      <DependentUpon>frmLogServerSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmPrtCode.resx">
+      <DependentUpon>frmPrtCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmSystemInfo.resx">
+      <DependentUpon>frmSystemInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmTrMode.resx">
+      <DependentUpon>frmTrMode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmTrString.resx">
+      <DependentUpon>frmTrString.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="frmAccessTz.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmBellInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmCommParam.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmDaigong.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmDepartment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmEnroll.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmEvent.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmLockCrl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmLogServerSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmPrtCode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmSystemInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmTrMode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmTrString.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <AutoGen>true</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>true</DesignTime>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <AutoGen>true</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>true</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="app.config" />
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="datEnrollDat.mdb" CopyToOutputDirectory="Always" />
+    <Content Include="GEN_FONT.dll" CopyToOutputDirectory="Always" />
+    <Content Include="GEN_FONT64.dll" CopyToOutputDirectory="Always" />
+    <Content Include="SBPCCOMM.dll" CopyToOutputDirectory="Always" />
+    <Content Include="SBPCCOMM64.dll" CopyToOutputDirectory="Always" />
+    <Content Include="SBXPCDLL.dll" CopyToOutputDirectory="Always" />
+    <Content Include="SBXPCDLL64.dll" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+</Project>
