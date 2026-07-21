@@ -4,6 +4,8 @@ import AppRoutes from './routes/AppRoutes';
 import MainLayout from './layouts/MainLayout';
 import useAuthStore from './store/authStore';
 import { App as CapApp } from '@capacitor/app';
+import { Capacitor, registerPlugin } from '@capacitor/core';
+import { BASE_URL } from './services/api';
 
 import { Toaster, toast } from 'react-hot-toast';
 
@@ -11,6 +13,31 @@ const AppContent = () => {
   const { isAuthenticated } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (Capacitor.getPlatform() === 'web') return;
+
+    try {
+      const BackgroundNotification = registerPlugin('BackgroundNotification');
+      if (isAuthenticated) {
+        const token = localStorage.getItem("access_token");
+        if (token) {
+          BackgroundNotification.requestNotificationPermission()
+            .then(() => {
+              BackgroundNotification.startService({
+                token: token,
+                apiUrl: BASE_URL
+              });
+            })
+            .catch((err) => console.error("Permission request failed", err));
+        }
+      } else {
+        BackgroundNotification.stopService().catch((err) => console.error("Stop service failed", err));
+      }
+    } catch (e) {
+      console.error("BackgroundNotification plugin failed to load", e);
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const isAppPluginAvailable = typeof window !== 'undefined' && window.Capacitor && window.Capacitor.isPluginAvailable('App');

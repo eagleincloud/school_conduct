@@ -1,0 +1,14 @@
+{
+  "device_name": "classroom",
+  "integration_mode": "bridge_pull",
+  "device_ip": "192.168.0.224",
+  "device_port": 5005,
+  "device_password": 0,
+  "machine_number": 4,
+  "device_serial_number": "",
+  "terminal_id": "",
+  "allowed_source_ip": null,
+  "school_id": "DEFAULT",
+  "server_url": "http://13.201.53.169/api/attendance/biometric-punch/",
+  "device_secret_key": "91eCdSphW5Pd5hNr5v13Lh0orgfD_VBM"
+}

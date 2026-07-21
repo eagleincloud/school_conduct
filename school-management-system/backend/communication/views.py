@@ -338,6 +338,18 @@ class ConversationView(views.APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         msg = serializer.save(sender=target_user, receiver_id=other_user_id, is_read=False)
+
+        # Notify the receiver of the new message
+        try:
+            Notification.objects.create(
+                user_id=other_user_id,
+                target_role=getattr(msg.receiver, 'role', 'student'),
+                title='New Message',
+                message=f'New message from {target_user.name or target_user.username}'
+            )
+        except Exception:
+            logger.exception("Failed to create message notification")
+
         return Response(MessageSerializer(msg).data, status=status.HTTP_201_CREATED)
 
 class DoubtConversationListView(views.APIView):

@@ -32,7 +32,7 @@ if raw_hosts:
     # Split and strip whitespace and trailing slashes from each host
     ALLOWED_HOSTS = [h.strip().rstrip('/') for h in clean_hosts.split(',') if h.strip()]
 else:
-    ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
@@ -90,7 +90,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Required for Render to correctly detect HTTPS behind proxy
+# Required to correctly detect HTTPS behind reverse proxy (Nginx)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
@@ -214,7 +214,7 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 
-# CSRF Trusted Origins for Render
+# CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
@@ -232,7 +232,7 @@ CSRF_TRUSTED_ORIGINS = [
 # to avoid adding https://localhost during local development.
 if not DEBUG:
     for host in ALLOWED_HOSTS:
-        if host and host != '*' and host != '.onrender.com':
+        if host and host != '*':
             if not host.startswith('http'):
                 CSRF_TRUSTED_ORIGINS.append(f"https://{host}")
             else:

@@ -1,4 +1,6 @@
 import axios from "axios";
+import { Capacitor, registerPlugin } from "@capacitor/core";
+
 
 // Centralized API Configuration
 // Supports both Vite (import.meta.env) and Vercel/CRA (process.env)
@@ -85,6 +87,18 @@ api.interceptors.response.use(
             if (response.data && response.data.access) {
               const newAccessToken = response.data.access;
               localStorage.setItem("access_token", newAccessToken);
+              
+              if (Capacitor.getPlatform() !== 'web') {
+                try {
+                  const BackgroundNotification = registerPlugin('BackgroundNotification');
+                  BackgroundNotification.startService({
+                    token: newAccessToken,
+                    apiUrl: BASE_URL
+                  }).catch(e => console.error("Failed to update background notification token", e));
+                } catch (e) {
+                  console.error(e);
+                }
+              }
               
               // Update authorization header and retry original request
               originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
