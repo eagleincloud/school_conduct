@@ -440,6 +440,58 @@ def process_biometric_event(
             if update_fields:
                 existing.save(update_fields=update_fields)
 
+            event_type = (payload.get('Event') or payload.get('event') or existing.event_type or '').strip()
+            user_identifier = str(payload.get('UserID') or payload.get('rfid_code') or existing.user_identifier or '').strip()
+            if event_type.lower() == 'timelog' and user_identifier:
+                punch_dt = existing.punch_time or _parse_punch_time(payload)
+                school_id = device.school.school_id
+                student = _resolve_student(user_identifier, school_id)
+                if student:
+                    attendance, _created, _message = _process_student_attendance(student, punch_dt)
+                    existing.status = 'processed'
+                    existing.attendance = attendance
+                    existing.processed_at = timezone.now()
+                    existing.save(update_fields=['status', 'attendance', 'processed_at'])
+
+                    if not device.last_punch_at or device.last_punch_at < punch_dt:
+                        device.last_punch_at = punch_dt
+                        device.save(update_fields=['last_punch_at'])
+
+                    return {
+                        'ok': True,
+                        'status': 'processed',
+                        'message': 'Duplicate biometric event reapplied to student attendance.',
+                        'target_type': 'student',
+                        'student_name': student.user.name or student.user.username,
+                        'school_name': student.school.name if student.school else '',
+                        'punch_time': attendance.punch_time.isoformat() if attendance.punch_time else punch_dt.isoformat(),
+                        'event_log_id': existing.id,
+                    }
+
+                teacher = _resolve_teacher(user_identifier, school_id)
+                if teacher:
+                    teacher_attendance, _created, message = _process_teacher_attendance(teacher, punch_dt)
+                    existing.status = 'processed'
+                    existing.teacher_attendance = teacher_attendance
+                    existing.processed_at = timezone.now()
+                    existing.save(update_fields=['status', 'teacher_attendance', 'processed_at'])
+
+                    if not device.last_punch_at or device.last_punch_at < punch_dt:
+                        device.last_punch_at = punch_dt
+                        device.save(update_fields=['last_punch_at'])
+
+                    return {
+                        'ok': True,
+                        'status': 'processed',
+                        'message': f'Duplicate biometric event reapplied to teacher attendance. {message}',
+                        'target_type': 'teacher',
+                        'teacher_name': teacher.user.name or teacher.user.username,
+                        'school_name': teacher.school.name if teacher.school else '',
+                        'punch_in_time': teacher_attendance.punch_in_time.isoformat() if teacher_attendance.punch_in_time else None,
+                        'punch_out_time': teacher_attendance.punch_out_time.isoformat() if teacher_attendance.punch_out_time else None,
+                        'event_log_id': existing.id,
+                    }
+
         return {
             'ok': True,
             'status': 'duplicate',

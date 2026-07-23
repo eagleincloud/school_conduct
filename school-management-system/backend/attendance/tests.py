@@ -1,3 +1,6 @@
+import socket
+import threading
+from datetime import timedelta
 from unittest import mock
 
 from django.urls import reverse
@@ -9,7 +12,7 @@ from rest_framework.test import APITestCase
 from accounts.models import User
 from attendance.direct_push import decode_secureye_json_body, normalize_secureye_http_event
 from attendance.management.commands.run_biometric_tcp_server import BiometricTCPRequestHandler
-from attendance.models import Attendance, BiometricDevice
+from attendance.models import Attendance, BiometricDevice, TeacherAttendance
 from attendance.services import (
     compute_event_fingerprint,
     extract_message_frames,
@@ -110,6 +113,94 @@ class BiometricTcpHelpersTests(SimpleTestCase):
         )
 
     @override_settings(BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n', BIOMETRIC_TCP_SOCKET_TIMEOUT=1, BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536)
+    def test_request_handler_acks_complete_xml_before_peer_disconnects(self):
+        payload = (
+            "<Message><DeviceSerialNo>T230700006</DeviceSerialNo><TerminalID>4</TerminalID>"
+            "<Event>TimeLog</Event><UserID>11</UserID><Year>2026</Year><Month>07</Month>"
+            "<Day>21</Day><Hour>18</Hour><Minute>00</Minute><Second>00</Second></Message>"
+        ).encode('utf-8')
+        server_socket, device_socket = socket.socketpair()
+        device_socket.settimeout(0.5)
+        handler_errors = []
+
+        def run_handler():
+            try:
+                BiometricTCPRequestHandler(
+                    server_socket,
+                    ('103.106.31.187', 50000),
+                    mock.Mock(),
+                )
+            except Exception as exc:  # pragma: no cover - surfaced below
+                handler_errors.append(exc)
+
+        with mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
+            return_value={'status': 'processed'},
+        ) as process_event_mock:
+            handler_thread = threading.Thread(target=run_handler)
+            handler_thread.start()
+            try:
+                device_socket.sendall(payload)
+                ack = device_socket.recv(16)
+            finally:
+                device_socket.close()
+                handler_thread.join(timeout=2)
+                server_socket.close()
+
+        self.assertFalse(handler_thread.is_alive())
+        self.assertEqual(handler_errors, [])
+        self.assertEqual(ack, b'OK\r\n')
+        self.assertEqual(process_event_mock.call_count, 1)
+
+    @override_settings(BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n', BIOMETRIC_TCP_SOCKET_TIMEOUT=1, BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536)
+    def test_request_handler_accepts_next_xml_message_on_same_open_socket(self):
+        first_payload = (
+            "<Message><DeviceSerialNo>T230700006</DeviceSerialNo><TerminalID>4</TerminalID>"
+            "<Event>TimeLog</Event><UserID>11</UserID><Year>2026</Year><Month>07</Month>"
+            "<Day>21</Day><Hour>18</Hour><Minute>00</Minute><Second>00</Second></Message>"
+        ).encode('utf-8')
+        second_payload = (
+            "<Message><DeviceSerialNo>T230700006</DeviceSerialNo><TerminalID>4</TerminalID>"
+            "<Event>TimeLog</Event><UserID>12</UserID><Year>2026</Year><Month>07</Month>"
+            "<Day>21</Day><Hour>18</Hour><Minute>00</Minute><Second>15</Second></Message>"
+        ).encode('utf-8')
+        server_socket, device_socket = socket.socketpair()
+        device_socket.settimeout(0.5)
+        handler_errors = []
+
+        def run_handler():
+            try:
+                BiometricTCPRequestHandler(
+                    server_socket,
+                    ('103.106.31.187', 50000),
+                    mock.Mock(),
+                )
+            except Exception as exc:  # pragma: no cover - surfaced below
+                handler_errors.append(exc)
+
+        with mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
+            return_value={'status': 'processed'},
+        ) as process_event_mock:
+            handler_thread = threading.Thread(target=run_handler)
+            handler_thread.start()
+            try:
+                device_socket.sendall(first_payload)
+                first_ack = device_socket.recv(16)
+                device_socket.sendall(second_payload)
+                second_ack = device_socket.recv(16)
+            finally:
+                device_socket.close()
+                handler_thread.join(timeout=2)
+                server_socket.close()
+
+        self.assertFalse(handler_thread.is_alive())
+        self.assertEqual(handler_errors, [])
+        self.assertEqual(first_ack, b'OK\r\n')
+        self.assertEqual(second_ack, b'OK\r\n')
+        self.assertEqual(process_event_mock.call_count, 2)
+
+    @override_settings(BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n', BIOMETRIC_TCP_SOCKET_TIMEOUT=1, BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536)
     def test_request_handler_processes_all_messages_in_same_connection(self):
         class FakeSocket:
             def __init__(self, chunks):
@@ -166,7 +257,11 @@ class BiometricTcpHelpersTests(SimpleTestCase):
             def sendall(self, data):
                 self.sent.append(data)
 
-        body_json = b'{"fk_bin_data_lib":"FKDATAHS101","user_id":"1","verify_mode":"33","io_mode":"0","io_time":"20260701171545"}'
+        io_time = timezone.localtime().strftime('%Y%m%d%H%M%S')
+        body_json = (
+            '{"fk_bin_data_lib":"FKDATAHS101","user_id":"1","verify_mode":"33",'
+            f'"io_mode":"0","io_time":"{io_time}"}}'
+        ).encode('utf-8')
         body = len(body_json).to_bytes(4, byteorder='little') + body_json + b'\x00'
         request = (
             b"POST / HTTP/1.1\r\n"
@@ -196,6 +291,49 @@ class BiometricTcpHelpersTests(SimpleTestCase):
         self.assertEqual(payload['Event'], 'TimeLog')
         self.assertEqual(payload['UserID'], '1')
         self.assertTrue(fake_socket.sent[0].startswith(b'HTTP/1.1 200 OK'))
+        self.assertIn(b'Content-Length: 0', fake_socket.sent[0])
+        self.assertIn(b'response_code: OK', fake_socket.sent[0])
+        self.assertTrue(fake_socket.sent[0].endswith(b'\r\n\r\n'))
+
+    @override_settings(BIOMETRIC_TCP_SOCKET_TIMEOUT=1, BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536)
+    def test_request_handler_fast_acks_stale_secureye_log_without_processing(self):
+        class FakeSocket:
+            def __init__(self, request):
+                self.request = request
+                self.sent = []
+
+            def settimeout(self, _value):
+                pass
+
+            def recv(self, _size):
+                request, self.request = self.request, b''
+                return request
+
+            def sendall(self, data):
+                self.sent.append(data)
+
+        body_json = b'{"fk_bin_data_lib":"FKDATAHS101","user_id":"16","verify_mode":"1","io_mode":"0","io_time":"20251217113000"}'
+        body = len(body_json).to_bytes(4, byteorder='little') + body_json + b'\x00'
+        request = (
+            b"POST // HTTP/1.0\r\n"
+            b"Content-Length: " + str(len(body)).encode('ascii') + b"\r\n"
+            b"request_code: realtime_glog\r\n"
+            b"dev_id: 2508031064\r\n"
+            b"trans_id: 0\r\n\r\n" + body
+        )
+        fake_socket = FakeSocket(request)
+
+        with mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.resolve_direct_push_device',
+            return_value=mock.Mock(),
+        ), mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
+        ) as process_event_mock:
+            BiometricTCPRequestHandler(fake_socket, ('103.106.31.187', 50000), mock.Mock())
+
+        process_event_mock.assert_not_called()
+        self.assertEqual(len(fake_socket.sent), 1)
+        self.assertIn(b'response_code: OK', fake_socket.sent[0])
 
 
 class BiometricTcpDeviceResolutionTests(TestCase):
@@ -265,6 +403,35 @@ class BiometricTcpDeviceResolutionTests(TestCase):
         )
 
         self.assertEqual(resolved, device)
+
+
+class BiometricDeviceLiveStatusTests(TestCase):
+    def setUp(self):
+        self.school = School.objects.create(name='Status Campus', school_id='STATUS')
+
+    def test_direct_push_device_is_offline_after_short_activity_window(self):
+        device = BiometricDevice.objects.create(
+            school=self.school,
+            name='Main Gate',
+            integration_mode='tcp_xml_push',
+            device_serial_number='STATUS-001',
+            last_seen_at=timezone.now() - timedelta(seconds=16),
+        )
+
+        self.assertFalse(device.is_online_now())
+        self.assertEqual(device.get_live_status_label(), 'offline')
+
+    def test_direct_push_device_is_online_during_short_activity_window(self):
+        device = BiometricDevice.objects.create(
+            school=self.school,
+            name='Main Gate',
+            integration_mode='tcp_xml_push',
+            device_serial_number='STATUS-002',
+            last_seen_at=timezone.now() - timedelta(seconds=10),
+        )
+
+        self.assertTrue(device.is_online_now())
+        self.assertEqual(device.get_live_status_label(), 'online')
 
 
 class TeacherManualAttendanceOverrideTests(APITestCase):
@@ -370,6 +537,49 @@ class TeacherManualAttendanceOverrideTests(APITestCase):
         self.assertEqual(attendance.verification_status, 'rejected')
 
 
+class AdminTeacherAttendanceClearTests(APITestCase):
+    def setUp(self):
+        self.school = School.objects.create(name='North Campus', school_id='NORTH')
+        self.admin_user = User.objects.create_user(
+            username='north-admin-clear',
+            password='pass1234',
+            role='admin',
+            school=self.school,
+            email='admin-clear@example.com',
+        )
+        self.teacher_user = User.objects.create_user(
+            username='teacher-clear',
+            password='pass1234',
+            role='teacher',
+            school=self.school,
+            email='teacher-clear@example.com',
+        )
+        self.teacher_profile = TeacherProfile.objects.create(
+            user=self.teacher_user,
+            school=self.school,
+            employee_id='T-CLEAR',
+            role='Class Teacher',
+        )
+        self.client.force_authenticate(self.admin_user)
+
+    def test_admin_can_clear_todays_teacher_attendance(self):
+        today = timezone.localdate()
+        TeacherAttendance.objects.create(
+            teacher=self.teacher_profile,
+            date=today,
+            status='present',
+            marked_via='rfid',
+            punch_in_time=timezone.now(),
+            punch_out_time=timezone.now() + timedelta(hours=1),
+        )
+
+        response = self.client.post(reverse('staff-attendance-clear-today'), {}, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['deleted'], 1)
+        self.assertFalse(TeacherAttendance.objects.filter(teacher=self.teacher_profile, date=today).exists())
+
+
 class BiometricPunchApprovalTests(TestCase):
     def setUp(self):
         self.school = School.objects.create(name='North Campus', school_id='NORTH')
@@ -447,6 +657,104 @@ class BiometricPunchApprovalTests(TestCase):
         self.assertEqual(attendance.status, 'present')
         self.assertEqual(attendance.verification_status, 'approved')
         self.assertEqual(attendance.marked_via, 'rfid')
+
+    def test_duplicate_tcp_punch_overwrites_manual_absent_for_now(self):
+        now = timezone.now()
+        payload = {
+            'DeviceSerialNo': 'T230700006',
+            'TerminalID': '4',
+            'Event': 'TimeLog',
+            'UserID': '3',
+            'Year': str(now.year),
+            'Month': str(now.month),
+            'Day': str(now.day),
+            'Hour': str(now.hour),
+            'Minute': str(now.minute),
+            'Second': str(now.second),
+        }
+
+        first_result = process_biometric_event(
+            protocol='tcp_xml',
+            payload=payload,
+            raw_payload='<Message />',
+            source_ip='103.106.31.187',
+        )
+        self.assertTrue(first_result['ok'])
+
+        attendance = Attendance.objects.get(student=self.student_profile, date=timezone.localdate())
+        attendance.status = 'absent'
+        attendance.verification_status = 'rejected'
+        attendance.marked_via = 'manual'
+        attendance.punch_time = None
+        attendance.save()
+
+        second_result = process_biometric_event(
+            protocol='tcp_xml',
+            payload=payload,
+            raw_payload='<Message />',
+            source_ip='103.106.31.187',
+        )
+
+        attendance.refresh_from_db()
+        self.assertTrue(second_result['ok'])
+        self.assertEqual(second_result['status'], 'processed')
+        self.assertEqual(attendance.status, 'present')
+        self.assertEqual(attendance.verification_status, 'approved')
+        self.assertEqual(attendance.marked_via, 'rfid')
+        self.assertIsNotNone(attendance.punch_time)
+
+    def test_duplicate_tcp_punch_recreates_cleared_teacher_attendance_for_now(self):
+        self.student_profile.rfid_code = 'STUDENT-3'
+        self.student_profile.save(update_fields=['rfid_code'])
+        teacher = TeacherProfile.objects.create(
+            user=User.objects.create_user(
+                username='teacher-biometric-duplicate',
+                password='pass1234',
+                role='teacher',
+                school=self.school,
+                email='teacher-biometric-duplicate@example.com',
+            ),
+            school=self.school,
+            employee_id='15',
+            rfid_code='15',
+            role='Teacher',
+        )
+        now = timezone.now()
+        payload = {
+            'DeviceSerialNo': 'T230700006',
+            'TerminalID': '4',
+            'Event': 'TimeLog',
+            'UserID': '15',
+            'Year': str(now.year),
+            'Month': str(now.month),
+            'Day': str(now.day),
+            'Hour': str(now.hour),
+            'Minute': str(now.minute),
+            'Second': str(now.second),
+        }
+
+        first_result = process_biometric_event(
+            protocol='tcp_xml',
+            payload=payload,
+            raw_payload='<Message />',
+            source_ip='103.106.31.187',
+        )
+        self.assertTrue(first_result['ok'])
+        TeacherAttendance.objects.filter(teacher=teacher, date=timezone.localdate()).delete()
+
+        second_result = process_biometric_event(
+            protocol='tcp_xml',
+            payload=payload,
+            raw_payload='<Message />',
+            source_ip='103.106.31.187',
+        )
+
+        teacher_attendance = TeacherAttendance.objects.get(teacher=teacher, date=timezone.localdate())
+        self.assertTrue(second_result['ok'])
+        self.assertEqual(second_result['status'], 'processed')
+        self.assertEqual(teacher_attendance.status, 'present')
+        self.assertEqual(teacher_attendance.marked_via, 'rfid')
+        self.assertIsNotNone(teacher_attendance.punch_in_time)
 
 
 class SecureyeNormalizationTests(SimpleTestCase):
