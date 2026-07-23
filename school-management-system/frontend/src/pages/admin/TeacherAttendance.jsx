@@ -5,6 +5,7 @@ import {
   ClipboardCheck,
   Clock,
   Save,
+  Trash2,
   UserCheck,
   UsersRound,
   X,
@@ -63,6 +64,7 @@ const TeacherAttendance = () => {
   const [sheet, setSheet] = useState(null);
   const [rows, setRows] = useState([]);
   const [saving, setSaving] = useState(false);
+  const [clearing, setClearing] = useState(false);
   const [saveStatus, setSaveStatus] = useState({ type: "", message: "" });
   const [search, setSearch] = useState("");
 
@@ -140,6 +142,29 @@ const TeacherAttendance = () => {
       setSaveStatus({ type: "error", message: e?.response?.data?.error || "Could not save." });
       setTimeout(() => setSaveStatus({ type: "", message: "" }), 4000);
     } finally { setSaving(false); }
+  };
+
+  const clearTodayAttendance = async () => {
+    if (!isEditable) {
+      setSaveStatus({ type: "error", message: "Only today's teacher attendance can be cleared." });
+      setTimeout(() => setSaveStatus({ type: "", message: "" }), 4000);
+      return;
+    }
+    const ok = window.confirm("Clear today's teacher attendance? Punch-in and punch-out times will be removed.");
+    if (!ok) return;
+
+    setClearing(true);
+    setSaveStatus({ type: "", message: "" });
+    try {
+      const res = await api.post("attendance/staff/clear-today/");
+      await loadSheet();
+      const deletedCount = Number(res?.data?.deleted || 0);
+      setSaveStatus({ type: "success", message: `Cleared ${deletedCount} teacher attendance record(s).` });
+      setTimeout(() => setSaveStatus({ type: "", message: "" }), 4000);
+    } catch (e) {
+      setSaveStatus({ type: "error", message: e?.response?.data?.error || "Could not clear teacher attendance." });
+      setTimeout(() => setSaveStatus({ type: "", message: "" }), 4000);
+    } finally { setClearing(false); }
   };
 
   const filteredRows = useMemo(() => {
@@ -299,6 +324,16 @@ const TeacherAttendance = () => {
                   <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
                     {!saving && <Save size={16} strokeWidth={2.5} />}
                     {saving ? "Saving..." : "Save Attendance"}
+                  </span>
+                </button>
+                <button type="button" onClick={clearTodayAttendance} disabled={clearing} style={{
+                  padding: "10px 14px", borderRadius: 10, border: "none",
+                  backgroundColor: palette.absent, color: "#fff", fontWeight: 1000,
+                  cursor: clearing ? "not-allowed" : "pointer", opacity: clearing ? 0.6 : 1,
+                }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                    {!clearing && <Trash2 size={16} strokeWidth={2.5} />}
+                    {clearing ? "Clearing..." : "Clear Today"}
                   </span>
                 </button>
               </>

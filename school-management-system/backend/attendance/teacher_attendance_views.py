@@ -227,6 +227,32 @@ class AdminTeacherAttendanceMarkView(views.APIView):
 # ─────────────────────────────────────────────────────────────────────
 # Admin: attendance summary (monthly stats)
 # ─────────────────────────────────────────────────────────────────────
+class AdminTeacherAttendanceClearTodayView(views.APIView):
+    """
+    Clear today's teacher attendance for the admin's school.
+    This removes punch-in and punch-out times so biometric testing can start fresh.
+    """
+    permission_classes = [IsAdmin]
+
+    def post(self, request):
+        target_date = timezone.localdate()
+        school = get_user_school(request.user)
+        teacher_ids = TeacherProfile.objects.filter(school=school).values_list('id', flat=True)
+        deleted_count, _ = TeacherAttendance.objects.filter(
+            teacher_id__in=teacher_ids,
+            date=target_date,
+        ).delete()
+
+        return Response(
+            {
+                'message': "Today's teacher attendance cleared.",
+                'date': target_date.isoformat(),
+                'deleted': deleted_count,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+
 class AdminTeacherAttendanceSummaryView(views.APIView):
     """
     Teacher attendance summary for a date or month.

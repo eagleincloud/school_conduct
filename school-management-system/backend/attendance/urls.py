@@ -26,6 +26,7 @@ from .views import (
 from .teacher_attendance_views import (
     AdminTeacherAttendanceSheetView,
     AdminTeacherAttendanceBulkSaveView,
+    AdminTeacherAttendanceClearTodayView,
     AdminTeacherAttendanceMarkView,
     AdminTeacherAttendanceSummaryView,
     TeacherMyAttendanceView,
@@ -58,6 +59,7 @@ urlpatterns = [
     path('staff/sheet/', AdminTeacherAttendanceSheetView.as_view(), name='staff-attendance-sheet'),
     path('staff/save/', AdminTeacherAttendanceBulkSaveView.as_view(), name='staff-attendance-bulk-save'),
     path('staff/mark/', AdminTeacherAttendanceMarkView.as_view(), name='staff-attendance-mark'),
+    path('staff/clear-today/', AdminTeacherAttendanceClearTodayView.as_view(), name='staff-attendance-clear-today'),
     path('staff/summary/', AdminTeacherAttendanceSummaryView.as_view(), name='staff-attendance-summary'),
     path('staff/my-attendance/', TeacherMyAttendanceView.as_view(), name='staff-my-attendance'),
     path('staff/biometric-punch/', TeacherBiometricPunchView.as_view(), name='staff-biometric-punch'),

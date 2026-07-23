@@ -98,13 +98,16 @@ def normalize_secureye_http_event(http_request: dict, source_ip: str | None = No
 
 
 def build_secureye_http_ack():
-    response_body = b"OK"
+    # FKDATAHS101/WS535-based terminals expect the vendor-specific
+    # ``response_code`` header and an empty response body. A generic 200
+    # response (or a success value in the body) does not dequeue the log.
+    response_body = b""
     headers = [
         b"HTTP/1.1 200 OK",
-        b"Content-Type: text/plain",
-        b"Content-Length: 2",
+        b"Content-Length: 0",
         b"Connection: close",
-        b"cmd_return_code: 0",
+        b"Cache-Control: no-store",
+        b"response_code: OK",
         b"",
         b"",
     ]
