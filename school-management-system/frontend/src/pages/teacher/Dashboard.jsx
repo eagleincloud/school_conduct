@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, GraduationCap, ClipboardList, FileText, Award } from "lucide-react";
+import { BookOpen, GraduationCap, ClipboardList, FileText, Award, CalendarCheck, Clock, MessageSquare, User, Settings, Users, FolderDown, FileSpreadsheet, Bell } from "lucide-react";
 import api from "../../services/api";
 import useAuthStore from "../../store/authStore";
 import { resolveImageUrl } from "../../utils/helpers";
@@ -529,6 +529,11 @@ const TeacherDashboard = () => {
         .teacher-summary-grid {
           grid-template-columns: repeat(5, 1fr) !important;
         }
+        @media (max-width: 768px) {
+          .teacher-summary-grid {
+            display: none !important;
+          }
+        }
 
         .teacher-tile-button {
           background-color: #fff;
@@ -851,130 +856,309 @@ const TeacherDashboard = () => {
             className="teacher-toolbar"
             style={{
               display: "flex",
-              gap: 10,
+              gap: 8,
               alignItems: "center",
-              flexWrap: "wrap",
+              flexWrap: "nowrap",
             }}
           >
-            <input
-              className="teacher-header-search"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              placeholder="Search students..."
+            <button
+              type="button"
+              onClick={() => navigate("/teacher/messaging")}
               style={{
-                width: 220,
-                padding: "10px 12px",
+                padding: "8px 12px",
                 borderRadius: 12,
                 border: `1px solid ${palette.border}`,
-                outline: "none",
                 backgroundColor: "#fff",
+                cursor: "pointer",
+                fontWeight: 900,
+                fontSize: 13,
+                whiteSpace: "nowrap",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
               }}
-            />
-            <div className="teacher-toolbar-buttons">
-              <button
-                type="button"
-                onClick={() => navigate("/teacher/messaging")}
-                style={{
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  border: `1px solid ${palette.border}`,
-                  backgroundColor: "#fff",
-                  cursor: "pointer",
-                  fontWeight: 1000,
-                }}
-              >
-                Notifications ({messages.length})
-              </button>
-              <button
-                type="button"
-                onClick={() => navigate("/teacher/profile")}
-                style={{
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  border: `1px solid ${palette.border}`,
-                  backgroundColor: "#fff",
-                  cursor: "pointer",
-                  fontWeight: 1000,
-                }}
-              >
-                Profile
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  logout();
-                  navigate("/login");
-                }}
-                style={{
-                  padding: "10px 12px",
-                  borderRadius: 12,
-                  border: "none",
-                  backgroundColor: palette.primary,
-                  color: "#fff",
-                  cursor: "pointer",
-                  fontWeight: 1000,
-                }}
-              >
-                Logout
-              </button>
-            </div>
+            >
+              🔔 Notifications ({messages.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate("/teacher/profile")}
+              style={{
+                padding: "8px 12px",
+                borderRadius: 12,
+                border: `1px solid ${palette.border}`,
+                backgroundColor: "#fff",
+                cursor: "pointer",
+                fontWeight: 900,
+                fontSize: 13,
+                whiteSpace: "nowrap",
+              }}
+            >
+              Profile
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                logout();
+                navigate("/login");
+              }}
+              style={{
+                padding: "8px 14px",
+                borderRadius: 12,
+                border: "none",
+                backgroundColor: palette.primary,
+                color: "#fff",
+                cursor: "pointer",
+                fontWeight: 900,
+                fontSize: 13,
+                whiteSpace: "nowrap",
+              }}
+            >
+              Logout
+            </button>
           </div>
         </div>
       </Card>
 
-      {/* Sidebar Menu (quick navigation strip) */}
-      <Card style={{ marginBottom: 12 }} className="teacher-quick-nav-card">
-        <div
-          className="teacher-quick-nav rg-autofit-sm" style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-            gap: 10,
-          }}
-        >
-          {sidebarItems.map((item) => (
-            <button
-              key={item.label}
-              type="button"
-              onClick={() => {
-                if (item.path.startsWith("#")) {
-                  const id = item.path.replace("#", "");
-                  const el = document.getElementById(id);
-                  if (el)
-                    el.scrollIntoView({ behavior: "smooth", block: "start" });
-                  return;
-                }
-                navigate(item.path);
-              }}
-              style={{
-                border: `1px solid ${palette.border}`,
-                borderRadius: 12,
-                padding: "10px 12px",
-                backgroundColor: "#fff",
-                cursor: "pointer",
-                color: palette.text,
-                fontWeight: 900,
-                textAlign: "left",
-              }}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
-      </Card>
+      {/* Categorized Teacher Tile Formation (Exact Student Dashboard Style) */}
+      <div style={{ marginBottom: 24 }}>
+        {[
+          {
+            label: "Academics & Teaching",
+            tiles: [
+              {
+                id: "mark-attendance",
+                title: "Mark Attendance",
+                route: "/teacher/attendance",
+                bg: "#eef2ff",
+                color: "#4f46e5",
+                imgSrc: "/icons/Attendance.jpeg",
+                icon: <CalendarCheck size={26} strokeWidth={2.2} />,
+                badge: attendanceSummary ? `${Number(attendanceSummary.attendance_percentage || 0).toFixed(0)}%` : null,
+              },
+              {
+                id: "my-attendance",
+                title: "My Attendance",
+                route: "/teacher/my-attendance",
+                bg: "#ecfdf5",
+                color: "#16a34a",
+                imgSrc: "/icons/Attendance.jpeg",
+                icon: <ClipboardList size={26} strokeWidth={2.2} />,
+              },
+              {
+                id: "upload-result",
+                title: "Upload Results",
+                route: "/teacher/upload-result",
+                bg: "#fef3c7",
+                color: "#d97706",
+                imgSrc: "/icons/results.png",
+                icon: <Award size={26} strokeWidth={2.2} />,
+                badge: (exams || []).length > 0 ? `${exams.length}` : null,
+              },
+              {
+                id: "create-assignment",
+                title: "Create Assignment",
+                route: "/teacher/assignment",
+                bg: "#fff7ed",
+                color: "#ea580c",
+                imgSrc: "/icons/Assignment.webp",
+                icon: <FileText size={26} strokeWidth={2.2} />,
+              },
+              {
+                id: "assignment-list",
+                title: "Assignment List",
+                route: "/teacher/assignments",
+                bg: "#fce7f3",
+                color: "#db2777",
+                imgSrc: "/icons/Assignment.webp",
+                icon: <FileText size={26} strokeWidth={2.2} />,
+                badge: (assignments || []).length > 0 ? `${assignments.length}` : null,
+              },
+              {
+                id: "syllabus",
+                title: "Syllabus",
+                route: "/teacher/syllabus",
+                bg: "#e0e0ff",
+                color: "#4338ca",
+                imgSrc: "/icons/Sybelles.png",
+                icon: <BookOpen size={26} strokeWidth={2.2} />,
+              },
+              {
+                id: "my-students",
+                title: "My Students",
+                route: "/teacher/students",
+                bg: "#eff6ff",
+                color: "#2563eb",
+                imgSrc: "/icons/students.png",
+                icon: <GraduationCap size={26} strokeWidth={2.2} />,
+                badge: myClasses.length > 0 ? `${myClasses.length}` : null,
+              },
+              {
+                id: "timetable",
+                title: "Time Table",
+                route: "/teacher/timetable",
+                bg: "#dbeafe",
+                color: "#2563eb",
+                imgSrc: "/icons/timetable.png",
+                icon: <Clock size={26} strokeWidth={2.2} />,
+              },
+            ],
+          },
+          {
+            label: "Communication & Info",
+            tiles: [
+              {
+                id: "messaging",
+                title: "Messaging",
+                route: "/teacher/messaging",
+                bg: "#dbeafe",
+                color: "#1d4ed8",
+                imgSrc: "/icons/messaging.png",
+                icon: <MessageSquare size={26} strokeWidth={2.2} />,
+                badge: messages.length > 0 ? `${messages.length}` : null,
+              },
+              {
+                id: "notifications",
+                title: "Notifications",
+                route: "/teacher/notifications",
+                bg: "#fff7ed",
+                color: "#ea580c",
+                imgSrc: "/icons/Notfication.png",
+                icon: <Bell size={26} strokeWidth={2.2} />,
+              },
+              {
+                id: "holidays",
+                title: "Holidays",
+                route: "/teacher/Holidays",
+                bg: "#fdf4ff",
+                color: "#a855f7",
+                imgSrc: "/icons/holidays.png",
+                icon: <CalendarCheck size={26} strokeWidth={2.2} />,
+              },
+              {
+                id: "gallery",
+                title: "Gallery",
+                route: "/teacher/gallery",
+                bg: "#f0fdfa",
+                color: "#0d9488",
+                imgSrc: "/icons/Photo gallery.webp",
+                icon: <FileText size={26} strokeWidth={2.2} />,
+              },
+            ],
+          },
+          {
+            label: "Account",
+            tiles: [
+              {
+                id: "profile",
+                title: "Profile",
+                route: "/teacher/Profile",
+                bg: "#f0fdf4",
+                color: "#16a34a",
+                imgSrc: "/icons/Profile.png",
+                icon: <User size={26} strokeWidth={2.2} />,
+              },
+            ],
+          },
+        ].map((category) => (
+          <div key={category.label} style={{ marginBottom: 24 }}>
+            <h2 style={{
+              margin: "0 0 14px 4px",
+              fontSize: 16,
+              fontWeight: 900,
+              color: palette.text,
+              letterSpacing: "-0.01em",
+            }}>
+              {category.label}
+            </h2>
+            <div className="student-tile-grid">
+              {category.tiles.map((tile) => (
+                <button
+                  key={tile.id}
+                  type="button"
+                  className="student-tile-item"
+                  onClick={() => {
+                    if (tile.route.startsWith("#")) {
+                      const id = tile.route.replace("#", "");
+                      const el = document.getElementById(id);
+                      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                      return;
+                    }
+                    navigate(tile.route);
+                  }}
+                  style={{
+                    background: "#ffffff",
+                    border: `1px solid ${palette.border}`,
+                    borderRadius: 20,
+                    cursor: "pointer",
+                    position: "relative",
+                    transition: "all 0.25s cubic-bezier(0.4,0,0.2,1)",
+                    boxShadow: "0 1px 6px rgba(0,0,0,0.04)",
+                    textDecoration: "none",
+                  }}
+                >
+                  {/* Badge */}
+                  {tile.badge && (
+                    <span style={{
+                      position: "absolute",
+                      top: 8,
+                      right: 8,
+                      padding: "2px 7px",
+                      borderRadius: 99,
+                      backgroundColor: tile.color,
+                      color: "#fff",
+                      fontSize: 10,
+                      fontWeight: 900,
+                      lineHeight: "16px",
+                    }}>
+                      {tile.badge}
+                    </span>
+                  )}
 
-      {/* Summary cards */}
+                  {/* Icon Container */}
+                  <div 
+                    className="student-tile-icon-container"
+                    style={{
+                      backgroundColor: tile.bg,
+                      color: tile.color,
+                      overflow: "hidden",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: 4,
+                    }}
+                  >
+                    {tile.imgSrc ? (
+                      <img src={tile.imgSrc} alt={tile.title} style={{ width: 28, height: 28, objectFit: "contain" }} />
+                    ) : (
+                      tile.icon
+                    )}
+                  </div>
+
+                  {/* Label */}
+                  <span className="student-tile-label" style={{ color: palette.text }}>
+                    {tile.title}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Summary cards (hidden on mobile) */}
       <div
-        className="teacher-summary-grid" style={{
+        className="teacher-summary-grid hide-on-mobile" style={{
           display: "grid",
           gap: 12,
         }}
       >
         {[
-          { label: 'Total Classes', value: myClasses.length, Icon: BookOpen, bg: 'bg-blue-50', text: 'text-blue-600', link: '/teacher/students' },
-          { label: 'Total Students', value: totalStudents, Icon: GraduationCap, bg: 'bg-indigo-50', text: 'text-indigo-600', link: '/teacher/students' },
-          { label: "Today's Attendance %", value: attendanceSummary ? `${Number(attendanceSummary.attendance_percentage || 0).toFixed(1)}%` : "0.0%", Icon: ClipboardList, bg: 'bg-emerald-50', text: 'text-emerald-600', link: '/teacher/attendance', isAttendance: true },
-          { label: 'Pending Assignments', value: pendingAssignments, Icon: FileText, bg: 'bg-amber-50', text: 'text-amber-600', link: '/teacher/assignment' },
-          { label: 'Upcoming Exams', value: upcomingExams.length, Icon: Award, bg: 'bg-violet-50', text: 'text-violet-600', link: '/teacher/upload-result', isExams: true },
+          { label: 'Total Classes', value: myClasses.length, Icon: BookOpen, imgSrc: '/icons/students.png', bg: 'bg-blue-50', text: 'text-blue-600', link: '/teacher/students' },
+          { label: 'Total Students', value: totalStudents, Icon: GraduationCap, imgSrc: '/icons/students.png', bg: 'bg-indigo-50', text: 'text-indigo-600', link: '/teacher/students' },
+          { label: "Today's Attendance %", value: attendanceSummary ? `${Number(attendanceSummary.attendance_percentage || 0).toFixed(1)}%` : "0.0%", Icon: ClipboardList, imgSrc: '/icons/Attendance.jpeg', bg: 'bg-emerald-50', text: 'text-emerald-600', link: '/teacher/attendance', isAttendance: true },
+          { label: 'Pending Assignments', value: pendingAssignments, Icon: FileText, imgSrc: '/icons/Assignment.webp', bg: 'bg-amber-50', text: 'text-amber-600', link: '/teacher/assignment' },
+          { label: 'Upcoming Exams', value: upcomingExams.length, Icon: Award, imgSrc: '/icons/results.png', bg: 'bg-violet-50', text: 'text-violet-600', link: '/teacher/upload-result', isExams: true },
         ].map((stat, i) => (
           <button
             key={i}
@@ -983,7 +1167,11 @@ const TeacherDashboard = () => {
             className="teacher-tile-button"
           >
             <div className={`teacher-tile-icon-wrapper ${stat.bg}`}>
-              <stat.Icon className={`h-5 w-5 ${stat.text}`} strokeWidth={2.4} />
+              {stat.imgSrc ? (
+                <img src={stat.imgSrc} alt={stat.label} style={{ width: 22, height: 22, objectFit: 'contain' }} />
+              ) : (
+                <stat.Icon className={`h-5 w-5 ${stat.text}`} strokeWidth={2.4} />
+              )}
             </div>
             <p className="tile-label">{stat.label}</p>
             <p

@@ -36,12 +36,43 @@ const AddStudent = () => {
     const fatherPhoneDigits = (formData.father_contact || '').replace(/\D/g, '').slice(0, 10);
     const motherPhoneDigits = (formData.mother_contact || '').replace(/\D/g, '').slice(0, 10);
     const selectedSection = mainSections.find((s) => String(s.id) === String(formData.section_id));
-    const rollPreview = selectedSection?.name ? `101${String(selectedSection.name).trim().charAt(0).toUpperCase()}` : 'Auto (e.g. 101A)';
+    const selectedClass = mainClasses.find((c) => String(c.id) === String(formData.class_id));
+    const rollPreview = (() => {
+        if (!formData.class_id || !formData.section_id || !selectedSection?.name) {
+            return 'Auto (Select Class & Section)';
+        }
+        const secChar = String(selectedSection.name).trim().charAt(0).toUpperCase() || 'A';
+        const currentClassId = String(formData.class_id);
+        const currentSecId = String(formData.section_id);
+        const cName = String(selectedClass?.name || '').toLowerCase();
+        const sName = String(selectedSection?.name || '').toLowerCase();
+
+        const used = new Set(
+            (students || [])
+                .filter(s => {
+                    const cId = String(s.class_id ?? s.class_section?.class_ref?.id ?? '');
+                    const sId = String(s.section_id ?? s.class_section?.section_ref?.id ?? '');
+                    const classNameStr = String(s.class_name || '').toLowerCase();
+                    const matchesName = cName && sName && classNameStr.includes(cName) && classNameStr.includes(sName);
+                    return (cId === currentClassId && sId === currentSecId) || matchesName;
+                })
+                .map(s => {
+                    const m = String(s.roll_number || '').match(/(\d+)/);
+                    return m ? parseInt(m[1], 10) : null;
+                })
+                .filter(n => Number.isFinite(n))
+        );
+        let maxNum = 100;
+        used.forEach(n => { if (n > maxNum) maxNum = n; });
+        return `${maxNum + 1}${secChar}`;
+    })();
     const admissionPreview = (() => {
         const used = new Set(
             (students || [])
             .map((s) => {
-                const m = String(s.admission_number || '').toUpperCase().match(/^ADM(\d+)$/);
+                let adm = String(s.admission_number || '').toUpperCase();
+                if (adm.includes('-')) adm = adm.split('-')[1];
+                const m = adm.match(/(\d+)/);
                 return m ? parseInt(m[1], 10) : null;
             })
             .filter((n) => Number.isFinite(n))
@@ -124,6 +155,8 @@ const AddStudent = () => {
             payload.username = emailLocal ? emailLocal : (generatedFromName && generatedFromName !== '.' ? generatedFromName : 'student');
 
             payload.name = `${formData.first_name} ${formData.last_name}`.trim();
+            payload.admission_number = formData.admission_number || admissionPreview;
+            payload.roll_number = formData.roll_number || (rollPreview.includes('Auto') ? '' : rollPreview);
             payload.father_contact = fatherPhoneDigits ? `+91${fatherPhoneDigits}` : '';
             payload.mother_contact = motherPhoneDigits ? `+91${motherPhoneDigits}` : '';
             await api.post('students/admin-create/', payload);

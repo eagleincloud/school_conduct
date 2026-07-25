@@ -47,26 +47,36 @@ def _next_roll_number_for_class_section(class_section):
         .values_list('roll_number', flat=True)
     )
     max_numeric = 100
+    used = set()
     for roll in existing:
-        match = re.match(r'^(\d+)', str(roll).strip())
+        roll_str = str(roll or '').strip()
+        match = re.search(r'(\d+)', roll_str)
         if match:
             num = int(match.group(1))
+            used.add(num)
             if num > max_numeric:
                 max_numeric = num
-    return f"{max_numeric + 1}{suffix}"
+    n = max_numeric + 1
+    while f"{n}{suffix}" in existing or StudentProfile.objects.filter(class_section=class_section, roll_number=f"{n}{suffix}").exists():
+        n += 1
+    return f"{n}{suffix}"
 
 
 def _next_admission_number(school):
     existing = StudentProfile.objects.filter(school=school).values_list('admission_number', flat=True)
     used = set()
     for adm in existing:
-        match = re.match(r'^ADM(\d+)$', str(adm or '').strip().upper())
+        if not adm:
+            continue
+        adm_str = str(adm).strip().upper()
+        if '-' in adm_str:
+            adm_str = adm_str.split('-', 1)[1]
+        match = re.search(r'(\d+)', adm_str)
         if match:
             used.add(int(match.group(1)))
 
-    # Always start from ADM101 and assign the first free number.
     n = 101
-    while n in used:
+    while n in used or StudentProfile.objects.filter(school=school, admission_number=f"ADM{n}").exists():
         n += 1
     return f"ADM{n}"
 
@@ -85,14 +95,17 @@ class StudentListView(views.APIView):
                 'school',
                 'class_section__class_ref',
                 'class_section__section_ref',
+                'class_section__assigned_shift',
                 'assigned_shift',
             )
         if not request.user.is_superuser:
             qs = qs.filter(user__school=school)
         records = qs.order_by('id')
 
-        return Response([
-            {
+        res = []
+        for s in records:
+            shift_obj = s.assigned_shift or (s.class_section.assigned_shift if s.class_section else None)
+            res.append({
                 "id": s.id,
                 "admission_number": f"{s.school.school_id if s.school else 'NS'}-{s.admission_number}",
                 "roll_number": s.roll_number,
@@ -116,15 +129,18 @@ class StudentListView(views.APIView):
                 "date_of_admission": s.date_of_admission,
                 "category": s.category,
                 "rfid_code": s.rfid_code,
-                "assigned_shift": s.assigned_shift.id if s.assigned_shift else None,
-                "assigned_shift_name": s.assigned_shift.name if s.assigned_shift else "—",
+                "assigned_shift": shift_obj.id if shift_obj else None,
+                "assigned_shift_name": shift_obj.name if shift_obj else "—",
+                "class_section_id": s.class_section_id,
+                "class_id": s.class_section.class_ref_id if s.class_section else None,
+                "section_id": s.class_section.section_ref_id if s.class_section else None,
                 "class_name": (
                     f"{s.class_section.class_ref.name} - {s.class_section.section_ref.name}"
                     if s.class_section else "N/A"
                 ),
-            }
-            for s in records
-        ])
+            })
+
+        return Response(res)
 
 
 class StudentsByClassSectionView(views.APIView):
@@ -263,17 +279,64 @@ class StudentUpdateView(views.APIView):
         u.name = data.get('name', f"{u.first_name} {u.last_name}".strip())
         u.save()
 
-        # Update StudentProfile fields.
+        # 1. Update ClassSection FIRST if class_section_id / class_id / section_id are provided
+        if 'class_section_id' in data or 'class_id' in data or 'section_id' in data:
+            cs_id = data.get('class_section_id')
+            if not cs_id:
+                c_id = data.get('class_id')
+                s_id = data.get('section_id')
+                if c_id and s_id:
+                    try:
+                        c_obj = MainClass.objects.get(id=int(c_id))
+                        s_obj = MainSection.objects.get(id=int(s_id))
+                        cs_obj, _ = ClassSection.objects.get_or_create(class_ref=c_obj, section_ref=s_obj)
+                        cs_id = cs_obj.id
+                    except (ValueError, MainClass.DoesNotExist, MainSection.DoesNotExist):
+                        pass
+                elif c_id:
+                    try:
+                        c_obj = MainClass.objects.get(id=int(c_id))
+                        s_obj = s.class_section.section_ref if (s.class_section and s.class_section.section_ref) else MainSection.objects.first()
+                        if c_obj and s_obj:
+                            cs_obj, _ = ClassSection.objects.get_or_create(class_ref=c_obj, section_ref=s_obj)
+                            cs_id = cs_obj.id
+                    except (ValueError, MainClass.DoesNotExist):
+                        pass
+                elif s_id:
+                    try:
+                        s_obj = MainSection.objects.get(id=int(s_id))
+                        c_obj = s.class_section.class_ref if (s.class_section and s.class_section.class_ref) else MainClass.objects.first()
+                        if c_obj and s_obj:
+                            cs_obj, _ = ClassSection.objects.get_or_create(class_ref=c_obj, section_ref=s_obj)
+                            cs_id = cs_obj.id
+                    except (ValueError, MainSection.DoesNotExist):
+                        pass
+
+            if cs_id:
+                try:
+                    s.class_section = ClassSection.objects.get(id=int(cs_id))
+                except (ValueError, ClassSection.DoesNotExist):
+                    pass
+
+        # 2. Update StudentProfile admission_number with auto-resolution
         raw_admission = data.get('admission_number')
         if raw_admission:
-            # Strip school prefix if present
             if '-' in raw_admission:
                 raw_admission = raw_admission.split('-', 1)[1]
-            s.admission_number = raw_admission
+            raw_admission = raw_admission.strip()
+            if raw_admission and StudentProfile.objects.filter(school=s.school, admission_number=raw_admission).exclude(id=s.id).exists():
+                raw_admission = _next_admission_number(s.school)
+            if raw_admission:
+                s.admission_number = raw_admission
         
-        if data.get('roll_number') is not None:
+        # 3. Update StudentProfile roll_number with auto-resolution against target class_section
+        if data.get('roll_number') is not None or 'class_id' in data or 'section_id' in data or 'class_section_id' in data:
+            raw_roll = str(data.get('roll_number') or '').strip()
+            if s.class_section:
+                if not raw_roll or StudentProfile.objects.filter(class_section=s.class_section, roll_number=raw_roll).exclude(id=s.id).exists():
+                    raw_roll = _next_roll_number_for_class_section(s.class_section)
+            s.roll_number = raw_roll
 
-            s.roll_number = data.get('roll_number')
         s.dob = data.get('dob', s.dob)
         s.gender = data.get('gender', s.gender)
         s.blood_group = data.get('blood_group', s.blood_group)
@@ -302,6 +365,7 @@ class StudentUpdateView(views.APIView):
                     s.assigned_shift = None
             else:
                 s.assigned_shift = None
+
         s.save()
 
         return Response({"message": "Student updated successfully"}, status=status.HTTP_200_OK)
@@ -361,11 +425,15 @@ class AdminStudentCreateView(views.APIView):
                         status=status.HTTP_409_CONFLICT,
                     )
 
-            roll_number = (data.get('roll_number') or '').strip() or _next_roll_number_for_class_section(class_section)
+            roll_number = (data.get('roll_number') or '').strip()
+            if not roll_number or StudentProfile.objects.filter(class_section=class_section, roll_number=roll_number).exists():
+                roll_number = _next_roll_number_for_class_section(class_section)
 
             admission_number = (data.get('admission_number') or '').strip()
             if admission_number and '-' in admission_number:
                 admission_number = admission_number.split('-', 1)[1]
+            if not admission_number or StudentProfile.objects.filter(school=school, admission_number=admission_number).exists():
+                admission_number = _next_admission_number(school)
 
             rfid_val = data.get('rfid_code')
             if rfid_val is not None:

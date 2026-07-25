@@ -102,9 +102,9 @@ const AddTeacher = () => {
     const used = new Set(
       (teachers || [])
         .map((t) => {
-          const m = String(t.employee_id || "")
-            .toUpperCase()
-            .match(/^T(\d+)$/);
+          let empId = String(t.employee_id || "").toUpperCase();
+          if (empId.includes('-')) empId = empId.split('-')[1];
+          const m = empId.match(/(\d+)/);
           return m ? parseInt(m[1], 10) : null;
         })
         .filter((n) => Number.isFinite(n)),
@@ -173,7 +173,8 @@ const AddTeacher = () => {
 
   const generateUsername = () => {
     const emailLocal = (form.email || "").split("@")[0].toLowerCase().trim();
-    const empSuffix = (form.employee_id || "").toString().slice(-4);
+    const empId = form.employee_id || employeeIdPreview || "";
+    const empSuffix = empId.toString().slice(-4);
     const safeLocal = emailLocal ? emailLocal.replace(/[^a-z0-9]/gi, "") : "";
     const suffix = empSuffix ? empSuffix.replace(/[^a-z0-9]/gi, "") : "";
     return safeLocal
@@ -205,7 +206,7 @@ const AddTeacher = () => {
         email: form.email.trim(),
         password: form.password,
         name: `${form.first_name} ${form.last_name}`.trim(),
-        employee_id: employeeIdPreview,
+        employee_id: form.employee_id || employeeIdPreview,
         rfid_code: form.rfid_code || '',
         subject_specialization: form.subject_specialization,
 

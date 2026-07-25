@@ -17,6 +17,13 @@ const StudentCards = ({ students, refreshStudents }) => {
     const [editStudent, setEditStudent] = useState(null);
     const [editForm, setEditForm] = useState(null);
     const [busy, setBusy] = useState(false);
+    const [classes, setClasses] = useState([]);
+    const [sections, setSections] = useState([]);
+
+    React.useEffect(() => {
+        api.get('classes/main-classes/').then(r => setClasses(r.data || [])).catch(() => {});
+        api.get('classes/main-sections/').then(r => setSections(r.data || [])).catch(() => {});
+    }, []);
 
     const closeModal = () => {
         setViewStudent(null);
@@ -46,12 +53,15 @@ const StudentCards = ({ students, refreshStudents }) => {
         e.preventDefault();
         setBusy(true);
         try {
-            const { first_name, last_name, admission_number, email, bus_no, father_name, mother_name, father_contact, mother_contact, rfid_code } = editForm;
+            const { first_name, last_name, admission_number, roll_number, class_id, section_id, email, bus_no, father_name, mother_name, father_contact, mother_contact, rfid_code } = editForm;
             await api.patch(`students/update/${editStudent.id}/`, {
                 first_name,
                 last_name,
                 name: `${first_name || ''} ${last_name || ''}`.trim(),
                 admission_number,
+                roll_number,
+                class_id: class_id || null,
+                section_id: section_id || null,
                 email,
                 bus_no,
                 father_name,
@@ -210,6 +220,21 @@ const StudentCards = ({ students, refreshStudents }) => {
                                         <div><label className={labelClasses}>First Name</label><input type="text" value={editForm.first_name} onChange={e => setEditForm({...editForm, first_name: e.target.value})} className={inputClasses} /></div>
                                         <div><label className={labelClasses}>Last Name</label><input type="text" value={editForm.last_name} onChange={e => setEditForm({...editForm, last_name: e.target.value})} className={inputClasses} /></div>
                                         <div><label className={labelClasses}>Admission No</label><input type="text" value={editForm.admission_number} onChange={e => setEditForm({...editForm, admission_number: e.target.value})} className={inputClasses} /></div>
+                                        <div><label className={labelClasses}>Roll No</label><input type="text" value={editForm.roll_number || ''} onChange={e => setEditForm({...editForm, roll_number: e.target.value})} className={inputClasses} /></div>
+                                        <div>
+                                            <label className={labelClasses}>Class</label>
+                                            <select value={editForm.class_id || ''} onChange={e => setEditForm({...editForm, class_id: e.target.value})} className={inputClasses}>
+                                                <option value="">Select Class</option>
+                                                {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className={labelClasses}>Section</label>
+                                            <select value={editForm.section_id || ''} onChange={e => setEditForm({...editForm, section_id: e.target.value})} className={inputClasses}>
+                                                <option value="">Select Section</option>
+                                                {sections.map(sec => <option key={sec.id} value={sec.id}>{sec.name}</option>)}
+                                            </select>
+                                        </div>
                                         <div><label className={labelClasses}>Email</label><input type="email" value={editForm.email} onChange={e => setEditForm({...editForm, email: e.target.value})} className={inputClasses} /></div>
                                         <div><label className={labelClasses}>Bus No.</label><input type="text" value={editForm.bus_no} onChange={e => setEditForm({...editForm, bus_no: e.target.value})} className={inputClasses} /></div>
                                         <div><label className={labelClasses}>RFID Code</label><input type="text" value={editForm.rfid_code || ''} onChange={e => setEditForm({...editForm, rfid_code: e.target.value})} className={inputClasses} /></div>
