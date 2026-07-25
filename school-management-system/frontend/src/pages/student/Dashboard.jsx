@@ -756,6 +756,7 @@ export default function StudentDashboard() {
           route: "/student/attendance",
           bg: "#eef2ff",
           color: "#4f46e5",
+          imgSrc: "/icons/Attendance.jpeg",
           badge: overallAttendance.total > 0 ? `${overallAttendance.percentage.toFixed(0)}%` : null,
           icon: <Clock size={26} strokeWidth={2.2} />,
         },
@@ -765,6 +766,7 @@ export default function StudentDashboard() {
           route: "/student/results",
           bg: "#fef3c7",
           color: "#d97706",
+          imgSrc: "/icons/results.png",
           icon: <Award size={26} strokeWidth={2.2} />,
         },
         {
@@ -773,6 +775,7 @@ export default function StudentDashboard() {
           route: "/student/timetable",
           bg: "#dbeafe",
           color: "#2563eb",
+          imgSrc: "/icons/timetable.png",
           badge: todayTimetable.length > 0 ? `${todayTimetable.length}` : null,
           icon: <Calendar size={26} strokeWidth={2.2} />,
         },
@@ -782,6 +785,7 @@ export default function StudentDashboard() {
           route: "/student/assignments",
           bg: "#fce7f3",
           color: "#db2777",
+          imgSrc: "/icons/Assignment.webp",
           badge: assignmentsWithStatus.filter((a) => a.status === "Pending").length > 0
             ? `${assignmentsWithStatus.filter((a) => a.status === "Pending").length}`
             : null,
@@ -793,6 +797,7 @@ export default function StudentDashboard() {
           route: "/student/exams",
           bg: "#fef9c3",
           color: "#a16207",
+          imgSrc: "/icons/Exam.png",
           badge: examsCount > 0 ? `${examsCount}` : null,
           icon: <FileText size={26} strokeWidth={2.2} />,
         },
@@ -802,6 +807,7 @@ export default function StudentDashboard() {
           route: "/student/syllabus",
           bg: "#e0e7ff",
           color: "#4338ca",
+          imgSrc: "/icons/Sybelles.png",
           icon: <BookOpen size={26} strokeWidth={2.2} />,
         },
         {
@@ -810,6 +816,7 @@ export default function StudentDashboard() {
           route: "/student/profile",
           bg: "#f0fdf4",
           color: "#16a34a",
+          imgSrc: "/icons/Profile.png",
           icon: <User size={26} strokeWidth={2.2} />,
         },
       ],
@@ -823,6 +830,7 @@ export default function StudentDashboard() {
           route: "/student/fees",
           bg: "#fef2f2",
           color: "#dc2626",
+          imgSrc: "/icons/Fees.jpg",
           badge: feeSummary && feeSummary.unpaid.status !== "paid" ? "Due" : null,
           icon: <IndianRupee size={26} strokeWidth={2.2} />,
         },
@@ -832,6 +840,7 @@ export default function StudentDashboard() {
           route: "/student/finance-cards",
           bg: "#f5f3ff",
           color: "#7c3aed",
+          imgSrc: "/icons/finance-cards.png",
           icon: <CreditCard size={26} strokeWidth={2.2} />,
         },
         {
@@ -840,6 +849,7 @@ export default function StudentDashboard() {
           route: "/student/ledger",
           bg: "#ecfdf5",
           color: "#059669",
+          imgSrc: "/icons/ledger.png",
           icon: <Receipt size={26} strokeWidth={2.2} />,
         },
       ],
@@ -853,6 +863,7 @@ export default function StudentDashboard() {
           route: "/student/notifications",
           bg: "#fff7ed",
           color: "#ea580c",
+          imgSrc: "/icons/Notfication.png",
           badge: unreadNotices.length > 0 ? `${unreadNotices.length}` : null,
           icon: <Bell size={26} strokeWidth={2.2} />,
         },
@@ -862,6 +873,7 @@ export default function StudentDashboard() {
           route: "/student/messaging",
           bg: "#dbeafe",
           color: "#1d4ed8",
+          imgSrc: "/icons/messaging.png",
           icon: <MessageSquare size={26} strokeWidth={2.2} />,
         },
         {
@@ -870,6 +882,7 @@ export default function StudentDashboard() {
           route: "/student/holidays",
           bg: "#fdf4ff",
           color: "#a855f7",
+          imgSrc: "/icons/holidays.png",
           icon: <Umbrella size={26} strokeWidth={2.2} />,
         },
       ],
@@ -883,6 +896,7 @@ export default function StudentDashboard() {
           route: "/student/shops",
           bg: "#fff1f2",
           color: "#e11d48",
+          imgSrc: "/icons/shops.png",
           icon: <Store size={26} strokeWidth={2.2} />,
         },
         {
@@ -891,6 +905,7 @@ export default function StudentDashboard() {
           route: "/student/gallery",
           bg: "#f0fdfa",
           color: "#0d9488",
+          imgSrc: "/icons/Photo gallery.webp",
           icon: <Image size={26} strokeWidth={2.2} />,
         },
       ],
@@ -1157,9 +1172,18 @@ export default function StudentDashboard() {
                       ? `${tile.color}18`
                       : tile.bg,
                     color: tile.color,
+                    overflow: "hidden",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: 4,
                   }}
                 >
-                  {tile.icon}
+                  {tile.imgSrc ? (
+                    <img src={tile.imgSrc} alt={tile.title} style={{ width: 28, height: 28, objectFit: "contain" }} />
+                  ) : (
+                    tile.icon
+                  )}
                 </div>
 
                 {/* Label */}

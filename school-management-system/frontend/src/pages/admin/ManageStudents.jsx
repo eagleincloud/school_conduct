@@ -280,6 +280,9 @@ const ManageStudents = () => {
                 name: `${editRow.first_name || ''} ${editRow.last_name || ''}`.trim() || editRow.name,
                 email: editRow.email || '',
                 admission_number: editRow.admission_number || '',
+                roll_number: editRow.roll_number || '',
+                class_id: editRow.class_id || null,
+                section_id: editRow.section_id || null,
                 bus_no: editRow.bus_no || '',
                 gender: editRow.gender || '',
                 father_name: editRow.father_name || '',
@@ -562,6 +565,19 @@ const ManageStudents = () => {
                             <input value={editRow.last_name || ''} onChange={(e) => setEditRow((p) => ({ ...p, last_name: e.target.value }))} placeholder="Last name" style={selectStyle} />
                             <input value={editRow.email || ''} onChange={(e) => setEditRow((p) => ({ ...p, email: e.target.value }))} placeholder="Email" style={selectStyle} />
                             <input value={editRow.admission_number || ''} onChange={(e) => setEditRow((p) => ({ ...p, admission_number: e.target.value }))} placeholder="Admission number" style={selectStyle} />
+                            <input value={editRow.roll_number || ''} onChange={(e) => setEditRow((p) => ({ ...p, roll_number: e.target.value }))} placeholder="Roll number" style={selectStyle} />
+                            <select value={editRow.class_id || ''} onChange={(e) => setEditRow((p) => ({ ...p, class_id: e.target.value }))} style={selectStyle}>
+                                <option value="">Class</option>
+                                {classes.map((c) => (
+                                    <option key={c.id} value={c.id}>{c.name}</option>
+                                ))}
+                            </select>
+                            <select value={editRow.section_id || ''} onChange={(e) => setEditRow((p) => ({ ...p, section_id: e.target.value }))} style={selectStyle}>
+                                <option value="">Section</option>
+                                {sections.map((sec) => (
+                                    <option key={sec.id} value={sec.id}>{sec.name}</option>
+                                ))}
+                            </select>
                             <input value={editRow.rfid_code || ''} onChange={(e) => setEditRow((p) => ({ ...p, rfid_code: e.target.value }))} placeholder="RFID Code" style={selectStyle} />
                             <input value={editRow.bus_no || ''} onChange={(e) => setEditRow((p) => ({ ...p, bus_no: e.target.value }))} placeholder="Bus No." style={selectStyle} />
                             <select value={editRow.gender || ''} onChange={(e) => setEditRow((p) => ({ ...p, gender: e.target.value }))} style={selectStyle}>

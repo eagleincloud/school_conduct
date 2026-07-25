@@ -8,6 +8,7 @@ import { Capacitor, registerPlugin } from '@capacitor/core';
 import { BASE_URL } from './services/api';
 
 import { Toaster, toast } from 'react-hot-toast';
+import NotificationPopup from './components/common/NotificationPopup';
 
 const AppContent = () => {
   const { isAuthenticated } = useAuthStore();
@@ -78,6 +79,7 @@ const AppContent = () => {
   return (
     <>
       <Toaster position="top-right" reverseOrder={false} />
+      <NotificationPopup />
       {(isAuthenticated && !isPublicRoute) ? (
         <MainLayout>
           <AppRoutes />

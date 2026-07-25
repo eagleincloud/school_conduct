@@ -93,7 +93,7 @@ def main():
         "-i", pem_path,
         "-o", "StrictHostKeyChecking=no",
         ssh_host,
-        "chmod +x /home/ec2-user/deploy_remote.sh && /home/ec2-user/deploy_remote.sh"
+        "sed -i 's/\\r$//' /home/ec2-user/deploy_remote.sh && chmod +x /home/ec2-user/deploy_remote.sh && /home/ec2-user/deploy_remote.sh"
     ]
     run_command(ssh_cmd)
     

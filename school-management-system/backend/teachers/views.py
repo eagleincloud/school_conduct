@@ -26,11 +26,16 @@ def _next_employee_id(school):
     existing = TeacherProfile.objects.filter(school=school).values_list('employee_id', flat=True)
     used = set()
     for eid in existing:
-        match = re.match(r'^T(\d+)$', str(eid or '').strip().upper())
+        if not eid:
+            continue
+        eid_str = str(eid).strip().upper()
+        if '-' in eid_str:
+            eid_str = eid_str.split('-', 1)[1]
+        match = re.search(r'(\d+)', eid_str)
         if match:
             used.add(int(match.group(1)))
     n = 1
-    while n in used:
+    while n in used or TeacherProfile.objects.filter(school=school, employee_id=f"T{n:03d}").exists():
         n += 1
     return f"T{n:03d}"
 
@@ -510,21 +515,19 @@ class AdminTeacherCreateView(views.APIView):
             # So we don't need this restrictive error check anymore.
             pass
 
-            # Check if employee_id already exists
             requested_employee_id = (data.get('employee_id') or '').strip().upper()
             if requested_employee_id and '-' in requested_employee_id:
                 requested_employee_id = requested_employee_id.split('-', 1)[1]
-                
-            if requested_employee_id and TeacherProfile.objects.filter(user__school=request.user.school, employee_id=requested_employee_id).exists():
-                return Response({"error": "A teacher with this Employee ID already exists."}, status=status.HTTP_400_BAD_REQUEST)
-
-            employee_id = requested_employee_id or _next_employee_id(request.user.school)
-
 
             school = request.user.school
             if not school and getattr(request.user, 'is_superuser', False):
                 from tenants.models import School
                 school = School.objects.first()
+
+            if not requested_employee_id or TeacherProfile.objects.filter(school=school, employee_id=requested_employee_id).exists():
+                employee_id = _next_employee_id(school)
+            else:
+                employee_id = requested_employee_id
 
             user = User.objects.create_user(
                 username=get_unique_username(data['username']),
