@@ -2,7 +2,7 @@ import ipaddress
 
 from rest_framework import serializers
 
-from .models import Attendance, BiometricDevice, TeacherAttendance, generate_device_secret_key
+from .models import Attendance, BiometricDevice, TeacherAttendance, BiometricEventLog, generate_device_secret_key
 from tenants.models import School
 
 
@@ -45,6 +45,27 @@ class AttendanceSerializer(serializers.ModelSerializer):
             'verified_at',
             'marked_via',
             'created_at',
+        ]
+
+
+class BiometricEventLogSerializer(serializers.ModelSerializer):
+    device_name = serializers.CharField(source='device.name', read_only=True)
+    school_name = serializers.CharField(source='school.name', read_only=True)
+
+    class Meta:
+        model = BiometricEventLog
+        fields = [
+            'id',
+            'school_name',
+            'device_name',
+            'protocol',
+            'status',
+            'event_type',
+            'user_identifier',
+            'device_serial_number',
+            'error_message',
+            'received_at',
+            'processed_at',
         ]
 
 

@@ -6,6 +6,11 @@ const biometricDeviceService = {
     return response.data || [];
   },
 
+  getLogs: async (params = {}) => {
+    const response = await api.get("attendance/devices/logs/", { params });
+    return response.data || [];
+  },
+
   create: async (payload) => {
     const response = await api.post("attendance/devices/", payload);
     return response.data;

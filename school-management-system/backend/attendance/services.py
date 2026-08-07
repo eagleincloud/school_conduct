@@ -255,10 +255,19 @@ def _process_teacher_attendance(teacher, punch_dt):
         },
     )
     if not created:
+        update_fields = []
+        if attendance.status != 'present':
+            attendance.status = 'present'
+            update_fields.append('status')
+        if not attendance.punch_in_time or punch_dt < attendance.punch_in_time:
+            attendance.punch_in_time = punch_dt
+            update_fields.append('punch_in_time')
         if not attendance.punch_out_time or attendance.punch_out_time < punch_dt:
             attendance.punch_out_time = punch_dt
-            attendance.save(update_fields=['punch_out_time'])
-        message = 'Punch-out recorded'
+            update_fields.append('punch_out_time')
+        if update_fields:
+            attendance.save(update_fields=update_fields)
+        message = 'Punch recorded and teacher attendance updated to present'
     else:
         message = 'Punch-in recorded successfully'
     return attendance, created, message
@@ -446,51 +455,49 @@ def process_biometric_event(
                 punch_dt = existing.punch_time or _parse_punch_time(payload)
                 school_id = device.school.school_id
                 student = _resolve_student(user_identifier, school_id)
-                if student:
-                    attendance, _created, _message = _process_student_attendance(student, punch_dt)
-                    existing.status = 'processed'
-                    existing.attendance = attendance
-                    existing.processed_at = timezone.now()
-                    existing.save(update_fields=['status', 'attendance', 'processed_at'])
-
-                    if not device.last_punch_at or device.last_punch_at < punch_dt:
-                        device.last_punch_at = punch_dt
-                        device.save(update_fields=['last_punch_at'])
-
-                    return {
-                        'ok': True,
-                        'status': 'processed',
-                        'message': 'Duplicate biometric event reapplied to student attendance.',
-                        'target_type': 'student',
-                        'student_name': student.user.name or student.user.username,
-                        'school_name': student.school.name if student.school else '',
-                        'punch_time': attendance.punch_time.isoformat() if attendance.punch_time else punch_dt.isoformat(),
-                        'event_log_id': existing.id,
-                    }
-
                 teacher = _resolve_teacher(user_identifier, school_id)
-                if teacher:
-                    teacher_attendance, _created, message = _process_teacher_attendance(teacher, punch_dt)
+                
+                if student or teacher:
+                    resp_dict = {
+                        'ok': True,
+                        'status': 'processed',
+                        'event_log_id': existing.id,
+                    }
+                    messages = []
+                    
+                    if teacher:
+                        teacher_attendance, _created, message = _process_teacher_attendance(teacher, punch_dt)
+                        existing.teacher_attendance = teacher_attendance
+                        messages.append(message)
+                        resp_dict['teacher_name'] = teacher.user.name or teacher.user.username
+                        resp_dict['school_name'] = teacher.school.name if teacher.school else ''
+                        resp_dict['punch_in_time'] = teacher_attendance.punch_in_time.isoformat() if teacher_attendance.punch_in_time else None
+                        resp_dict['punch_out_time'] = teacher_attendance.punch_out_time.isoformat() if teacher_attendance.punch_out_time else None
+
+                    if student:
+                        attendance, _created, _message = _process_student_attendance(student, punch_dt)
+                        existing.attendance = attendance
+                        messages.append('Student attendance processed')
+                        resp_dict['student_name'] = student.user.name or student.user.username
+                        resp_dict['school_name'] = student.school.name if student.school else ''
+                        resp_dict['punch_time'] = attendance.punch_time.isoformat() if attendance.punch_time else punch_dt.isoformat()
+
                     existing.status = 'processed'
-                    existing.teacher_attendance = teacher_attendance
                     existing.processed_at = timezone.now()
-                    existing.save(update_fields=['status', 'teacher_attendance', 'processed_at'])
+                    existing.save(update_fields=['status', 'attendance', 'teacher_attendance', 'processed_at'])
 
                     if not device.last_punch_at or device.last_punch_at < punch_dt:
                         device.last_punch_at = punch_dt
                         device.save(update_fields=['last_punch_at'])
 
-                    return {
-                        'ok': True,
-                        'status': 'processed',
-                        'message': f'Duplicate biometric event reapplied to teacher attendance. {message}',
-                        'target_type': 'teacher',
-                        'teacher_name': teacher.user.name or teacher.user.username,
-                        'school_name': teacher.school.name if teacher.school else '',
-                        'punch_in_time': teacher_attendance.punch_in_time.isoformat() if teacher_attendance.punch_in_time else None,
-                        'punch_out_time': teacher_attendance.punch_out_time.isoformat() if teacher_attendance.punch_out_time else None,
-                        'event_log_id': existing.id,
-                    }
+                    resp_dict['message'] = 'Duplicate biometric event reapplied. ' + ' | '.join(messages)
+                    if student and teacher:
+                        resp_dict['target_type'] = 'both'
+                    elif student:
+                        resp_dict['target_type'] = 'student'
+                    else:
+                        resp_dict['target_type'] = 'teacher'
+                    return resp_dict
 
         return {
             'ok': True,
@@ -609,12 +616,13 @@ def process_biometric_event(
 
     if not target_type:
         student = _resolve_student(user_identifier, school_id)
-        if student:
+        teacher = _resolve_teacher(user_identifier, school_id)
+        if student and teacher:
+            target_type = 'both'
+        elif student:
             target_type = 'student'
-        else:
-            teacher = _resolve_teacher(user_identifier, school_id)
-            if teacher:
-                target_type = 'teacher'
+        elif teacher:
+            target_type = 'teacher'
     elif target_type == 'student':
         student = _resolve_student(user_identifier, school_id)
     elif target_type == 'teacher':
@@ -656,42 +664,39 @@ def process_biometric_event(
             'event_log_id': event_log.id,
         }
 
-    if target_type == 'teacher':
+    resp_dict = {
+        'ok': True,
+        'status': 'processed',
+        'event_log_id': event_log.id,
+        'target_type': target_type,
+    }
+    messages = []
+    
+    if teacher:
         teacher_attendance, created, message = _process_teacher_attendance(teacher, punch_dt)
-        device.last_punch_at = punch_dt
-        update_fields.append('last_punch_at')
-        device.save(update_fields=update_fields)
-        event_log.status = 'processed'
         event_log.teacher_attendance = teacher_attendance
-        event_log.processed_at = timezone.now()
-        event_log.save(update_fields=['status', 'teacher_attendance', 'processed_at'])
-        return {
-            'ok': True,
-            'status': 'processed',
-            'message': message,
-            'target_type': 'teacher',
-            'teacher_name': teacher.user.name or teacher.user.username,
-            'school_name': teacher.school.name if teacher.school else '',
-            'punch_in_time': teacher_attendance.punch_in_time.isoformat() if teacher_attendance.punch_in_time else None,
-            'punch_out_time': teacher_attendance.punch_out_time.isoformat() if teacher_attendance.punch_out_time else None,
-            'event_log_id': event_log.id,
-        }
+        messages.append(message)
+        resp_dict['teacher_name'] = teacher.user.name or teacher.user.username
+        resp_dict['school_name'] = teacher.school.name if teacher.school else ''
+        resp_dict['punch_in_time'] = teacher_attendance.punch_in_time.isoformat() if teacher_attendance.punch_in_time else None
+        resp_dict['punch_out_time'] = teacher_attendance.punch_out_time.isoformat() if teacher_attendance.punch_out_time else None
 
-    attendance, created, message = _process_student_attendance(student, punch_dt)
+    if student:
+        attendance, created, message = _process_student_attendance(student, punch_dt)
+        event_log.attendance = attendance
+        messages.append(message)
+        resp_dict['student_name'] = student.user.name or student.user.username
+        resp_dict['school_name'] = student.school.name if student.school else ''
+        resp_dict['punch_time'] = attendance.punch_time.isoformat() if attendance.punch_time else punch_dt.isoformat()
+
     device.last_punch_at = punch_dt
     update_fields.append('last_punch_at')
     device.save(update_fields=update_fields)
+
     event_log.status = 'processed'
-    event_log.attendance = attendance
     event_log.processed_at = timezone.now()
-    event_log.save(update_fields=['status', 'attendance', 'processed_at'])
-    return {
-        'ok': True,
-        'status': 'processed',
-        'message': message,
-        'target_type': 'student',
-        'student_name': student.user.name or student.user.username,
-        'school_name': student.school.name if student.school else '',
-        'punch_time': attendance.punch_time.isoformat() if attendance.punch_time else punch_dt.isoformat(),
-        'event_log_id': event_log.id,
-    }
+    event_log.save(update_fields=['status', 'attendance', 'teacher_attendance', 'processed_at'])
+    
+    resp_dict['message'] = " | ".join(messages)
+    
+    return resp_dict

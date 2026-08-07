@@ -858,3 +858,75 @@ class BiometricEventSanitizationTests(TestCase):
         self.assertEqual(event_log.user_identifier, '1')
         self.assertEqual(event_log.normalized_payload['UserID'], '1')
         self.assertEqual(event_log.normalized_payload['body_json']['user_id'], '1')
+
+
+class ContinuousBiometricPushTests(SimpleTestCase):
+    @override_settings(
+        BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_TCP_SOCKET_TIMEOUT=1,
+        BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536,
+    )
+    def test_request_handler_processes_multiple_continuous_http_pushes_on_single_tcp_stream(self):
+        server_socket, device_socket = socket.socketpair()
+        device_socket.settimeout(1.0)
+        handler_errors = []
+
+        def run_handler():
+            try:
+                handler = BiometricTCPRequestHandler(
+                    server_socket,
+                    ('192.168.0.100', 50000),
+                    mock.Mock(),
+                )
+            except Exception as exc:
+                handler_errors.append(exc)
+
+        processed_requests = []
+
+        def mock_process_event(protocol, payload, raw_payload, source_ip, device):
+            processed_requests.append(payload)
+            return {'status': 'processed', 'ok': True}
+
+        with mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
+            side_effect=mock_process_event,
+        ), mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.resolve_direct_push_device',
+            return_value=None,
+        ):
+            handler_thread = threading.Thread(target=run_handler)
+            handler_thread.start()
+
+            received_acks = []
+            try:
+                # Send 5 continuous HTTP push punches over the exact same TCP socket connection
+                for i in range(1, 6):
+                    body = (
+                        f'{{"user_id": "{i}", "io_time": "2026080710300{i}", '
+                        f'"machine_id": "2", "verify_mode": 1, "io_mode": 1}}'
+                    ).encode('utf-8')
+                    req = (
+                        f"POST /glog HTTP/1.1\r\n"
+                        f"Host: 13.201.53.169:5555\r\n"
+                        f"dev_id: T190900185\r\n"
+                        f"request_code: realtime_glog\r\n"
+                        f"trans_id: {100 + i}\r\n"
+                        f"Content-Length: {len(body)}\r\n\r\n"
+                    ).encode('utf-8') + body
+
+                    device_socket.sendall(req)
+                    ack = device_socket.recv(1024)
+                    received_acks.append(ack)
+            finally:
+                device_socket.close()
+                handler_thread.join(timeout=2)
+                server_socket.close()
+
+        self.assertEqual(len(processed_requests), 5)
+        self.assertEqual(len(received_acks), 5)
+        for ack in received_acks:
+            self.assertIn(b"response_code: OK", ack)
+            self.assertIn(b"Connection: keep-alive", ack)
+        user_ids = [p['UserID'] for p in processed_requests]
+        self.assertEqual(user_ids, ['1', '2', '3', '4', '5'])
+

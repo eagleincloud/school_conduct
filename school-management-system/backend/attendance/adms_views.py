@@ -26,6 +26,8 @@ def process_direct_punch(device, rfid_code, punch_dt):
         school=school
     ).first()
 
+    matched = False
+
     if student:
         # Create or update student attendance (pending verification)
         attendance, created = Attendance.objects.select_related('student').get_or_create(
@@ -77,7 +79,7 @@ def process_direct_punch(device, rfid_code, punch_dt):
                 )
         
         logger.info(f"[ADMS PUNCH SYNCED] Student {student.user.username} (RFID: {rfid_code}) at {punch_dt}")
-        return True
+        matched = True
 
     # 2. Look up teacher in this school
     teacher = TeacherProfile.objects.select_related('user', 'school').filter(
@@ -102,10 +104,13 @@ def process_direct_punch(device, rfid_code, punch_dt):
                 attendance.save(update_fields=['punch_out_time'])
         
         logger.info(f"[ADMS PUNCH SYNCED] Teacher {teacher.user.username} (RFID: {rfid_code}) at {punch_dt}")
-        return True
+        matched = True
 
-    logger.warning(f"[ADMS PUNCH UNMATCHED] RFID {rfid_code} not found in school {school_id}")
-    return False
+    if not matched:
+        logger.warning(f"[ADMS PUNCH UNMATCHED] RFID {rfid_code} not found in school {school_id}")
+        return False
+
+    return True
 
 
 @csrf_exempt
@@ -122,7 +127,7 @@ def adms_handshake_or_upload(request):
 
     # Resolve device by Serial Number
     device = BiometricDevice.objects.select_related('school').filter(
-        serial_number=serial_number,
+        device_serial_number=serial_number,
         is_active=True
     ).first()
 

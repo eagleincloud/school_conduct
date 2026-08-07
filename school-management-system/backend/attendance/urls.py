@@ -9,6 +9,7 @@ from .device_views import (
     BiometricDeviceRotateSecretView,
     BiometricDeviceStatusStreamView,
     BiometricDeviceTestView,
+    BiometricEventLogListView,
 )
 from .views import (
     AttendanceMarkView,
@@ -35,6 +36,7 @@ from .teacher_attendance_views import (
 
 urlpatterns = [
     path('devices/', BiometricDeviceListCreateView.as_view(), name='biometric-device-list-create'),
+    path('devices/logs/', BiometricEventLogListView.as_view(), name='biometric-device-logs'),
     path('devices/test-connection/', BiometricDeviceConnectionProbeView.as_view(), name='biometric-device-probe'),
     path('devices/<int:device_id>/', BiometricDeviceDetailView.as_view(), name='biometric-device-detail'),
     path('devices/<int:device_id>/test/', BiometricDeviceTestView.as_view(), name='biometric-device-test'),

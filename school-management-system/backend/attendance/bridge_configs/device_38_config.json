@@ -1,14 +1,14 @@
 {
-  "device_name": "Main Gate",
+  "device_name": "class 10",
   "integration_mode": "bridge_pull",
-  "device_ip": "192.168.0.50",
+  "device_ip": "192.168.0.100",
   "device_port": 4370,
   "device_password": 0,
-  "machine_number": 1,
-  "device_serial_number": "",
+  "machine_number": 2,
+  "device_serial_number": "T190900185",
   "terminal_id": "",
   "allowed_source_ip": null,
-  "school_id": "NORTH",
+  "school_id": "DEFAULT",
   "server_url": "http://13.201.53.169/api/attendance/biometric-punch/",
-  "device_secret_key": "4VmiohXYHeO3RgbFBdZhA9TRrNRTlV-V"
+  "device_secret_key": "Ebn_Zg2FyvmD6Fw4o2S6tBKUfmWaL5nG"
 }

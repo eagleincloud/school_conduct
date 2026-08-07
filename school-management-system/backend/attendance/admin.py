@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Attendance, BiometricDevice, TeacherAttendance
+from .models import Attendance, BiometricDevice, TeacherAttendance, BiometricEventLog
 
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
@@ -19,3 +19,10 @@ class TeacherAttendanceAdmin(admin.ModelAdmin):
     list_filter = ('status', 'marked_via', 'date')
     search_fields = ('teacher__user__username', 'teacher__user__name', 'teacher__employee_id')
 
+@admin.register(BiometricEventLog)
+class BiometricEventLogAdmin(admin.ModelAdmin):
+    list_display = ('received_at', 'status', 'event_type', 'user_identifier', 'device_serial_number', 'protocol', 'error_message')
+    list_filter = ('status', 'event_type', 'protocol', 'received_at', 'school')
+    search_fields = ('user_identifier', 'device_serial_number', 'error_message')
+    readonly_fields = ('received_at', 'processed_at')
+    ordering = ('-received_at',)

@@ -12,11 +12,11 @@ except ImportError as exc:
 # =========================================================================
 # CONFIGURATION - CHANGE THESE SETTINGS FOR EACH SCHOOL DEPLOYMENT
 # =========================================================================
-DEVICE_IP = '192.168.0.150'
-DEVICE_PORT = 4370         # Z500V2 custom TCP Port (from machine settings)
-SCHOOL_ID = 'DEFAULT'            # !!! UNIQUE SCHOOL ID (e.g. 'school_01', 'school_02' etc. as per DB)
-SERVER_URL = 'http://13.201.53.169/api/attendance/biometric-punch/'  #put the server url here
-DEVICE_SECRET_KEY = 'y0ur_Sup3r_S3cr3t_B1om3tr1c_K3y_987'  # Must match the configured key in Django settings
+DEVICE_IP = '192.168.0.100' # Ensure this is your Biometric Machine IP
+DEVICE_PORT = 4370         # Default pyzk port
+SCHOOL_ID = 'DEFAULT'            
+SERVER_URL = 'http://13.201.53.169/api/attendance/biometric-punch/'
+DEVICE_SECRET_KEY = 'Ebn_Zg2FyvmD6Fw4o2S6tBKUfmWaL5nG' 
 # =========================================================================
 
 def start_bridge():
@@ -25,8 +25,8 @@ def start_bridge():
     print(f"Connecting to Biometric Device {DEVICE_IP}:{DEVICE_PORT}...")
     print("=" * 60)
 
-    # force_udp=False (TCP Mode) and ommit_ping=True based on hardware configuration
-    zk = ZK(DEVICE_IP, port=DEVICE_PORT, timeout=10, password=0, force_udp=False, ommit_ping=True)
+    # force_udp=True (TCP Mode) and ommit_ping=True based on hardware configuration
+    zk = ZK(DEVICE_IP, port=DEVICE_PORT, timeout=10, password=0, force_udp=True, ommit_ping=True)
 
     conn = None
 
@@ -44,6 +44,7 @@ def start_bridge():
         
         # We start checking punches from the current local time onwards
         last_checked_punch_time = datetime.now()
+        processed_punches = set()
 
         while True:
             if not conn:
@@ -55,15 +56,18 @@ def start_bridge():
                 attendance_logs = conn.get_attendance()
                 
                 for log in attendance_logs:
-                    # Filter only new punches recorded after our start pointer
-                    if log.timestamp > last_checked_punch_time:
+                    punch_time_str = log.timestamp.strftime("%Y-%m-%d %H:%M:%S")
+                    punch_key = (str(log.user_id), punch_time_str)
+
+                    # Filter punches recorded at or after our start pointer that haven't been synced yet
+                    if log.timestamp >= last_checked_punch_time and punch_key not in processed_punches:
                         print(f"[PUNCH DETECTED] RFID/User ID: {log.user_id} | Time: {log.timestamp}")
 
                         # Multi-Tenant Payload: Enforce that this data belongs strictly to SCHOOL_ID
                         payload = {
                             'rfid_code': str(log.user_id), # Matches rfid_code field in student DB
                             'school_id': SCHOOL_ID,         # Ensures isolation for this school
-                            'punch_time': log.timestamp.strftime("%Y-%m-%d %H:%M:%S")
+                            'punch_time': punch_time_str
                         }
 
                         headers = {
@@ -84,8 +88,13 @@ def start_bridge():
                             with open("biometric_bridge_errors.log", "a") as log_file:
                                 log_file.write(f"[{datetime.now()}] Server post error for RFID {log.user_id}: {post_err}\n")
 
+                        processed_punches.add(punch_key)
+                        if len(processed_punches) > 1000:
+                            processed_punches.clear()
+
                         # Update last checked timestamp
-                        last_checked_punch_time = log.timestamp
+                        if log.timestamp > last_checked_punch_time:
+                            last_checked_punch_time = log.timestamp
 
             except Exception as loop_err:
                 print(f"[ERROR] Loop iteration error: {loop_err}")

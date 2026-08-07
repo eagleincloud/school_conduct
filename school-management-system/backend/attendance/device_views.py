@@ -11,14 +11,14 @@ from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.utils import timezone
 from django.views import View
-from rest_framework import permissions, status, views
+from rest_framework import permissions, status, views, generics
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from tenants.models import School
 
-from .models import BiometricDevice, generate_device_secret_key
-from .serializers import BiometricDeviceSerializer
+from .models import BiometricDevice, BiometricEventLog, generate_device_secret_key
+from .serializers import BiometricDeviceSerializer, BiometricEventLogSerializer
 from .bridge_runtime import (
     delete_device_runtime_config,
     get_bridge_executable_path,
@@ -492,3 +492,31 @@ class BiometricDeviceStatusStreamView(View):
         response['Cache-Control'] = 'no-cache'
         response['X-Accel-Buffering'] = 'no'
         return response
+
+
+class BiometricEventLogListView(generics.ListAPIView):
+    """
+    Returns a list of biometric event logs for the user's school.
+    Supports filtering by device_id.
+    """
+    serializer_class = BiometricEventLogSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if not _ensure_device_manager(user):
+            return BiometricEventLog.objects.none()
+
+        qs = BiometricEventLog.objects.all()
+
+        school_scope = _get_school_scope(self.request)
+        if school_scope:
+            qs = qs.filter(school=school_scope)
+        elif user.role == 'admin':
+            qs = qs.filter(school=user.school)
+
+        device_id = self.request.query_params.get('device_id')
+        if device_id:
+            qs = qs.filter(device_id=device_id)
+
+        return qs.order_by('-received_at')

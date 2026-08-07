@@ -49,8 +49,8 @@ def decode_secureye_json_body(body: bytes):
     if not body:
         return {}
 
-    payload = body
-    if len(payload) >= 4:
+    payload = body.strip(b"\x00").strip()
+    if not payload.startswith(b"{") and not payload.startswith(b"[") and len(payload) >= 4:
         declared_length = int.from_bytes(payload[:4], byteorder="little", signed=False)
         candidate = payload[4 : 4 + declared_length]
         if declared_length and candidate:
@@ -97,15 +97,16 @@ def normalize_secureye_http_event(http_request: dict, source_ip: str | None = No
     return payload, body_data
 
 
-def build_secureye_http_ack():
+def build_secureye_http_ack(close_connection: bool = False):
     # FKDATAHS101/WS535-based terminals expect the vendor-specific
     # ``response_code`` header and an empty response body. A generic 200
     # response (or a success value in the body) does not dequeue the log.
     response_body = b""
+    conn_header = b"Connection: close" if close_connection else b"Connection: keep-alive"
     headers = [
         b"HTTP/1.1 200 OK",
         b"Content-Length: 0",
-        b"Connection: close",
+        conn_header,
         b"Cache-Control: no-store",
         b"response_code: OK",
         b"",

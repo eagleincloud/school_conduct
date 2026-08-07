@@ -74,14 +74,26 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
             if looks_like_http_request(joined):
                 expected_http_bytes = self._expected_http_bytes(joined)
                 if expected_http_bytes is not None and len(joined) >= expected_http_bytes:
-                    self._handle_http_push(joined[:expected_http_bytes], source_ip)
-                    return
+                    close_after = settings.BIOMETRIC_TCP_CLOSE_AFTER_ACK
+                    self._handle_http_push(
+                        joined[:expected_http_bytes],
+                        source_ip,
+                        close_connection=close_after,
+                    )
+                    if close_after:
+                        return
+                    remainder = joined[expected_http_bytes:]
+                    chunks = [remainder] if remainder else []
+                    total_bytes = len(remainder)
                 continue
 
             buffer += chunk.decode("utf-8", errors="ignore")
             frames, buffer = extract_message_frames(buffer)
-            for frame in frames:
-                self._process_tcp_xml_frame(frame, source_ip)
+            if frames:
+                for frame in frames:
+                    self._process_tcp_xml_frame(frame, source_ip)
+                chunks = []
+                total_bytes = 0
                 if settings.BIOMETRIC_TCP_CLOSE_AFTER_ACK:
                     return
 
@@ -93,7 +105,6 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
             self._process_tcp_xml_frame(frame, source_ip)
 
     def _process_tcp_xml_frame(self, frame: str, source_ip: str | None):
-        ack_bytes = settings.BIOMETRIC_TCP_ACK_MESSAGE.encode("utf-8")
         try:
             payload = parse_tcp_xml_payload(frame)
             result = process_biometric_event(
@@ -102,17 +113,30 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
                 raw_payload=frame,
                 source_ip=source_ip,
             )
+            serial = payload.get('DeviceSerialNo', '')
+            print(
+                f"Processed biometric TCP XML event serial={serial} "
+                f"event={payload.get('Event', '')} user={payload.get('UserID', '')} "
+                f"status={result.get('status', 'unknown')}",
+                flush=True,
+            )
             logger.info(
                 "Processed biometric TCP XML event serial=%s event=%s status=%s",
-                payload.get('DeviceSerialNo', ''),
+                serial,
                 payload.get('Event', ''),
                 result.get('status', 'unknown'),
             )
+            ack_bytes = settings.BIOMETRIC_TCP_ACK_MESSAGE.encode("utf-8")
             self.request.sendall(ack_bytes)
         except Exception as exc:
             logger.exception("Failed to process biometric TCP XML payload from %s: %s", source_ip, exc)
 
-    def _handle_http_push(self, raw_request: bytes, source_ip: str | None):
+    def _handle_http_push(
+        self,
+        raw_request: bytes,
+        source_ip: str | None,
+        close_connection: bool = False,
+    ):
         try:
             http_request = parse_http_request(raw_request)
             payload, _body_data = normalize_secureye_http_event(http_request, source_ip=source_ip)
@@ -138,7 +162,7 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
                     pass
 
             if is_stale_timelog:
-                self.request.sendall(build_secureye_http_ack())
+                self.request.sendall(build_secureye_http_ack(close_connection=close_connection))
                 logger.info(
                     "Fast-acknowledged stale biometric HTTP log serial=%s user=%s punch_time=%s",
                     payload.get('DeviceSerialNo', ''),
@@ -170,7 +194,7 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
                 payload.get('punch_time', ''),
                 result.get('status', 'unknown'),
             )
-            self.request.sendall(build_secureye_http_ack())
+            self.request.sendall(build_secureye_http_ack(close_connection=close_connection))
         except Exception as exc:
             logger.exception("Failed to process biometric HTTP push payload from %s: %s", source_ip, exc)
             self.request.sendall(
