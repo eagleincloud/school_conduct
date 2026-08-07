@@ -28,6 +28,7 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
         self.request.settimeout(settings.BIOMETRIC_TCP_SOCKET_TIMEOUT)
         max_payload_bytes = settings.BIOMETRIC_TCP_MAX_PAYLOAD_BYTES
         source_ip = self.client_address[0] if self.client_address else None
+        self.processed_frame_count = 0
         self._handle_push_stream(max_payload_bytes, source_ip)
 
     @staticmethod
@@ -81,19 +82,31 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
             buffer += chunk.decode("utf-8", errors="ignore")
             frames, buffer = extract_message_frames(buffer)
             for frame in frames:
-                self._process_tcp_xml_frame(frame, source_ip)
-                if settings.BIOMETRIC_TCP_CLOSE_AFTER_ACK:
+                should_close = self._process_tcp_xml_frame(frame, source_ip)
+                self.processed_frame_count += 1
+                if should_close:
                     return
+
+        if chunks and self.processed_frame_count == 0:
+            self._log_unrecognized_payload(b"".join(chunks), source_ip)
+        elif buffer.strip():
+            self._log_unrecognized_payload(
+                buffer.encode("utf-8", errors="replace"),
+                source_ip,
+                label="trailing or incomplete",
+            )
 
     def _handle_tcp_xml_push(self, raw_request: bytes, source_ip: str | None):
         buffer = raw_request.decode("utf-8", errors="ignore")
         frames, _remainder = extract_message_frames(buffer)
 
         for frame in frames:
-            self._process_tcp_xml_frame(frame, source_ip)
+            should_close = self._process_tcp_xml_frame(frame, source_ip)
+            self.processed_frame_count += 1
+            if should_close:
+                return
 
     def _process_tcp_xml_frame(self, frame: str, source_ip: str | None):
-        ack_bytes = settings.BIOMETRIC_TCP_ACK_MESSAGE.encode("utf-8")
         try:
             payload = parse_tcp_xml_payload(frame)
             result = process_biometric_event(
@@ -108,9 +121,42 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
                 payload.get('Event', ''),
                 result.get('status', 'unknown'),
             )
-            self.request.sendall(ack_bytes)
+            is_sbxpc = bool(
+                payload.get("MachineID")
+                or payload.get("EventType")
+                or payload.get("TerminalType")
+                or payload.get("DeviceUID")
+            )
+            ack_message = settings.BIOMETRIC_SBXPC_ACK_MESSAGE if is_sbxpc else settings.BIOMETRIC_TCP_ACK_MESSAGE
+            if ack_message:
+                self.request.sendall(ack_message.encode("utf-8"))
+            return (
+                settings.BIOMETRIC_SBXPC_CLOSE_AFTER_ACK
+                if is_sbxpc
+                else settings.BIOMETRIC_TCP_CLOSE_AFTER_ACK
+            )
         except Exception as exc:
             logger.exception("Failed to process biometric TCP XML payload from %s: %s", source_ip, exc)
+            self._log_unrecognized_payload(
+                frame.encode("utf-8", errors="replace"),
+                source_ip,
+                label="failed",
+            )
+            return True
+
+    @staticmethod
+    def _log_unrecognized_payload(raw_payload: bytes, source_ip: str | None, label="unrecognized"):
+        preview_size = settings.BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES
+        preview = raw_payload[:preview_size]
+        text_preview = preview.decode("utf-8", errors="backslashreplace")
+        logger.warning(
+            "Captured %s biometric TCP payload source=%s bytes=%s text=%r hex=%s",
+            label,
+            source_ip or "unknown",
+            len(raw_payload),
+            text_preview,
+            preview.hex(" "),
+        )
 
     def _handle_http_push(self, raw_request: bytes, source_ip: str | None):
         try:

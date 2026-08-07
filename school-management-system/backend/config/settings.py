@@ -18,10 +18,20 @@ DEBUG = os.getenv('DEBUG', 'False').strip().lower() == 'true'
 USE_POSTGRES = os.getenv('USE_POSTGRES', 'False').strip().lower() == 'true'
 PUBLIC_API_BASE_URL = os.getenv('PUBLIC_API_BASE_URL', 'http://127.0.0.1:8000').rstrip('/')
 BIOMETRIC_TCP_HOST = os.getenv('BIOMETRIC_TCP_HOST', '0.0.0.0')
-BIOMETRIC_TCP_PORT = int(os.getenv('BIOMETRIC_TCP_PORT', '5005'))
+BIOMETRIC_TCP_PORT = int(os.getenv('BIOMETRIC_TCP_PORT', '5555'))
 BIOMETRIC_TCP_SOCKET_TIMEOUT = int(os.getenv('BIOMETRIC_TCP_SOCKET_TIMEOUT', '15'))
 BIOMETRIC_TCP_MAX_PAYLOAD_BYTES = int(os.getenv('BIOMETRIC_TCP_MAX_PAYLOAD_BYTES', '65536'))
 BIOMETRIC_TCP_ACK_MESSAGE = codecs.decode(os.getenv('BIOMETRIC_TCP_ACK_MESSAGE', 'OK\\r\\n'), 'unicode_escape')
+BIOMETRIC_SBXPC_ACK_MESSAGE = codecs.decode(
+    os.getenv('BIOMETRIC_SBXPC_ACK_MESSAGE', 'OK\\r\\n'),
+    'unicode_escape',
+)
+BIOMETRIC_SBXPC_CLOSE_AFTER_ACK = (
+    os.getenv('BIOMETRIC_SBXPC_CLOSE_AFTER_ACK', 'True').strip().lower() == 'true'
+)
+BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES = int(
+    os.getenv('BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES', '512')
+)
 BIOMETRIC_TCP_CLOSE_AFTER_ACK = os.getenv('BIOMETRIC_TCP_CLOSE_AFTER_ACK', 'False').strip().lower() == 'true'
 raw_hosts = os.getenv('ALLOWED_HOSTS', '*')
 if raw_hosts:
@@ -141,10 +151,10 @@ else:
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': os.getenv('DB_NAME', 'postgres'),
-            'USER': os.getenv('DB_USER', 'postgres.uzztcarhwpsrjhaxqgiu'),
-            'PASSWORD': os.getenv('DB_PASSWORD', 'quZz5KvCpSKSO5lJ'),
-            'HOST': os.getenv('DB_HOST', 'aws-1-ap-south-1.pooler.supabase.com'),
-            'PORT': os.getenv('DB_PORT', '6543'),
+            'USER': os.getenv('DB_USER', 'postgres'),
+            'PASSWORD': os.getenv('DB_PASSWORD', ''),
+            'HOST': os.getenv('DB_HOST', 'localhost'),
+            'PORT': os.getenv('DB_PORT', '5432'),
             'OPTIONS': {
                 'sslmode': 'require',
             },

@@ -70,7 +70,8 @@ def main():
         (os.path.join(workspace_dir, "deploy_remote.sh"), "/home/ec2-user/deploy_remote.sh"),
         (os.path.join(backend_dir, ".env"), "/home/ec2-user/backend.env"),
         (os.path.join(workspace_dir, "deploy", "nginx.conf"), "/home/ec2-user/nginx.conf"),
-        (os.path.join(workspace_dir, "deploy", "school.conf"), "/home/ec2-user/school.conf")
+        (os.path.join(workspace_dir, "deploy", "school.conf"), "/home/ec2-user/school.conf"),
+        (os.path.join(workspace_dir, "deploy", "biometric-tcp.service"), "/home/ec2-user/biometric-tcp.service"),
     ]
     
     for local_file, remote_dest in scp_files:

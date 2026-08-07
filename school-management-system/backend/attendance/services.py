@@ -1,5 +1,6 @@
 import hashlib
 import logging
+import re
 from pathlib import Path
 from datetime import datetime as datetime_type
 from xml.etree import ElementTree
@@ -14,6 +15,10 @@ from .models import Attendance, BiometricDevice, BiometricEventLog, TeacherAtten
 
 logger = logging.getLogger(__name__)
 _BIOMETRIC_DEBUG_LOG = Path("/home/ec2-user/school-app/logs/biometric-debug.log")
+_XML_OPENING_TAG = re.compile(
+    r"<([A-Za-z_][A-Za-z0-9_.:-]*)(?:\s[^<>]*?)?\s*(/?)>",
+    re.DOTALL,
+)
 
 
 class AttendanceService:
@@ -44,29 +49,147 @@ def _sanitize_biometric_payload(value):
 
 
 def extract_message_frames(buffer: str):
+    """Extract complete XML documents from a streaming TCP buffer.
+
+    The original listener only recognized ``<Message>`` documents. SBXPC
+    firmware and callback versions can use other root element names and may
+    prefix a document with an XML declaration or transport noise.
+    """
     frames = []
     remainder = buffer
 
     while True:
-        start = remainder.find("<Message")
+        start = remainder.find("<")
         if start == -1:
             return frames, remainder[-2048:]
 
-        end = remainder.find("</Message>", start)
-        if end == -1:
-            return frames, remainder[start:]
+        if start:
+            remainder = remainder[start:]
 
-        end += len("</Message>")
-        frames.append(remainder[start:end])
+        document_start = 0
+        root_start = 0
+        if remainder.startswith("<?xml"):
+            declaration_end = remainder.find("?>")
+            if declaration_end == -1:
+                return frames, remainder
+            root_start = declaration_end + 2
+            while root_start < len(remainder) and remainder[root_start].isspace():
+                root_start += 1
+
+        match = _XML_OPENING_TAG.match(remainder, root_start)
+        if not match:
+            # Keep an incomplete tag for the next socket read. For a complete
+            # non-document token, advance one character and continue scanning.
+            if ">" not in remainder[root_start:]:
+                return frames, remainder[document_start:]
+            remainder = remainder[root_start + 1 :]
+            continue
+
+        root_name = match.group(1)
+        if match.group(2) == "/":
+            end = match.end()
+            frames.append(remainder[document_start:end])
+            remainder = remainder[end:]
+            continue
+
+        closing_tag = f"</{root_name}>"
+        end = remainder.lower().find(closing_tag.lower(), match.end())
+        if end == -1:
+            return frames, remainder[document_start:]
+
+        end += len(closing_tag)
+        frames.append(remainder[document_start:end])
         remainder = remainder[end:]
+
+
+def _xml_local_name(tag: str):
+    return tag.rsplit("}", 1)[-1].split(":", 1)[-1]
+
+
+def _first_payload_value(payload: dict, *keys):
+    for key in keys:
+        value = payload.get(key)
+        if value is not None and str(value).strip():
+            return str(value).strip()
+    return ""
+
+
+def normalize_tcp_xml_event(payload: dict):
+    """Normalize generic and SBXPC callback XML into School Conduct fields."""
+    normalized = {str(key): _strip_nul_chars(value) for key, value in payload.items()}
+
+    serial = _first_payload_value(
+        normalized,
+        "DeviceSerialNo",
+        "DeviceUID",
+        "DeviceUniqueID",
+        "SerialNumber",
+        "DeviceID",
+    )
+    if serial:
+        normalized["DeviceSerialNo"] = serial
+
+    terminal_id = _first_payload_value(
+        normalized,
+        "TerminalID",
+        "TerminalId",
+        "MachineID",
+        "MachineId",
+        "MachineNumber",
+    )
+    if terminal_id:
+        normalized["TerminalID"] = terminal_id
+
+    user_id = _first_payload_value(
+        normalized,
+        "UserID",
+        "UserId",
+        "EnrollNumber",
+        "EnrollNo",
+        "rfid_code",
+    )
+    if user_id:
+        normalized["UserID"] = user_id
+
+    event_type = _first_payload_value(normalized, "Event", "EventType", "event")
+    compact_event_type = re.sub(r"[\s_-]+", "", event_type).lower()
+    event_aliases = {
+        "timelog": "TimeLog",
+        "attendancelog": "TimeLog",
+        "generallog": "TimeLog",
+        "managementlog": "ManagementLog",
+        "verificationfailure": "VerificationFailure",
+        "verificationsuccess": "VerificationSuccess",
+        "alarmon": "AlarmOn",
+        "alarmoff": "AlarmOff",
+        "doorbell": "DoorBell",
+    }
+    if event_type:
+        normalized["Event"] = event_aliases.get(compact_event_type, event_type.strip())
+
+    attendance_status = _first_payload_value(
+        normalized, "AttendStat", "AttendanceStatus", "IOStatus", "io_mode"
+    )
+    if attendance_status:
+        normalized["AttendStat"] = attendance_status
+
+    verification_mode = _first_payload_value(
+        normalized, "VerifMode", "VerificationMode", "VerifyMode", "verify_mode"
+    )
+    if verification_mode:
+        normalized["VerifMode"] = verification_mode
+
+    return normalized
 
 
 def parse_tcp_xml_payload(raw_payload: str):
     root = ElementTree.fromstring(raw_payload.strip())
     payload = {}
-    for child in root:
-        payload[child.tag] = (child.text or "").strip()
-    return payload
+    for child in root.iter():
+        if child is root or len(child):
+            continue
+        payload[_xml_local_name(child.tag)] = (child.text or "").strip()
+    return normalize_tcp_xml_event(payload)
 
 
 def _normalize_target_type(value):
@@ -115,6 +238,7 @@ def compute_event_fingerprint(protocol: str, payload: dict):
         [
             protocol,
             payload.get('DeviceSerialNo', '') or payload.get('device_serial_number', ''),
+            payload.get('TerminalID', '') or payload.get('MachineID', ''),
             payload.get('Event', '') or payload.get('event', ''),
             payload.get('TransID', '') or payload.get('trans_id', ''),
             payload.get('UserID', '') or payload.get('rfid_code', ''),
@@ -147,7 +271,12 @@ def resolve_direct_push_device(
     lookup_label='direct push',
 ):
     serial = (payload.get('DeviceSerialNo') or "").strip()
-    terminal_id = (payload.get('TerminalID') or "").strip()
+    terminal_id = (
+        payload.get('TerminalID')
+        or payload.get('MachineID')
+        or payload.get('MachineId')
+        or ""
+    ).strip()
 
     device = None
     if serial:

@@ -114,6 +114,7 @@ export default function BiometricMachines() {
   const [draftProbe, setDraftProbe] = useState(null);
   const [preview, setPreview] = useState(null);
   const [activePreviewId, setActivePreviewId] = useState(null);
+  const isDirectPushMode = ["tcp_xml_push", "http_push"].includes(form.integration_mode);
 
   const loadSchools = async () => {
     if (!isSuperadmin) return;
@@ -253,7 +254,7 @@ export default function BiometricMachines() {
   };
 
   const handleDraftProbe = async () => {
-    if (!form.device_ip) {
+    if (!isDirectPushMode && !form.device_ip) {
       toast.error("Enter a machine IP first");
       return;
     }
@@ -264,6 +265,7 @@ export default function BiometricMachines() {
       const result = await biometricDeviceService.probeConnection({
         device_ip: normalizeIpAddress(form.device_ip),
         device_port: Number(form.device_port),
+        integration_mode: form.integration_mode,
       });
       setDraftProbe(result);
       if (result.ok) {
@@ -381,7 +383,7 @@ export default function BiometricMachines() {
             <SectionTitle
               icon={ServerCog}
               title="Biometric Machine Control"
-              body="Register machines, test LAN connectivity, rotate secure tokens, and export bridge configs for each school or office entrance."
+              body="Register bridge-pull machines or receive supported biometric pushes directly on the public server."
             />
             <div className="flex flex-wrap gap-3">
               <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black uppercase tracking-widest text-slate-500">
@@ -553,7 +555,9 @@ export default function BiometricMachines() {
                 </label>
 
                 <label>
-                  <span className="text-xs font-black uppercase tracking-wide text-slate-500">IP address</span>
+                  <span className="text-xs font-black uppercase tracking-wide text-slate-500">
+                    {isDirectPushMode ? "Machine IP (inventory only)" : "Machine LAN IP"}
+                  </span>
                   <input
                     className="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold outline-none"
                     value={form.device_ip}
@@ -562,12 +566,14 @@ export default function BiometricMachines() {
                       setForm((prev) => ({ ...prev, device_ip: normalizeIpAddress(event.target.value) }))
                     }
                     placeholder="192.168.0.150"
-                    required
+                    required={!isDirectPushMode}
                   />
                 </label>
 
                 <label>
-                  <span className="text-xs font-black uppercase tracking-wide text-slate-500">Port</span>
+                  <span className="text-xs font-black uppercase tracking-wide text-slate-500">
+                    {isDirectPushMode ? "Machine management port" : "Machine LAN port"}
+                  </span>
                   <input
                     type="number"
                     min="1"
@@ -576,6 +582,11 @@ export default function BiometricMachines() {
                     value={form.device_port}
                     onChange={(event) => setForm((prev) => ({ ...prev, device_port: event.target.value }))}
                   />
+                  {isDirectPushMode ? (
+                    <span className="mt-1 block text-xs font-semibold text-slate-400">
+                      This is not the public push port. Configure the terminal&apos;s log server to use TCP port 5555.
+                    </span>
+                  ) : null}
                 </label>
 
                 <label>
@@ -692,9 +703,10 @@ export default function BiometricMachines() {
               <h3 className="text-lg font-black text-slate-900">Setup flow</h3>
               <div className="mt-4 space-y-3 text-sm font-semibold text-slate-600">
                 <p>1. For bridge mode, register the machine LAN IP/port and use connection testing from the server side.</p>
-                <p>2. For TCP XML push mode, register the device serial and optional source IP allowlist, then configure the machine once with the public server IP and TCP port.</p>
-                <p>3. Launch bridges only for legacy bridge-pull machines. TCP push machines report in directly and do not need a customer-side worker.</p>
-                <p>4. Watch the machine card for last seen, last event, and last punch updates after live scans begin.</p>
+                <p>2. For TCP XML push mode, register the device serial, or its Machine ID plus source-IP allowlist.</p>
+                <p>3. On SBXPC/M50 terminals, set ManagerPCDomainName to the public server and ManagerPCPort to 5555.</p>
+                <p>4. Launch bridges only for legacy bridge-pull machines. Direct-push machines do not need a customer-side worker.</p>
+                <p>5. Watch the machine card for last seen, last event, and last punch updates after live scans begin.</p>
               </div>
             </div>
           </div>
@@ -825,7 +837,7 @@ export default function BiometricMachines() {
             <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <h3 className="text-lg font-black text-slate-900">Bridge preview</h3>
+                  <h3 className="text-lg font-black text-slate-900">Integration preview</h3>
                   <p className="mt-1 text-sm font-semibold text-slate-500">
                     Downloaded configs match this payload. Use it with the Windows bridge app.
                   </p>
@@ -848,7 +860,11 @@ export default function BiometricMachines() {
                     <p><span className="font-black text-slate-900">Device:</span> {preview.device.name}</p>
                     <p className="mt-1"><span className="font-black text-slate-900">Target API:</span> {preview.config.server_url}</p>
                     {preview.tcp_listener ? (
-                      <p className="mt-1"><span className="font-black text-slate-900">TCP listener:</span> {preview.tcp_listener.host}:{preview.tcp_listener.port}</p>
+                      <p className="mt-1">
+                        <span className="font-black text-slate-900">Public TCP push target:</span>{" "}
+                        {preview.tcp_listener.public_host || preview.network_target?.host || "configured public host"}:
+                        {preview.tcp_listener.port}
+                      </p>
                     ) : null}
                     <p className="mt-1"><span className="font-black text-slate-900">Launch note:</span> {preview.launch_note}</p>
                   </div>
