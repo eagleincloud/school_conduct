@@ -1,4 +1,5 @@
 import logging
+import socket
 import socketserver
 from datetime import datetime as datetime_type
 from http.client import HTTPMessage
@@ -26,10 +27,20 @@ logger = logging.getLogger(__name__)
 class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
     def handle(self):
         self.request.settimeout(settings.BIOMETRIC_TCP_SOCKET_TIMEOUT)
+        self._enable_tcp_keepalive()
         max_payload_bytes = settings.BIOMETRIC_TCP_MAX_PAYLOAD_BYTES
         source_ip = self.client_address[0] if self.client_address else None
         self.processed_frame_count = 0
         self._handle_push_stream(max_payload_bytes, source_ip)
+
+    def _enable_tcp_keepalive(self):
+        set_socket_option = getattr(self.request, "setsockopt", None)
+        if not set_socket_option:
+            return
+        try:
+            set_socket_option(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+        except OSError as exc:
+            logger.debug("Could not enable biometric TCP keepalive: %s", exc)
 
     @staticmethod
     def _expected_http_bytes(raw_request: bytes):
@@ -67,12 +78,15 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
 
             chunks.append(chunk)
             total_bytes += len(chunk)
-            if total_bytes > max_payload_bytes:
-                logger.warning("Biometric payload exceeded max size from %s; truncating connection.", self.client_address)
-                break
 
             joined = b"".join(chunks)
             if looks_like_http_request(joined):
+                if total_bytes > max_payload_bytes:
+                    logger.warning(
+                        "Biometric HTTP payload exceeded max size from %s; closing connection.",
+                        self.client_address,
+                    )
+                    break
                 expected_http_bytes = self._expected_http_bytes(joined)
                 if expected_http_bytes is not None and len(joined) >= expected_http_bytes:
                     self._handle_http_push(joined[:expected_http_bytes], source_ip)
@@ -81,11 +95,48 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
 
             buffer += chunk.decode("utf-8", errors="ignore")
             frames, buffer = extract_message_frames(buffer)
+            buffered_bytes = buffer.encode("utf-8", errors="replace")
+            frame_sizes = [len(frame.encode("utf-8", errors="replace")) for frame in frames]
+            unrecognized_bytes = max(0, total_bytes - sum(frame_sizes) - len(buffered_bytes))
+            if any(frame_size > max_payload_bytes for frame_size in frame_sizes):
+                logger.warning(
+                    "Biometric XML frame exceeded max size from %s; closing connection.",
+                    self.client_address,
+                )
+                break
+            if unrecognized_bytes > max_payload_bytes:
+                logger.warning(
+                    "Biometric XML stream contained excessive non-frame data from %s; closing connection.",
+                    self.client_address,
+                )
+                break
+
+            close_after_batch = False
             for frame in frames:
                 should_close = self._process_tcp_xml_frame(frame, source_ip)
                 self.processed_frame_count += 1
-                if should_close:
+                if should_close is None:
                     return
+                close_after_batch = close_after_batch or should_close
+
+            # The size limit protects one incomplete frame, not the lifetime
+            # of an established event stream.  Reset the raw accumulator after
+            # complete XML documents have been removed from the text buffer.
+            if frames:
+                chunks = [buffered_bytes] if buffered_bytes else []
+                total_bytes = len(buffered_bytes)
+            if total_bytes > max_payload_bytes:
+                logger.warning(
+                    "Biometric XML frame exceeded max size from %s; closing connection.",
+                    self.client_address,
+                )
+                break
+
+            # Never discard a second complete event that arrived in the same
+            # recv() call.  Honour close-after-ACK only after draining and
+            # acknowledging the entire batch already received from the device.
+            if close_after_batch:
+                return
 
         if chunks and self.processed_frame_count == 0:
             self._log_unrecognized_payload(b"".join(chunks), source_ip)
@@ -100,11 +151,14 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
         buffer = raw_request.decode("utf-8", errors="ignore")
         frames, _remainder = extract_message_frames(buffer)
 
+        close_after_batch = False
         for frame in frames:
             should_close = self._process_tcp_xml_frame(frame, source_ip)
             self.processed_frame_count += 1
-            if should_close:
-                return
+            if should_close is None:
+                return True
+            close_after_batch = close_after_batch or should_close
+        return close_after_batch
 
     def _process_tcp_xml_frame(self, frame: str, source_ip: str | None):
         try:
@@ -130,11 +184,24 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
             ack_message = settings.BIOMETRIC_SBXPC_ACK_MESSAGE if is_sbxpc else settings.BIOMETRIC_TCP_ACK_MESSAGE
             if ack_message:
                 self.request.sendall(ack_message.encode("utf-8"))
-            return (
-                settings.BIOMETRIC_SBXPC_CLOSE_AFTER_ACK
-                if is_sbxpc
-                else settings.BIOMETRIC_TCP_CLOSE_AFTER_ACK
+            is_authorized = result.get('device_authorized') is True
+            if is_sbxpc:
+                close_after_ack = settings.BIOMETRIC_SBXPC_CLOSE_AFTER_ACK or not is_authorized
+            else:
+                close_after_ack = settings.BIOMETRIC_TCP_CLOSE_AFTER_ACK
+            if is_sbxpc and not close_after_ack:
+                idle_timeout = settings.BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS
+                self.request.settimeout(idle_timeout if idle_timeout > 0 else None)
+
+            ack_hex = ack_message.encode("utf-8").hex() if ack_message else ""
+            print(
+                f"Acknowledged biometric TCP XML source={source_ip or 'unknown'} "
+                f"serial={payload.get('DeviceSerialNo', '')} trans_id={payload.get('TransID', '')} "
+                f"verify_mode={payload.get('VerifMode', '')} status={result.get('status', 'unknown')} "
+                f"ack_hex={ack_hex} close_after_ack={close_after_ack}",
+                flush=True,
             )
+            return close_after_ack
         except Exception as exc:
             logger.exception("Failed to process biometric TCP XML payload from %s: %s", source_ip, exc)
             self._log_unrecognized_payload(
@@ -142,7 +209,7 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
                 source_ip,
                 label="failed",
             )
-            return True
+            return None
 
     @staticmethod
     def _log_unrecognized_payload(raw_payload: bytes, source_ip: str | None, label="unrecognized"):

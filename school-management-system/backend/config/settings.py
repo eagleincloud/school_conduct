@@ -27,7 +27,10 @@ BIOMETRIC_SBXPC_ACK_MESSAGE = codecs.decode(
     'unicode_escape',
 )
 BIOMETRIC_SBXPC_CLOSE_AFTER_ACK = (
-    os.getenv('BIOMETRIC_SBXPC_CLOSE_AFTER_ACK', 'True').strip().lower() == 'true'
+    os.getenv('BIOMETRIC_SBXPC_CLOSE_AFTER_ACK', 'False').strip().lower() == 'true'
+)
+BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS = int(
+    os.getenv('BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS', '86400')
 )
 BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES = int(
     os.getenv('BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES', '512')

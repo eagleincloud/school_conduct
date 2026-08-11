@@ -25,7 +25,10 @@ from the expected school public IPs. Do not expose any database port.
 5. Set `ManagerPCPort` to `5555`.
 6. Ensure the terminal has a default gateway and DNS server when a hostname is
    used.
-7. Perform a test punch and inspect the biometric TCP service log.
+7. Leave `Event Send Type` as `No` for this BG-PC integration. Its `TCP/IP`
+   option belongs to the separate proprietary SDK event-capture path and is
+   not consumed by this plain TCP/XML listener.
+8. Perform a test punch and inspect the biometric TCP service log.
 
 SBXPC callback XML is normalized as follows:
 
@@ -55,20 +58,30 @@ Environment settings:
 BIOMETRIC_TCP_PORT=5555
 BIOMETRIC_TCP_ACK_MESSAGE=OK\r\n
 BIOMETRIC_SBXPC_ACK_MESSAGE=OK\r\n
-BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=True
+BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=False
+BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS=86400
 BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES=512
 ```
 
-M50/SBXPC connections close immediately after the acknowledgement. Production
-logs showed that keeping these connections open caused terminals to replay the
-same historical transactions continuously. Other TCP/XML integrations retain
-their existing `BIOMETRIC_TCP_CLOSE_AFTER_ACK` behavior.
+M50/SBXPC BG-PC connections remain open after an acknowledgement because the
+terminal can send later fingerprint and card punches on the same TCP session.
+The default established-session idle timeout is one day and TCP keepalive is
+enabled. The initial connection timeout still protects sockets that never send
+an authorized frame. Set the idle timeout to `0` only in a source-IP-restricted
+environment when the device requires an indefinitely open session. A configured
+close-after-ACK is still honoured, but all complete frames already received in
+the same TCP packet are processed and acknowledged before closing.
+
+The payload-size limit applies to one incomplete XML frame rather than the
+lifetime byte count of a persistent connection.
 
 The SBXPC acknowledgement remains configurable because the SDK reference
 documents callback XML fields but does not document the device-to-server wire
-acknowledgement. Confirm it using a physical-device push. If a terminal still
-resends an accepted log, update `BIOMETRIC_SBXPC_ACK_MESSAGE` to the confirmed
-vendor response.
+acknowledgement. Every response is logged as `ack_hex` alongside its `TransID`
+and verification mode. Confirm it using a physical-device push. If a terminal
+still resends an accepted log, capture the server-to-device bytes from the
+official vendor receiver and update `BIOMETRIC_SBXPC_ACK_MESSAGE` to that
+confirmed response.
 
 ## Security and recovery
 

@@ -234,24 +234,123 @@ def _parse_punch_time(payload):
 
 
 def compute_event_fingerprint(protocol: str, payload: dict):
+    def value(*keys):
+        return _first_payload_value(payload, *keys)
+
     base = "|".join(
         [
-            protocol,
-            payload.get('DeviceSerialNo', '') or payload.get('device_serial_number', ''),
-            payload.get('TerminalID', '') or payload.get('MachineID', ''),
-            payload.get('Event', '') or payload.get('event', ''),
-            payload.get('TransID', '') or payload.get('trans_id', ''),
-            payload.get('UserID', '') or payload.get('rfid_code', ''),
-            payload.get('punch_time', ''),
-            payload.get('Year', ''),
-            payload.get('Month', ''),
-            payload.get('Day', ''),
-            payload.get('Hour', ''),
-            payload.get('Minute', ''),
-            payload.get('Second', ''),
+            str(protocol or '').strip().lower(),
+            value('DeviceSerialNo', 'device_serial_number', 'DeviceUID'),
+            value('TerminalID', 'terminal_id', 'MachineID'),
+            value('Event', 'event'),
+            value('TransID', 'trans_id'),
+            value('UserID', 'rfid_code'),
+            value('VerifMode', 'VerificationMode', 'VerifyMode', 'verify_mode'),
+            value('AttendStat', 'AttendanceStatus', 'IOStatus', 'io_mode'),
+            value('punch_time', 'PunchTime'),
+            value('Year'),
+            value('Month'),
+            value('Day'),
+            value('Hour'),
+            value('Minute'),
+            value('Second'),
         ]
     )
     return hashlib.sha256(base.encode("utf-8")).hexdigest()
+
+
+def _legacy_event_fingerprints(protocol: str, payload: dict):
+    """Return fingerprints emitted before verification details were added.
+
+    Keeping a compatibility lookup prevents a terminal replay from inserting
+    one fresh copy of every historical punch immediately after deployment.
+    """
+    serial = str(
+        payload.get('DeviceSerialNo', '') or payload.get('device_serial_number', '') or ''
+    )
+    terminal_id = str(payload.get('TerminalID', '') or payload.get('MachineID', '') or '')
+    suffix = [
+        str(payload.get('Event', '') or payload.get('event', '') or ''),
+        str(payload.get('TransID', '') or payload.get('trans_id', '') or ''),
+        str(payload.get('UserID', '') or payload.get('rfid_code', '') or ''),
+        str(payload.get('punch_time', '') or ''),
+        str(payload.get('Year', '') or ''),
+        str(payload.get('Month', '') or ''),
+        str(payload.get('Day', '') or ''),
+        str(payload.get('Hour', '') or ''),
+        str(payload.get('Minute', '') or ''),
+        str(payload.get('Second', '') or ''),
+    ]
+
+    fingerprints = []
+    if serial or terminal_id:
+        with_terminal = "|".join([str(protocol), serial, terminal_id, *suffix])
+        fingerprints.append(hashlib.sha256(with_terminal.encode("utf-8")).hexdigest())
+    if serial:
+        without_terminal = "|".join([str(protocol), serial, *suffix])
+        fingerprints.append(hashlib.sha256(without_terminal.encode("utf-8")).hexdigest())
+    return fingerprints
+
+
+def _legacy_event_matches_verification_details(event_log, payload: dict):
+    incoming_mode = _first_payload_value(
+        payload, 'VerifMode', 'VerificationMode', 'VerifyMode', 'verify_mode'
+    ).casefold()
+    incoming_status = _first_payload_value(
+        payload, 'AttendStat', 'AttendanceStatus', 'IOStatus', 'io_mode'
+    ).casefold()
+    stored_mode = str(event_log.verify_mode or '').strip().casefold()
+    stored_status = str(event_log.attend_stat or '').strip().casefold()
+    mode_matches = not incoming_mode or not stored_mode or incoming_mode == stored_mode
+    status_matches = not incoming_status or not stored_status or incoming_status == stored_status
+    return mode_matches and status_matches
+
+
+def _find_existing_event_log(protocol: str, payload: dict, fingerprint: str):
+    existing = BiometricEventLog.objects.filter(event_fingerprint=fingerprint).first()
+    if existing:
+        return existing
+
+    serial = _first_payload_value(payload, 'DeviceSerialNo', 'device_serial_number')
+    terminal_id = _first_payload_value(payload, 'TerminalID', 'terminal_id', 'MachineID')
+    event_type = _first_payload_value(payload, 'Event', 'event')
+    trans_id = _first_payload_value(payload, 'TransID', 'trans_id')
+    user_identifier = _first_payload_value(payload, 'UserID', 'rfid_code')
+    verify_mode = _first_payload_value(
+        payload, 'VerifMode', 'VerificationMode', 'VerifyMode', 'verify_mode'
+    )
+    attend_stat = _first_payload_value(
+        payload, 'AttendStat', 'AttendanceStatus', 'IOStatus', 'io_mode'
+    )
+    has_device_timestamp = bool(
+        _first_payload_value(payload, 'punch_time', 'PunchTime')
+        or all(_first_payload_value(payload, key) for key in ('Year', 'Month', 'Day'))
+    )
+    if serial and event_type and user_identifier and has_device_timestamp:
+        semantic_match = BiometricEventLog.objects.filter(
+            protocol=protocol,
+            device_serial_number__iexact=serial,
+            event_type__iexact=event_type,
+            user_identifier=user_identifier,
+            punch_time=_parse_punch_time(payload),
+        )
+        if terminal_id:
+            semantic_match = semantic_match.filter(terminal_id=terminal_id)
+        if trans_id:
+            semantic_match = semantic_match.filter(trans_id=trans_id)
+        if verify_mode:
+            semantic_match = semantic_match.filter(verify_mode__iexact=verify_mode)
+        if attend_stat:
+            semantic_match = semantic_match.filter(attend_stat__iexact=attend_stat)
+        existing = semantic_match.order_by('id').first()
+        if existing:
+            return existing
+
+    for legacy_fingerprint in _legacy_event_fingerprints(protocol, payload):
+        existing = BiometricEventLog.objects.filter(event_fingerprint=legacy_fingerprint).first()
+        if existing and _legacy_event_matches_verification_details(existing, payload):
+            return existing
+    return None
 
 
 def resolve_tcp_device(payload: dict, source_ip: str | None = None):
@@ -540,7 +639,7 @@ def process_biometric_event(
         payload['Event'] = 'TimeLog'
 
     fingerprint = compute_event_fingerprint(protocol, payload)
-    existing = BiometricEventLog.objects.filter(event_fingerprint=fingerprint).first()
+    existing = _find_existing_event_log(protocol, payload, fingerprint)
     if existing:
         try:
             if device:
@@ -589,6 +688,7 @@ def process_biometric_event(
                     return {
                         'ok': True,
                         'status': 'processed',
+                        'device_authorized': True,
                         'message': 'Duplicate biometric event reapplied to student attendance.',
                         'target_type': 'student',
                         'student_name': student.user.name or student.user.username,
@@ -612,6 +712,7 @@ def process_biometric_event(
                     return {
                         'ok': True,
                         'status': 'processed',
+                        'device_authorized': True,
                         'message': f'Duplicate biometric event reapplied to teacher attendance. {message}',
                         'target_type': 'teacher',
                         'teacher_name': teacher.user.name or teacher.user.username,
@@ -624,6 +725,7 @@ def process_biometric_event(
         return {
             'ok': True,
             'status': 'duplicate',
+            'device_authorized': bool(device),
             'message': 'Duplicate biometric event ignored.',
             'event_log_id': existing.id,
         }
@@ -666,9 +768,10 @@ def process_biometric_event(
             existing = BiometricEventLog.objects.filter(event_fingerprint=fingerprint).first()
             if existing:
                 return {
-                    'ok': True,
-                    'status': 'duplicate',
-                    'message': 'Duplicate biometric event ignored.',
+                    'ok': False,
+                    'status': 'unauthorized',
+                    'device_authorized': False,
+                    'message': 'Duplicate unauthorized biometric event ignored.',
                     'event_log_id': existing.id,
                 }
             raise
@@ -676,6 +779,7 @@ def process_biometric_event(
         return {
             'ok': False,
             'status': 'unauthorized',
+            'device_authorized': False,
             'message': str(exc),
             'event_log_id': event_log.id,
         }
@@ -693,6 +797,7 @@ def process_biometric_event(
             return {
                 'ok': True,
                 'status': 'duplicate',
+                'device_authorized': True,
                 'message': 'Duplicate biometric event ignored.',
                 'event_log_id': existing.id,
             }
@@ -716,6 +821,7 @@ def process_biometric_event(
         return {
             'ok': True,
             'status': 'ignored',
+            'device_authorized': True,
             'message': f'Ignored non-attendance event {event_type}.',
             'event_log_id': event_log.id,
         }
@@ -728,6 +834,7 @@ def process_biometric_event(
         return {
             'ok': False,
             'status': 'failed',
+            'device_authorized': True,
             'message': event_log.error_message,
             'event_log_id': event_log.id,
         }
@@ -757,6 +864,7 @@ def process_biometric_event(
         return {
             'ok': False,
             'status': 'unmatched',
+            'device_authorized': True,
             'message': event_log.error_message,
             'event_log_id': event_log.id,
         }
@@ -769,6 +877,7 @@ def process_biometric_event(
         return {
             'ok': False,
             'status': 'unmatched',
+            'device_authorized': True,
             'message': event_log.error_message,
             'event_log_id': event_log.id,
         }
@@ -781,6 +890,7 @@ def process_biometric_event(
         return {
             'ok': False,
             'status': 'unmatched',
+            'device_authorized': True,
             'message': event_log.error_message,
             'event_log_id': event_log.id,
         }
@@ -797,6 +907,7 @@ def process_biometric_event(
         return {
             'ok': True,
             'status': 'processed',
+            'device_authorized': True,
             'message': message,
             'target_type': 'teacher',
             'teacher_name': teacher.user.name or teacher.user.username,
@@ -817,6 +928,7 @@ def process_biometric_event(
     return {
         'ok': True,
         'status': 'processed',
+        'device_authorized': True,
         'message': message,
         'target_type': 'student',
         'student_name': student.user.name or student.user.username,
