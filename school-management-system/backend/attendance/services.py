@@ -1,7 +1,6 @@
 import hashlib
 import logging
 import re
-from pathlib import Path
 from datetime import datetime as datetime_type
 from xml.etree import ElementTree
 
@@ -14,7 +13,6 @@ from teachers.models import TeacherProfile
 from .models import Attendance, BiometricDevice, BiometricEventLog, TeacherAttendance
 
 logger = logging.getLogger(__name__)
-_BIOMETRIC_DEBUG_LOG = Path("/home/ec2-user/school-app/logs/biometric-debug.log")
 _XML_OPENING_TAG = re.compile(
     r"<([A-Za-z_][A-Za-z0-9_.:-]*)(?:\s[^<>]*?)?\s*(/?)>",
     re.DOTALL,
@@ -571,58 +569,6 @@ def _base_event_log_kwargs(device, protocol, source_ip, payload, raw_payload, pu
     }
 
 
-def _log_nul_bytes_in_event_kwargs(kwargs):
-    def contains_nul(value):
-        if isinstance(value, str):
-            return "\x00" in value
-        if isinstance(value, bytes):
-            return b"\x00" in value
-        if isinstance(value, dict):
-            return any(contains_nul(key) or contains_nul(item) for key, item in value.items())
-        if isinstance(value, (list, tuple)):
-            return any(contains_nul(item) for item in value)
-        return False
-
-    def walk(value, path):
-        if isinstance(value, str):
-            if "\x00" in value:
-                logger.error("NUL byte detected at %s: %r", path, value)
-            return
-        if isinstance(value, bytes):
-            if b"\x00" in value:
-                logger.error("NUL byte detected at %s: %r", path, value)
-            return
-        if isinstance(value, dict):
-            for key, item in value.items():
-                walk(key, f"{path}[key]")
-                walk(item, f"{path}.{key}")
-            return
-        if isinstance(value, (list, tuple)):
-            for index, item in enumerate(value):
-                walk(item, f"{path}[{index}]")
-
-    for key, value in kwargs.items():
-        try:
-            if contains_nul(value):
-                logger.error("NUL byte detected in BiometricEventLog field '%s' (type=%s)", key, type(value).__name__)
-                walk(value, key)
-        except Exception as exc:
-            logger.error("Failed while checking field '%s' for NUL bytes: %s", key, exc)
-
-
-def _write_biometric_debug_snapshot(label, kwargs):
-    try:
-        lines = [f"[{label}]"]
-        for key, value in kwargs.items():
-            lines.append(f"{key}: type={type(value).__name__} repr={value!r}")
-        lines.append("")
-        _BIOMETRIC_DEBUG_LOG.parent.mkdir(parents=True, exist_ok=True)
-        with _BIOMETRIC_DEBUG_LOG.open("a", encoding="utf-8") as handle:
-            handle.write("\n".join(lines))
-    except Exception:
-        pass
-
-
 @transaction.atomic
 def process_biometric_event(
     *,
@@ -758,8 +704,6 @@ def process_biometric_event(
                 'processed_at': timezone.now(),
             }
         )
-        _log_nul_bytes_in_event_kwargs(event_log_kwargs)
-        _write_biometric_debug_snapshot("unauthorized-before-create", event_log_kwargs)
         try:
             event_log = BiometricEventLog.objects.create(
                 **event_log_kwargs,
@@ -788,8 +732,6 @@ def process_biometric_event(
         event_log_kwargs = _base_event_log_kwargs(
             device, protocol, source_ip, payload, raw_payload, punch_dt, fingerprint
         )
-        _log_nul_bytes_in_event_kwargs(event_log_kwargs)
-        _write_biometric_debug_snapshot("before-create", event_log_kwargs)
         event_log = BiometricEventLog.objects.create(**event_log_kwargs)
     except IntegrityError:
         existing = BiometricEventLog.objects.filter(event_fingerprint=fingerprint).first()

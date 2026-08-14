@@ -13,7 +13,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SCHOOL_NAME = os.getenv('SCHOOL_NAME', 'School Management System')
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key')
-DEVICE_SECRET_KEY = os.getenv('DEVICE_SECRET_KEY', 'y0ur_Sup3r_S3cr3t_B1om3tr1c_K3y_987')
 DEBUG = os.getenv('DEBUG', 'False').strip().lower() == 'true'
 USE_POSTGRES = os.getenv('USE_POSTGRES', 'False').strip().lower() == 'true'
 PUBLIC_API_BASE_URL = os.getenv('PUBLIC_API_BASE_URL', 'http://127.0.0.1:8000').rstrip('/')
@@ -23,9 +22,21 @@ BIOMETRIC_TCP_SOCKET_TIMEOUT = int(os.getenv('BIOMETRIC_TCP_SOCKET_TIMEOUT', '15
 BIOMETRIC_TCP_MAX_PAYLOAD_BYTES = int(os.getenv('BIOMETRIC_TCP_MAX_PAYLOAD_BYTES', '65536'))
 BIOMETRIC_TCP_ACK_MESSAGE = codecs.decode(os.getenv('BIOMETRIC_TCP_ACK_MESSAGE', 'OK\\r\\n'), 'unicode_escape')
 BIOMETRIC_SBXPC_ACK_MESSAGE = codecs.decode(
-    os.getenv('BIOMETRIC_SBXPC_ACK_MESSAGE', 'OK\\r\\n'),
+    os.getenv(
+        'BIOMETRIC_SBXPC_ACK_MESSAGE',
+        '<?xml version="1.0"?><Message><Request>UploadedLog</Request>'
+        '<TransID>{TransID}</TransID></Message>',
+    ),
     'unicode_escape',
 )
+BIOMETRIC_SBXPC_ACK_TEMPLATE = codecs.decode(
+    os.getenv('BIOMETRIC_SBXPC_ACK_TEMPLATE', ''),
+    'unicode_escape',
+)
+BIOMETRIC_SBXPC_ACK_MODE = os.getenv(
+    'ACK_MODE',
+    os.getenv('BIOMETRIC_SBXPC_ACK_MODE', 'NUL'),
+).strip().upper()
 BIOMETRIC_SBXPC_CLOSE_AFTER_ACK = (
     os.getenv('BIOMETRIC_SBXPC_CLOSE_AFTER_ACK', 'False').strip().lower() == 'true'
 )
@@ -34,6 +45,9 @@ BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS = int(
 )
 BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES = int(
     os.getenv('BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES', '512')
+)
+BIOMETRIC_PROTOCOL_DIAGNOSTICS_ENABLED = (
+    os.getenv('BIOMETRIC_PROTOCOL_DIAGNOSTICS_ENABLED', 'False').strip().lower() == 'true'
 )
 BIOMETRIC_TCP_CLOSE_AFTER_ACK = os.getenv('BIOMETRIC_TCP_CLOSE_AFTER_ACK', 'False').strip().lower() == 'true'
 raw_hosts = os.getenv('ALLOWED_HOSTS', '*')

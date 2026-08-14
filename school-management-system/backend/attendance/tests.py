@@ -1,3 +1,4 @@
+import hashlib
 import socket
 import threading
 from datetime import timedelta
@@ -11,8 +12,12 @@ from rest_framework.test import APITestCase
 
 from accounts.models import User
 from attendance.direct_push import decode_secureye_json_body, normalize_secureye_http_event
-from attendance.management.commands.run_biometric_tcp_server import BiometricTCPRequestHandler
+from attendance.management.commands.run_biometric_tcp_server import (
+    BiometricTCPRequestHandler,
+    build_sbxpc_ack,
+)
 from attendance.models import Attendance, BiometricDevice, BiometricEventLog, TeacherAttendance
+from attendance.protocol_diagnostics import ConnectionDiagnostics
 from attendance.services import (
     compute_event_fingerprint,
     extract_message_frames,
@@ -146,6 +151,122 @@ class BiometricTcpHelpersTests(SimpleTestCase):
             compute_event_fingerprint('tcp_xml', check_in_payload),
         )
 
+    def test_sbxpc_ack_framing_modes_only_change_the_terminator(self):
+        template = (
+            '<?xml version="1.0" encoding="UTF-8"?>\r\n'
+            '<Message><DeviceSerialNo>{DeviceSerialNo}</DeviceSerialNo>'
+            '<TransID>{TransID}</TransID><Result>1</Result></Message>'
+        )
+        payload = {'DeviceSerialNo': 'T190900185', 'TransID': '0'}
+        base = (
+            b'<?xml version="1.0" encoding="UTF-8"?>\r\n'
+            b'<Message><DeviceSerialNo>T190900185</DeviceSerialNo>'
+            b'<TransID>0</TransID><Result>1</Result></Message>'
+        )
+        modes = {
+            'CRLF': b'\r\n',
+            'NUL': b'\x00',
+            'CRLF_NUL': b'\r\n\x00',
+            'NO_TERMINATOR': b'',
+        }
+
+        for mode, suffix in modes.items():
+            with self.subTest(mode=mode), override_settings(
+                BIOMETRIC_SBXPC_ACK_TEMPLATE=template,
+                BIOMETRIC_SBXPC_ACK_MODE=mode,
+            ):
+                self.assertEqual(build_sbxpc_ack(payload), base + suffix)
+
+    @override_settings(
+        BIOMETRIC_SBXPC_ACK_TEMPLATE=(
+            '<?xml version="1.0"?><Message><Request>UploadedLog</Request>'
+            '<TransID>{TransID}</TransID></Message>'
+        ),
+        BIOMETRIC_SBXPC_ACK_MODE='NUL',
+    )
+    def test_z305_ack_matches_vendor_capture_exactly(self):
+        ack = build_sbxpc_ack({'TransID': '0'})
+
+        self.assertEqual(
+            ack,
+            b'<?xml version="1.0"?><Message><Request>UploadedLog</Request>'
+            b'<TransID>0</TransID></Message>\x00',
+        )
+        self.assertEqual(len(ack), 91)
+        self.assertEqual(
+            hashlib.sha256(ack).hexdigest(),
+            '0ce8138af3024daba6c1ce48aeeb9287a5fb64a4ebcd359c11fd75e835902d1c',
+        )
+
+    def test_protocol_diagnostics_hash_original_bytes_and_show_nul(self):
+        raw = b'<Message>\r\n\x00'
+        fake_socket = mock.Mock()
+        fake_socket.getsockname.return_value = ('172.31.42.12', 5555)
+        diagnostics = ConnectionDiagnostics(
+            fake_socket,
+            ('103.106.31.189', 1033),
+            enabled=True,
+        )
+
+        with mock.patch('builtins.print') as print_mock:
+            diagnostics.log_rx(raw)
+            diagnostics.next_message(raw)
+
+        output = '\n'.join(str(call.args[0]) for call in print_mock.call_args_list)
+        self.assertIn(raw.hex(' '), output)
+        self.assertIn(hashlib.sha256(raw).hexdigest(), output)
+        self.assertIn(r'<Message>\r\n\x00', output)
+        self.assertIn('NUL position: 11', output)
+        self.assertIn('Bytes after NUL: 0', output)
+
+    @override_settings(
+        BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MESSAGE='unused\r\n',
+        BIOMETRIC_SBXPC_ACK_TEMPLATE=(
+            '<?xml version="1.0"?><Message><Request>UploadedLog</Request>'
+            '<TransID>{TransID}</TransID></Message>'
+        ),
+        BIOMETRIC_SBXPC_ACK_MODE='NUL',
+        BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS=1,
+        BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES=512,
+        BIOMETRIC_TCP_SOCKET_TIMEOUT=1,
+        BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536,
+    )
+    def test_z305_nul_ack_is_sent_without_crlf_before_nul(self):
+        payload = self._production_m50_frame(
+            user_id='1', second='19', verify_mode='Card', trans_id='0'
+        ).encode('utf-8') + b'\x00'
+
+        class FakeSocket:
+            def __init__(self):
+                self.chunks = [payload, b'']
+                self.sent = []
+
+            def settimeout(self, _value):
+                pass
+
+            def recv(self, _size):
+                return self.chunks.pop(0)
+
+            def sendall(self, data):
+                self.sent.append(data)
+
+        fake_socket = FakeSocket()
+        with mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
+            return_value={'status': 'processed', 'device_authorized': True},
+        ):
+            BiometricTCPRequestHandler(fake_socket, ('103.106.31.189', 1033), mock.Mock())
+
+        self.assertEqual(len(fake_socket.sent), 1)
+        self.assertEqual(
+            fake_socket.sent[0],
+            b'<?xml version="1.0"?><Message><Request>UploadedLog</Request>'
+            b'<TransID>0</TransID></Message>\x00',
+        )
+
     def test_event_identity_normalizes_verification_mode_alias(self):
         payload = parse_tcp_xml_payload(
             self._production_m50_frame(
@@ -221,6 +342,7 @@ class BiometricTcpHelpersTests(SimpleTestCase):
     @override_settings(
         BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
         BIOMETRIC_SBXPC_ACK_MESSAGE='SBXPC-OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MODE='CRLF',
         BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=True,
         BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
         BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES=512,
@@ -267,6 +389,7 @@ class BiometricTcpHelpersTests(SimpleTestCase):
     @override_settings(
         BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
         BIOMETRIC_SBXPC_ACK_MESSAGE='SBXPC-OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MODE='CRLF',
         BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=True,
         BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
         BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES=512,
@@ -309,6 +432,7 @@ class BiometricTcpHelpersTests(SimpleTestCase):
     @override_settings(
         BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
         BIOMETRIC_SBXPC_ACK_MESSAGE='SBXPC-OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MODE='CRLF',
         BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=False,
         BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS=1,
         BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
@@ -363,6 +487,7 @@ class BiometricTcpHelpersTests(SimpleTestCase):
     @override_settings(
         BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
         BIOMETRIC_SBXPC_ACK_MESSAGE='SBXPC-OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MODE='CRLF',
         BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=False,
         BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS=0,
         BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
@@ -408,6 +533,7 @@ class BiometricTcpHelpersTests(SimpleTestCase):
     @override_settings(
         BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
         BIOMETRIC_SBXPC_ACK_MESSAGE='SBXPC-OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MODE='CRLF',
         BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=False,
         BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS=86400,
         BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
@@ -446,6 +572,7 @@ class BiometricTcpHelpersTests(SimpleTestCase):
     @override_settings(
         BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
         BIOMETRIC_SBXPC_ACK_MESSAGE='SBXPC-OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MODE='CRLF',
         BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=False,
         BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS=86400,
         BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
@@ -481,6 +608,7 @@ class BiometricTcpHelpersTests(SimpleTestCase):
     @override_settings(
         BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
         BIOMETRIC_SBXPC_ACK_MESSAGE='SBXPC-OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MODE='CRLF',
         BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=False,
         BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS=86400,
         BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
@@ -523,6 +651,7 @@ class BiometricTcpHelpersTests(SimpleTestCase):
     @override_settings(
         BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
         BIOMETRIC_SBXPC_ACK_MESSAGE='SBXPC-OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MODE='CRLF',
         BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=False,
         BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS=86400,
         BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
