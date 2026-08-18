@@ -327,7 +327,6 @@ export default function StudentDashboard() {
   const [galleryImages, setGalleryImages] = useState([]);
   const [galleryLoading, setGalleryLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const galleryToken = localStorage.getItem('access_token');
 
   const { selectedStudentId, setSelectedStudentId } = useStudent();
 
@@ -1213,7 +1212,7 @@ export default function StudentDashboard() {
           {galleryImages.map((img, idx) => (
             <img
               key={img.id}
-              src={`${resolveImageUrl(img.image_url)}${galleryToken ? `?token=${galleryToken}` : ''}`}
+              src={resolveImageUrl(img.image_url)}
               alt={img.title}
               style={{
                 position: "absolute",

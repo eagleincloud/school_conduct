@@ -1,8 +1,12 @@
 import mimetypes
 import os
+from urllib.parse import urlencode
 
-from django.http import FileResponse
+from django.conf import settings
+from django.core import signing
+from django.http import FileResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from rest_framework import status, views, permissions
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
@@ -16,6 +20,21 @@ def _can_view_gallery(user):
 
 def _is_admin(user):
     return user.is_authenticated and (user.role == 'admin' or user.is_superuser)
+
+
+def _signed_image_url(request, image):
+    is_global = request.user.is_superuser or request.user.role in {'superadmin', 'dealer'}
+    signature = signing.dumps(
+        {
+            'image_id': image.id,
+            'school_id': None if is_global else request.user.school_id,
+            'global': is_global,
+        },
+        salt='gallery-image',
+        compress=True,
+    )
+    path = reverse('gallery-protected-image', kwargs={'image_id': image.id})
+    return request.build_absolute_uri(f'{path}?{urlencode({"sig": signature})}')
 
 
 class GalleryListCreateView(views.APIView):
@@ -37,7 +56,7 @@ class GalleryListCreateView(views.APIView):
                 {
                     'id': img.id,
                     'title': img.title,
-                    'image_url': request.build_absolute_uri(f'/api/gallery/{img.id}/image/'),
+                    'image_url': _signed_image_url(request, img),
                     'created_at': img.created_at,
                     'uploaded_by': img.uploaded_by.username,
                     'school_name': img.school.name if img.school else 'Global',
@@ -91,7 +110,7 @@ class GalleryListCreateView(views.APIView):
                 created_objects.append({
                     'id': obj.id,
                     'title': obj.title,
-                    'image_url': request.build_absolute_uri(f'/api/gallery/{obj.id}/image/'),
+                    'image_url': _signed_image_url(request, obj),
                     'created_at': obj.created_at,
                 })
             except Exception as e:
@@ -132,16 +151,19 @@ class GalleryImageProtectedView(views.APIView):
 
     def get(self, request, image_id: int):
         # Support token in query params for <img> tags that can't send headers
-        token = request.query_params.get('token')
-        if token and not request.user.is_authenticated:
+        signed_scope = None
+        signature = request.query_params.get('sig')
+        if signature:
             try:
-                from rest_framework_simplejwt.authentication import JWTAuthentication
-                auth = JWTAuthentication()
-                validated_token = auth.get_validated_token(token)
-                request.user = auth.get_user(validated_token)
-                print(f"DEBUG [Gallery]: Authenticated user {request.user} ({request.user.role}) via token")
-            except Exception as e:
-                print(f"DEBUG [Gallery]: Token auth failed for image {image_id}: {str(e)}")
+                signed_scope = signing.loads(
+                    signature,
+                    salt='gallery-image',
+                    max_age=settings.GALLERY_SIGNED_URL_TTL_SECONDS,
+                )
+                if signed_scope.get('image_id') != image_id:
+                    signed_scope = None
+            except (signing.BadSignature, signing.SignatureExpired):
+                return Response({'error': 'Image link is invalid or expired'}, status=status.HTTP_401_UNAUTHORIZED)
 
         # 🔒 Data isolation check
         user = request.user
@@ -153,14 +175,16 @@ class GalleryImageProtectedView(views.APIView):
             getattr(user, 'role', None) in ['superadmin', 'dealer']
         )
 
-        if not is_privileged:
+        if signed_scope and signed_scope.get('global'):
+            pass
+        elif signed_scope:
+            qs = qs.filter(school_id=signed_scope.get('school_id'))
+        elif not is_privileged:
             if not user.is_authenticated:
-                print(f"DEBUG [Gallery]: Anonymous access denied for image {image_id}")
                 return Response({'error': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
             
             user_school = getattr(user, 'school', None)
             if not user_school:
-                print(f"DEBUG [Gallery]: User {user.username} has no school assigned")
                 return Response({'error': 'No school assigned to user'}, status=status.HTTP_403_FORBIDDEN)
             
             # Filter specifically for this user's school
@@ -169,7 +193,6 @@ class GalleryImageProtectedView(views.APIView):
         try:
             obj = qs.get(id=image_id)
         except GalleryImage.DoesNotExist:
-            print(f"DEBUG [Gallery]: Image {image_id} not found or not authorized for school {getattr(user, 'school', 'N/A')}")
             return Response({'error': 'Image not found or unauthorized'}, status=status.HTTP_404_NOT_FOUND)
 
         if not obj.image:
@@ -181,27 +204,15 @@ class GalleryImageProtectedView(views.APIView):
         try:
             url = obj.image.url
             if url.startswith('http://') or url.startswith('https://'):
-                import requests
-                from django.http import HttpResponse
-                img_res = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'}, timeout=15)
-                if img_res.status_code == 200:
-                    content_type = img_res.headers.get('Content-Type') or mimetypes.guess_type(url)[0] or 'image/jpeg'
-                    response = HttpResponse(img_res.content, content_type=content_type)
-                    response['Content-Disposition'] = f'inline; filename="{obj.filename()}"'
-                    response['X-Content-Type-Options'] = 'nosniff'
-                    response['Cache-Control'] = 'private, max-age=3600'
-                    return response
-                else:
-                    print(f"DEBUG [Gallery]: Cloudinary fetch failed with status {img_res.status_code}")
-        except Exception as e:
-            print(f"DEBUG [Gallery]: Could not proxy image from URL: {str(e)}")
+                return HttpResponseRedirect(url)
+        except Exception:
+            pass
 
 
         # 📁 Local Storage Fallback:
         try:
             file_path = obj.image.path
             if not os.path.exists(file_path):
-                print(f"DEBUG [Gallery]: Physical file missing at {file_path}")
                 return Response({'error': 'Physical image file missing on server'}, status=status.HTTP_404_NOT_FOUND)
 
             content_type = mimetypes.guess_type(file_path)[0] or 'application/octet-stream'
@@ -211,9 +222,7 @@ class GalleryImageProtectedView(views.APIView):
             response['Cache-Control'] = 'private, max-age=3600'
             return response
         except NotImplementedError:
-            from django.http import HttpResponseRedirect
             return HttpResponseRedirect(obj.image.url)
-        except Exception as e:
-            print(f"DEBUG [Gallery]: Local file serving failed: {str(e)}")
+        except Exception:
             return Response({'error': 'Failed to retrieve image file'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

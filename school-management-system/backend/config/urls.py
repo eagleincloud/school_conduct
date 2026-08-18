@@ -3,6 +3,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.http import JsonResponse
+from django.db import connection
 
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -12,6 +13,11 @@ from tenants.views import SchoolDetailView
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+    throttle_scope = 'login'
+
+
+class CustomTokenRefreshView(TokenRefreshView):
+    throttle_scope = 'token_refresh'
 
 # --- Utility Views ---
 def root_view(request):
@@ -25,7 +31,13 @@ def root_view(request):
 
 def health_check(request):
     """Health check endpoint for deployment verification."""
-    return JsonResponse({"status": "healthy"})
+    try:
+        connection.ensure_connection()
+    except Exception:
+        return JsonResponse({"status": "unhealthy", "database": "unavailable"}, status=503)
+    response = JsonResponse({"status": "healthy", "database": "available"})
+    response['Cache-Control'] = 'no-store'
+    return response
 
 def test_route(request):
     """Debug route to confirm server functionality."""
@@ -47,7 +59,7 @@ urlpatterns = [
     # Server Base URLs
     path('', root_view, name='root'),
     path('health/', health_check, name='health_check'),
-    path('test/', test_route, name='test_route'),
+    *([path('test/', test_route, name='test_route')] if settings.DEBUG else []),
     
     # Dynamic route for tenant/school access
     path('school/<str:name>/', SchoolDetailView.as_view(), name='direct-school-info'),
@@ -56,7 +68,7 @@ urlpatterns = [
     
     # Auth
     path('api/auth/login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/auth/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
 
     # Modular Apps URLs
     path('api/auth/', include('accounts.urls')),

@@ -4,8 +4,9 @@ import codecs
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
+from django.core.exceptions import ImproperlyConfigured
 
-load_dotenv(override=True)
+load_dotenv(override=False)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -14,6 +15,8 @@ SCHOOL_NAME = os.getenv('SCHOOL_NAME', 'School Management System')
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key')
 DEBUG = os.getenv('DEBUG', 'False').strip().lower() == 'true'
+if not DEBUG and SECRET_KEY == 'django-insecure-default-key':
+    raise ImproperlyConfigured('Set a strong SECRET_KEY before running in production.')
 USE_POSTGRES = os.getenv('USE_POSTGRES', 'False').strip().lower() == 'true'
 PUBLIC_API_BASE_URL = os.getenv('PUBLIC_API_BASE_URL', 'http://127.0.0.1:8000').rstrip('/')
 BIOMETRIC_TCP_HOST = os.getenv('BIOMETRIC_TCP_HOST', '0.0.0.0')
@@ -50,7 +53,7 @@ BIOMETRIC_PROTOCOL_DIAGNOSTICS_ENABLED = (
     os.getenv('BIOMETRIC_PROTOCOL_DIAGNOSTICS_ENABLED', 'False').strip().lower() == 'true'
 )
 BIOMETRIC_TCP_CLOSE_AFTER_ACK = os.getenv('BIOMETRIC_TCP_CLOSE_AFTER_ACK', 'False').strip().lower() == 'true'
-raw_hosts = os.getenv('ALLOWED_HOSTS', '*')
+raw_hosts = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1')
 if raw_hosts:
     # Clean brackets and quotes in case they were written as a list string in .env
     clean_hosts = raw_hosts.replace('[', '').replace(']', '').replace("'", "").replace('"', '')
@@ -77,6 +80,7 @@ INSTALLED_APPS = [
     # Third Party
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
 
     # Local Apps (modular)
@@ -148,12 +152,36 @@ AUTH_USER_MODEL = 'accounts.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'core.authentication.ActiveTenantJWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': int(os.getenv('API_PAGE_SIZE', '50')),
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.ScopedRateThrottle',
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': os.getenv('API_ANON_RATE', '300/minute'),
+        'user': os.getenv('API_USER_RATE', '600/minute'),
+        'login': os.getenv('API_LOGIN_RATE', '5/minute'),
+        'token_refresh': os.getenv('API_TOKEN_REFRESH_RATE', '30/minute'),
+        'upload': os.getenv('API_UPLOAD_RATE', '10/minute'),
+        'report': os.getenv('API_REPORT_RATE', '10/minute'),
+        'enquiry': os.getenv('API_ENQUIRY_RATE', '5/hour'),
+    },
 }
+
+API_DEFAULT_PAGE_SIZE = int(os.getenv('API_PAGE_SIZE', '50'))
+API_MAX_BULK_ROWS = int(os.getenv('API_MAX_BULK_ROWS', '1000'))
+API_MAX_EXPORT_ROWS = int(os.getenv('API_MAX_EXPORT_ROWS', '10000'))
+API_MAX_UPLOAD_BYTES = int(os.getenv('API_MAX_UPLOAD_BYTES', str(10 * 1024 * 1024)))
+GALLERY_SIGNED_URL_TTL_SECONDS = int(os.getenv('GALLERY_SIGNED_URL_TTL_SECONDS', '300'))
+DATA_UPLOAD_MAX_MEMORY_SIZE = int(os.getenv('DATA_UPLOAD_MAX_MEMORY_SIZE', str(12 * 1024 * 1024)))
+FILE_UPLOAD_MAX_MEMORY_SIZE = int(os.getenv('FILE_UPLOAD_MAX_MEMORY_SIZE', str(5 * 1024 * 1024)))
 
 if DEBUG and not USE_POSTGRES:
     # Use lightweight SQLite for local development only when Postgres is not explicitly requested.
@@ -174,43 +202,37 @@ else:
             'PORT': os.getenv('DB_PORT', '5432'),
             'OPTIONS': {
                 'sslmode': 'require',
+                'connect_timeout': 10,
             },
+            'CONN_MAX_AGE': int(os.getenv('DB_CONN_MAX_AGE', '60')),
+            'CONN_HEALTH_CHECKS': True,
         },
     }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=365),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=400),
-    'ROTATE_REFRESH_TOKENS': False,
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=int(os.getenv('JWT_ACCESS_MINUTES', '15'))),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=int(os.getenv('JWT_REFRESH_DAYS', '7'))),
+    'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
+    'SIGNING_KEY': os.getenv('JWT_SIGNING_KEY', SECRET_KEY),
     'AUTH_HEADER_TYPES': ('Bearer',),
+    'CHECK_REVOKE_TOKEN': True,
 }
 
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = os.getenv('CORS_ALLOW_CREDENTIALS', 'False').strip().lower() == 'true'
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:5174",
-    "http://127.0.0.1:5174",
-    "http://localhost:3000",
-    "http://localhost",  # capacitor webview
-    "http://127.0.0.1",
-    "http://13.201.53.169",  # EC2 IP
-    "http://13.201.53.169:8000",
-    "http://ec2-13-201-53-169.ap-south-1.compute.amazonaws.com",
-    "http://ec2-13-201-53-169.ap-south-1.compute.amazonaws.com:8000",
+    origin.strip().rstrip('/')
+    for origin in os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
+    if origin.strip()
 ]
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^http://localhost:\d+$",
-    r"^http://127\.0\.0\.1:\d+$",
-]
+if DEBUG:
+    CORS_ALLOWED_ORIGIN_REGEXES = [r"^http://localhost:\d+$", r"^http://127\.0\.0\.1:\d+$"]
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', 'OPTIONS': {'min_length': 10}},
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
@@ -222,7 +244,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
@@ -236,23 +257,23 @@ CLOUDINARY_STORAGE = {
     'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
     'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
 }
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+STORAGES = {
+    'default': {
+        'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
 
 
 
 
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:5174",
-    "http://127.0.0.1:5174",
-    "http://localhost",  # capacitor webview
-    "http://127.0.0.1",
-    "http://13.201.53.169",  # EC2 IP
-    "http://13.201.53.169:8000",
-    "http://ec2-13-201-53-169.ap-south-1.compute.amazonaws.com",
-    "http://ec2-13-201-53-169.ap-south-1.compute.amazonaws.com:8000",
+    origin.strip().rstrip('/')
+    for origin in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+    if origin.strip()
 ]
 
 # Only automatically append host-derived https entries in non-debug (production)
@@ -264,6 +285,19 @@ if not DEBUG:
                 CSRF_TRUSTED_ORIGINS.append(f"https://{host}")
             else:
                 CSRF_TRUSTED_ORIGINS.append(host)
+
+SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', str(not DEBUG)).strip().lower() == 'true'
+SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', str(not DEBUG)).strip().lower() == 'true'
+CSRF_COOKIE_SECURE = os.getenv('CSRF_COOKIE_SECURE', str(not DEBUG)).strip().lower() == 'true'
+SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS', '31536000' if not DEBUG else '0'))
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_HSTS_PRELOAD = not DEBUG
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = 'same-origin'
+X_FRAME_OPTIONS = 'DENY'
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_HTTPONLY = True
 
 # ============================================================
 # EMAIL CONFIGURATION
@@ -290,7 +324,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'your-email@gmail.com')          # ← SENDER email (your Gmail)
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'your-app-password')      # ← Gmail App Password (16 chars)
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-CONTACT_EMAIL = os.getenv('CONTACT_EMAIL', 'admin-email@gmail.com')              # ← RECEIVER email (enquiries go here)
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 CONTACT_EMAIL = os.getenv('CONTACT_EMAIL', 'admin-email@gmail.com')              # ← RECEIVER email (enquiries go here)

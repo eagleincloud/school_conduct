@@ -167,7 +167,6 @@ const TeacherDashboard = () => {
   const [galleryImages, setGalleryImages] = useState([]);
   const [galleryLoading, setGalleryLoading] = useState(false);
   const [currentGallerySlide, setCurrentGallerySlide] = useState(0);
-  const galleryToken = localStorage.getItem('access_token');
 
   useEffect(() => {
     setLoading(true);
@@ -1717,7 +1716,7 @@ const TeacherDashboard = () => {
                 {galleryImages.map((img, idx) => (
                   <img
                     key={img.id}
-                    src={`${resolveImageUrl(img.image_url)}${galleryToken ? `?token=${galleryToken}` : ''}`}
+                    src={resolveImageUrl(img.image_url)}
                     alt={img.title}
                     style={{
                       position: "absolute",

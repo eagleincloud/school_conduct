@@ -28,6 +28,28 @@ from classes.models import ClassSection
 logger = logging.getLogger(__name__)
 
 
+def _is_platform_user(user):
+    return bool(user.is_superuser or user.role == 'superadmin')
+
+
+def _school_exams(user):
+    qs = Exam.objects.all()
+    if _is_platform_user(user):
+        return qs
+    if not user.school_id:
+        return qs.none()
+    return qs.filter(class_section__school_id=user.school_id)
+
+
+def _school_class_sections(user):
+    qs = ClassSection.objects.all()
+    if _is_platform_user(user):
+        return qs
+    if not user.school_id:
+        return qs.none()
+    return qs.filter(school_id=user.school_id)
+
+
 def _teacher_can_upload_subject_for_exam(user, class_section_id, subject_name: str) -> bool:
     if user.role != 'teacher':
         return True
@@ -35,7 +57,7 @@ def _teacher_can_upload_subject_for_exam(user, class_section_id, subject_name: s
     if not teacher_profile:
         return False
     # Identify subject in this class
-    cs = ClassSection.objects.filter(id=class_section_id).first()
+    cs = _school_class_sections(user).filter(id=class_section_id).first()
     if not cs:
         return False
     subject = Subject.objects.filter(
@@ -96,7 +118,7 @@ class ExamListCreateView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        qs = Exam.objects.select_related('class_section__class_ref', 'class_section__section_ref').all()
+        qs = _school_exams(request.user).select_related('class_section__class_ref', 'class_section__section_ref')
         if request.user.role == 'student':
             student_profile = get_requested_student(request)
             if student_profile:
@@ -118,6 +140,9 @@ class ExamListCreateView(views.APIView):
     def post(self, request):
         if request.user.role not in ('admin', 'teacher'):
             return Response({'error': 'Not allowed'}, status=status.HTTP_403_FORBIDDEN)
+        class_section_id = request.data.get('class_section')
+        if not _school_class_sections(request.user).filter(id=class_section_id).exists():
+            return Response({'class_section': 'Invalid class section.'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = ExamSerializer(data=request.data)
         if serializer.is_valid():
             exam = serializer.save()
@@ -148,7 +173,7 @@ class ExamDetailView(views.APIView):
         if request.user.role not in ('admin', 'teacher'):
             return Response({'error': 'Not allowed'}, status=status.HTTP_403_FORBIDDEN)
         exam = (
-            Exam.objects.select_related('class_section__class_ref', 'class_section__section_ref')
+            _school_exams(request.user).select_related('class_section__class_ref', 'class_section__section_ref')
             .filter(id=exam_id)
             .first()
         )
@@ -161,6 +186,9 @@ class ExamDetailView(views.APIView):
             'exam_type': exam.exam_type,
             'class_section_id': exam.class_section_id,
         }
+        target_class_section = request.data.get('class_section')
+        if target_class_section and not _school_class_sections(request.user).filter(id=target_class_section).exists():
+            return Response({'class_section': 'Invalid class section.'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = ExamSerializer(exam, data=request.data, partial=True)
         if serializer.is_valid():
             exam = serializer.save()
@@ -194,7 +222,7 @@ class ExamDetailView(views.APIView):
     def delete(self, request, exam_id: int):
         if request.user.role != 'admin':
             return Response({'error': 'Not allowed'}, status=status.HTTP_403_FORBIDDEN)
-        exam = Exam.objects.filter(id=exam_id).first()
+        exam = _school_exams(request.user).filter(id=exam_id).first()
         if not exam:
             return Response({'error': 'Exam not found'}, status=status.HTTP_404_NOT_FOUND)
         exam.delete()
@@ -209,7 +237,7 @@ class ExamScheduleListCreateView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, exam_id: int):
-        exam = Exam.objects.filter(id=exam_id).first()
+        exam = _school_exams(request.user).filter(id=exam_id).first()
         if not exam:
             return Response({'error': 'Exam not found'}, status=status.HTTP_404_NOT_FOUND)
         rows = ExamSchedule.objects.filter(exam_id=exam_id).order_by('exam_date', 'start_time')
@@ -218,7 +246,7 @@ class ExamScheduleListCreateView(views.APIView):
     def post(self, request, exam_id: int):
         if request.user.role not in ('admin', 'teacher'):
             return Response({'error': 'Not allowed'}, status=status.HTTP_403_FORBIDDEN)
-        exam = Exam.objects.select_related('class_section').filter(id=exam_id).first()
+        exam = _school_exams(request.user).select_related('class_section').filter(id=exam_id).first()
         if not exam:
             return Response({'error': 'Exam not found'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -278,9 +306,16 @@ class ExamScheduleDetailView(views.APIView):
     def patch(self, request, schedule_id: int):
         if request.user.role not in ('admin', 'teacher'):
             return Response({'error': 'Not allowed'}, status=status.HTTP_403_FORBIDDEN)
-        row = ExamSchedule.objects.select_related('exam').filter(id=schedule_id).first()
+        row = ExamSchedule.objects.select_related('exam').filter(
+            id=schedule_id,
+            exam__in=_school_exams(request.user),
+        ).first()
         if not row:
             return Response({'error': 'Schedule not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        target_exam_id = request.data.get('exam')
+        if target_exam_id and not _school_exams(request.user).filter(id=target_exam_id).exists():
+            return Response({'exam': 'Invalid exam.'}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = ExamScheduleSerializer(row, data=request.data, partial=True)
         if not serializer.is_valid():
@@ -323,7 +358,7 @@ class ExamScheduleDetailView(views.APIView):
     def delete(self, request, schedule_id: int):
         if request.user.role not in ('admin', 'teacher'):
             return Response({'error': 'Not allowed'}, status=status.HTTP_403_FORBIDDEN)
-        row = ExamSchedule.objects.filter(id=schedule_id).first()
+        row = ExamSchedule.objects.filter(id=schedule_id, exam__in=_school_exams(request.user)).first()
         if not row:
             return Response({'error': 'Schedule not found'}, status=status.HTTP_404_NOT_FOUND)
         row.delete()
@@ -345,6 +380,9 @@ class ResultUploadView(views.APIView):
             'class_section__section_ref',
             'uploaded_by__user'
         ).all()
+
+        if not _is_platform_user(request.user):
+            qs = qs.filter(class_section__school_id=request.user.school_id)
 
         if request.user.role == 'teacher':
             qs = qs.filter(uploaded_by=teacher_profile)
@@ -371,7 +409,7 @@ class ResultUploadView(views.APIView):
             # If exam_id is provided, we can infer class and type if they are missing
             exam_type = payload.get('exam_type')
             if not exam_type and exam_id:
-                exam = Exam.objects.filter(id=exam_id).first()
+                exam = _school_exams(request.user).filter(id=exam_id).first()
                 if exam:
                     exam_type = exam.exam_type.lower().replace(' ', '_')
             
@@ -397,12 +435,19 @@ class ResultUploadView(views.APIView):
                 max_marks = 100.0
 
             entries = payload.get('entries') or []
+            if len(entries) > settings.API_MAX_BULK_ROWS:
+                return Response(
+                    {'error': f'A maximum of {settings.API_MAX_BULK_ROWS} entries is allowed per request.'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             # Improved Lookup: Must filter by BOTH name and class_ref_id to avoid cross-class data leaks.
-            class_section = ClassSection.objects.filter(id=class_section_id).first()
+            class_section = _school_class_sections(request.user).filter(id=class_section_id).first()
             if not class_section:
                 return Response({"error": "Class section not found"}, status=status.HTTP_404_NOT_FOUND)
                 
             subject_obj = Subject.objects.filter(name=subject_name, class_ref_id=class_section.class_ref_id).first()
+            if not subject_obj:
+                return Response({'error': 'Subject not found for this class.'}, status=status.HTTP_404_NOT_FOUND)
             teacher_profile = getattr(request.user, 'teacher_profile', None)
 
             errors = []
@@ -422,6 +467,20 @@ class ResultUploadView(views.APIView):
 
             if errors:
                 return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
+
+            valid_student_ids = set(
+                StudentProfile.objects.filter(
+                    id__in=[student_id for student_id, _ in parsed],
+                    class_section=class_section,
+                    user__school_id=class_section.school_id,
+                ).values_list('id', flat=True)
+            )
+            invalid_student_ids = sorted({student_id for student_id, _ in parsed} - valid_student_ids)
+            if invalid_student_ids:
+                return Response(
+                    {'error': 'One or more students do not belong to this class.', 'student_ids': invalid_student_ids},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
             with transaction.atomic():
                 for student_id, marks_val in parsed:
@@ -447,7 +506,7 @@ class ExamResultDashboardView(views.APIView):
 
     def get(self, request, exam_id: int):
         student_id = request.query_params.get('student_id')
-        exam = Exam.objects.select_related('class_section').filter(id=exam_id).first()
+        exam = _school_exams(request.user).select_related('class_section').filter(id=exam_id).first()
         if not exam:
             return Response({'error': 'Exam not found'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -498,7 +557,7 @@ class PublishResultView(views.APIView):
     permission_classes = [IsTeacher | IsAdmin]
 
     def post(self, request, exam_id: int):
-        exam = Exam.objects.select_related('class_section').filter(id=exam_id).first()
+        exam = _school_exams(request.user).select_related('class_section').filter(id=exam_id).first()
         if not exam:
             return Response({'error': 'Exam not found'}, status=status.HTTP_404_NOT_FOUND)
         
@@ -610,7 +669,7 @@ class ExamSubjectStatusView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, exam_id: int):
-        exam = Exam.objects.select_related('class_section__class_ref').filter(id=exam_id).first()
+        exam = _school_exams(request.user).select_related('class_section__class_ref').filter(id=exam_id).first()
         if not exam:
             return Response({'error': 'Exam not found'}, status=status.HTTP_404_NOT_FOUND)
         
@@ -642,7 +701,7 @@ class ExamDetailedStatusView(views.APIView):
     permission_classes = [IsAdmin]
 
     def get(self, request, exam_id: int):
-        exam = Exam.objects.select_related('class_section__class_ref').filter(id=exam_id).first()
+        exam = _school_exams(request.user).select_related('class_section__class_ref').filter(id=exam_id).first()
         if not exam:
             return Response({'error': 'Exam not found'}, status=status.HTTP_404_NOT_FOUND)
         
@@ -690,7 +749,7 @@ class TeacherExamSubjectsView(views.APIView):
     permission_classes = [IsTeacher | IsAdmin]
 
     def get(self, request, exam_id: int):
-        exam = Exam.objects.select_related('class_section__class_ref').filter(id=exam_id).first()
+        exam = _school_exams(request.user).select_related('class_section__class_ref').filter(id=exam_id).first()
         if not exam:
             return Response({'error': 'Exam not found'}, status=status.HTTP_404_NOT_FOUND)
         class_ref_id = exam.class_section.class_ref_id
@@ -727,7 +786,7 @@ class ClassSectionTeacherSubjectsView(views.APIView):
     permission_classes = [IsTeacher | IsAdmin]
 
     def get(self, request, class_section_id: int):
-        cs = ClassSection.objects.select_related('class_ref').filter(id=class_section_id).first()
+        cs = _school_class_sections(request.user).select_related('class_ref').filter(id=class_section_id).first()
         if not cs:
             return Response({'error': 'Class section not found'}, status=status.HTTP_404_NOT_FOUND)
         class_ref_id = cs.class_ref_id
@@ -795,15 +854,17 @@ class MyResultMarksheetPDFView(views.APIView):
     permission_classes = [IsStudent]
 
     def get(self, request, exam_id: int):
-        exam = Exam.objects.select_related('class_section').filter(id=exam_id).first()
+        profile = get_requested_student(request)
+        if not profile:
+            return Response({'error': 'Student profile not found'}, status=status.HTTP_404_NOT_FOUND)
+        exam = _school_exams(request.user).select_related('class_section').filter(
+            id=exam_id,
+            class_section=profile.class_section,
+        ).first()
         if not exam:
             return Response({'error': 'Exam not found'}, status=status.HTTP_404_NOT_FOUND)
 
         exam_type_slug = exam.exam_type.lower().replace(' ', '_')
-        profile = get_requested_student(request)
-        if not profile:
-            return Response({'error': 'Student profile not found'}, status=status.HTTP_404_NOT_FOUND)
-
         # Check if published
         res_status = ResultStatus.objects.filter(class_section=profile.class_section, exam_type=exam_type_slug, is_published=True).first()
         is_mst_blocked = profile.school and profile.school.name.lower() == "standard public school" and exam_type_slug == "mst"

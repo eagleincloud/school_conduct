@@ -48,7 +48,6 @@ const AdminDashboard = () => {
     const [galleryImages, setGalleryImages] = useState([]);
     const [galleryLoading, setGalleryLoading] = useState(false);
     const [currentSlide, setCurrentSlide] = useState(0);
-    const token = localStorage.getItem('access_token');
     const parentPhoneDigits = (formData.parent_contact_number || '').replace(/\D/g, '').slice(0, 10);
 
     const fetchCounts = async () => {
@@ -242,7 +241,7 @@ const AdminDashboard = () => {
                                         {galleryImages.map((img, idx) => (
                                             <img
                                                 key={img.id}
-                                                src={`${resolveImageUrl(img.image_url)}${token ? `?token=${token}` : ''}`}
+                                                src={resolveImageUrl(img.image_url)}
                                                 alt={img.title}
                                                 className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 select-none ${idx === currentSlide ? 'opacity-100' : 'opacity-0'}`}
                                                 onContextMenu={(e) => e.preventDefault()}
