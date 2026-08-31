@@ -24,9 +24,12 @@ const ShopLocations = () => {
         setLoading(true);
         try {
             const res = await api.get('shops/');
-            setShops(res.data || []);
+            const list = Array.isArray(res.data) ? res.data : (res.data?.results || []);
+            setShops(list);
         } catch (err) {
+            console.error('Failed to fetch shops:', err);
             toast.error('Failed to fetch shops');
+            setShops([]);
         } finally {
             setLoading(false);
         }

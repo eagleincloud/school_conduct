@@ -1,7 +1,7 @@
 import csv
 from django.http import HttpResponse
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAdminUser
+from django.conf import settings
 from django.db.models import Q
 from attendance.models import Attendance
 from academics.models import Result, Exam
@@ -9,9 +9,11 @@ from students.models import StudentProfile
 from teachers.models import TeacherProfile
 from classes.models import ClassSection
 import datetime
+from core.permissions import IsAdmin
 
 class AdminReportDownloadView(APIView):
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdmin]
+    throttle_scope = 'report'
 
     def get(self, request):
         report_cat = request.GET.get('report_cat', 'attendance') # attendance, marks, students, teachers
@@ -20,6 +22,8 @@ class AdminReportDownloadView(APIView):
         month = request.GET.get('month')
         year = request.GET.get('year')
         class_id = request.GET.get('class')
+        is_platform_user = request.user.is_superuser or request.user.role == 'superadmin'
+        school_id = request.user.school_id
 
         # Base querysets
         if report_cat == 'attendance':
@@ -41,6 +45,16 @@ class AdminReportDownloadView(APIView):
         else:
             return HttpResponse("Invalid report category", status=400)
 
+        if not is_platform_user:
+            if not school_id:
+                return HttpResponse('School assignment required', status=403)
+            if report_cat == 'attendance':
+                queryset = queryset.filter(student__user__school_id=school_id)
+            elif report_cat == 'marks':
+                queryset = queryset.filter(student__user__school_id=school_id)
+            else:
+                queryset = queryset.filter(user__school_id=school_id)
+
         # Apply Class Filter
         if class_id and class_id != 'all' and class_field:
             queryset = queryset.filter(**{class_field: class_id})
@@ -60,9 +74,12 @@ class AdminReportDownloadView(APIView):
         class_name = "all_classes"
         if class_id and class_id != 'all':
             try:
-                cs = ClassSection.objects.get(id=class_id)
+                class_qs = ClassSection.objects.all()
+                if not is_platform_user:
+                    class_qs = class_qs.filter(school_id=school_id)
+                cs = class_qs.get(id=class_id)
                 class_name = f"class{cs.class_ref.name.replace(' ', '')}"
-            except:
+            except (ClassSection.DoesNotExist, ValueError):
                 pass
         
         time_str = ""
@@ -77,7 +94,7 @@ class AdminReportDownloadView(APIView):
         
         if report_cat == 'attendance':
             writer.writerow(['Student Name', 'Admission No', 'Class', 'Date', 'Status', 'Marked Via'])
-            for record in queryset:
+            for record in queryset[:settings.API_MAX_EXPORT_ROWS]:
                 writer.writerow([
                     record.student.user.get_full_name() or record.student.user.username,
                     record.student.admission_number,
@@ -88,7 +105,7 @@ class AdminReportDownloadView(APIView):
                 ])
         elif report_cat == 'marks':
             writer.writerow(['Student Name', 'Roll No', 'Class', 'Exam', 'Subject', 'Marks Obtained', 'Max Marks'])
-            for record in queryset:
+            for record in queryset[:settings.API_MAX_EXPORT_ROWS]:
                 writer.writerow([
                     record.student.user.get_full_name() or record.student.user.username,
                     record.student.roll_number,
@@ -100,7 +117,7 @@ class AdminReportDownloadView(APIView):
                 ])
         elif report_cat == 'students':
             writer.writerow(['Name', 'Admission No', 'Roll No', 'Class', 'Guardian Name', 'Contact', 'Admission Date'])
-            for record in queryset:
+            for record in queryset[:settings.API_MAX_EXPORT_ROWS]:
                 writer.writerow([
                     record.user.get_full_name() or record.user.username,
                     record.admission_number,
@@ -112,7 +129,7 @@ class AdminReportDownloadView(APIView):
                 ])
         elif report_cat == 'teachers':
             writer.writerow(['Name', 'Employee ID', 'Specialization', 'Role', 'Joining Date', 'Status'])
-            for record in queryset:
+            for record in queryset[:settings.API_MAX_EXPORT_ROWS]:
                 writer.writerow([
                     record.user.get_full_name() or record.user.username,
                     record.employee_id,

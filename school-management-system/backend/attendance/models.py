@@ -58,7 +58,7 @@ class BiometricDevice(models.Model):
     # Direct-push terminals do not provide a persistent connection that can be
     # inspected from Django. Treat recent packets as a short-lived heartbeat so
     # a powered-off terminal does not remain online for five minutes.
-    DIRECT_PUSH_ONLINE_WINDOW_SECONDS = 15
+    DIRECT_PUSH_ONLINE_WINDOW_SECONDS = 120
     TEST_ONLINE_WINDOW_SECONDS = 120
     DIRECT_PUSH_INTEGRATION_MODES = ('tcp_xml_push', 'http_push')
     DEVICE_TYPE_CHOICES = (

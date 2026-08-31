@@ -7,12 +7,14 @@ from django.http import HttpResponse
 from django.db import transaction
 from django.db.utils import OperationalError, ProgrammingError
 from django.utils import timezone
+from django.conf import settings
 from django.db.models import Sum
 from django.db.models.functions import ExtractMonth
 from rest_framework import status, views
 from rest_framework.response import Response
 
 from core.permissions import IsStudent, IsAdmin
+from core.validators import validate_uploaded_file
 from students.models import StudentProfile
 from students.utils import get_requested_student
 from .models import ClassFeeCard, ClassFeeCardRollback, FeeStructure, StudentFee, Payment
@@ -152,12 +154,18 @@ class AdminClassFeeCardDetailView(views.APIView):
 
 class AdminClassFeeCardBulkUpsertView(views.APIView):
     permission_classes = [IsAdmin]
+    throttle_scope = 'upload'
 
     def post(self, request):
         school = request.user.school
         cards = request.data.get('cards') or []
         if not isinstance(cards, list) or len(cards) == 0:
             return Response({"error": "cards list is required"}, status=status.HTTP_400_BAD_REQUEST)
+        if len(cards) > settings.API_MAX_BULK_ROWS:
+            return Response(
+                {"error": f"A maximum of {settings.API_MAX_BULK_ROWS} cards is allowed per request."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         _create_fee_card_snapshot(school, request.user, source='bulk_upload')
         saved = []
         skipped = []
@@ -197,6 +205,7 @@ class AdminClassFeeCardBulkUpsertView(views.APIView):
 
 class AdminClassFeeCardFileUploadView(views.APIView):
     permission_classes = [IsAdmin]
+    throttle_scope = 'upload'
 
     def post(self, request):
         school = request.user.school
@@ -204,6 +213,10 @@ class AdminClassFeeCardFileUploadView(views.APIView):
         file_type = str(request.data.get('file_type', '')).strip().lower()
         if not upload:
             return Response({"error": "file is required"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            validate_uploaded_file(upload, allowed_extensions={'.csv', '.pdf'})
+        except ValueError as exc:
+            return Response({'file': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
 
         guessed_type = (upload.name.split('.')[-1] if '.' in upload.name else '').lower()
         source_type = file_type or guessed_type

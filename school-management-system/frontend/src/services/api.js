@@ -5,26 +5,30 @@ import { Capacitor, registerPlugin } from "@capacitor/core";
 // Centralized API Configuration
 // Supports both Vite (import.meta.env) and Vercel/CRA (process.env)
 const getBaseURL = () => {
+  // Mobile app (Capacitor/Cordova Android/iOS) always connects to production VPS backend
+  const isNativeMobile = typeof window !== "undefined" && (
+    (typeof Capacitor !== "undefined" && Capacitor.isNativePlatform && Capacitor.isNativePlatform()) ||
+    window.location.protocol === "capacitor:" ||
+    window.location.protocol === "ionic:" ||
+    /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+  );
+
+  if (isNativeMobile) {
+    return "http://93.127.199.44/api/";
+  }
+
   let url = import.meta.env.VITE_API_URL;
   if (!url || url.startsWith('/')) {
-    const isNativeMobile = typeof window !== "undefined" && (
-      (window.Capacitor && window.Capacitor.getPlatform() !== 'web') ||
-      (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) && 
-       (window.location.hostname === "localhost" || window.location.protocol === "capacitor:"))
-    );
-    if (isNativeMobile) {
-      url = "http://13.201.53.169/api/";
-    } else if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
-      // Browser dev fallback uses the local backend server
+    if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
       url = "http://127.0.0.1:8000/api/";
     } else if (typeof window !== "undefined") {
-      // Production fallback uses the current hosted origin
       url = `${window.location.origin}/api/`;
     } else {
-      url = "http://127.0.0.1:8000/api/";
+      url = "http://93.127.199.44/api/";
     }
   }
-  return url.replace(/\/?$/, "/");};
+  return url.replace(/\/?$/, "/");
+};
 
 export const BASE_URL = getBaseURL();
 
@@ -38,9 +42,12 @@ const api = axios.create({
   },
 });
 
-// Interceptor to add JWT token to every request
+// Interceptor to normalize URL and add JWT token to every request
 api.interceptors.request.use(
   (config) => {
+    if (config.url && config.url.startsWith("/")) {
+      config.url = config.url.replace(/^\/+/, "");
+    }
     const token = localStorage.getItem("access_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

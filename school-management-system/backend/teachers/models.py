@@ -36,7 +36,7 @@ class TeacherProfile(models.Model):
     status = models.CharField(max_length=10, default='Active')
     profile_image_base64 = models.TextField(blank=True, null=True)
     photo = models.ImageField(upload_to=teacher_photo_path, blank=True, null=True, max_length=500)
-    rfid_code = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    rfid_code = models.CharField(max_length=100, blank=True, null=True)
     assigned_shift = models.ForeignKey('timetable.Shift', on_delete=models.SET_NULL, null=True, blank=True, related_name='teachers')
 
     class Meta:
@@ -44,7 +44,11 @@ class TeacherProfile(models.Model):
             models.UniqueConstraint(
                 fields=['school', 'employee_id'],
                 name='unique_employee_per_school',
-            )
+            ),
+            models.UniqueConstraint(
+                fields=['school', 'rfid_code'],
+                name='unique_teacher_rfid_per_school',
+            ),
         ]
 
     def __str__(self):

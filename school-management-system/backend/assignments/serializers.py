@@ -78,6 +78,11 @@ class AssignmentSerializer(serializers.ModelSerializer):
         due_date = attrs.get('due_date')
         if start_date and due_date and due_date < start_date:
             raise serializers.ValidationError({'due_date': 'Due date cannot be before start date'})
+        request = self.context.get('request')
+        class_section = attrs.get('class_section') or getattr(self.instance, 'class_section', None)
+        if request and class_section and not request.user.is_superuser:
+            if class_section.school_id != request.user.school_id:
+                raise serializers.ValidationError({'class_section': 'Invalid class section.'})
         return attrs
 
     def validate_attachment(self, file_obj):

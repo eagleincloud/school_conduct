@@ -1,3 +1,4 @@
+import hashlib
 import socket
 import threading
 from datetime import timedelta
@@ -11,8 +12,12 @@ from rest_framework.test import APITestCase
 
 from accounts.models import User
 from attendance.direct_push import decode_secureye_json_body, normalize_secureye_http_event
-from attendance.management.commands.run_biometric_tcp_server import BiometricTCPRequestHandler
-from attendance.models import Attendance, BiometricDevice, TeacherAttendance
+from attendance.management.commands.run_biometric_tcp_server import (
+    BiometricTCPRequestHandler,
+    build_sbxpc_ack,
+)
+from attendance.models import Attendance, BiometricDevice, BiometricEventLog, TeacherAttendance
+from attendance.protocol_diagnostics import ConnectionDiagnostics
 from attendance.services import (
     compute_event_fingerprint,
     extract_message_frames,
@@ -85,6 +90,19 @@ class BiometricDeviceApiTests(APITestCase):
 
 
 class BiometricTcpHelpersTests(SimpleTestCase):
+    @staticmethod
+    def _production_m50_frame(*, user_id, second, verify_mode, trans_id):
+        return (
+            "<Message><TerminalType>M50</TerminalType>"
+            "<DeviceUID>E1E0E457-7D9A6ED8</DeviceUID>"
+            "<TerminalID>4</TerminalID><DeviceSerialNo>T230700006</DeviceSerialNo>"
+            f"<TransID>{trans_id}</TransID><Event>TimeLog</Event>"
+            "<Year>2026</Year><Month>8</Month><Day>11</Day>"
+            f"<Hour>12</Hour><Minute>21</Minute><Second>{second}</Second>"
+            f"<UserID>{user_id}</UserID><AttendStat>Duty Off</AttendStat>"
+            f"<VerifMode>{verify_mode}</VerifMode><Photo>No</Photo></Message>"
+        )
+
     def test_extract_message_frames_handles_multiple_messages_and_remainder(self):
         buffer = (
             "<Message><DeviceSerialNo>A1</DeviceSerialNo></Message>"
@@ -112,7 +130,572 @@ class BiometricTcpHelpersTests(SimpleTestCase):
             compute_event_fingerprint('tcp_xml', payload),
         )
 
-    @override_settings(BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n', BIOMETRIC_TCP_SOCKET_TIMEOUT=1, BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536)
+    def test_verification_mode_and_attendance_state_are_part_of_event_identity(self):
+        payload = parse_tcp_xml_payload(
+            self._production_m50_frame(
+                user_id='2',
+                second='3',
+                verify_mode='FP',
+                trans_id='0',
+            )
+        )
+        card_payload = {**payload, 'VerifMode': 'Card'}
+        check_in_payload = {**payload, 'AttendStat': 'Duty On'}
+
+        self.assertNotEqual(
+            compute_event_fingerprint('tcp_xml', payload),
+            compute_event_fingerprint('tcp_xml', card_payload),
+        )
+        self.assertNotEqual(
+            compute_event_fingerprint('tcp_xml', payload),
+            compute_event_fingerprint('tcp_xml', check_in_payload),
+        )
+
+    def test_sbxpc_ack_framing_modes_only_change_the_terminator(self):
+        template = (
+            '<?xml version="1.0" encoding="UTF-8"?>\r\n'
+            '<Message><DeviceSerialNo>{DeviceSerialNo}</DeviceSerialNo>'
+            '<TransID>{TransID}</TransID><Result>1</Result></Message>'
+        )
+        payload = {'DeviceSerialNo': 'T190900185', 'TransID': '0'}
+        base = (
+            b'<?xml version="1.0" encoding="UTF-8"?>\r\n'
+            b'<Message><DeviceSerialNo>T190900185</DeviceSerialNo>'
+            b'<TransID>0</TransID><Result>1</Result></Message>'
+        )
+        modes = {
+            'CRLF': b'\r\n',
+            'NUL': b'\x00',
+            'CRLF_NUL': b'\r\n\x00',
+            'NO_TERMINATOR': b'',
+        }
+
+        for mode, suffix in modes.items():
+            with self.subTest(mode=mode), override_settings(
+                BIOMETRIC_SBXPC_ACK_TEMPLATE=template,
+                BIOMETRIC_SBXPC_ACK_MODE=mode,
+            ):
+                self.assertEqual(build_sbxpc_ack(payload), base + suffix)
+
+    @override_settings(
+        BIOMETRIC_SBXPC_ACK_TEMPLATE=(
+            '<?xml version="1.0"?><Message><Request>UploadedLog</Request>'
+            '<TransID>{TransID}</TransID></Message>'
+        ),
+        BIOMETRIC_SBXPC_ACK_MODE='NUL',
+    )
+    def test_z305_ack_matches_vendor_capture_exactly(self):
+        ack = build_sbxpc_ack({'TransID': '0'})
+
+        self.assertEqual(
+            ack,
+            b'<?xml version="1.0"?><Message><Request>UploadedLog</Request>'
+            b'<TransID>0</TransID></Message>\x00',
+        )
+        self.assertEqual(len(ack), 91)
+        self.assertEqual(
+            hashlib.sha256(ack).hexdigest(),
+            '0ce8138af3024daba6c1ce48aeeb9287a5fb64a4ebcd359c11fd75e835902d1c',
+        )
+
+    def test_protocol_diagnostics_hash_original_bytes_and_show_nul(self):
+        raw = b'<Message>\r\n\x00'
+        fake_socket = mock.Mock()
+        fake_socket.getsockname.return_value = ('172.31.42.12', 5555)
+        diagnostics = ConnectionDiagnostics(
+            fake_socket,
+            ('103.106.31.189', 1033),
+            enabled=True,
+        )
+
+        with mock.patch('builtins.print') as print_mock:
+            diagnostics.log_rx(raw)
+            diagnostics.next_message(raw)
+
+        output = '\n'.join(str(call.args[0]) for call in print_mock.call_args_list)
+        self.assertIn(raw.hex(' '), output)
+        self.assertIn(hashlib.sha256(raw).hexdigest(), output)
+        self.assertIn(r'<Message>\r\n\x00', output)
+        self.assertIn('NUL position: 11', output)
+        self.assertIn('Bytes after NUL: 0', output)
+
+    @override_settings(
+        BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MESSAGE='unused\r\n',
+        BIOMETRIC_SBXPC_ACK_TEMPLATE=(
+            '<?xml version="1.0"?><Message><Request>UploadedLog</Request>'
+            '<TransID>{TransID}</TransID></Message>'
+        ),
+        BIOMETRIC_SBXPC_ACK_MODE='NUL',
+        BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS=1,
+        BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES=512,
+        BIOMETRIC_TCP_SOCKET_TIMEOUT=1,
+        BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536,
+    )
+    def test_z305_nul_ack_is_sent_without_crlf_before_nul(self):
+        payload = self._production_m50_frame(
+            user_id='1', second='19', verify_mode='Card', trans_id='0'
+        ).encode('utf-8') + b'\x00'
+
+        class FakeSocket:
+            def __init__(self):
+                self.chunks = [payload, b'']
+                self.sent = []
+
+            def settimeout(self, _value):
+                pass
+
+            def recv(self, _size):
+                return self.chunks.pop(0)
+
+            def sendall(self, data):
+                self.sent.append(data)
+
+        fake_socket = FakeSocket()
+        with mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
+            return_value={'status': 'processed', 'device_authorized': True},
+        ):
+            BiometricTCPRequestHandler(fake_socket, ('103.106.31.189', 1033), mock.Mock())
+
+        self.assertEqual(len(fake_socket.sent), 1)
+        self.assertEqual(
+            fake_socket.sent[0],
+            b'<?xml version="1.0"?><Message><Request>UploadedLog</Request>'
+            b'<TransID>0</TransID></Message>\x00',
+        )
+
+    def test_event_identity_normalizes_verification_mode_alias(self):
+        payload = parse_tcp_xml_payload(
+            self._production_m50_frame(
+                user_id='2',
+                second='3',
+                verify_mode='Card',
+                trans_id='0',
+            )
+        )
+        alias_payload = {**payload}
+        alias_payload.pop('VerifMode')
+        alias_payload['VerificationMode'] = 'Card'
+
+        self.assertEqual(
+            compute_event_fingerprint('tcp_xml', payload),
+            compute_event_fingerprint('tcp_xml', alias_payload),
+        )
+
+    def test_extract_message_frames_accepts_sbxpc_root_and_xml_declaration(self):
+        buffer = (
+            'transport-noise<?xml version="1.0" encoding="utf-8"?>'
+            "<SBXPCEvent><MachineID>4</MachineID><EventType>Time Log</EventType>"
+            "<UserID>11</UserID></SBXPCEvent><SBX"
+        )
+
+        frames, remainder = extract_message_frames(buffer)
+
+        self.assertEqual(len(frames), 1)
+        self.assertTrue(frames[0].startswith("<?xml"))
+        self.assertTrue(frames[0].endswith("</SBXPCEvent>"))
+        self.assertEqual(remainder, "<SBX")
+
+    def test_parse_sbxpc_event_normalizes_callback_fields(self):
+        raw_payload = (
+            "<SBXPCEvent><MachineID>4</MachineID><MachineType>M50</MachineType>"
+            "<EventType>Time Log</EventType><UserID>11</UserID>"
+            "<AttendanceStatus>In</AttendanceStatus>"
+            "<VerificationMode>Fingerprint-based</VerificationMode>"
+            "<Year>2026</Year><Month>07</Month><Day>27</Day>"
+            "<Hour>09</Hour><Minute>15</Minute><Second>12</Second></SBXPCEvent>"
+        )
+
+        payload = parse_tcp_xml_payload(raw_payload)
+
+        self.assertEqual(payload["TerminalID"], "4")
+        self.assertEqual(payload["Event"], "TimeLog")
+        self.assertEqual(payload["UserID"], "11")
+        self.assertEqual(payload["AttendStat"], "In")
+        self.assertEqual(payload["VerifMode"], "Fingerprint-based")
+
+    def test_parse_production_m50_tcp_xml_shape(self):
+        raw_payload = (
+            "<Message><TerminalType>M50</TerminalType>"
+            "<DeviceUID>E1E0E457-7D9A6ED8</DeviceUID>"
+            "<TerminalID>4</TerminalID><DeviceSerialNo>T230700006</DeviceSerialNo>"
+            "<TransID>16</TransID><Event>TimeLog</Event>"
+            "<Year>2026</Year><Month>7</Month><Day>22</Day>"
+            "<Hour>19</Hour><Minute>1</Minute><Second>33</Second>"
+            "<UserID>3</UserID><AttendStat>Duty Off</AttendStat>"
+            "<VerifMode>FP</VerifMode><JobCode>0</JobCode>"
+            "<APStat>None</APStat><flags>33</flags><Photo>No</Photo></Message>"
+        )
+
+        payload = parse_tcp_xml_payload(raw_payload)
+
+        self.assertEqual(payload["DeviceSerialNo"], "T230700006")
+        self.assertEqual(payload["TerminalID"], "4")
+        self.assertEqual(payload["Event"], "TimeLog")
+        self.assertEqual(payload["UserID"], "3")
+        self.assertEqual(payload["AttendStat"], "Duty Off")
+        self.assertEqual(payload["VerifMode"], "FP")
+
+    @override_settings(
+        BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MESSAGE='SBXPC-OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MODE='CRLF',
+        BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=True,
+        BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES=512,
+        BIOMETRIC_TCP_SOCKET_TIMEOUT=1,
+        BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536,
+    )
+    def test_request_handler_uses_sbxpc_ack_profile(self):
+        payload = (
+            "<Message><TerminalType>M50</TerminalType>"
+            "<DeviceUID>E1E0E457-7D9A6ED8</DeviceUID>"
+            "<TerminalID>4</TerminalID><DeviceSerialNo>T230700006</DeviceSerialNo>"
+            "<Event>TimeLog</Event><UserID>11</UserID>"
+            "<Year>2026</Year><Month>07</Month>"
+            "<Day>27</Day><Hour>09</Hour><Minute>15</Minute>"
+            "<Second>12</Second></Message>"
+        ).encode("utf-8")
+
+        class FakeSocket:
+            def __init__(self):
+                self.chunks = [payload, b""]
+                self.sent = []
+
+            def settimeout(self, _value):
+                pass
+
+            def recv(self, _size):
+                return self.chunks.pop(0)
+
+            def sendall(self, data):
+                self.sent.append(data)
+
+        fake_socket = FakeSocket()
+        with mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
+            return_value={'status': 'processed', 'device_authorized': True},
+        ) as process_event_mock:
+            BiometricTCPRequestHandler(fake_socket, ('103.106.31.187', 50000), mock.Mock())
+
+        normalized = process_event_mock.call_args.kwargs["payload"]
+        self.assertEqual(normalized["TerminalID"], "4")
+        self.assertEqual(normalized["Event"], "TimeLog")
+        self.assertEqual(fake_socket.sent, [b"SBXPC-OK\r\n"])
+
+    @override_settings(
+        BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MESSAGE='SBXPC-OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MODE='CRLF',
+        BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=True,
+        BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES=512,
+        BIOMETRIC_TCP_SOCKET_TIMEOUT=1,
+        BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536,
+    )
+    def test_m50_drains_all_complete_frames_received_before_close(self):
+        first = self._production_m50_frame(
+            user_id='2', second='3', verify_mode='FP', trans_id='16'
+        )
+        second = self._production_m50_frame(
+            user_id='3', second='18', verify_mode='Card', trans_id='17'
+        )
+
+        class FakeSocket:
+            def __init__(self):
+                self.chunks = [(first + second).encode('utf-8'), b'']
+                self.sent = []
+
+            def settimeout(self, _value):
+                pass
+
+            def recv(self, _size):
+                return self.chunks.pop(0)
+
+            def sendall(self, data):
+                self.sent.append(data)
+
+        fake_socket = FakeSocket()
+        with mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
+            return_value={'status': 'processed', 'device_authorized': True},
+        ) as process_event_mock:
+            BiometricTCPRequestHandler(fake_socket, ('103.106.31.187', 50000), mock.Mock())
+
+        payloads = [call.kwargs['payload'] for call in process_event_mock.call_args_list]
+        self.assertEqual([payload['VerifMode'] for payload in payloads], ['FP', 'Card'])
+        self.assertEqual(fake_socket.sent, [b'SBXPC-OK\r\n', b'SBXPC-OK\r\n'])
+
+    @override_settings(
+        BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MESSAGE='SBXPC-OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MODE='CRLF',
+        BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS=1,
+        BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES=512,
+        BIOMETRIC_TCP_SOCKET_TIMEOUT=0.05,
+        BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536,
+    )
+    def test_m50_accepts_later_rfid_punch_after_initial_socket_timeout(self):
+        first_payload = self._production_m50_frame(
+            user_id='2', second='3', verify_mode='FP', trans_id='16'
+        ).encode('utf-8')
+        second_payload = self._production_m50_frame(
+            user_id='3', second='18', verify_mode='Card', trans_id='17'
+        ).encode('utf-8')
+        server_socket, device_socket = socket.socketpair()
+        device_socket.settimeout(0.5)
+        handler_errors = []
+
+        def run_handler():
+            try:
+                BiometricTCPRequestHandler(
+                    server_socket,
+                    ('103.106.31.187', 50000),
+                    mock.Mock(),
+                )
+            except Exception as exc:  # pragma: no cover - surfaced below
+                handler_errors.append(exc)
+
+        with mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
+            return_value={'status': 'processed', 'device_authorized': True},
+        ) as process_event_mock:
+            handler_thread = threading.Thread(target=run_handler)
+            handler_thread.start()
+            try:
+                device_socket.sendall(first_payload)
+                first_ack = device_socket.recv(32)
+                threading.Event().wait(0.1)
+                device_socket.sendall(second_payload)
+                second_ack = device_socket.recv(32)
+            finally:
+                device_socket.close()
+                handler_thread.join(timeout=2)
+                server_socket.close()
+
+        self.assertFalse(handler_thread.is_alive())
+        self.assertEqual(handler_errors, [])
+        self.assertEqual(first_ack, b'SBXPC-OK\r\n')
+        self.assertEqual(second_ack, b'SBXPC-OK\r\n')
+        self.assertEqual(process_event_mock.call_count, 2)
+
+    @override_settings(
+        BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MESSAGE='SBXPC-OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MODE='CRLF',
+        BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS=0,
+        BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES=512,
+        BIOMETRIC_TCP_SOCKET_TIMEOUT=1,
+        BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=600,
+    )
+    def test_m50_payload_limit_is_per_frame_not_connection_lifetime(self):
+        frames = [
+            self._production_m50_frame(
+                user_id=str(user_id),
+                second=str(user_id),
+                verify_mode='Card',
+                trans_id=str(user_id),
+            ).encode('utf-8')
+            for user_id in range(1, 6)
+        ]
+
+        class FakeSocket:
+            def __init__(self):
+                self.chunks = [*frames, b'']
+                self.sent = []
+
+            def settimeout(self, _value):
+                pass
+
+            def recv(self, _size):
+                return self.chunks.pop(0)
+
+            def sendall(self, data):
+                self.sent.append(data)
+
+        fake_socket = FakeSocket()
+        with mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
+            return_value={'status': 'processed', 'device_authorized': True},
+        ) as process_event_mock:
+            BiometricTCPRequestHandler(fake_socket, ('103.106.31.187', 50000), mock.Mock())
+
+        self.assertEqual(process_event_mock.call_count, 5)
+        self.assertEqual(fake_socket.sent, [b'SBXPC-OK\r\n'] * 5)
+
+    @override_settings(
+        BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MESSAGE='SBXPC-OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MODE='CRLF',
+        BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS=86400,
+        BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES=32,
+        BIOMETRIC_TCP_SOCKET_TIMEOUT=1,
+        BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=100,
+    )
+    def test_m50_rejects_complete_frame_larger_than_per_frame_limit(self):
+        payload = self._production_m50_frame(
+            user_id='2', second='3', verify_mode='Card', trans_id='16'
+        ).encode('utf-8')
+
+        class FakeSocket:
+            def __init__(self):
+                self.chunks = [payload, b'']
+                self.sent = []
+
+            def settimeout(self, _value):
+                pass
+
+            def recv(self, _size):
+                return self.chunks.pop(0)
+
+            def sendall(self, data):
+                self.sent.append(data)
+
+        fake_socket = FakeSocket()
+        with mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.process_biometric_event'
+        ) as process_event_mock:
+            BiometricTCPRequestHandler(fake_socket, ('103.106.31.187', 50000), mock.Mock())
+
+        process_event_mock.assert_not_called()
+        self.assertEqual(fake_socket.sent, [])
+
+    @override_settings(
+        BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MESSAGE='SBXPC-OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MODE='CRLF',
+        BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS=86400,
+        BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES=32,
+        BIOMETRIC_TCP_SOCKET_TIMEOUT=1,
+        BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=16,
+    )
+    def test_m50_rejects_non_xml_stream_over_payload_limit(self):
+        class FakeSocket:
+            def __init__(self):
+                self.chunks = [b'x' * 10, b'y' * 10, b'not-read']
+                self.recv_count = 0
+
+            def settimeout(self, _value):
+                pass
+
+            def recv(self, _size):
+                self.recv_count += 1
+                return self.chunks.pop(0)
+
+            def sendall(self, _data):
+                raise AssertionError('No ACK should be sent for non-XML data.')
+
+        fake_socket = FakeSocket()
+        with mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.process_biometric_event'
+        ) as process_event_mock:
+            BiometricTCPRequestHandler(fake_socket, ('103.106.31.187', 50000), mock.Mock())
+
+        process_event_mock.assert_not_called()
+        self.assertEqual(fake_socket.recv_count, 2)
+
+    @override_settings(
+        BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MESSAGE='SBXPC-OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MODE='CRLF',
+        BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS=86400,
+        BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES=32,
+        BIOMETRIC_TCP_SOCKET_TIMEOUT=1,
+        BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536,
+    )
+    def test_m50_stops_batch_immediately_after_processing_failure(self):
+        first = self._production_m50_frame(
+            user_id='2', second='3', verify_mode='FP', trans_id='16'
+        )
+        second = self._production_m50_frame(
+            user_id='3', second='18', verify_mode='Card', trans_id='17'
+        )
+
+        class FakeSocket:
+            def __init__(self):
+                self.chunks = [(first + second).encode('utf-8'), b'']
+                self.sent = []
+
+            def settimeout(self, _value):
+                pass
+
+            def recv(self, _size):
+                return self.chunks.pop(0)
+
+            def sendall(self, data):
+                self.sent.append(data)
+
+        fake_socket = FakeSocket()
+        with mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
+            side_effect=RuntimeError('database unavailable'),
+        ) as process_event_mock:
+            BiometricTCPRequestHandler(fake_socket, ('103.106.31.187', 50000), mock.Mock())
+
+        self.assertEqual(process_event_mock.call_count, 1)
+        self.assertEqual(fake_socket.sent, [])
+
+    @override_settings(
+        BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MESSAGE='SBXPC-OK\r\n',
+        BIOMETRIC_SBXPC_ACK_MODE='CRLF',
+        BIOMETRIC_SBXPC_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_SBXPC_IDLE_TIMEOUT_SECONDS=86400,
+        BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_TCP_DIAGNOSTIC_PREVIEW_BYTES=32,
+        BIOMETRIC_TCP_SOCKET_TIMEOUT=1,
+        BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536,
+    )
+    def test_unauthorized_m50_frame_does_not_create_persistent_socket(self):
+        payload = self._production_m50_frame(
+            user_id='2', second='3', verify_mode='Card', trans_id='16'
+        ).encode('utf-8')
+
+        class FakeSocket:
+            def __init__(self):
+                self.chunks = [payload, b'not-read']
+                self.sent = []
+                self.timeouts = []
+
+            def settimeout(self, value):
+                self.timeouts.append(value)
+
+            def recv(self, _size):
+                return self.chunks.pop(0)
+
+            def sendall(self, data):
+                self.sent.append(data)
+
+        fake_socket = FakeSocket()
+        with mock.patch(
+            'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
+            return_value={'status': 'unauthorized', 'device_authorized': False},
+        ) as process_event_mock:
+            BiometricTCPRequestHandler(fake_socket, ('103.106.31.187', 50000), mock.Mock())
+
+        self.assertEqual(process_event_mock.call_count, 1)
+        self.assertEqual(fake_socket.timeouts, [1])
+        self.assertEqual(fake_socket.sent, [b'SBXPC-OK\r\n'])
+
+    @override_settings(
+        BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
+        BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_TCP_SOCKET_TIMEOUT=1,
+        BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536,
+    )
     def test_request_handler_acks_complete_xml_before_peer_disconnects(self):
         payload = (
             "<Message><DeviceSerialNo>T230700006</DeviceSerialNo><TerminalID>4</TerminalID>"
@@ -135,7 +718,7 @@ class BiometricTcpHelpersTests(SimpleTestCase):
 
         with mock.patch(
             'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
-            return_value={'status': 'processed'},
+            return_value={'status': 'processed', 'device_authorized': True},
         ) as process_event_mock:
             handler_thread = threading.Thread(target=run_handler)
             handler_thread.start()
@@ -152,7 +735,12 @@ class BiometricTcpHelpersTests(SimpleTestCase):
         self.assertEqual(ack, b'OK\r\n')
         self.assertEqual(process_event_mock.call_count, 1)
 
-    @override_settings(BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n', BIOMETRIC_TCP_SOCKET_TIMEOUT=1, BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536)
+    @override_settings(
+        BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
+        BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_TCP_SOCKET_TIMEOUT=1,
+        BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536,
+    )
     def test_request_handler_accepts_next_xml_message_on_same_open_socket(self):
         first_payload = (
             "<Message><DeviceSerialNo>T230700006</DeviceSerialNo><TerminalID>4</TerminalID>"
@@ -180,7 +768,7 @@ class BiometricTcpHelpersTests(SimpleTestCase):
 
         with mock.patch(
             'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
-            return_value={'status': 'processed'},
+            return_value={'status': 'processed', 'device_authorized': True},
         ) as process_event_mock:
             handler_thread = threading.Thread(target=run_handler)
             handler_thread.start()
@@ -200,7 +788,12 @@ class BiometricTcpHelpersTests(SimpleTestCase):
         self.assertEqual(second_ack, b'OK\r\n')
         self.assertEqual(process_event_mock.call_count, 2)
 
-    @override_settings(BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n', BIOMETRIC_TCP_SOCKET_TIMEOUT=1, BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536)
+    @override_settings(
+        BIOMETRIC_TCP_ACK_MESSAGE='OK\r\n',
+        BIOMETRIC_TCP_CLOSE_AFTER_ACK=False,
+        BIOMETRIC_TCP_SOCKET_TIMEOUT=1,
+        BIOMETRIC_TCP_MAX_PAYLOAD_BYTES=65536,
+    )
     def test_request_handler_processes_all_messages_in_same_connection(self):
         class FakeSocket:
             def __init__(self, chunks):
@@ -231,7 +824,7 @@ class BiometricTcpHelpersTests(SimpleTestCase):
 
         with mock.patch(
             'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
-            return_value={'status': 'processed'},
+            return_value={'status': 'processed', 'device_authorized': True},
         ) as process_event_mock:
             BiometricTCPRequestHandler(fake_socket, ('103.106.31.187', 50000), mock.Mock())
 
@@ -281,7 +874,7 @@ class BiometricTcpHelpersTests(SimpleTestCase):
             return_value=device,
         ), mock.patch(
             'attendance.management.commands.run_biometric_tcp_server.process_biometric_event',
-            return_value={'status': 'processed'},
+            return_value={'status': 'processed', 'device_authorized': True},
         ) as process_event_mock:
             BiometricTCPRequestHandler(fake_socket, ('103.106.31.187', 50000), mock.Mock())
 
@@ -370,6 +963,24 @@ class BiometricTcpDeviceResolutionTests(TestCase):
             source_ip='103.106.31.187',
         )
 
+        self.assertEqual(resolved, device)
+
+    def test_sbxpc_machine_id_normalizes_to_terminal_id_for_resolution(self):
+        device = BiometricDevice.objects.create(
+            school=self.school,
+            name='SBXPC Main Gate',
+            integration_mode='tcp_xml_push',
+            terminal_id='7',
+            allowed_source_ip='103.106.31.187',
+        )
+        payload = parse_tcp_xml_payload(
+            "<SBXPCEvent><MachineID>7</MachineID>"
+            "<EventType>Time Log</EventType><UserID>11</UserID></SBXPCEvent>"
+        )
+
+        resolved = resolve_tcp_device(payload, source_ip='103.106.31.187')
+
+        self.assertEqual(payload["TerminalID"], "7")
         self.assertEqual(resolved, device)
 
     def test_terminal_id_fallback_requires_matching_source_ip(self):
@@ -657,6 +1268,78 @@ class BiometricPunchApprovalTests(TestCase):
         self.assertEqual(attendance.status, 'present')
         self.assertEqual(attendance.verification_status, 'approved')
         self.assertEqual(attendance.marked_via, 'rfid')
+
+    def test_existing_event_still_deduplicates_after_identity_upgrade(self):
+        now = timezone.now()
+        payload = {
+            'DeviceSerialNo': 'T230700006',
+            'TerminalID': '4',
+            'Event': 'TimeLog',
+            'TransID': '0',
+            'UserID': '3',
+            'VerifMode': 'Card',
+            'AttendStat': 'Duty Off',
+            'Year': str(now.year),
+            'Month': str(now.month),
+            'Day': str(now.day),
+            'Hour': str(now.hour),
+            'Minute': str(now.minute),
+            'Second': str(now.second),
+        }
+
+        first_result = process_biometric_event(
+            protocol='tcp_xml',
+            payload=payload,
+            raw_payload='<Message />',
+            source_ip='103.106.31.187',
+        )
+        event_log = BiometricEventLog.objects.get(id=first_result['event_log_id'])
+        event_log.event_fingerprint = '0' * 64
+        event_log.save(update_fields=['event_fingerprint'])
+
+        second_result = process_biometric_event(
+            protocol='tcp_xml',
+            payload=payload,
+            raw_payload='<Message />',
+            source_ip='103.106.31.187',
+        )
+
+        self.assertEqual(second_result['event_log_id'], event_log.id)
+        self.assertEqual(BiometricEventLog.objects.count(), 1)
+
+    def test_duplicate_unauthorized_event_never_authorizes_persistent_socket(self):
+        now = timezone.now()
+        payload = {
+            'DeviceSerialNo': 'UNREGISTERED-M50',
+            'TerminalID': '99',
+            'Event': 'TimeLog',
+            'TransID': '0',
+            'UserID': '3',
+            'VerifMode': 'Card',
+            'Year': str(now.year),
+            'Month': str(now.month),
+            'Day': str(now.day),
+            'Hour': str(now.hour),
+            'Minute': str(now.minute),
+            'Second': str(now.second),
+        }
+
+        first_result = process_biometric_event(
+            protocol='tcp_xml',
+            payload=payload,
+            raw_payload='<Message />',
+            source_ip='203.0.113.10',
+        )
+        second_result = process_biometric_event(
+            protocol='tcp_xml',
+            payload=payload,
+            raw_payload='<Message />',
+            source_ip='203.0.113.10',
+        )
+
+        self.assertFalse(first_result['device_authorized'])
+        self.assertFalse(second_result['device_authorized'])
+        self.assertEqual(BiometricEventLog.objects.filter(device__isnull=True).count(), 1)
 
     def test_duplicate_tcp_punch_overwrites_manual_absent_for_now(self):
         now = timezone.now()

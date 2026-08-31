@@ -75,7 +75,7 @@ def _should_refresh_connectivity(device, cooldown_seconds=15):
     if not device.is_active:
         return False
     if not device.device_ip or not device.device_port:
-        return device.integration_mode == 'tcp_xml_push'
+        return device.integration_mode in {'tcp_xml_push', 'http_push'}
     if not device.last_tested_at:
         return True
     return device.last_tested_at < timezone.now() - timedelta(seconds=cooldown_seconds)
@@ -117,10 +117,13 @@ def _default_bridge_url(request):
 
 
 def _tcp_listener_config():
+    public_api = urlparse(settings.PUBLIC_API_BASE_URL)
     return {
         'host': settings.BIOMETRIC_TCP_HOST,
+        'public_host': public_api.hostname or '',
         'port': settings.BIOMETRIC_TCP_PORT,
         'ack_message': settings.BIOMETRIC_TCP_ACK_MESSAGE,
+        'sbxpc_ack_message': settings.BIOMETRIC_SBXPC_ACK_MESSAGE,
     }
 
 
@@ -192,7 +195,7 @@ class BiometricDeviceConnectionProbeView(views.APIView):
         timeout_seconds = float(request.data.get('timeout_seconds') or 3)
         integration_mode = request.data.get('integration_mode') or 'bridge_pull'
 
-        if integration_mode != 'tcp_xml_push' and not device_ip:
+        if integration_mode not in {'tcp_xml_push', 'http_push'} and not device_ip:
             return Response({'error': 'device_ip is required'}, status=status.HTTP_400_BAD_REQUEST)
 
         if integration_mode in {'tcp_xml_push', 'http_push'}:
@@ -501,6 +504,7 @@ class BiometricEventLogListView(generics.ListAPIView):
     """
     serializer_class = BiometricEventLogSerializer
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = None
 
     def get_queryset(self):
         user = self.request.user

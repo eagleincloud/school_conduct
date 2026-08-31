@@ -1,6 +1,6 @@
 import hashlib
 import logging
-from pathlib import Path
+import re
 from datetime import datetime as datetime_type
 from xml.etree import ElementTree
 
@@ -13,7 +13,10 @@ from teachers.models import TeacherProfile
 from .models import Attendance, BiometricDevice, BiometricEventLog, TeacherAttendance
 
 logger = logging.getLogger(__name__)
-_BIOMETRIC_DEBUG_LOG = Path("/home/ec2-user/school-app/logs/biometric-debug.log")
+_XML_OPENING_TAG = re.compile(
+    r"<([A-Za-z_][A-Za-z0-9_.:-]*)(?:\s[^<>]*?)?\s*(/?)>",
+    re.DOTALL,
+)
 
 
 class AttendanceService:
@@ -44,29 +47,147 @@ def _sanitize_biometric_payload(value):
 
 
 def extract_message_frames(buffer: str):
+    """Extract complete XML documents from a streaming TCP buffer.
+
+    The original listener only recognized ``<Message>`` documents. SBXPC
+    firmware and callback versions can use other root element names and may
+    prefix a document with an XML declaration or transport noise.
+    """
     frames = []
     remainder = buffer
 
     while True:
-        start = remainder.find("<Message")
+        start = remainder.find("<")
         if start == -1:
             return frames, remainder[-2048:]
 
-        end = remainder.find("</Message>", start)
-        if end == -1:
-            return frames, remainder[start:]
+        if start:
+            remainder = remainder[start:]
 
-        end += len("</Message>")
-        frames.append(remainder[start:end])
+        document_start = 0
+        root_start = 0
+        if remainder.startswith("<?xml"):
+            declaration_end = remainder.find("?>")
+            if declaration_end == -1:
+                return frames, remainder
+            root_start = declaration_end + 2
+            while root_start < len(remainder) and remainder[root_start].isspace():
+                root_start += 1
+
+        match = _XML_OPENING_TAG.match(remainder, root_start)
+        if not match:
+            # Keep an incomplete tag for the next socket read. For a complete
+            # non-document token, advance one character and continue scanning.
+            if ">" not in remainder[root_start:]:
+                return frames, remainder[document_start:]
+            remainder = remainder[root_start + 1 :]
+            continue
+
+        root_name = match.group(1)
+        if match.group(2) == "/":
+            end = match.end()
+            frames.append(remainder[document_start:end])
+            remainder = remainder[end:]
+            continue
+
+        closing_tag = f"</{root_name}>"
+        end = remainder.lower().find(closing_tag.lower(), match.end())
+        if end == -1:
+            return frames, remainder[document_start:]
+
+        end += len(closing_tag)
+        frames.append(remainder[document_start:end])
         remainder = remainder[end:]
+
+
+def _xml_local_name(tag: str):
+    return tag.rsplit("}", 1)[-1].split(":", 1)[-1]
+
+
+def _first_payload_value(payload: dict, *keys):
+    for key in keys:
+        value = payload.get(key)
+        if value is not None and str(value).strip():
+            return str(value).strip()
+    return ""
+
+
+def normalize_tcp_xml_event(payload: dict):
+    """Normalize generic and SBXPC callback XML into School Conduct fields."""
+    normalized = {str(key): _strip_nul_chars(value) for key, value in payload.items()}
+
+    serial = _first_payload_value(
+        normalized,
+        "DeviceSerialNo",
+        "DeviceUID",
+        "DeviceUniqueID",
+        "SerialNumber",
+        "DeviceID",
+    )
+    if serial:
+        normalized["DeviceSerialNo"] = serial
+
+    terminal_id = _first_payload_value(
+        normalized,
+        "TerminalID",
+        "TerminalId",
+        "MachineID",
+        "MachineId",
+        "MachineNumber",
+    )
+    if terminal_id:
+        normalized["TerminalID"] = terminal_id
+
+    user_id = _first_payload_value(
+        normalized,
+        "UserID",
+        "UserId",
+        "EnrollNumber",
+        "EnrollNo",
+        "rfid_code",
+    )
+    if user_id:
+        normalized["UserID"] = user_id
+
+    event_type = _first_payload_value(normalized, "Event", "EventType", "event")
+    compact_event_type = re.sub(r"[\s_-]+", "", event_type).lower()
+    event_aliases = {
+        "timelog": "TimeLog",
+        "attendancelog": "TimeLog",
+        "generallog": "TimeLog",
+        "managementlog": "ManagementLog",
+        "verificationfailure": "VerificationFailure",
+        "verificationsuccess": "VerificationSuccess",
+        "alarmon": "AlarmOn",
+        "alarmoff": "AlarmOff",
+        "doorbell": "DoorBell",
+    }
+    if event_type:
+        normalized["Event"] = event_aliases.get(compact_event_type, event_type.strip())
+
+    attendance_status = _first_payload_value(
+        normalized, "AttendStat", "AttendanceStatus", "IOStatus", "io_mode"
+    )
+    if attendance_status:
+        normalized["AttendStat"] = attendance_status
+
+    verification_mode = _first_payload_value(
+        normalized, "VerifMode", "VerificationMode", "VerifyMode", "verify_mode"
+    )
+    if verification_mode:
+        normalized["VerifMode"] = verification_mode
+
+    return normalized
 
 
 def parse_tcp_xml_payload(raw_payload: str):
     root = ElementTree.fromstring(raw_payload.strip())
     payload = {}
-    for child in root:
-        payload[child.tag] = (child.text or "").strip()
-    return payload
+    for child in root.iter():
+        if child is root or len(child):
+            continue
+        payload[_xml_local_name(child.tag)] = (child.text or "").strip()
+    return normalize_tcp_xml_event(payload)
 
 
 def _normalize_target_type(value):
@@ -111,23 +232,123 @@ def _parse_punch_time(payload):
 
 
 def compute_event_fingerprint(protocol: str, payload: dict):
+    def value(*keys):
+        return _first_payload_value(payload, *keys)
+
     base = "|".join(
         [
-            protocol,
-            payload.get('DeviceSerialNo', '') or payload.get('device_serial_number', ''),
-            payload.get('Event', '') or payload.get('event', ''),
-            payload.get('TransID', '') or payload.get('trans_id', ''),
-            payload.get('UserID', '') or payload.get('rfid_code', ''),
-            payload.get('punch_time', ''),
-            payload.get('Year', ''),
-            payload.get('Month', ''),
-            payload.get('Day', ''),
-            payload.get('Hour', ''),
-            payload.get('Minute', ''),
-            payload.get('Second', ''),
+            str(protocol or '').strip().lower(),
+            value('DeviceSerialNo', 'device_serial_number', 'DeviceUID'),
+            value('TerminalID', 'terminal_id', 'MachineID'),
+            value('Event', 'event'),
+            value('TransID', 'trans_id'),
+            value('UserID', 'rfid_code'),
+            value('VerifMode', 'VerificationMode', 'VerifyMode', 'verify_mode'),
+            value('AttendStat', 'AttendanceStatus', 'IOStatus', 'io_mode'),
+            value('punch_time', 'PunchTime'),
+            value('Year'),
+            value('Month'),
+            value('Day'),
+            value('Hour'),
+            value('Minute'),
+            value('Second'),
         ]
     )
     return hashlib.sha256(base.encode("utf-8")).hexdigest()
+
+
+def _legacy_event_fingerprints(protocol: str, payload: dict):
+    """Return fingerprints emitted before verification details were added.
+
+    Keeping a compatibility lookup prevents a terminal replay from inserting
+    one fresh copy of every historical punch immediately after deployment.
+    """
+    serial = str(
+        payload.get('DeviceSerialNo', '') or payload.get('device_serial_number', '') or ''
+    )
+    terminal_id = str(payload.get('TerminalID', '') or payload.get('MachineID', '') or '')
+    suffix = [
+        str(payload.get('Event', '') or payload.get('event', '') or ''),
+        str(payload.get('TransID', '') or payload.get('trans_id', '') or ''),
+        str(payload.get('UserID', '') or payload.get('rfid_code', '') or ''),
+        str(payload.get('punch_time', '') or ''),
+        str(payload.get('Year', '') or ''),
+        str(payload.get('Month', '') or ''),
+        str(payload.get('Day', '') or ''),
+        str(payload.get('Hour', '') or ''),
+        str(payload.get('Minute', '') or ''),
+        str(payload.get('Second', '') or ''),
+    ]
+
+    fingerprints = []
+    if serial or terminal_id:
+        with_terminal = "|".join([str(protocol), serial, terminal_id, *suffix])
+        fingerprints.append(hashlib.sha256(with_terminal.encode("utf-8")).hexdigest())
+    if serial:
+        without_terminal = "|".join([str(protocol), serial, *suffix])
+        fingerprints.append(hashlib.sha256(without_terminal.encode("utf-8")).hexdigest())
+    return fingerprints
+
+
+def _legacy_event_matches_verification_details(event_log, payload: dict):
+    incoming_mode = _first_payload_value(
+        payload, 'VerifMode', 'VerificationMode', 'VerifyMode', 'verify_mode'
+    ).casefold()
+    incoming_status = _first_payload_value(
+        payload, 'AttendStat', 'AttendanceStatus', 'IOStatus', 'io_mode'
+    ).casefold()
+    stored_mode = str(event_log.verify_mode or '').strip().casefold()
+    stored_status = str(event_log.attend_stat or '').strip().casefold()
+    mode_matches = not incoming_mode or not stored_mode or incoming_mode == stored_mode
+    status_matches = not incoming_status or not stored_status or incoming_status == stored_status
+    return mode_matches and status_matches
+
+
+def _find_existing_event_log(protocol: str, payload: dict, fingerprint: str):
+    existing = BiometricEventLog.objects.filter(event_fingerprint=fingerprint).first()
+    if existing:
+        return existing
+
+    serial = _first_payload_value(payload, 'DeviceSerialNo', 'device_serial_number')
+    terminal_id = _first_payload_value(payload, 'TerminalID', 'terminal_id', 'MachineID')
+    event_type = _first_payload_value(payload, 'Event', 'event')
+    trans_id = _first_payload_value(payload, 'TransID', 'trans_id')
+    user_identifier = _first_payload_value(payload, 'UserID', 'rfid_code')
+    verify_mode = _first_payload_value(
+        payload, 'VerifMode', 'VerificationMode', 'VerifyMode', 'verify_mode'
+    )
+    attend_stat = _first_payload_value(
+        payload, 'AttendStat', 'AttendanceStatus', 'IOStatus', 'io_mode'
+    )
+    has_device_timestamp = bool(
+        _first_payload_value(payload, 'punch_time', 'PunchTime')
+        or all(_first_payload_value(payload, key) for key in ('Year', 'Month', 'Day'))
+    )
+    if serial and event_type and user_identifier and has_device_timestamp:
+        semantic_match = BiometricEventLog.objects.filter(
+            protocol=protocol,
+            device_serial_number__iexact=serial,
+            event_type__iexact=event_type,
+            user_identifier=user_identifier,
+            punch_time=_parse_punch_time(payload),
+        )
+        if terminal_id:
+            semantic_match = semantic_match.filter(terminal_id=terminal_id)
+        if trans_id:
+            semantic_match = semantic_match.filter(trans_id=trans_id)
+        if verify_mode:
+            semantic_match = semantic_match.filter(verify_mode__iexact=verify_mode)
+        if attend_stat:
+            semantic_match = semantic_match.filter(attend_stat__iexact=attend_stat)
+        existing = semantic_match.order_by('id').first()
+        if existing:
+            return existing
+
+    for legacy_fingerprint in _legacy_event_fingerprints(protocol, payload):
+        existing = BiometricEventLog.objects.filter(event_fingerprint=legacy_fingerprint).first()
+        if existing and _legacy_event_matches_verification_details(existing, payload):
+            return existing
+    return None
 
 
 def resolve_tcp_device(payload: dict, source_ip: str | None = None):
@@ -147,7 +368,12 @@ def resolve_direct_push_device(
     lookup_label='direct push',
 ):
     serial = (payload.get('DeviceSerialNo') or "").strip()
-    terminal_id = (payload.get('TerminalID') or "").strip()
+    terminal_id = (
+        payload.get('TerminalID')
+        or payload.get('MachineID')
+        or payload.get('MachineId')
+        or ""
+    ).strip()
 
     device = None
     if serial:
@@ -352,59 +578,6 @@ def _base_event_log_kwargs(device, protocol, source_ip, payload, raw_payload, pu
     }
 
 
-def _log_nul_bytes_in_event_kwargs(kwargs):
-    def contains_nul(value):
-        if isinstance(value, str):
-            return "\x00" in value
-        if isinstance(value, bytes):
-            return b"\x00" in value
-        if isinstance(value, dict):
-            return any(contains_nul(key) or contains_nul(item) for key, item in value.items())
-        if isinstance(value, (list, tuple)):
-            return any(contains_nul(item) for item in value)
-        return False
-
-    def walk(value, path):
-        if isinstance(value, str):
-            if "\x00" in value:
-                logger.error("NUL byte detected at %s: %r", path, value)
-            return
-        if isinstance(value, bytes):
-            if b"\x00" in value:
-                logger.error("NUL byte detected at %s: %r", path, value)
-            return
-        if isinstance(value, dict):
-            for key, item in value.items():
-                walk(key, f"{path}[key]")
-                walk(item, f"{path}.{key}")
-            return
-        if isinstance(value, (list, tuple)):
-            for index, item in enumerate(value):
-                walk(item, f"{path}[{index}]")
-
-    for key, value in kwargs.items():
-        try:
-            if contains_nul(value):
-                logger.error("NUL byte detected in BiometricEventLog field '%s' (type=%s)", key, type(value).__name__)
-                walk(value, key)
-        except Exception as exc:
-            logger.error("Failed while checking field '%s' for NUL bytes: %s", key, exc)
-
-
-def _write_biometric_debug_snapshot(label, kwargs):
-    try:
-        lines = [f"[{label}]"]
-        for key, value in kwargs.items():
-            lines.append(f"{key}: type={type(value).__name__} repr={value!r}")
-        lines.append("")
-        _BIOMETRIC_DEBUG_LOG.parent.mkdir(parents=True, exist_ok=True)
-        with _BIOMETRIC_DEBUG_LOG.open("a", encoding="utf-8") as handle:
-            handle.write("\n".join(lines))
-    except Exception:
-        pass
-
-
-@transaction.atomic
 def process_biometric_event(
     *,
     protocol: str,
@@ -420,7 +593,7 @@ def process_biometric_event(
         payload['Event'] = 'TimeLog'
 
     fingerprint = compute_event_fingerprint(protocol, payload)
-    existing = BiometricEventLog.objects.filter(event_fingerprint=fingerprint).first()
+    existing = _find_existing_event_log(protocol, payload, fingerprint)
     if existing:
         try:
             if device:
@@ -461,6 +634,11 @@ def process_biometric_event(
                     resp_dict = {
                         'ok': True,
                         'status': 'processed',
+                        'message': 'Duplicate biometric event reapplied to student attendance.',
+                        'target_type': 'student',
+                        'student_name': student.user.name or student.user.username,
+                        'school_name': student.school.name if student.school else '',
+                        'punch_time': attendance.punch_time.isoformat() if attendance.punch_time else punch_dt.isoformat(),
                         'event_log_id': existing.id,
                     }
                     messages = []
@@ -490,18 +668,22 @@ def process_biometric_event(
                         device.last_punch_at = punch_dt
                         device.save(update_fields=['last_punch_at'])
 
-                    resp_dict['message'] = 'Duplicate biometric event reapplied. ' + ' | '.join(messages)
-                    if student and teacher:
-                        resp_dict['target_type'] = 'both'
-                    elif student:
-                        resp_dict['target_type'] = 'student'
-                    else:
-                        resp_dict['target_type'] = 'teacher'
-                    return resp_dict
+                    return {
+                        'ok': True,
+                        'status': 'processed',
+                        'message': f'Duplicate biometric event reapplied to teacher attendance. {message}',
+                        'target_type': 'teacher',
+                        'teacher_name': teacher.user.name or teacher.user.username,
+                        'school_name': teacher.school.name if teacher.school else '',
+                        'punch_in_time': teacher_attendance.punch_in_time.isoformat() if teacher_attendance.punch_in_time else None,
+                        'punch_out_time': teacher_attendance.punch_out_time.isoformat() if teacher_attendance.punch_out_time else None,
+                        'event_log_id': existing.id,
+                    }
 
         return {
             'ok': True,
             'status': 'duplicate',
+            'device_authorized': bool(device),
             'message': 'Duplicate biometric event ignored.',
             'event_log_id': existing.id,
         }
@@ -534,8 +716,6 @@ def process_biometric_event(
                 'processed_at': timezone.now(),
             }
         )
-        _log_nul_bytes_in_event_kwargs(event_log_kwargs)
-        _write_biometric_debug_snapshot("unauthorized-before-create", event_log_kwargs)
         try:
             event_log = BiometricEventLog.objects.create(
                 **event_log_kwargs,
@@ -544,9 +724,10 @@ def process_biometric_event(
             existing = BiometricEventLog.objects.filter(event_fingerprint=fingerprint).first()
             if existing:
                 return {
-                    'ok': True,
-                    'status': 'duplicate',
-                    'message': 'Duplicate biometric event ignored.',
+                    'ok': False,
+                    'status': 'unauthorized',
+                    'device_authorized': False,
+                    'message': 'Duplicate unauthorized biometric event ignored.',
                     'event_log_id': existing.id,
                 }
             raise
@@ -554,6 +735,7 @@ def process_biometric_event(
         return {
             'ok': False,
             'status': 'unauthorized',
+            'device_authorized': False,
             'message': str(exc),
             'event_log_id': event_log.id,
         }
@@ -562,8 +744,6 @@ def process_biometric_event(
         event_log_kwargs = _base_event_log_kwargs(
             device, protocol, source_ip, payload, raw_payload, punch_dt, fingerprint
         )
-        _log_nul_bytes_in_event_kwargs(event_log_kwargs)
-        _write_biometric_debug_snapshot("before-create", event_log_kwargs)
         event_log = BiometricEventLog.objects.create(**event_log_kwargs)
     except IntegrityError:
         existing = BiometricEventLog.objects.filter(event_fingerprint=fingerprint).first()
@@ -571,6 +751,7 @@ def process_biometric_event(
             return {
                 'ok': True,
                 'status': 'duplicate',
+                'device_authorized': True,
                 'message': 'Duplicate biometric event ignored.',
                 'event_log_id': existing.id,
             }
@@ -594,6 +775,7 @@ def process_biometric_event(
         return {
             'ok': True,
             'status': 'ignored',
+            'device_authorized': True,
             'message': f'Ignored non-attendance event {event_type}.',
             'event_log_id': event_log.id,
         }
@@ -606,6 +788,7 @@ def process_biometric_event(
         return {
             'ok': False,
             'status': 'failed',
+            'device_authorized': True,
             'message': event_log.error_message,
             'event_log_id': event_log.id,
         }
@@ -636,6 +819,7 @@ def process_biometric_event(
         return {
             'ok': False,
             'status': 'unmatched',
+            'device_authorized': True,
             'message': event_log.error_message,
             'event_log_id': event_log.id,
         }
@@ -648,6 +832,7 @@ def process_biometric_event(
         return {
             'ok': False,
             'status': 'unmatched',
+            'device_authorized': True,
             'message': event_log.error_message,
             'event_log_id': event_log.id,
         }
@@ -660,6 +845,7 @@ def process_biometric_event(
         return {
             'ok': False,
             'status': 'unmatched',
+            'device_authorized': True,
             'message': event_log.error_message,
             'event_log_id': event_log.id,
         }
@@ -675,28 +861,41 @@ def process_biometric_event(
     if teacher:
         teacher_attendance, created, message = _process_teacher_attendance(teacher, punch_dt)
         event_log.teacher_attendance = teacher_attendance
-        messages.append(message)
-        resp_dict['teacher_name'] = teacher.user.name or teacher.user.username
-        resp_dict['school_name'] = teacher.school.name if teacher.school else ''
-        resp_dict['punch_in_time'] = teacher_attendance.punch_in_time.isoformat() if teacher_attendance.punch_in_time else None
-        resp_dict['punch_out_time'] = teacher_attendance.punch_out_time.isoformat() if teacher_attendance.punch_out_time else None
+        event_log.processed_at = timezone.now()
+        event_log.save(update_fields=['status', 'teacher_attendance', 'processed_at'])
 
-    if student:
-        attendance, created, message = _process_student_attendance(student, punch_dt)
-        event_log.attendance = attendance
-        messages.append(message)
-        resp_dict['student_name'] = student.user.name or student.user.username
-        resp_dict['school_name'] = student.school.name if student.school else ''
-        resp_dict['punch_time'] = attendance.punch_time.isoformat() if attendance.punch_time else punch_dt.isoformat()
+        # Update device last_punch_at for teacher punches too
+        device.last_punch_at = punch_dt
+        update_fields.append('last_punch_at')
+        device.save(update_fields=update_fields)
 
+        return {
+            'ok': True,
+            'status': 'processed',
+            'message': message,
+            'target_type': 'teacher',
+            'teacher_name': teacher.user.name or teacher.user.username,
+            'school_name': teacher.school.name if teacher.school else '',
+            'punch_in_time': teacher_attendance.punch_in_time.isoformat() if teacher_attendance.punch_in_time else None,
+            'punch_out_time': teacher_attendance.punch_out_time.isoformat() if teacher_attendance.punch_out_time else None,
+            'event_log_id': event_log.id,
+        }
+
+    attendance, created, message = _process_student_attendance(student, punch_dt)
     device.last_punch_at = punch_dt
     update_fields.append('last_punch_at')
     device.save(update_fields=update_fields)
 
     event_log.status = 'processed'
     event_log.processed_at = timezone.now()
-    event_log.save(update_fields=['status', 'attendance', 'teacher_attendance', 'processed_at'])
-    
-    resp_dict['message'] = " | ".join(messages)
-    
-    return resp_dict
+    event_log.save(update_fields=['status', 'attendance', 'processed_at'])
+    return {
+        'ok': True,
+        'status': 'processed',
+        'message': message,
+        'target_type': 'student',
+        'student_name': student.user.name or student.user.username,
+        'school_name': student.school.name if student.school else '',
+        'punch_time': attendance.punch_time.isoformat() if attendance.punch_time else punch_dt.isoformat(),
+        'event_log_id': event_log.id,
+    }

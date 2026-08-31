@@ -1,4 +1,5 @@
 import base64
+import logging
 
 from django.db.models import Q
 from django.core.files.base import ContentFile
@@ -19,6 +20,8 @@ from .serializers import (
     SubjectAssignmentSerializer,
     TeacherAssignmentSerializer,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def _strip_base64_prefix(data: str) -> str:
@@ -390,7 +393,6 @@ class TeacherAssignmentListCreateView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        print("DEBUG POST DATA:", request.data)
         school = request.user.school
         teacher_id = request.data.get('teacher_id')
         class_id = request.data.get('class_id')
@@ -452,10 +454,9 @@ class TeacherAssignmentListCreateView(APIView):
             )
             assignment = TeacherAssignment.objects.select_related('teacher__user', 'class_ref', 'section', 'subject').get(id=assignment.id)
             return Response(TeacherAssignmentSerializer(assignment).data, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            import traceback
-            print(traceback.format_exc())
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception:
+            logger.exception('Failed to create teacher assignment')
+            return Response({"error": "Unable to create teacher assignment"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class TeacherAssignmentDetailView(APIView):

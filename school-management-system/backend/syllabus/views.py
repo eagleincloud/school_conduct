@@ -1,6 +1,6 @@
+import logging
 import os
 
-from django.core.files.storage import default_storage
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
@@ -9,9 +9,37 @@ from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 from core.permissions import IsAdmin, IsStudent, IsTeacher
 from subjects.models import Subject, TeacherAssignment
+from classes.models import MainClass
+from core.validators import validate_uploaded_file
 
 from .models import Syllabus
 from .serializers import SyllabusSerializer
+
+logger = logging.getLogger(__name__)
+
+
+def _is_platform_user(user):
+    return bool(user.is_superuser or user.role == 'superadmin')
+
+
+def _school_syllabi(user):
+    qs = Syllabus.objects.all()
+    if _is_platform_user(user):
+        return qs
+    if not user.school_id:
+        return qs.none()
+    return qs.filter(class_ref__school_id=user.school_id)
+
+
+def _validated_class_subject(user, class_id, subject_id):
+    classes = MainClass.objects.all()
+    if not _is_platform_user(user):
+        classes = classes.filter(school_id=user.school_id)
+    class_ref = classes.filter(id=class_id).first()
+    if not class_ref:
+        return None, None
+    subject = Subject.objects.filter(id=subject_id, class_ref=class_ref).first()
+    return class_ref, subject
 
 
 class AdminSyllabusControlView(views.APIView):
@@ -35,21 +63,30 @@ class AdminSyllabusControlView(views.APIView):
         if not file:
             return Response({'error': 'file is required'}, status=status.HTTP_400_BAD_REQUEST)
 
+        class_ref, subject = _validated_class_subject(request.user, class_id, subject_id)
+        if not class_ref or not subject:
+            return Response({'error': 'Invalid class or subject.'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            validate_uploaded_file(file, allowed_extensions={'.pdf', '.doc', '.docx'})
+        except ValueError as exc:
+            return Response({'file': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
             syllabus = Syllabus.objects.create(
-                class_ref_id=class_id,
-                subject_id=subject_id,
+                class_ref=class_ref,
+                subject=subject,
                 uploaded_by=request.user,
                 title=title,
                 description=description,
                 file=file,
             )
             return Response(SyllabusSerializer(syllabus).data, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception:
+            logger.exception('Failed to create syllabus')
+            return Response({'error': 'Unable to create syllabus.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def patch(self, request, syllabus_id: int):
-        syllabus = get_object_or_404(Syllabus, id=syllabus_id)
+        syllabus = get_object_or_404(_school_syllabi(request.user), id=syllabus_id)
         
         # Allow updating file, title, description, class, or subject
         class_id = request.data.get('class_id')
@@ -58,17 +95,28 @@ class AdminSyllabusControlView(views.APIView):
         description = request.data.get('description')
         file = request.FILES.get('file')
 
-        if class_id: syllabus.class_ref_id = class_id
-        if subject_id: syllabus.subject_id = subject_id
+        if class_id or subject_id:
+            next_class_id = class_id or syllabus.class_ref_id
+            next_subject_id = subject_id or syllabus.subject_id
+            class_ref, subject = _validated_class_subject(request.user, next_class_id, next_subject_id)
+            if not class_ref or not subject:
+                return Response({'error': 'Invalid class or subject.'}, status=status.HTTP_400_BAD_REQUEST)
+            syllabus.class_ref = class_ref
+            syllabus.subject = subject
         if title: syllabus.title = title
         if description is not None: syllabus.description = description
-        if file: syllabus.file = file
+        if file:
+            try:
+                validate_uploaded_file(file, allowed_extensions={'.pdf', '.doc', '.docx'})
+            except ValueError as exc:
+                return Response({'file': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+            syllabus.file = file
 
         syllabus.save()
         return Response(SyllabusSerializer(syllabus).data)
 
     def delete(self, request, syllabus_id: int):
-        syllabus = get_object_or_404(Syllabus, id=syllabus_id)
+        syllabus = get_object_or_404(_school_syllabi(request.user), id=syllabus_id)
         syllabus.delete()
         return Response({'message': 'Syllabus deleted successfully'}, status=status.HTTP_200_OK)
 
@@ -113,8 +161,8 @@ class SyllabusListView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset_for_user(self, user):
-        if user.role == 'admin':
-            return Syllabus.objects.all()
+        if user.role == 'admin' or _is_platform_user(user):
+            return _school_syllabi(user)
         
         if user.role == 'teacher':
             teacher_profile = getattr(user, 'teacher_profile', None)
@@ -131,14 +179,14 @@ class SyllabusListView(views.APIView):
             for a in assignments:
                 query |= Q(class_ref_id=a.class_ref_id, subject_id=a.subject_id)
             
-            return Syllabus.objects.filter(query)
+            return _school_syllabi(user).filter(query)
 
         if user.role == 'student':
             from students.utils import get_requested_student
             sp = get_requested_student(self.request)
             if not sp or not sp.class_section_id:
                 return Syllabus.objects.none()
-            return Syllabus.objects.filter(class_ref_id=sp.class_section.class_ref_id)
+            return _school_syllabi(user).filter(class_ref_id=sp.class_section.class_ref_id)
         
         return Syllabus.objects.none()
 
@@ -165,7 +213,7 @@ class SyllabusDetailView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, syllabus_id: int):
-        syllabus = get_object_or_404(Syllabus, id=syllabus_id)
+        syllabus = get_object_or_404(_school_syllabi(request.user), id=syllabus_id)
         
         # Access control
         if request.user.role == 'admin':
@@ -189,7 +237,7 @@ class StudentSyllabusDownloadView(views.APIView):
     permission_classes = [permissions.IsAuthenticated] # Allowed for all authed roles if assigned
 
     def get(self, request, syllabus_id: int):
-        syllabus = get_object_or_404(Syllabus, id=syllabus_id)
+        syllabus = get_object_or_404(_school_syllabi(request.user), id=syllabus_id)
         
         # Access check
         if request.user.role == 'student':
@@ -210,5 +258,6 @@ class StudentSyllabusDownloadView(views.APIView):
             # Determine content type or use default
             response['Content-Disposition'] = f'attachment; filename="{os.path.basename(syllabus.file.name)}"'
             return response
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception:
+            logger.exception('Failed to open syllabus file id=%s', syllabus_id)
+            return Response({'error': 'Unable to open file.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

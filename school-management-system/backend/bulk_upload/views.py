@@ -5,22 +5,32 @@ from rest_framework.permissions import IsAuthenticated
 from core.permissions import IsAdmin
 from .services import BulkImportService
 from .models import BulkImportLog
+from django.conf import settings
+from core.validators import validate_uploaded_file
 
 class ValidateUploadAPIView(APIView):
     permission_classes = [IsAuthenticated, IsAdmin]
+    throttle_scope = 'upload'
 
     def post(self, request):
         if 'file' not in request.FILES:
             return Response({"error": "No file uploaded"}, status=status.HTTP_400_BAD_REQUEST)
         
         file_obj = request.FILES['file']
+        try:
+            validate_uploaded_file(file_obj, allowed_extensions={'.csv', '.xls', '.xlsx'})
+        except ValueError as exc:
+            return Response({'file': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
         import_type = request.data.get('type')
         school = request.user.school
         
         if import_type not in ['student', 'teacher']:
             return Response({"error": "Invalid import type. Must be 'student' or 'teacher'."}, status=status.HTTP_400_BAD_REQUEST)
 
-        valid_rows, error_rows = BulkImportService.validate_file(file_obj, import_type, school)
+        try:
+            valid_rows, error_rows = BulkImportService.validate_file(file_obj, import_type, school)
+        except Exception as exc:
+            return Response({"error_rows": [{"row": 0, "error": f"Error parsing file: {str(exc)}"}]}, status=status.HTTP_400_BAD_REQUEST)
         
         if valid_rows is None:
             return Response({"error_rows": error_rows}, status=status.HTTP_400_BAD_REQUEST)
@@ -33,6 +43,7 @@ class ValidateUploadAPIView(APIView):
 
 class ConfirmImportAPIView(APIView):
     permission_classes = [IsAuthenticated, IsAdmin]
+    throttle_scope = 'upload'
 
     def post(self, request):
         valid_data = request.data.get('data', [])
@@ -45,6 +56,11 @@ class ConfirmImportAPIView(APIView):
 
         if not valid_data:
             return Response({"error": "No valid data to import"}, status=status.HTTP_400_BAD_REQUEST)
+        if not isinstance(valid_data, list) or len(valid_data) > settings.API_MAX_BULK_ROWS:
+            return Response(
+                {"error": f"A maximum of {settings.API_MAX_BULK_ROWS} rows is allowed per import."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         success_count, failed_count, created_users = BulkImportService.confirm_import(valid_data, import_type, school)
         

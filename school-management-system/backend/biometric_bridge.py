@@ -15,8 +15,8 @@ except ImportError as exc:
 DEVICE_IP = '192.168.0.100' # Ensure this is your Biometric Machine IP
 DEVICE_PORT = 4370         # Default pyzk port
 SCHOOL_ID = 'DEFAULT'            
-SERVER_URL = 'http://13.201.53.169/api/attendance/biometric-punch/'
-DEVICE_SECRET_KEY = 'Ebn_Zg2FyvmD6Fw4o2S6tBKUfmWaL5nG' 
+SERVER_URL = 'http://93.127.199.44/api/attendance/biometric-punch/'
+DEVICE_SECRET_KEY = 'y0ur_Sup3r_S3cr3t_B1om3tr1c_K3y_987' 
 # =========================================================================
 
 def start_bridge():

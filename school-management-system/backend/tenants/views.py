@@ -48,10 +48,7 @@ class CommonSchoolInfoView(APIView):
         serializer = PublicSchoolSerializer(request.user.school)
         return Response(serializer.data)
 
-class IsSuperAdmin(permissions.BasePermission):
-    """Custom permission to only allow superadmins."""
-    def has_permission(self, request, view):
-        return bool(request.user and request.user.is_authenticated and request.user.is_superuser)
+from core.permissions import IsSuperAdmin
 
 from rest_framework.decorators import action
 

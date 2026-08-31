@@ -3,12 +3,12 @@ import api, { BASE_URL } from "./api";
 const biometricDeviceService = {
   list: async (params = {}) => {
     const response = await api.get("attendance/devices/", { params });
-    return response.data || [];
+    return Array.isArray(response.data) ? response.data : (response.data?.results || []);
   },
 
   getLogs: async (params = {}) => {
     const response = await api.get("attendance/devices/logs/", { params });
-    return response.data || [];
+    return Array.isArray(response.data) ? response.data : (response.data?.results || []);
   },
 
   create: async (payload) => {

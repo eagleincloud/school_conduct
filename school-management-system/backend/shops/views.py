@@ -4,6 +4,7 @@ from .serializers import ShopSerializer
 
 class ShopViewSet(viewsets.ModelViewSet):
     serializer_class = ShopSerializer
+    pagination_class = None
 
     def get_queryset(self):
         # 🔒 Data Isolation: Only show shops belonging to the user's school.
