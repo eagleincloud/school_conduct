@@ -2,7 +2,7 @@ import ipaddress
 
 from rest_framework import serializers
 
-from .models import Attendance, BiometricDevice, TeacherAttendance, BiometricEventLog, generate_device_secret_key
+from .models import Attendance, BiometricDevice, TeacherAttendance, BiometricEventLog, AttendanceSetting, generate_device_secret_key
 from tenants.models import School
 
 
@@ -225,3 +225,16 @@ class TeacherAttendanceSerializer(serializers.ModelSerializer):
             'notes',
             'created_at',
         ]
+
+
+class AttendanceSettingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AttendanceSetting
+        fields = [
+            'id',
+            'teacher_late_time',
+            'student_late_time',
+            'auto_mark_absent',
+            'updated_at',
+        ]
+

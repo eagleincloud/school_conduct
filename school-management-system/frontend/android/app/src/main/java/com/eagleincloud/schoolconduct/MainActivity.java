@@ -1,4 +1,4 @@
-package com.schoolconduct.app;
+package com.eagleincloud.schoolconduct;
 
 import android.os.Build;
 import android.os.Bundle;

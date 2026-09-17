@@ -281,3 +281,30 @@ class BiometricEventLog(models.Model):
     def __str__(self):
         return f"{self.protocol}:{self.event_type or 'unknown'}:{self.device_serial_number or 'unbound'}"
 
+
+class AttendanceSetting(models.Model):
+    school = models.OneToOneField(
+        'tenants.School',
+        on_delete=models.CASCADE,
+        related_name='attendance_setting',
+    )
+    teacher_late_time = models.TimeField(
+        null=True,
+        blank=True,
+        help_text="Punches after this time will be marked as late for teachers",
+    )
+    student_late_time = models.TimeField(
+        null=True,
+        blank=True,
+        help_text="Punches after this time will be marked as late for students",
+    )
+    auto_mark_absent = models.BooleanField(
+        default=True,
+        help_text="Automatically treat unpunched teachers/students as absent",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Attendance Settings for {self.school.name}"
+

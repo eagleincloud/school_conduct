@@ -106,13 +106,6 @@ const Login = () => {
     }
   };
 
-  // Get the expected role from URL (e.g., /school/:id/login?role=admin)
-  const expectedRole = searchParams.get("role") || "student";
-  const roleTitle =
-    expectedRole === "student"
-      ? "Parent"
-      : expectedRole.charAt(0).toUpperCase() + expectedRole.slice(1);
-
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
@@ -121,14 +114,6 @@ const Login = () => {
     try {
       const user = await authService.login(username, password);
       if (user) {
-        if (user.role !== expectedRole) {
-          setError(`Access Denied: You are not a registered ${roleTitle}.`);
-          authService.logout();
-          logout();
-          setIsLoading(false);
-          return;
-        }
-
         // Enforce strict tenant isolation
         // String coercion is used since API might send number, URL param is string
         if (String(user.school_id) !== String(finalSchoolId)) {
@@ -150,6 +135,7 @@ const Login = () => {
 
         if (user.role === "admin") navigate("/admin/dashboard");
         else if (user.role === "teacher") navigate("/teacher/dashboard");
+        else if (user.role === "superadmin") navigate("/superadmin/dashboard");
         else {
           if (user.student_profile_id) {
             setSelectedStudentId(user.student_profile_id);
@@ -217,19 +203,16 @@ const Login = () => {
           <div className="mt-2 inline-flex items-center gap-2 px-3 py-1 bg-white border border-slate-200 rounded-full shadow-sm">
             <span className="w-2 h-2 rounded-full bg-school-blue animate-pulse"></span>
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-              {roleTitle} Portal
+              Secure Portal Access
             </span>
           </div>
         </div>
 
         <div className="bg-white/80 backdrop-blur-xl border border-white rounded-3xl shadow-2xl shadow-slate-200/50 p-8 md:p-10 animate-in fade-in zoom-in-95 duration-500 delay-150">
-          <div className="mb-8">
-            <h2 className="text-xl font-bold text-slate-800 mb-1">
-              {roleTitle} Login
+          <div className="mb-8 text-center">
+            <h2 className="text-2xl font-bold text-slate-800">
+              Log in
             </h2>
-            <p className="text-sm text-slate-500">
-              Please enter your credentials to continue
-            </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-5">

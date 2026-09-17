@@ -1,7 +1,7 @@
 import hashlib
 import logging
 import re
-from datetime import datetime as datetime_type
+from datetime import datetime as datetime_type, time
 from xml.etree import ElementTree
 
 from django.db import IntegrityError, models, transaction
@@ -10,7 +10,7 @@ from django.utils import timezone
 from students.models import StudentProfile
 from teachers.models import TeacherProfile
 
-from .models import Attendance, BiometricDevice, BiometricEventLog, TeacherAttendance
+from .models import Attendance, BiometricDevice, BiometricEventLog, TeacherAttendance, AttendanceSetting
 
 logger = logging.getLogger(__name__)
 _XML_OPENING_TAG = re.compile(
@@ -470,41 +470,67 @@ def _resolve_teacher(identifier: str, school_id: str):
     )
 
 
+def _is_late_punch(school, punch_dt, target_type='teacher'):
+    if not school or not punch_dt:
+        return False
+    setting = AttendanceSetting.objects.filter(school=school).first()
+    cutoff_time = time(8, 30)
+    if setting:
+        if target_type == 'teacher' and setting.teacher_late_time:
+            cutoff_time = setting.teacher_late_time
+        elif target_type == 'student' and setting.student_late_time:
+            cutoff_time = setting.student_late_time
+
+    local_punch_dt = timezone.localtime(punch_dt) if timezone.is_aware(punch_dt) else punch_dt
+    return local_punch_dt.time() > cutoff_time
+
+
 def _process_teacher_attendance(teacher, punch_dt):
+    is_late = _is_late_punch(teacher.school, punch_dt, 'teacher')
+    punch_status = 'late' if is_late else 'present'
+
     attendance, created = TeacherAttendance.objects.get_or_create(
         teacher=teacher,
         date=punch_dt.date(),
         defaults={
-            'status': 'present',
+            'status': punch_status,
             'marked_via': 'rfid',
             'punch_in_time': punch_dt,
         },
     )
     if not created:
         update_fields = []
-        if attendance.status != 'present':
-            attendance.status = 'present'
-            update_fields.append('status')
         if not attendance.punch_in_time or punch_dt < attendance.punch_in_time:
             attendance.punch_in_time = punch_dt
             update_fields.append('punch_in_time')
+            earliest_is_late = _is_late_punch(teacher.school, punch_dt, 'teacher')
+            attendance.status = 'late' if earliest_is_late else 'present'
+            update_fields.append('status')
+        elif attendance.status == 'absent':
+            earliest_is_late = _is_late_punch(teacher.school, attendance.punch_in_time or punch_dt, 'teacher')
+            attendance.status = 'late' if earliest_is_late else 'present'
+            update_fields.append('status')
+
         if not attendance.punch_out_time or attendance.punch_out_time < punch_dt:
             attendance.punch_out_time = punch_dt
             update_fields.append('punch_out_time')
         if update_fields:
             attendance.save(update_fields=update_fields)
-        message = 'Punch recorded and teacher attendance updated to present'
+        message = f'Punch recorded and teacher attendance updated ({attendance.status})'
     else:
-        message = 'Punch-in recorded successfully'
+        message = f'Punch-in recorded successfully ({punch_status})'
     return attendance, created, message
 
 
 def _process_student_attendance(student, punch_dt):
+    is_late = _is_late_punch(student.school, punch_dt, 'student')
+    punch_status = 'late' if is_late else 'present'
+
     attendance, created = Attendance.objects.select_related('student').get_or_create(
         student=student,
         date=punch_dt.date(),
         defaults={
-            'status': 'present',
+            'status': punch_status,
             'verification_status': 'approved',
             'marked_via': 'rfid',
             'punch_time': punch_dt,
@@ -516,34 +542,11 @@ def _process_student_attendance(student, punch_dt):
         if not attendance.punch_time or attendance.punch_time < punch_dt:
             attendance.punch_time = punch_dt
             attendance.save(update_fields=['punch_time'])
-        message = 'Punch received: attendance already approved'
+        message = f'Punch received: attendance already approved ({attendance.status})'
         return attendance, created, message
 
     if not created:
-        if attendance.status == 'absent' or attendance.verification_status == 'rejected':
-            attendance.status = 'present'
-            attendance.verification_status = 'approved'
-            attendance.marked_via = 'rfid'
-            attendance.punch_time = punch_dt
-            attendance.class_section = student.class_section
-            attendance.marked_by = None
-            attendance.verified_by = None
-            attendance.verified_at = timezone.now()
-            attendance.save()
-            message = 'Punch processed and attendance marked present'
-        else:
-            attendance.status = 'present'
-            attendance.verification_status = 'approved'
-            attendance.marked_via = 'rfid'
-            attendance.punch_time = punch_dt
-            attendance.class_section = student.class_section
-            attendance.marked_by = None
-            attendance.verified_by = None
-            attendance.verified_at = timezone.now()
-            attendance.save()
-            message = 'Punch processed successfully'
-    else:
-        attendance.status = 'present'
+        attendance.status = punch_status
         attendance.verification_status = 'approved'
         attendance.marked_via = 'rfid'
         attendance.punch_time = punch_dt
@@ -552,7 +555,18 @@ def _process_student_attendance(student, punch_dt):
         attendance.verified_by = None
         attendance.verified_at = timezone.now()
         attendance.save()
-        message = 'Punch processed successfully'
+        message = f'Punch processed and attendance marked {punch_status}'
+    else:
+        attendance.status = punch_status
+        attendance.verification_status = 'approved'
+        attendance.marked_via = 'rfid'
+        attendance.punch_time = punch_dt
+        attendance.class_section = student.class_section
+        attendance.marked_by = None
+        attendance.verified_by = None
+        attendance.verified_at = timezone.now()
+        attendance.save()
+        message = f'Punch processed successfully ({punch_status})'
 
     return attendance, created, message
 

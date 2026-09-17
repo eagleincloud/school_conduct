@@ -23,6 +23,7 @@ from .views import (
     TeacherAttendanceVerificationDecisionView,
     BiometricDevicePunchView,
     BiometricDeviceHeartbeatView,
+    AttendanceSettingView,
 )
 from .teacher_attendance_views import (
     AdminTeacherAttendanceSheetView,
@@ -65,4 +66,5 @@ urlpatterns = [
     path('staff/summary/', AdminTeacherAttendanceSummaryView.as_view(), name='staff-attendance-summary'),
     path('staff/my-attendance/', TeacherMyAttendanceView.as_view(), name='staff-my-attendance'),
     path('staff/biometric-punch/', TeacherBiometricPunchView.as_view(), name='staff-biometric-punch'),
+    path('settings/', AttendanceSettingView.as_view(), name='attendance-settings'),
 ]

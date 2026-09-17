@@ -1,4 +1,4 @@
-package com.schoolconduct.app;
+package com.eagleincloud.schoolconduct;
 
 import android.content.Context;
 import android.os.Environment;

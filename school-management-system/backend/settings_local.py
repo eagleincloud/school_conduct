@@ -1,7 +1,7 @@
 """
 Local development settings - uses SQLite and skips external services
 """
-from .settings import *
+from config.settings import *
 
 # Use SQLite for local development (no external DB needed)
 DATABASES = {
@@ -12,7 +12,14 @@ DATABASES = {
 }
 
 # Disable Cloudinary for local dev (no credentials needed)
-DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+    },
+}
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
