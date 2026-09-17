@@ -74,6 +74,11 @@ const TeacherAttendance = () => {
   const [monthlyMonth, setMonthlyMonth] = useState(new Date().getMonth() + 1);
   const [monthlyYear, setMonthlyYear] = useState(new Date().getFullYear());
 
+  // Late cut-off settings
+  const [lateCutoff, setLateCutoff] = useState("08:30");
+  const [savingCutoff, setSavingCutoff] = useState(false);
+  const [cutoffMsg, setCutoffMsg] = useState("");
+
   const isEditable = !!sheet?.is_editable;
 
   const loadSheet = async (silent = false) => {
@@ -81,11 +86,31 @@ const TeacherAttendance = () => {
     try {
       const res = await api.get("attendance/staff/sheet/", { params: { date } });
       setSheet(res.data || null);
-      setRows((res.data?.teachers || []).map((t) => ({ ...t, status: t.status || "" })));
+      setRows((res.data?.teachers || []).map((t) => ({ ...t, status: t.status || "absent" })));
+      if (res.data?.late_cutoff_time) {
+        setLateCutoff(res.data.late_cutoff_time.slice(0, 5));
+      }
     } catch {
       if (!silent) { setSheet(null); setRows([]); }
     } finally {
       if (!silent) setLoading(false);
+    }
+  };
+
+  const saveLateSetting = async () => {
+    if (!lateCutoff) return;
+    setSavingCutoff(true);
+    setCutoffMsg("");
+    try {
+      await api.post("attendance/settings/", { teacher_late_time: lateCutoff });
+      setCutoffMsg(`Cut-off updated to ${lateCutoff}! Any punch after this is marked Late.`);
+      setTimeout(() => setCutoffMsg(""), 5000);
+      await loadSheet(true);
+    } catch (e) {
+      setCutoffMsg(e?.response?.data?.error || "Failed to save late cut-off time.");
+      setTimeout(() => setCutoffMsg(""), 5000);
+    } finally {
+      setSavingCutoff(false);
     }
   };
 
@@ -119,6 +144,11 @@ const TeacherAttendance = () => {
   const markAllPresent = () => {
     if (!isEditable) return;
     setRows((prev) => prev.map((r) => ({ ...r, status: "present" })));
+  };
+
+  const markAllAbsent = () => {
+    if (!isEditable) return;
+    setRows((prev) => prev.map((r) => ({ ...r, status: "absent" })));
   };
 
   const saveAttendance = async () => {
@@ -206,6 +236,72 @@ const TeacherAttendance = () => {
               {showMonthly ? "Close Summary" : "Monthly Summary"}
             </span>
           </button>
+        </div>
+      </div>
+
+      {/* Late Cut-off Time Configuration */}
+      <div style={{
+        background: palette.card, border: `1px solid ${palette.border}`, borderRadius: 16,
+        padding: "14px 18px", boxShadow: palette.shadow, marginBottom: 16,
+        display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12,
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{
+            width: 40, height: 40, borderRadius: 10, background: "#fef3c7",
+            display: "flex", alignItems: "center", justifyContent: "center", color: palette.late,
+          }}>
+            <Clock size={22} strokeWidth={2.5} />
+          </div>
+          <div>
+            <div style={{ fontWeight: 1000, fontSize: 14, color: "#111827", display: "flex", alignItems: "center", gap: 8 }}>
+              Late Punch Cut-off Time
+              <span style={{ fontSize: 11, fontWeight: 900, background: "#fef3c7", color: palette.late, padding: "2px 8px", borderRadius: 6 }}>
+                Active ({lateCutoff})
+              </span>
+            </div>
+            <div style={{ fontSize: 12, color: palette.muted, fontWeight: 800, marginTop: 2 }}>
+              Any staff punch recorded after this time will automatically be marked as <strong>Late</strong>.
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ fontSize: 12, fontWeight: 900, color: palette.muted }}>Set Time:</span>
+            <input
+              type="time"
+              value={lateCutoff}
+              onChange={(e) => setLateCutoff(e.target.value)}
+              style={{
+                padding: "8px 12px", borderRadius: 10, border: `1px solid ${palette.border}`,
+                backgroundColor: "#fff", fontWeight: 900, fontSize: 14, outline: "none",
+              }}
+            />
+          </div>
+          <button
+            type="button"
+            onClick={saveLateSetting}
+            disabled={savingCutoff}
+            style={{
+              padding: "8px 16px", borderRadius: 10, border: "none",
+              backgroundColor: palette.late, color: "#fff", fontWeight: 1000,
+              cursor: savingCutoff ? "not-allowed" : "pointer", opacity: savingCutoff ? 0.7 : 1,
+              display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13,
+            }}
+          >
+            <Clock size={15} strokeWidth={2.5} />
+            {savingCutoff ? "Saving..." : "Save Cut-off Time"}
+          </button>
+          {cutoffMsg && (
+            <span style={{
+              padding: "6px 12px", borderRadius: 8,
+              backgroundColor: cutoffMsg.includes("updated") ? "#dcfce7" : "#fee2e2",
+              color: cutoffMsg.includes("updated") ? palette.present : palette.absent,
+              fontWeight: 900, fontSize: 12,
+            }}>
+              {cutoffMsg}
+            </span>
+          )}
         </div>
       </div>
 
@@ -314,8 +410,12 @@ const TeacherAttendance = () => {
               <>
                 <button type="button" onClick={markAllPresent} style={{
                   padding: "10px 14px", borderRadius: 10, border: `1px solid ${palette.border}`,
-                  backgroundColor: "#fff", fontWeight: 1000, cursor: "pointer",
+                  backgroundColor: "#fff", color: palette.present, fontWeight: 1000, cursor: "pointer",
                 }}>Mark All Present</button>
+                <button type="button" onClick={markAllAbsent} style={{
+                  padding: "10px 14px", borderRadius: 10, border: `1px solid ${palette.border}`,
+                  backgroundColor: "#fff", color: palette.absent, fontWeight: 1000, cursor: "pointer",
+                }}>Mark All Absent</button>
                 <button type="button" onClick={saveAttendance} disabled={saving} style={{
                   padding: "10px 14px", borderRadius: 10, border: "none",
                   backgroundColor: palette.primary, color: "#fff", fontWeight: 1000,

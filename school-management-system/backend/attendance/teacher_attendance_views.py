@@ -3,14 +3,14 @@ Teacher / Staff Attendance views — managed by school admin.
 Teachers can only view their own attendance via TeacherMyAttendanceView.
 """
 from collections import defaultdict
-from datetime import date as date_type, timedelta, datetime as datetime_type
+from datetime import date as date_type, timedelta, datetime as datetime_type, time
 
 from django.db import transaction
 from django.utils import timezone
 from rest_framework import status, views, permissions
 from rest_framework.response import Response
 
-from .models import TeacherAttendance, BiometricDevice
+from .models import TeacherAttendance, BiometricDevice, AttendanceSetting
 from .serializers import TeacherAttendanceSerializer
 from core.permissions import IsAdmin, IsTeacher
 from teachers.models import TeacherProfile
@@ -60,6 +60,10 @@ class AdminTeacherAttendanceSheetView(views.APIView):
         records = TeacherAttendance.objects.filter(teacher_id__in=teacher_ids, date=target_date)
         rec_by_teacher = {r.teacher_id: r for r in records}
 
+        setting = AttendanceSetting.objects.filter(school=school).first()
+        late_cutoff = setting.teacher_late_time if setting and setting.teacher_late_time else time(8, 30)
+        is_past_or_today = target_date <= timezone.localdate()
+
         rows = []
         present = 0
         absent = 0
@@ -68,7 +72,15 @@ class AdminTeacherAttendanceSheetView(views.APIView):
 
         for t in teachers:
             rec = rec_by_teacher.get(t.id)
-            st = rec.status if rec else None
+            if rec:
+                st = rec.status
+                if rec.punch_in_time:
+                    local_punch = timezone.localtime(rec.punch_in_time) if timezone.is_aware(rec.punch_in_time) else rec.punch_in_time
+                    if local_punch.time() > late_cutoff:
+                        st = 'late'
+            else:
+                st = 'absent' if is_past_or_today else None
+
             if st in ('present', 'absent', 'late'):
                 marked += 1
                 if st == 'present':
@@ -77,6 +89,7 @@ class AdminTeacherAttendanceSheetView(views.APIView):
                     absent += 1
                 elif st == 'late':
                     late += 1
+
             rows.append({
                 'teacher_id': t.id,
                 'name': t.user.name or t.user.username,
@@ -92,6 +105,7 @@ class AdminTeacherAttendanceSheetView(views.APIView):
         return Response({
             'date': target_date.isoformat(),
             'is_editable': is_editable,
+            'late_cutoff_time': late_cutoff.strftime('%H:%M'),
             'summary': {
                 'present': present,
                 'absent': absent,
@@ -287,19 +301,47 @@ class AdminTeacherAttendanceSummaryView(views.APIView):
         # ── Daily snapshot ──
         day_records = TeacherAttendance.objects.filter(teacher_id__in=teacher_ids, date=target_date)
         day_map = {r.teacher_id: r for r in day_records}
-        day_present = sum(1 for r in day_records if r.status in ('present', 'late'))
-        day_absent = sum(1 for r in day_records if r.status == 'absent')
-        day_late = sum(1 for r in day_records if r.status == 'late')
+
+        setting = AttendanceSetting.objects.filter(school=school).first()
+        late_cutoff = setting.teacher_late_time if setting and setting.teacher_late_time else time(8, 30)
+        is_past_or_today = target_date <= timezone.localdate()
+
+        day_present = 0
+        day_absent = 0
+        day_late = 0
+
+        for t in teachers:
+            r = day_map.get(t.id)
+            if r:
+                st = r.status
+                if r.punch_in_time:
+                    local_punch = timezone.localtime(r.punch_in_time) if timezone.is_aware(r.punch_in_time) else r.punch_in_time
+                    if local_punch.time() > late_cutoff:
+                        st = 'late'
+            else:
+                st = 'absent' if is_past_or_today else None
+
+            if st == 'present':
+                day_present += 1
+            elif st == 'late':
+                day_late += 1
+                day_present += 1  # Attended
+            elif st == 'absent':
+                day_absent += 1
+
+        day_marked = day_present + day_absent
+        day_pct = round(day_present / total_teachers * 100, 2) if total_teachers else 0
 
         result = {
             'date': target_date.isoformat(),
             'total_teachers': total_teachers,
             'today': {
-                'present': day_present,
+                'present': day_present - day_late,
+                'attended': day_present,
                 'absent': day_absent,
                 'late': day_late,
-                'marked': day_present + day_absent,
-                'attendance_pct': round(day_present / total_teachers * 100, 2) if total_teachers else 0,
+                'marked': day_marked,
+                'attendance_pct': day_pct,
             },
         }
 
@@ -316,6 +358,18 @@ class AdminTeacherAttendanceSummaryView(views.APIView):
             month_start = date_type(year, month, 1)
             month_end = date_type(year, month, last_day)
 
+            today = timezone.localdate()
+            effective_end = min(today, month_end) if year == today.year and month == today.month else month_end
+            if year > today.year or (year == today.year and month > today.month):
+                total_working_days = 0
+            else:
+                curr = month_start
+                total_working_days = 0
+                while curr <= effective_end:
+                    if curr.weekday() != 6:  # Exclude Sunday
+                        total_working_days += 1
+                    curr += timedelta(days=1)
+
             month_records = TeacherAttendance.objects.filter(
                 teacher_id__in=teacher_ids,
                 date__gte=month_start,
@@ -330,15 +384,38 @@ class AdminTeacherAttendanceSummaryView(views.APIView):
 
             for t in teachers:
                 recs = by_teacher.get(t.id, [])
-                t_present = sum(1 for r in recs if r.status in ('present', 'late'))
-                t_absent = sum(1 for r in recs if r.status == 'absent')
-                t_late = sum(1 for r in recs if r.status == 'late')
-                t_total = t_present + t_absent
+                attended_dates = set()
+                late_dates = set()
+                explicit_absent_dates = set()
+
+                for r in recs:
+                    st = r.status
+                    if r.punch_in_time:
+                        local_p = timezone.localtime(r.punch_in_time) if timezone.is_aware(r.punch_in_time) else r.punch_in_time
+                        if local_p.time() > late_cutoff:
+                            st = 'late'
+                    if st in ('present', 'late'):
+                        attended_dates.add(r.date)
+                        if st == 'late':
+                            late_dates.add(r.date)
+                    elif st == 'absent':
+                        explicit_absent_dates.add(r.date)
+
+                t_present = len(attended_dates)
+                t_late = len(late_dates)
+                if total_working_days > 0:
+                    t_absent = max(0, total_working_days - t_present)
+                    t_total = total_working_days
+                else:
+                    t_absent = len(explicit_absent_dates)
+                    t_total = t_present + t_absent
+
                 teacher_stats.append({
                     'teacher_id': t.id,
                     'name': t.user.name or t.user.username,
                     'employee_id': f"{t.school.school_id if t.school else 'NS'}-{t.employee_id}",
-                    'present': t_present,
+                    'present': t_present - t_late,
+                    'attended': t_present,
                     'absent': t_absent,
                     'late': t_late,
                     'total_marked': t_total,
@@ -348,6 +425,7 @@ class AdminTeacherAttendanceSummaryView(views.APIView):
             result['monthly'] = {
                 'year': year,
                 'month': month,
+                'total_working_days': total_working_days,
                 'teacher_stats': teacher_stats,
             }
 
@@ -392,10 +470,34 @@ class TeacherMyAttendanceView(views.APIView):
             .order_by('date')
         )
 
-        present = sum(1 for r in records if r.status in ('present', 'late'))
-        absent = sum(1 for r in records if r.status == 'absent')
-        late = sum(1 for r in records if r.status == 'late')
-        total_marked = present + absent
+        effective_end = min(today, month_end) if year == today.year and month == today.month else month_end
+        curr = month_start
+        total_working_days = 0
+        while curr <= effective_end:
+            if curr.weekday() != 6:
+                total_working_days += 1
+            curr += timedelta(days=1)
+
+        setting = AttendanceSetting.objects.filter(school=teacher_profile.school).first()
+        late_cutoff = setting.teacher_late_time if setting and setting.teacher_late_time else time(8, 30)
+
+        attended_dates = set()
+        late_dates = set()
+        for r in records:
+            st = r.status
+            if r.punch_in_time:
+                local_p = timezone.localtime(r.punch_in_time) if timezone.is_aware(r.punch_in_time) else r.punch_in_time
+                if local_p.time() > late_cutoff:
+                    st = 'late'
+            if st in ('present', 'late'):
+                attended_dates.add(r.date)
+                if st == 'late':
+                    late_dates.add(r.date)
+
+        present = len(attended_dates)
+        late = len(late_dates)
+        absent = max(0, total_working_days - present) if total_working_days > 0 else sum(1 for r in records if r.status == 'absent')
+        total_marked = total_working_days if total_working_days > 0 else (present + absent)
 
         daily = []
         for r in records:
@@ -412,11 +514,14 @@ class TeacherMyAttendanceView(views.APIView):
         for day_num in range(1, last_day + 1):
             d = date_type(year, month, day_num)
             rec = next((r for r in records if r.date == d), None)
+            st = rec.status if rec else None
+            if not rec and d <= today and d.weekday() != 6:
+                st = 'absent'
             calendar_grid.append({
                 'date': d.isoformat(),
                 'day': day_num,
                 'weekday': d.strftime('%a'),
-                'status': rec.status if rec else None,
+                'status': st,
             })
 
         return Response({
@@ -424,7 +529,8 @@ class TeacherMyAttendanceView(views.APIView):
             'month': month,
             'month_name': calendar.month_name[month],
             'summary': {
-                'present': present,
+                'present': present - late,
+                'attended': present,
                 'absent': absent,
                 'late': late,
                 'total_marked': total_marked,
@@ -503,25 +609,44 @@ class TeacherBiometricPunchView(views.APIView):
         device.last_test_message = 'Teacher punch received by backend API.'
         device.save(update_fields=['last_seen_at', 'last_punch_at', 'last_test_status', 'last_test_message'])
 
+        # Check late cutoff
+        setting = AttendanceSetting.objects.filter(school=teacher.school).first()
+        late_cutoff = setting.teacher_late_time if setting and setting.teacher_late_time else time(8, 30)
+        local_punch = timezone.localtime(punch_dt) if timezone.is_aware(punch_dt) else punch_dt
+        punch_status = 'late' if local_punch.time() > late_cutoff else 'present'
+
         # Get or create attendance record
         attendance, created = TeacherAttendance.objects.get_or_create(
             teacher=teacher,
             date=target_date,
             defaults={
-                'status': 'present',
+                'status': punch_status,
                 'marked_via': 'rfid',
                 'punch_in_time': punch_dt,
             },
         )
 
         if not created:
-            # Already has a record — this is punch-out (or update)
+            update_fields = []
+            if not attendance.punch_in_time or punch_dt < attendance.punch_in_time:
+                attendance.punch_in_time = punch_dt
+                update_fields.append('punch_in_time')
+                local_earliest = timezone.localtime(punch_dt) if timezone.is_aware(punch_dt) else punch_dt
+                attendance.status = 'late' if local_earliest.time() > late_cutoff else 'present'
+                update_fields.append('status')
+            elif attendance.status == 'absent':
+                attendance.status = punch_status
+                update_fields.append('status')
+
             if not attendance.punch_out_time or attendance.punch_out_time < punch_dt:
                 attendance.punch_out_time = punch_dt
-                attendance.save(update_fields=['punch_out_time'])
+                update_fields.append('punch_out_time')
+
+            if update_fields:
+                attendance.save(update_fields=update_fields)
 
             return Response({
-                'message': 'Punch-out recorded' if attendance.punch_out_time else 'Punch updated',
+                'message': f'Punch recorded ({attendance.status})',
                 'teacher_name': teacher.user.name or teacher.user.username,
                 'school_name': teacher.school.name if teacher.school else '',
                 'punch_in_time': attendance.punch_in_time.isoformat() if attendance.punch_in_time else None,
@@ -529,7 +654,7 @@ class TeacherBiometricPunchView(views.APIView):
             }, status=status.HTTP_200_OK)
 
         return Response({
-            'message': 'Punch-in recorded successfully',
+            'message': f'Punch-in recorded successfully ({punch_status})',
             'teacher_name': teacher.user.name or teacher.user.username,
             'school_name': teacher.school.name if teacher.school else '',
             'punch_in_time': punch_dt.isoformat(),

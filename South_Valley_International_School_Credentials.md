@@ -1,0 +1,1151 @@
+# 🏫 South Valley International School (SVIS) - User Credentials & Details
+
+> **School Code:** `SVIS`  
+> **Portal URL:** [http://93.127.199.44/school/SVIS/login](http://93.127.199.44/school/SVIS/login)  
+> **First Login Reset:** Har teacher aur student pehli baar login karte waqt apna naya password set karega.
+
+---
+
+## 👩‍🏫 1. Teachers Credentials (58 Teachers)
+
+> **Username Format:** `First Name + Employee ID` (e.g. `namrata101`, `khyati102`)  
+> **Default Password:** `teacher@123`
+
+| Sr | Teacher Name | Username | Default Password | Employee ID | Role / Subject | Phone Number | RFID / Punch No |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | **Mrs. Zulfiquar Khan** | `zulfiquar10` | `teacher@123` | 10 | Subject Teacher | 9713032062 |  |
+| 2 | **Mrs. Shabana Khan** | `shabana11` | `teacher@123` | 11 | Subject Teacher | 8602303384 |  |
+| 3 | **Mrs. Nisha Bhatt** | `nisha12` | `teacher@123` | 12 | Subject Teacher | 9827579916 |  |
+| 4 | **Mrs. Shalini Gupta** | `shalini13` | `teacher@123` | 13 | Subject Teacher | 7415619118 |  |
+| 5 | **Mrs. Shubhra Joshi** | `shubhra14` | `teacher@123` | 14 | Subject Teacher | 9926251303 |  |
+| 6 | **Mr. Ankit Jain** | `ankit15` | `teacher@123` | 15 | Subject Teacher | 9425072471 |  |
+| 7 | **Mr. Ashish Shrivastava** | `ashish16` | `teacher@123` | 16 | Subject Teacher | 9770554671 |  |
+| 8 | **Ms. Alfiya Shaikh** | `alfiya17` | `teacher@123` | 17 | Subject Teacher | 8827292405 |  |
+| 9 | **Ms. Deepa Gothwal** | `deepa18` | `teacher@123` | 18 | Subject Teacher | 9203759411 |  |
+| 10 | **Ms. Anuradha Mohanthy** | `anuradha19` | `teacher@123` | 19 | Subject Teacher | 9622097366 |  |
+| 11 | **Mrs. Poonam Singh Shekhwat** | `poonam2` | `teacher@123` | 2 | Subject Teacher | 9302254871 | 1 |
+| 12 | **Mr. Sandeep Singh Tomar** | `sandeep20` | `teacher@123` | 20 | Subject Teacher | 8871605191 |  |
+| 13 | **Mr. Ashish Ekka** | `ashish21` | `teacher@123` | 21 | Subject Teacher | 9131760244 |  |
+| 14 | **Mrs. Geeta Pardeshi** | `geeta22` | `teacher@123` | 22 | Subject Teacher | 7509586880 |  |
+| 15 | **Mr. Anil Singh Tomar** | `anil23` | `teacher@123` | 23 | Subject Teacher | 9399332923 |  |
+| 16 | **Ms. Mohini Kaithwas** | `mohini24` | `teacher@123` | 24 | Subject Teacher | 8959677391 |  |
+| 17 | **Mrs. Roshni Vishwakarma** | `roshni25` | `teacher@123` | 25 | Subject Teacher | 9039467462 |  |
+| 18 | **Mrs. Chaitali Kamble Mohve** | `chaitali26` | `teacher@123` | 26 | Subject Teacher | 7412088006 |  |
+| 19 | **Mrs.Rachana Ingle** | `rachana27` | `teacher@123` | 27 | Subject Teacher | 9202604201 |  |
+| 20 | **Ms. Mansi Pawar** | `mansi28` | `teacher@123` | 28 | Subject Teacher | 7566451157 |  |
+| 21 | **Ms. Ibra Khan** | `ibra29` | `teacher@123` | 29 | Subject Teacher | 9691688280 |  |
+| 22 | **Mr. Abbas Ali Barnagar Wala** | `abbas3` | `teacher@123` | 3 | Subject Teacher | 9926031149 |  |
+| 23 | **Mrs. Preeti Joshi** | `preeti30` | `teacher@123` | 30 | Subject Teacher | 9691288607 |  |
+| 24 | **Mrs. Manisha Panwar** | `manisha31` | `teacher@123` | 31 | Subject Teacher | 8793302141 |  |
+| 25 | **Mrs. Kanta Parmar** | `kanta32` | `teacher@123` | 32 | Subject Teacher | 7611190979 |  |
+| 26 | **Ms. Nupur Ojha** | `nupur33` | `teacher@123` | 33 | Subject Teacher | 9109281146 |  |
+| 27 | **Ms. Shivani Yadav** | `shivani34` | `teacher@123` | 34 | Subject Teacher | 9340491458 |  |
+| 28 | **Ms. Purvi Untwale** | `purvi35` | `teacher@123` | 35 | Subject Teacher | 8955738792 |  |
+| 29 | **Ms. Pratibha Trivedi** | `pratibha36` | `teacher@123` | 36 | Subject Teacher | 9993344658 |  |
+| 30 | **Mrs. Soniya Tanwani** | `soniya37` | `teacher@123` | 37 | Subject Teacher | 9977794975 |  |
+| 31 | **Mrs. Anita Sharma** | `anita38` | `teacher@123` | 38 | Subject Teacher | 8962200878 |  |
+| 32 | **Mrs. Varsha Pahwa** | `varsha39` | `teacher@123` | 39 | Subject Teacher | 9575200035 |  |
+| 33 | **Mr. Vishal Garhwal** | `vishal4` | `teacher@123` | 4 | Subject Teacher | 9826859808 |  |
+| 34 | **Ms. Meenu Richhariya** | `meenu40` | `teacher@123` | 40 | Subject Teacher | 7898140953 |  |
+| 35 | **Mrs. Poonam Singh Parihar** | `poonam41` | `teacher@123` | 41 | Subject Teacher | 7898909093 |  |
+| 36 | **Mrs. Kavita Yadav** | `kavita42` | `teacher@123` | 42 | Subject Teacher | 7225959938 |  |
+| 37 | **Ms. Radhika Pardeshi** | `radhika43` | `teacher@123` | 43 | Subject Teacher | 7581973647 |  |
+| 38 | **Mrs. Pooja Choursiya** | `pooja44` | `teacher@123` | 44 | Subject Teacher | 9407433220 |  |
+| 39 | **Mr. Harprit Singh Chhabra** | `harprit45` | `teacher@123` | 45 | Subject Teacher | 9977718124 |  |
+| 40 | **Ms. Kajol Purohit** | `kajol46` | `teacher@123` | 46 | Subject Teacher | 8109850815 |  |
+| 41 | **Mr. Nitin Kaithwas** | `nitin47` | `teacher@123` | 47 | Subject Teacher | 9617606792 |  |
+| 42 | **Mr. Abhishek S. Rathore** | `abhishek48` | `teacher@123` | 48 | Subject Teacher | 8962777121 |  |
+| 43 | **Mr. Jitendra Choursiya** | `jitendra49` | `teacher@123` | 49 | Subject Teacher | 9407489881 |  |
+| 44 | **Mr. Akbar Khan** | `akbar5` | `teacher@123` | 5 | Subject Teacher | 9039461786 |  |
+| 45 | **Mr. Harsh Parihar** | `harsh50` | `teacher@123` | 50 | Subject Teacher | 8982385088 |  |
+| 46 | **Mr. Sanjay Chaudhari** | `sanjay51` | `teacher@123` | 51 | Subject Teacher | 9424836517 |  |
+| 47 | **Ms. Shilpa Mujumdar** | `shilpa52` | `teacher@123` | 52 | Subject Teacher | 9425190960 |  |
+| 48 | **Mr.Sunil Karadia** | `sunil53` | `teacher@123` | 53 | Subject Teacher | 9977326299 | 2 |
+| 49 | **Mr. Nikhil Jadhav** | `nikhil54` | `teacher@123` | 54 | Subject Teacher | 9302600058 |  |
+| 50 | **Mr. Gaurav Soni** | `gaurav55` | `teacher@123` | 55 | Subject Teacher | 9926691524 |  |
+| 51 | **Mr. Bharat Barapatre** | `bharat56` | `teacher@123` | 56 | Subject Teacher | 9754423480 |  |
+| 52 | **Mrs. Reecha Paliwal** | `reecha57` | `teacher@123` | 57 | Subject Teacher | 9713292908 |  |
+| 53 | **Mr. Lalitkumar B. Patil** | `lalitkumar58` | `teacher@123` | 58 | Subject Teacher | 9405373298 |  |
+| 54 | **Mr. Prashant Kadam** | `prashant6` | `teacher@123` | 6 | Subject Teacher | 9399758767 |  |
+| 55 | **Mr. Harsh Vardhan** | `harsh7` | `teacher@123` | 7 | Subject Teacher | 6260725127 |  |
+| 56 | **Mr. Gaurav Rega** | `gaurav8` | `teacher@123` | 8 | Subject Teacher | 7828429051 |  |
+| 57 | **Mr. Sanjeev Singh Chouhan** | `sanjeev9` | `teacher@123` | 9 | Subject Teacher |  |  |
+| 58 | **Mrs. Anjna Madaan** | `anjna1` | `teacher@123` | SVIS-1 | Subject Teacher | 9302254881 |  |
+
+---
+
+## 🎓 2. Students Credentials (1068 Students)
+
+> **Username Format:** `First Name + Birth Year` (e.g. `aarav2014`)  
+> **Default Password:** `student@123`
+
+| Sr | Student Name | Username | Default Password | Class & Sec | Admission No | Roll No | Mother Name | Contact | RFID / Punch No |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | **Aarohi Sharma** | `aarohi3221` | `student@123` | I-A | 3221 |  | MRS. MADHURI SHARMA | 9039523503 | 1 |
+| 2 | **Aditya Singh Parmar** | `aditya2970` | `student@123` | I-B | 2970 |  | MRS. PREMLATA PARMAR | 9893129196 | 32 |
+| 3 | **Advaita Kesarwani** | `advaita2902` | `student@123` | I-A | 2902 |  | MRS. RUCHITA OMPRAKASH GUPTA | 9309528655 | 2 |
+| 4 | **Anand** | `anand3569` | `student@123` | I-A | 3569 |  | MRS. KOUHSAL SISODIYA | 8827123123 | 3 |
+| 5 | **Anshuman Rathod** | `anshuman3167` | `student@123` | I-B | 3167 |  | MRS. MAMTA RATHOD | 9009492280 | 33 |
+| 6 | **Atharv Bhandari** | `atharv3039` | `student@123` | I-A | 3039 |  | MRS. DEEPMALA BHANDARI | 9926792951 | 4 |
+| 7 | **Aviral Sharma** | `aviral2957` | `student@123` | I-B | 2957 |  | MRS. NEHA SHARMA | 9575006400 | 34 |
+| 8 | **Ayansh Nagar** | `ayansh3625` | `student@123` | I-A | 3625 |  | MRS. YASHODHARA NAGAR | 9926497767 | 5 |
+| 9 | **Bhavya Singh** | `bhavya3149` | `student@123` | I-A | 3149 |  | MRS. BABY SINGH | 7812019009 | 6 |
+| 10 | **Daivik Rajput** | `daivik3123` | `student@123` | I-A | 3123 |  | MRS. TRIPTI RAJPUT | 8770304689 | 7 |
+| 11 | **Ditya Chouhan** | `ditya3350` | `student@123` | I-A | 3350 |  | MRS. SUMAN PANCHAL | 9753303444 | 8 |
+| 12 | **Divesh Parmar** | `divesh3155` | `student@123` | I-B | 3155 |  | MRS. ROSHNI PARMAR | 9977529330 | 35 |
+| 13 | **Divy Kadu** | `divy3684` | `student@123` | I-B | 3684 |  | MRS. ANKITA KADU | 7489159789 | 36 |
+| 14 | **Divyaraj Singh Panwar** | `divyaraj3579` | `student@123` | I-B | 3579 |  | MRS. LAXMI PANWAR | 7354262911 | 37 |
+| 15 | **Drashti Jain** | `drashti3721` | `student@123` | I-B | 3721 |  | MRS. NEHA JAIN | 7987714830 | 38 |
+| 16 | **Gajendra Singh Rajput** | `gajendra3473` | `student@123` | I-B | 3473 |  | MR. SONAM KANWAR RAJPUT | 9584467557 | 39 |
+| 17 | **Gourav Raj Singh Chouhan** | `gourav3001` | `student@123` | I-B | 3001 |  | MRS. BHAVNA CHOUHAN | 7000144611 | 40 |
+| 18 | **Granth Choudhary** | `granth2951` | `student@123` | I-A | 2951 |  | MRS. MADHURI CHOUDHARY | 9131127629 | 9 |
+| 19 | **Hardik Maida** | `hardik3358` | `student@123` | I-B | 3358 |  | MRS. JYOTI MAIDA | 9926490949 | 41 |
+| 20 | **Harshvardhan Chouhan** | `harshvardhan3027` | `student@123` | I-B | 3027 |  | MRS. RACHANA CHOUHAN | 9617075660 | 42 |
+| 21 | **Iraa Thakur** | `iraa3587` | `student@123` | I-A | 3587 |  | MRS. VANDNA THAKUR | 9752293991 | 10 |
+| 22 | **Izaan Ali Makrani** | `izaan3525` | `student@123` | I-A | 3525 |  | ANJUM REHBAR MAKRANI | 7014064004 | 11 |
+| 23 | **Jinagya Jain** | `jinagya3402` | `student@123` | I-A | 3402 |  | MRS. MALYA JAIN | 9826124902 | 12 |
+| 24 | **Kavya Badodiya** | `kavya3057` | `student@123` | I-A | 3057 |  | MRS. RACHNA BADODIYA | 8120755333 | 13 |
+| 25 | **Kiara Bahuguna** | `kiara3414` | `student@123` | I-A | 3414 |  | MRS. SARITA BAHUGUNA | 8839320430 | 14 |
+| 26 | **Krisha Bahuguna** | `krisha3415` | `student@123` | I-B | 3415 |  | MRS. SARITA BAHUGUNA | 8839320430 | 43 |
+| 27 | **Krisha Bhandari** | `krisha3734` | `student@123` | I-B | 3734 |  | MRS. YOGITA BHANDARI | 9977043859 | 44 |
+| 28 | **Kunj Singh Panwar** | `kunj2934` | `student@123` | I-B | 2934 |  | MRS. CHANCHAL PANWAR | 8965074376 | 45 |
+| 29 | **Kush Panwar** | `kush3439` | `student@123` | I-A | 3439 |  | MRS. SHALU PANWAR | 9770269098 | 15 |
+| 30 | **Lavish Khandelwal** | `lavish2889` | `student@123` | I-A | 2889 |  | MRS. PALLAVI KHANDELWAL | 9961622222 | 16 |
+| 31 | **Lavyansh Bhandari** | `lavyansh3040` | `student@123` | I-B | 3040 |  | MRS. YOGITA BHANDARI | 9926648888 | 46 |
+| 32 | **Love Panwar** | `love3438` | `student@123` | I-B | 3438 |  | MRS. SHALU PANWAR | 9770269098 | 47 |
+| 33 | **Neeom Chouhan** | `neeom3173` | `student@123` | I-A | 3173 |  | MRS. SAPNA CHOUHAN | 7987195374 | 17 |
+| 34 | **Nikhil Rathore** | `nikhil3613` | `student@123` | I-B | 3613 |  | MRS. MANISHA RATHORE | 8827769867 | 48 |
+| 35 | **Parth Mishra** | `parth3560` | `student@123` | I-A | 3560 |  | MRS. MENKA MISHRA | 7974569290 | 18 |
+| 36 | **Prince Choudhary** | `prince3218` | `student@123` | I-A | 3218 |  | MRS. TINA CHOUHARY | 8889674267 | 19 |
+| 37 | **Rajhansh Patel** | `rajhansh3702` | `student@123` | I-A | 3702 |  | MRS. PRIYANKA | 9431255281 | 20 |
+| 38 | **Riyansh Singh** | `riyansh3150` | `student@123` | I-B | 3150 |  | MRS. PINKI KUMARI | 7812019009 | 49 |
+| 39 | **Rohit Solanki** | `rohit2996` | `student@123` | I-A | 2996 |  | MR. KAVITA SOLANKI | 6260806643 | 21 |
+| 40 | **Rudra Prakash Parihar** | `rudra3020` | `student@123` | I-B | 3020 |  | MRS. KAMNA PARIHAR | 8085422311 | 50 |
+| 41 | **Rudra Pratap Singh Sisodiya** | `rudra3121` | `student@123` | I-B | 3121 |  | MRS. CHETNA SISODIYA | 9340415202 | 51 |
+| 42 | **Rudransh Agrawal** | `rudransh2982` | `student@123` | I-A | 2982 |  | MRS. NIKITA AGRAWAL | 9111172631 | 22 |
+| 43 | **Saiyas Singh** | `saiyas2966` | `student@123` | I-B | 2966 |  | MRS. NIKEE KUMARI | 9572819519 | 52 |
+| 44 | **Samriddhi Sharma** | `samriddhi3693` | `student@123` | I-A | 3693 |  | MRS. SHRUTI SHARMA | 9893199043 | 23 |
+| 45 | **Sanvi Singh** | `sanvi2904` | `student@123` | I-A | 2904 |  | MRS. MANJU SINGH | 7879865840 | 24 |
+| 46 | **Sarthak Jat** | `sarthak3756` | `student@123` | I-A | 3756 |  | MRS.  KIRAN JAT | 9424539711 | 25 |
+| 47 | **Semantika Motiramani** | `semantika3166` | `student@123` | I-A | 3166 |  | MRS. POOJA MOTIRAMANI | 9826564853 | 26 |
+| 48 | **Shambhavi Kumari** | `shambhavi3678` | `student@123` | I-A | 3678 |  | MRS. RAKHI KUMARI | 9431097309 | 27 |
+| 49 | **Shayaan Khan** | `shayaan2986` | `student@123` | I-A | 2986 |  | MRS. RAFATNAAZ | 9977575080 | 28 |
+| 50 | **Shivanya Solanki** | `shivanya3729` | `student@123` | I-B | 3729 |  | MRS. SEEMA SOLANKI | 7047140994 | 53 |
+| 51 | **Shreeansh Bairagi** | `shreeansh3458` | `student@123` | I-A | 3458 |  | MRS. ANJU BAIRAGI | 9111983710 | 29 |
+| 52 | **Shreya Mishra** | `shreya3399` | `student@123` | I-B | 3399 |  | MRS. KIRAN | 9522223303 | 54 |
+| 53 | **Shreyansh Shrivas** | `shreyansh2692` | `student@123` | I-A | 2692 |  | MRS. PARUL SHRIVAS | 6261378810 | 30 |
+| 54 | **Siddhant Raghuvanshi** | `siddhant3406` | `student@123` | I-B | 3406 |  | MRS. NEHA RAGHUVANSHI | 8964079640 | 55 |
+| 55 | **Siyansh Gehlod** | `siyansh3106` | `student@123` | I-B | 3106 |  | MRS. VARSHA GEHLOD | 9713242007 | 56 |
+| 56 | **Suryansh Chauhan** | `suryansh3655` | `student@123` | I-B | 3655 |  | MRS. BABITA | 6392688599 | 57 |
+| 57 | **Trishabh Nagar** | `trishabh3663` | `student@123` | I-B | 3663 |  | MRS. JAISHREE NAGAR | 9993763108 | 58 |
+| 58 | **Uwani Saratkar** | `uwani3083` | `student@123` | I-B | 3083 |  | MRS. SHEELA SARATKAR | 9926617203 | 59 |
+| 59 | **Vedanshi Makwana** | `vedanshi2979` | `student@123` | I-B | 2979 |  | MRS. VARSHA MAKWANA | 9685119913 | 60 |
+| 60 | **Vihan Jaiswal** | `vihan2917` | `student@123` | I-A | 2917 |  | MRS. RUPALI JAISWAL | 8871363140 | 31 |
+| 61 | **Yug Dangi** | `yug2698` | `student@123` | I-B | 2698 |  | MRS. SANJU DANGI | 9977378218 | 61 |
+| 62 | **Zaid Khan** | `zaid3496` | `student@123` | I-B | 3496 |  | MRS. SHIREEN KHAN | 9630056104 | 62 |
+| 63 | **Aarav Chouhan** | `aarav3547` | `student@123` | II-C | 3547 |  | MRS. RAKHI CHOUHAN | 9754275333 | 122 |
+| 64 | **Aarohi Mourya** | `aarohi3190` | `student@123` | II-A | 3190 |  | MRS. RAJANI MORYA | 9977478792 | 63 |
+| 65 | **Aaryaman Patel** | `aaryaman3447` | `student@123` | II-B | 3447 |  | MRS. MONA PATEL | 9753278819 | 93 |
+| 66 | **Akshat Jirati** | `akshat2632` | `student@123` | II-C | 2632 |  | MRS. SMITA JIRATI | 9754964066 | 123 |
+| 67 | **Akshat Singh Susner** | `akshat3164` | `student@123` | II-A | 3164 |  | MRS. LEENA SUSNER | 7000778079 | 64 |
+| 68 | **Amayra Jadhav** | `amayra3107` | `student@123` | II-C | 3107 |  | MRS. JAYA JADHAV | 9755822243 | 124 |
+| 69 | **Anaya Vyas** | `anaya3366` | `student@123` | II-C | 3366 |  | MRS. ANJALI VYAS | 8959204688 | 125 |
+| 70 | **Anirudhra Raghuvanshi** | `anirudhra3559` | `student@123` | II-B | 3559 |  | MRS. PREETI RAGHUVANSHI | 7583031420 | 94 |
+| 71 | **Anmol Nagar** | `anmol3225` | `student@123` | II-B | 3225 |  | MRS. BHURI NAGAR | 9826915666 | 95 |
+| 72 | **Ansh Choudhary** | `ansh2630` | `student@123` | II-A | 2630 |  | MRS. DIKSHA CHOUDHARY | 9826547742 | 65 |
+| 73 | **Anshuman Palta Singh** | `anshuman3565` | `student@123` | II-C | 3565 |  | MRS. ALADINI PALTA SINGH | 8817455611 | 126 |
+| 74 | **Anvi Nagar** | `anvi3119` | `student@123` | II-B | 3119 |  | MRS. JYOTI NAGAR | 9826489999 | 96 |
+| 75 | **Anvit Mukati** | `anvit2925` | `student@123` | II-A | 2925 |  | MRS. BHAWANA MUKATI | 7909422424 | 66 |
+| 76 | **Arush Dhiraj** | `arush2603` | `student@123` | II-A | 2603 |  | MRS. PRIYANKA DHIRAJ | 9074841698 | 67 |
+| 77 | **Atharv Songara** | `atharv2853` | `student@123` | II-A | 2853 |  | MRS. REENA SONGARA | 9977155743 | 68 |
+| 78 | **Avik Raj** | `avik3691` | `student@123` | II-A | 3691 |  | MRS. BEENA KUMARI | 9518043839 | 69 |
+| 79 | **Avni Sharma** | `avni3487` | `student@123` | II-B | 3487 |  | MRS. RAKSHA SHARMA | 7987438050 | 97 |
+| 80 | **Avnika Choudhary** | `avnika2954` | `student@123` | II-C | 2954 |  | MRS. NILAM CHOUDHARY | 7241140421 | 127 |
+| 81 | **Bhoomika Patel** | `bhoomika2798` | `student@123` | II-A | 2798 |  | MRS. SHARMILA PATEL | 9753315152 | 70 |
+| 82 | **Devyani Chouhan** | `devyani2907` | `student@123` | II-C | 2907 |  | MRS. HARSHA  CHOUHAN | 9754991143 | 128 |
+| 83 | **Dhruv Dangi** | `dhruv2699` | `student@123` | II-B | 2699 |  | MRS. SANJU DANGI | 9977378218 | 98 |
+| 84 | **Dhruvin Joshi** | `dhruvin2876` | `student@123` | II-C | 2876 |  | MRS. SHUBHANGI JOSHI | 9826369966 | 129 |
+| 85 | **Disha Jirati** | `disha2887` | `student@123` | II-C | 2887 |  | MRS. NIKITA JIRATI | 7879447909 | 130 |
+| 86 | **Divyansh Singh Panwar** | `divyansh2935` | `student@123` | II-C | 2935 |  | MRS. MEENA PANWAR | 7000898654 | 131 |
+| 87 | **Divyansh Sisodiya** | `divyansh3491` | `student@123` | II-A | 3491 |  | MRS. ARTI SISODIYA | 9977073730 | 71 |
+| 88 | **Divyant Raghuwanshi** | `divyant2794` | `student@123` | II-A | 2794 |  | MRS. AARTI RAGHUWANSHI | 9399842781 | 72 |
+| 89 | **Granth Choudhary** | `granth3361` | `student@123` | II-C | 3361 |  | MR. PREETI CHOUDHARY | 8959832701 | 132 |
+| 90 | **Harshveer Singh** | `harshveer2914` | `student@123` | II-A | 2914 |  | MRS. KIRAN | 7470816883 | 73 |
+| 91 | **Inaisha Soni** | `inaisha3146` | `student@123` | II-C | 3146 |  | MRS. PARIDHI SONI | 9907600852 | 133 |
+| 92 | **Jignesh Raghuvanshi** | `jignesh2769` | `student@123` | II-C | 2769 |  | MRS. SAVITA RAGHUVANSHI | 9713734306 | 134 |
+| 93 | **Jinisha Solanki** | `jinisha2948` | `student@123` | II-B | 2948 |  | MRS. RADHIKA SOLANKI | 9691551200 | 99 |
+| 94 | **Jivesh Yadav** | `jivesh2710` | `student@123` | II-A | 2710 |  | MRS. NEEMA YADAV | 8878998478 | 74 |
+| 95 | **Kalp Kothari** | `kalp2940` | `student@123` | II-A | 2940 |  | MRS. PURVA KOTHARI | 7999544033 | 75 |
+| 96 | **Kartik Rajput** | `kartik3628` | `student@123` | II-C | 3628 |  | MRS. SEEMA RAJPUT | 9926710592 | 135 |
+| 97 | **Krishika Jaiswal** | `krishika2941` | `student@123` | II-B | 2941 |  | MRS. HEERAMANI JAISWAL | 9826045888 | 100 |
+| 98 | **Krishna Chouhan** | `krishna3561` | `student@123` | II-A | 3561 |  | MRS. PINKI CHOUHAN | 9399123334 | 76 |
+| 99 | **Lakshit Chaturvedi** | `lakshit3494` | `student@123` | II-A | 3494 |  | MRS. SHAIFALI CHATURVEDI | 7974428898 | 77 |
+| 100 | **Mahatv Pratap Singh Chouhan** | `mahatv2716` | `student@123` | II-B | 2716 |  | MRS. KAVITA CHOUHAN | 9993328411 | 101 |
+| 101 | **Manasvi Barnashiya** | `manasvi2942` | `student@123` | II-C | 2942 |  | MRS. VARSHA BARNASHIYA | 8718800429 | 136 |
+| 102 | **Mayank Singh** | `mayank3466` | `student@123` | II-A | 3466 |  | MRS. KHUSHBOO KUMARI | 8085475518 | 78 |
+| 103 | **Mitanshu Yadav** | `mitanshu3071` | `student@123` | II-C | 3071 |  | MRS. JYOTI YADAV | 9981878553 | 137 |
+| 104 | **Mohammad Ali Khan** | `mohammad3074` | `student@123` | II-C | 3074 |  | MRS. NAZIYA BEE | 9340211379 | 138 |
+| 105 | **Mohd. Jafar Khan** | `mohd3510` | `student@123` | II-A | 3510 |  | MRS. RANI BEE | 9009191786 | 79 |
+| 106 | **Nairiti Malviya** | `nairiti2926` | `student@123` | II-B | 2926 |  | MRS. PAREEDHI MALVIYA | 9893067546 | 102 |
+| 107 | **Neevishka Solanki** | `neevishka3708` | `student@123` | II-B | 3708 |  | MRS. MONIKA SOLANKI | 9407442278 | 103 |
+| 108 | **Nidhan Bairagi** | `nidhan3442` | `student@123` | II-B | 3442 |  | MRS. DEEPIKA BAIRAGI | 8120661877 | 104 |
+| 109 | **Nitya Choudhary** | `nitya3046` | `student@123` | II-A | 3046 |  | MRS. APEKSHA CHOUDHARY | 7697480076 | 80 |
+| 110 | **Nityanta Solanki** | `nityanta3412` | `student@123` | II-B | 3412 |  | MRS. SONA SOLANKI | 9200000733 | 105 |
+| 111 | **Padmnabh Singh Sisodiya** | `padmnabh3420` | `student@123` | II-A | 3420 |  | MRS. KISMAT KUNWAR | 9770389864 | 81 |
+| 112 | **Parth Singh** | `parth2711` | `student@123` | II-A | 2711 |  | MRS. NIDHI SINGH | 8871221649 | 82 |
+| 113 | **Prathviraj Khare** | `prathviraj2974` | `student@123` | II-C | 2974 |  | MRS. ROSHNI KHARE | 8839770132 | 139 |
+| 114 | **Preet Sisodiya** | `preet2652` | `student@123` | II-C | 2652 |  | MRS. SOHINI SISODIYA | 7697272693 | 140 |
+| 115 | **Priyadarshiniraj Sisodiya** | `priyadarshiniraj3421` | `student@123` | II-A | 3421 |  | MRS. KISMAT KUNWAR | 9770389864 | 83 |
+| 116 | **Priyal Jirati** | `priyal3130` | `student@123` | II-B | 3130 |  | MRS. RAVEENA JIRATI | 9977737512 | 106 |
+| 117 | **Priyansh Dangore** | `priyansh3620` | `student@123` | II-B | 3620 |  | MRS. RACHANA DANGORE | 9202604201 | 107 |
+| 118 | **Raghvendra Yadav** | `raghvendra3548` | `student@123` | II-A | 3548 |  | MRS. MAMTA YADAV | 9098235565 | 84 |
+| 119 | **Raj Malivya** | `raj3536` | `student@123` | II-B | 3536 |  | MRS. DIMPAL MALVIYA | 9926427646 | 108 |
+| 120 | **Rakshit Thakur** | `rakshit3072` | `student@123` | II-B | 3072 |  | MRS. VARSHA THAKUR | 9685003758 | 109 |
+| 121 | **Rohnit Rai** | `rohnit2836` | `student@123` | II-B | 2836 |  | MRS. JYOTI RAI | 8878939546 | 110 |
+| 122 | **Rudra Bariya** | `rudra2704` | `student@123` | II-B | 2704 |  | MRS. MANJU BARIYA | 9981308727 | 111 |
+| 123 | **Rudraksh Tiwari** | `rudraksh3705` | `student@123` | II-B | 3705 |  | MRS. NIKITA TIWARI | 9993339911 | 112 |
+| 124 | **Rudransh Raghuwanshi** | `rudransh2789` | `student@123` | II-B | 2789 |  | MRS. RANI RAGHUWANSHI | 9893863204 | 113 |
+| 125 | **Sadiya Khan** | `sadiya2671` | `student@123` | II-C | 2671 |  | MRS. ASHMA KHATOON | 9179168953 | 141 |
+| 126 | **Samaksh Somani** | `samaksh3369` | `student@123` | II-B | 3369 |  | MRS. SANDHYA SOMANI | 9826054807 | 114 |
+| 127 | **Samar Prajapati** | `samar3748` | `student@123` | II-A | 3748 |  | MRS. RAJNI PRAJAPATI | 9755319383 | 85 |
+| 128 | **Samarth Jatwa** | `samarth2839` | `student@123` | II-C | 2839 |  | MRS. SANDHYA JATWA | 9196605056 | 142 |
+| 129 | **Sanskriti Dayal** | `sanskriti3659` | `student@123` | II-B | 3659 |  | MRS. SUNITA DAYAL | 9907794321 | 115 |
+| 130 | **Sarthak Joshi** | `sarthak2728` | `student@123` | II-C | 2728 |  | MRS. DIMPAL JOSHI | 9926836387 | 143 |
+| 131 | **Shivay Kourav** | `shivay2654` | `student@123` | II-A | 2654 |  | MRS. PREETI KOURAV | 8349476465 | 86 |
+| 132 | **Shourya Goswami** | `shourya2762` | `student@123` | II-A | 2762 |  | MRS. JYOTI GOSWAMI | 9977574076 | 87 |
+| 133 | **Shreedhi Dhamani** | `shreedhi2591` | `student@123` | II-B | 2591 |  | MRS. RUCHI DHAMANI | 8962296595 | 116 |
+| 134 | **Shreyansh Kumar Mishra** | `shreyansh3696` | `student@123` | II-A | 3696 |  | MRS. PUNITA KUMARI MISHRA | 8962973889 | 88 |
+| 135 | **Siddharth Chouhan** | `siddharth2784` | `student@123` | II-B | 2784 |  | MRS. TEENA CHOUHAN | 9752786472 | 117 |
+| 136 | **Siddhi Solanki** | `siddhi2912` | `student@123` | II-A | 2912 |  | MRS. SHOBHA  SOLANKI | 7747056197 | 89 |
+| 137 | **Tanisha Maurya** | `tanisha3732` | `student@123` | II-A | 3732 |  | MRS. ANKITA MAURYA | 9695309551 | 90 |
+| 138 | **Tanmay Yadav** | `tanmay2919` | `student@123` | II-B | 2919 |  | MRS. ANKITA YADAV | 7000448482 | 118 |
+| 139 | **Tanu Pandit** | `tanu2943` | `student@123` | II-C | 2943 |  | MRS. SONU PANDIT | 7898383190 | 144 |
+| 140 | **Vedansh Makwana** | `vedansh3662` | `student@123` | II-C | 3662 |  | MRS. SAPNA MAKWANA | 9617187504 | 145 |
+| 141 | **Veera Solanki** | `veera3567` | `student@123` | II-A | 3567 |  | MRS. RONAK SOLANKI | 9617139111 | 91 |
+| 142 | **Vishvaditya Chouhan** | `vishvaditya2893` | `student@123` | II-B | 2893 |  | MRS. SHALINI CHOUHAN | 8959972808 | 119 |
+| 143 | **Vivaan Soni** | `vivaan3148` | `student@123` | II-B | 3148 |  | MRS. SAMIKSHA SONI | 7828089365 | 120 |
+| 144 | **Vivan Yadav** | `vivan3021` | `student@123` | II-A | 3021 |  | MRS. SHOBHA YADAV | 9826433692 | 92 |
+| 145 | **Yashveer Yadav** | `yashveer2021` | `student@123` | II-B | 3112 |  | MRS. SAPNA YADAV | 9827809357 | 121 |
+| 146 | **Zaid Khan** | `zaid3517` | `student@123` | II-C | 3517 |  | MRS. SHIFA KHAN | 9977374400 | 146 |
+| 147 | **Zakariya Mehar** | `zakariya2913` | `student@123` | II-C | 2913 |  | MRS. BUSRA KHAN | 9907868686 | 147 |
+| 148 | **Aarvi Soni** | `aarvi2742` | `student@123` | III-A | 2742 |  | MRS. HARSHITA SONI | 8770573621 | 148 |
+| 149 | **Aayesha Sheikh** | `aayesha3443` | `student@123` | III-B | 3443 |  | MRS. ROSHAN BEE | 9977236736 | 189 |
+| 150 | **Aayna Gurjar** | `aayna3751` | `student@123` | III-B | 3751 |  | MRS. RAJNI GURJAR | 9755705481 | 190 |
+| 151 | **Alok Kumar Gautam** | `alok2905` | `student@123` | III-A | 2905 |  | MRS. URMILA GAUTAM | 9977986067 | 149 |
+| 152 | **Anaya Choudhary** | `anaya2659` | `student@123` | III-B | 2659 |  | MRS. BABITA CHOUDHARY | 9669852255 | 191 |
+| 153 | **Anaya Vaishnav** | `anaya2815` | `student@123` | III-A | 2815 |  | MRS. PUSHPA VAISHNAV | 9753950399 | 150 |
+| 154 | **Anirudh Garain** | `anirudh3595` | `student@123` | III-B | 3595 |  | MRS. SUNITA GARAIN | 8827653280 | 192 |
+| 155 | **Anirudh Meena** | `anirudh3041` | `student@123` | III-B | 3041 |  | MRS. LALITA MEENA | 9098808485 | 193 |
+| 156 | **Aradhya Palta Singh** | `aradhya3564` | `student@123` | III-A | 3564 |  | MRS. ALADINI PALTA SINGH | 8817455611 | 151 |
+| 157 | **Areesha Khan** | `areesha3006` | `student@123` | III-A | 3006 |  | MRS. ISHRAT BEE | 9826126789 | 152 |
+| 158 | **Ariha Jain** | `ariha2690` | `student@123` | III-B | 2690 |  | MRS. NAYAN JAIN | 9826724071 | 194 |
+| 159 | **Atharv Yadav** | `atharv2975` | `student@123` | III-A | 2975 |  | MRS. MEGHA YADAV | 8827252525 | 153 |
+| 160 | **Atigya Choudhary** | `atigya2593` | `student@123` | III-B | 2593 |  | MRS. SAPNA CHOUDHARY | 9009250061 | 195 |
+| 161 | **Aviraj Chaturvedi** | `aviraj2657` | `student@123` | III-B | 2657 |  | MRS. SHIKHA CHATURVEDI | 9981105556 | 196 |
+| 162 | **Bhavil Sahu** | `bhavil3193` | `student@123` | III-A | 3193 |  | MRS. POOJA SAHU | 8949024634 | 154 |
+| 163 | **Bhavyansh Sharma** | `bhavyansh2911` | `student@123` | III-B | 2911 |  | MRS. SUMAN SHARMA | 9588685028 | 197 |
+| 164 | **Bhuvnesh Choudhary** | `bhuvnesh2588` | `student@123` | III-B | 2588 |  | MRS. JAYMALA CHOUDHARY | 8964895554 | 198 |
+| 165 | **Chitransh Kulariya** | `chitransh2746` | `student@123` | III-A | 2746 |  | MRS. MANISHA KULARIYA | 9039909757 | 155 |
+| 166 | **Daksh Gautam** | `daksh3752` | `student@123` | III-B | 3752 |  | MRS. SONALI GAUTAM | 8120704400 | 199 |
+| 167 | **Darsh Soni** | `darsh3726` | `student@123` | III-A | 3726 |  | MRS. SONAM SONI | 9575955755 | 156 |
+| 168 | **Darvesh Singh** | `darvesh3540` | `student@123` | III-A | 3540 |  | MRS.BHUPENDRA KAUR | 8109171513 | 157 |
+| 169 | **Devyani Ray** | `devyani3593` | `student@123` | III-B | 3593 |  | MRS. PARO RAI | 9826158722 | 200 |
+| 170 | **Dharv Bhosle** | `dharv2714` | `student@123` | III-A | 2714 |  | MRS. PRIYA BHOSLE | 8817884353 | 158 |
+| 171 | **Divyanshi Sharma** | `divyanshi3588` | `student@123` | III-B | 3588 |  | MRS. SHRUTI SHARMA | 9752855000 | 201 |
+| 172 | **Harsh Kumar Singh** | `harsh2667` | `student@123` | III-B | 2667 |  | MRS. KIRAN DEVI | 9981684225 | 202 |
+| 173 | **Havisha Mishra** | `havisha2633` | `student@123` | III-A | 2633 |  | DR. KESHAR MISHRA | 9424654905 | 159 |
+| 174 | **Himanshi Solanki** | `himanshi2883` | `student@123` | III-B | 2883 |  | MRS. RITU SOLANKI | 9926716184 | 203 |
+| 175 | **Ishaan Vijayvargiya** | `ishaan3356` | `student@123` | III-B | 3356 |  | MR. SHWETA VIJAYVARGIYA | 9993131631 | 204 |
+| 176 | **Ivan Vijayvargiya** | `ivan3357` | `student@123` | III-B | 3357 |  | MRS. SHWETA VIJAYVARGIYA | 9993131631 | 205 |
+| 177 | **Jenil Choudhary** | `jenil2589` | `student@123` | III-A | 2589 |  | MRS. ANKITA CHOUDHARY | 9826474444 | 160 |
+| 178 | **Jignesh Rathore** | `jignesh2846` | `student@123` | III-A | 2846 |  | MRS. JANTA RATHORE | 9753950418 | 161 |
+| 179 | **Khanika Sharma** | `khanika3341` | `student@123` | III-B | 3341 |  | MRS. CHHAVI SHARMA | 9893771180 | 206 |
+| 180 | **Khushal Yadav** | `khushal2551` | `student@123` | III-A | 2551 |  | MRS. MADHURI YADAV | 9424352815 | 162 |
+| 181 | **Khyati Agrawal** | `khyati2768` | `student@123` | III-B | 2768 |  | MRS. KIRTI AGRAWAL | 9826086397 | 207 |
+| 182 | **Kiyansh Kaushal** | `kiyansh3127` | `student@123` | III-A | 3127 |  | MRS. SARITA KAUSHAL | 9981073938 | 163 |
+| 183 | **Kulshresth Mandloi** | `kulshresth3665` | `student@123` | III-B | 3665 |  | MRS. TEENA MANDLOI | 8817870178 | 208 |
+| 184 | **Kunal Singh Rajput** | `kunal3644` | `student@123` | III-A | 3644 |  | MRA. SONAM RAJPUT | 9669932037 | 164 |
+| 185 | **Lavishka Kamble** | `lavishka2650` | `student@123` | III-A | 2650 |  | MRS. PINKU KAMBLE | 9009772122 | 165 |
+| 186 | **Madhav Yadav** | `madhav3058` | `student@123` | III-B | 3058 |  | MRS. UPASANA YADAV | 8085231282 | 209 |
+| 187 | **Mahima Shree** | `mahima2867` | `student@123` | III-A | 2867 |  | MRS. MAMTA GEHLOD | 7869482543 | 166 |
+| 188 | **Manya Sonone** | `manya3452` | `student@123` | III-B | 3452 |  | MRS. CHANCHALA SONONE | 9826039815 | 210 |
+| 189 | **Masira Fatima** | `masira3175` | `student@123` | III-B | 3175 |  | MRS. FARIN KHAN | 9826458264 | 211 |
+| 190 | **Mayank Choudhary** | `mayank2557` | `student@123` | III-A | 2557 |  | MRS. PUJA CHOUDHARY | 9009042706 | 167 |
+| 191 | **Mihika Chouhan** | `mihika2683` | `student@123` | III-B | 2683 |  | MRS. SONIKA CHOUHAN | 9144211111 | 212 |
+| 192 | **Mihika Patidar** | `mihika3037` | `student@123` | III-A | 3037 |  | MRS. BHARTI PATIDAR | 8319316963 | 168 |
+| 193 | **Misha Dhamani** | `misha2586` | `student@123` | III-A | 2586 |  | MRS. DIMPAL DHAMANI | 9977883960 | 169 |
+| 194 | **Mitanshi Agrawal** | `mitanshi2981` | `student@123` | III-A | 2981 |  | MRS. NIKITA AGRAWAL | 9111172631 | 170 |
+| 195 | **Mohd. Umair Makrani** | `mohd3524` | `student@123` | III-A | 3524 |  | ANJUM REHBAR MAKRANI | 7014064004 | 171 |
+| 196 | **Moksh Sharma** | `moksh2638` | `student@123` | III-B | 2638 |  | MRS. MONA SHARMA | 9993341802 | 213 |
+| 197 | **Naman Patidar** | `naman2525` | `student@123` | III-B | 2525 |  | MRS. TANUJA PATIDAR | 9826063846 | 214 |
+| 198 | **Nitara Panwar** | `nitara3160` | `student@123` | III-B | 3160 |  | MRS. SHWETA PANWAR | 9926532202 | 215 |
+| 199 | **Noman Khan** | `noman3455` | `student@123` | III-A | 3455 |  | MRS. NAZIYA KHAN | 9981372911 | 172 |
+| 200 | **Pihu Manik Garain** | `pihu3594` | `student@123` | III-B | 3594 |  | MRS. SUNITA GARAIN | 8827653280 | 216 |
+| 201 | **Prisha Patidar** | `prisha2600` | `student@123` | III-B | 2600 |  | MRS. SONALI PATIDAR | 9754705092 | 217 |
+| 202 | **Priyal Parmar** | `priyal3462` | `student@123` | III-B | 3462 |  | MRS. SAVITA PARMAR | 9770221112 | 218 |
+| 203 | **Raghav Singh Surywanshi** | `raghav3411` | `student@123` | III-A | 3411 |  | MRS. DURGA SURYWANSHI | 7240850454 | 173 |
+| 204 | **Rajeshwari Yadav** | `rajeshwari3572` | `student@123` | III-A | 3572 |  | MRS. ALKA YADAV | 9907913330 | 174 |
+| 205 | **Rajveer Jat** | `rajveer3011` | `student@123` | III-B | 3011 |  | MRS. KAVITA JAT | 8435479588 | 219 |
+| 206 | **Ranaditya Chhadodi** | `ranaditya3212` | `student@123` | III-A | 3212 |  | MRS. CHANDA CHHADODI | 9977305666 | 175 |
+| 207 | **Ridham Mourya** | `ridham3228` | `student@123` | III-B | 3228 |  | MRS. MONA MOURYA | 9977358524 | 220 |
+| 208 | **Riyansh Nagar** | `riyansh3200` | `student@123` | III-B | 3200 |  | MRS. MONIKA NAGAR | 9111205028 | 221 |
+| 209 | **Rohit Bariya** | `rohit2783` | `student@123` | III-A | 2783 |  | MRS. MANJU BARIYA | 9981308727 | 176 |
+| 210 | **Ruhi Raghuwanshi** | `ruhi3194` | `student@123` | III-A | 3194 |  | MRS. TEJU RAGHUWANSHI | 9754244074 | 177 |
+| 211 | **Ruhika Makwana** | `ruhika3220` | `student@123` | III-A | 3220 |  | MRS. POOJA MAKWANA | 7898764388 | 178 |
+| 212 | **Sanaya Paliwal** | `sanaya2686` | `student@123` | III-A | 2686 |  | MRS. POONAM PALIWAL | 9993160888 | 179 |
+| 213 | **Sanskrati Haldkar** | `sanskrati2755` | `student@123` | III-B | 2755 |  | MRS. BABEETA HALDKAR | 9993917975 | 222 |
+| 214 | **Shivaay Songare** | `shivaay3336` | `student@123` | III-B | 3336 |  | MRS. POOJA SONGARE | 9770891250 | 223 |
+| 215 | **Shivay Chaturvedi** | `shivay2579` | `student@123` | III-A | 2579 |  | MRS. BHAVANA CHATURVEDI | 9009954608 | 180 |
+| 216 | **Shivay Pal** | `shivay2778` | `student@123` | III-A | 2778 |  | MRS. NEHA PAL | 9926813473 | 181 |
+| 217 | **Shourya Chauhan** | `shourya3654` | `student@123` | III-A | 3654 |  | MRS. BABITA  CHAUHAN | 6392688599 | 182 |
+| 218 | **Siya Jirati** | `siya2829` | `student@123` | III-B | 2829 |  | MRS. DEEPIKA JIRATI | 9111010730 | 224 |
+| 219 | **Stuti Gautam** | `stuti3101` | `student@123` | III-A | 3101 |  | MRS. SANJNA GAUTAM | 9340785652 | 183 |
+| 220 | **Suryansh Singh Parihar** | `suryansh2681` | `student@123` | III-B | 2681 |  | MRS. POONAM SINGH PARIHAR | 7898909093 | 225 |
+| 221 | **Suvrana Panday** | `suvrana3174` | `student@123` | III-A | 3174 |  | MRS. SHIVA PANDEY | 9779152653 | 184 |
+| 222 | **Vedant Ranjan** | `vedant2928` | `student@123` | III-B | 2928 |  | MRS. KHUSHBU KUMARI | 8082478814 | 226 |
+| 223 | **Vidhan Makwana** | `vidhan3544` | `student@123` | III-A | 3544 |  | MRS. GAYATRI MAKWANA | 9754724670 | 185 |
+| 224 | **Vyom Ujjainiya** | `vyom3207` | `student@123` | III-A | 3207 |  | MRS. SARIKA UJJAINIYA | 9907003740 | 186 |
+| 225 | **Yuvan Mourya** | `yuvan3445` | `student@123` | III-A | 3445 |  | MRS. RANI MOURYA | 9165654876 | 187 |
+| 226 | **Yuvika Singh** | `yuvika3709` | `student@123` | III-A | 3709 |  | MRS. SONAL SINGH | 9752341709 | 188 |
+| 227 | **Aaman Khan** | `aaman3514` | `student@123` | IV-B | 3514 |  | MRS. NAZIYA | 9981372911 | 264 |
+| 228 | **Abhimanyu Singh Patel  [H]** | `abhimanyu3612` | `student@123` | IV-A | 3612 |  | MRS. NISHA PATEL | 9753662502 | 227 |
+| 229 | **Abhiyansh Jat** | `abhiyansh3035` | `student@123` | IV-A | 3035 |  | MRS. MAYA JAT | 8770552983 | 228 |
+| 230 | **Aditi Patel** | `aditi2799` | `student@123` | IV-B | 2799 |  | MRS. VAISHALI PATEL | 7697479865 | 265 |
+| 231 | **Ajuni Kaur Chhabra** | `ajuni2625` | `student@123` | IV-B | 2625 |  | MRS. SURJEET KAUR CHHABRA | 9826062440 | 266 |
+| 232 | **Amay Joshi** | `amay3499` | `student@123` | IV-B | 3499 |  | MRS. HEMA JOSHI | 9926792639 | 267 |
+| 233 | **Amol Thakur** | `amol3553` | `student@123` | IV-A | 3553 |  | MRS. ARCHANA THAKUR | 9981112500 | 229 |
+| 234 | **Anay Kumrawat** | `anay2628` | `student@123` | IV-B | 2628 |  | MRS. ARCHANA KUMRAWAT | 9039874888 | 268 |
+| 235 | **Anika Gayakwad** | `anika2415` | `student@123` | IV-B | 2415 |  | MRS. TEENA GAYAKWAD | 9770056016 | 269 |
+| 236 | **Anirudh Rathore** | `anirudh2693` | `student@123` | IV-B | 2693 |  | MRS. SUMITRA RATHORE | 9753022088 | 270 |
+| 237 | **Anvesh Joshi** | `anvesh3501` | `student@123` | IV-A | 3501 |  | MRS. NEHA JOSHI | 9826678072 | 230 |
+| 238 | **Aryan Thakur** | `aryan2707` | `student@123` | IV-A | 2707 |  | MRS. POOJA THAKUR | 9630370083 | 231 |
+| 239 | **Avik Rathore** | `avik2767` | `student@123` | IV-A | 2767 |  | MRS. MONA RATHORE | 9589694747 | 232 |
+| 240 | **Bhavika Nagar** | `bhavika3426` | `student@123` | IV-B | 3426 |  | MRS. POOJA NAGAR | 9926099883 | 271 |
+| 241 | **Chahat Pal** | `chahat3669` | `student@123` | IV-B | 3669 |  | MRS. SHEELA PAL | 8827122920 | 272 |
+| 242 | **Daksh Parmar** | `daksh2995` | `student@123` | IV-A | 2995 |  | MR. SONA PARMAR | 9575844788 | 233 |
+| 243 | **Dakshraj Sisodiya** | `dakshraj3492` | `student@123` | IV-B | 3492 |  | MRS. ARTI SISODIYA | 9977073730 | 273 |
+| 244 | **Devansh Raghuvanshi** | `devansh3408` | `student@123` | IV-A | 3408 |  | MRS. KIRAN RAGHUVANSHI | 6265063381 | 234 |
+| 245 | **Divyansh Raghuvanshi** | `divyansh3023` | `student@123` | IV-B | 3023 |  | MRS. POOJA RAGHUVANSHI | 7974560078 | 274 |
+| 246 | **Garima Raghuvanshi** | `garima3407` | `student@123` | IV-A | 3407 |  | MRS. NEHA RAGHUVANSHI | 8964079640 | 235 |
+| 247 | **Harjas Kaur** | `harjas3761` | `student@123` | IV-A | 3761 |  | MRS. KAMALJEET | 9977718124 | 236 |
+| 248 | **Harshalika Sisodiya** | `harshalika3642` | `student@123` | IV-A | 3642 |  | MRS. PARAS KUNWAR SISODIYA | 7725826149 | 237 |
+| 249 | **Himanshu Raghuvanshi** | `himanshu3576` | `student@123` | IV-B | 3576 |  | MRS. BHARTI RAGHUVANSHI | 8120067101 | 275 |
+| 250 | **Hiya Jain** | `hiya3550` | `student@123` | IV-A | 3550 |  | MRS. PRAGYA JAIN | 9893100430 | 238 |
+| 251 | **Hridhyansh Laud** | `hridhyansh2653` | `student@123` | IV-A | 2653 |  | MRS. PARUL LAUD | 9893260629 | 239 |
+| 252 | **Jayant Sharma** | `jayant3590` | `student@123` | IV-B | 3590 |  | MRS. ALKA SHARMA | 9753008500 | 276 |
+| 253 | **Jayvardhan Singh Thakur** | `jayvardhan2833` | `student@123` | IV-A | 2833 |  | MRS. TEENA THAKUR | 9617504875 | 240 |
+| 254 | **Kartavya Raj Singh Bhati** | `kartavya3391` | `student@123` | IV-A | 3391 |  | MRS. SANGEETA KUNWAR | 8839133263 | 241 |
+| 255 | **Kartik Kushwah  [H]** | `kartik3485` | `student@123` | IV-A | 3485 |  | MRS. ARTI KUSHWAH | 7397671205 | 242 |
+| 256 | **Khushi Bagwan** | `khushi2782` | `student@123` | IV-A | 2782 |  | MRS. AARTI BAGWAN | 9926716832 | 243 |
+| 257 | **Khushi Parmar** | `khushi2969` | `student@123` | IV-B | 2969 |  | MRS. PREMLATA PARMAR | 9893129196 | 277 |
+| 258 | **Krishna Rathore** | `krishna2443` | `student@123` | IV-B | 2443 |  | MRS. SUSHILA RATHORE | 9009409968 | 278 |
+| 259 | **Kunal Singh Chouhan** | `kunal3224` | `student@123` | IV-A | 3224 |  | MRS. KRISHNA CHOUHAN | 9893398375 | 244 |
+| 260 | **Manav Chouhan** | `manav3213` | `student@123` | IV-B | 3213 |  | MRS. MEERA CHOUHAN | 9977152067 | 279 |
+| 261 | **Mishika Panchal** | `mishika2920` | `student@123` | IV-B | 2920 |  | MRS. MONA PANCHAL | 9826126608 | 280 |
+| 262 | **Parth Singh** | `parth2661` | `student@123` | IV-B | 2661 |  | MRS. SHALINI SINGH | 9977929243 | 281 |
+| 263 | **Prayas Yadav** | `prayas2584` | `student@123` | IV-A | 2584 |  | MRS. POOJA YADAV | 8120771921 | 245 |
+| 264 | **Raj Verma** | `raj3370` | `student@123` | IV-B | 3370 |  | MRS. PRIYANKA VERMA | 9039465243 | 282 |
+| 265 | **Rehan Kureshi** | `rehan3427` | `student@123` | IV-A | 3427 |  | MRS. AFSANA BEE | 7354151590 | 246 |
+| 266 | **Reyansh Parmar** | `reyansh2548` | `student@123` | IV-B | 2548 |  | MRS. NISHA PARMAR | 9827739114 | 283 |
+| 267 | **Rihanshu Raghuvanshi** | `rihanshu3577` | `student@123` | IV-B | 3577 |  | MRS. KAVITA RAGHUVANSHI | 9589806502 | 284 |
+| 268 | **Rishabh Yadav** | `rishabh2660` | `student@123` | IV-A | 2660 |  | MRS. REENA YADAV | 9993201955 | 247 |
+| 269 | **Ritesh Jatwa** | `ritesh2831` | `student@123` | IV-B | 2831 |  | MRS. REENA JATWA | 9977870886 | 285 |
+| 270 | **Rudra Badwaya** | `rudra2994` | `student@123` | IV-B | 2994 |  | MRS. PAVITRA BADWAYA | 9009362870 | 286 |
+| 271 | **Rudra Bairagi** | `rudra2850` | `student@123` | IV-A | 2850 |  | MRS. MEGHA BAIRAGI | 9753245293 | 248 |
+| 272 | **Rudra Pratap Singh** | `rudra2859` | `student@123` | IV-A | 2859 |  | MRS. JULI SINGH | 8435368107 | 249 |
+| 273 | **Rudra Raghuvanshi** | `rudra3584` | `student@123` | IV-B | 3584 |  | MRS. ARCHANA RAGHUVANSHI | 7880071572 | 287 |
+| 274 | **Rudransh Joshi** | `rudransh2592` | `student@123` | IV-B | 2592 |  | MRS. POOJA JOSHI | 9340836925 | 288 |
+| 275 | **Saisa Singh** | `saisa2967` | `student@123` | IV-B | 2967 |  | MRS. NIKEE KUMARI | 9572819519 | 289 |
+| 276 | **Samrat Solanki** | `samrat2879` | `student@123` | IV-B | 2879 |  | MRS. KAVITA SOLANKI | 9754544855 | 290 |
+| 277 | **Sanavi Rajput** | `sanavi3727` | `student@123` | IV-B | 3727 |  | MRS. KANCHAN RAJPUT | 7909670916 | 291 |
+| 278 | **Sanidhya Patel** | `sanidhya3090` | `student@123` | IV-B | 3090 |  | MRS. REENA PATEL | 9977478722 | 292 |
+| 279 | **Sarthak Shrivastava** | `sarthak3526` | `student@123` | IV-A | 3526 |  | MRS. ANJALI SHRIVASTAVA | 8318734688 | 250 |
+| 280 | **Shreyansh Mukati** | `shreyansh3054` | `student@123` | IV-A | 3054 |  | MRS. NEHA MUKATI | 8770059633 | 251 |
+| 281 | **Siddharth Solanki** | `siddharth2825` | `student@123` | IV-A | 2825 |  | MRS. SHOBHA SOLANKI | 7747056197 | 252 |
+| 282 | **Sindhu Gehlot** | `sindhu2754` | `student@123` | IV-A | 2754 |  | MRS. BHAVNA GEHLOT | 9589901411 | 253 |
+| 283 | **Somiya Upadhyay** | `somiya3600` | `student@123` | IV-A | 3600 |  | MRS. MNJULA UPADHYAY | 9713067576 | 254 |
+| 284 | **Tejasveer Singh Chouhan** | `tejasveer2629` | `student@123` | IV-B | 2629 |  | MRS. RAKSHA CHOUHAN | 7470881087 | 293 |
+| 285 | **Tejaswani Singh Rajput** | `tejaswani3645` | `student@123` | IV-B | 3645 |  | MRS. SONAM RAJPUT | 9669932037 | 294 |
+| 286 | **Umer Raza Khan** | `umer3633` | `student@123` | IV-A | 3633 |  | MRS. SAZIYA KHAN | 9755375211 | 255 |
+| 287 | **Unnati Sejgaya** | `unnati2732` | `student@123` | IV-A | 2732 |  | MRS. POOJA SEJGAYA | 6260609995 | 256 |
+| 288 | **Utkarsh Jatwa** | `utkarsh2780` | `student@123` | IV-A | 2780 |  | MRS. JYOTI JATWA | 9826018451 | 257 |
+| 289 | **Vadehi Thakur** | `vadehi3120` | `student@123` | IV-B | 3120 |  | MRS. PRIYA THAKUR | 9009115908 | 295 |
+| 290 | **Vaidik Tanwar** | `vaidik3651` | `student@123` | IV-A | 3651 |  | MRS. HIRAMANI TANWAR | 9753417957 | 258 |
+| 291 | **Vanshraj Parihar** | `vanshraj2800` | `student@123` | IV-B | 2800 |  | MRS. SUMAN PARIHAR | 9893005115 | 296 |
+| 292 | **Vanshraj Sankla** | `vanshraj3209` | `student@123` | IV-A | 3209 |  | MRS. BHURI BAI | 9617955882 | 259 |
+| 293 | **Vedahi Badodiya** | `vedahi2580` | `student@123` | IV-A | 2580 |  | MRS. JYOTI BADODIYA | 9074477541 | 260 |
+| 294 | **Veer Jirati** | `veer2504` | `student@123` | IV-A | 2504 |  | MRS. RITU JIRATI | 8226004079 | 261 |
+| 295 | **Vinayak Rathore** | `vinayak3630` | `student@123` | IV-B | 3630 |  | MRS. TULSI RATHORE | 8120384792 | 297 |
+| 296 | **Vrandan Singh Chauhan** | `vrandan2655` | `student@123` | IV-B | 2655 |  | MRS. SNEHA SINGH CHAUHAN | 9926810178 | 298 |
+| 297 | **Vrati Jain** | `vrati3720` | `student@123` | IV-B | 3720 |  | MRS. NEHA JAIN | 7987714830 | 299 |
+| 298 | **Yashraj Kamdar** | `yashraj2583` | `student@123` | IV-A | 2583 |  | MRS. RADHA KAMDAR | 9977533600 | 262 |
+| 299 | **Yug Pratap Singh Chouhan** | `yug3343` | `student@123` | IV-A | 3343 |  | MRS. POONAM SINGH | 9753950428 | 263 |
+| 300 | **Zeeshan Kureshi** | `zeeshan3428` | `student@123` | IV-B | 3428 |  | MRS. AFSANA BEE | 7354151590 | 300 |
+| 301 | **Aaradhy Singh Baghel** | `aaradhy2823` | `student@123` | IX-A | 2823 |  | MRS. AMITA BAGHEL | 8435238110 | 652 |
+| 302 | **Aaradhya Rathore** | `aaradhya2448` | `student@123` | IX-A | 2448 |  | MRS. JYOTI RATHORE | 9977059090 | 653 |
+| 303 | **Aaryan Chhadodi** | `aaryan2021` | `student@123` | IX-B | 2021 |  | MRS. REKHA CHHADODI | 9826634286 | 693 |
+| 304 | **Abhiraj Mandloi** | `abhiraj2036` | `student@123` | IX-A | 2036 |  | MRS. BHARTI MANDLOI | 9926865751 | 654 |
+| 305 | **Aditya Jat** | `aditya3138` | `student@123` | IX-B | 3138 |  | MRS. PRIYA JAT | 9303634215 | 694 |
+| 306 | **Alka Singh** | `alka2973` | `student@123` | IX-B | 2973 |  | MRS. ASKI DEVI | 9754126580 | 695 |
+| 307 | **Ambuj Rai** | `ambuj2651` | `student@123` | IX-B | 2651 |  | MRS. SANJU RAI | 7415052269 | 696 |
+| 308 | **Angel Bairagi** | `angel2898` | `student@123` | IX-B | 2898 |  | MR. SHOBHA BAIRAGI | 9753411112 | 697 |
+| 309 | **Angel Parihar** | `angel1778` | `student@123` | IX-A | 1778 |  | MRS. REENA PARIHAR | 9826880651 | 655 |
+| 310 | **Aniket Rathore** | `aniket3629` | `student@123` | IX-A | 3629 |  | MRS. KOMAL RATHORE | 9826795921 | 656 |
+| 311 | **Ansh Solanki** | `ansh3038` | `student@123` | IX-B | 3038 |  | MRS. ANITA SOLANKI | 9826773164 | 698 |
+| 312 | **Ansh Yadav** | `ansh2877` | `student@123` | IX-A | 2877 |  | MRS. DEEPIKA YADAV | 9131849633 | 657 |
+| 313 | **Anshik Dwivedi** | `anshik3739` | `student@123` | IX-B | 3739 |  | MRS. PRIYANKA DWIVEDI | 7772901299 | 699 |
+| 314 | **Anshuman Yadav** | `anshuman2976` | `student@123` | IX-A | 2976 |  | MRS. MEGHA YADAV | 8827252525 | 658 |
+| 315 | **Arzan Khan** | `arzan1832` | `student@123` | IX-B | 1832 |  | MRS. ZEENAT KHAN | 9009994354 | 700 |
+| 316 | **Avika Joshi** | `avika3185` | `student@123` | IX-B | 3185 |  | MRS. PRIYA JOSHI | 9754144583 | 701 |
+| 317 | **Ayush Singh** | `ayush3151` | `student@123` | IX-B | 3151 |  | MRS. ANJALI SINGH | 7200626608 | 702 |
+| 318 | **Badal Makwana** | `badal3641` | `student@123` | IX-A | 3641 |  | MRS. VINITA MAKWANA | 9977999974 | 659 |
+| 319 | **Bhagyashree Gehlod** | `bhagyashree1798` | `student@123` | IX-A | 1798 |  | MRS. SAPNA GEHLOD | 9977709606 | 660 |
+| 320 | **Bhavya Chouhan** | `bhavya1940` | `student@123` | IX-B | 1940 |  | MRS. SUMAN PANCHAL | 9753303444 | 703 |
+| 321 | **Bhavya Pathe** | `bhavya3707` | `student@123` | IX-B | 3707 |  | MRS. VARSHA PATHE | 9589722444 | 704 |
+| 322 | **Hariom Sankla** | `hariom3640` | `student@123` | IX-B | 3640 |  | MRS. KAMNA SANKLA | 9977999974 | 705 |
+| 323 | **Himanshu Singh** | `himanshu2909` | `student@123` | IX-A | 2909 |  | MRS. SANGEETA DEVI | 8349890919 | 661 |
+| 324 | **Ishayu Solanki** | `ishayu1836` | `student@123` | IX-A | 1836 |  | MRS. SONA SOLANKI | 9200000733 | 662 |
+| 325 | **Izhaan Shah** | `izhaan1777` | `student@123` | IX-B | 1777 |  | MRS. PARVEEN SHAH | 9977430786 | 706 |
+| 326 | **Jeevika Jatwa** | `jeevika2878` | `student@123` | IX-A | 2878 |  | MRS. MONIKA JATWA | 9826513180 | 663 |
+| 327 | **Kalash Wankhede** | `kalash3342` | `student@123` | IX-A | 3342 |  | MRS. VAISHALI WANKHEDE | 8815598980 | 664 |
+| 328 | **Kamleshi** | `kamleshi3741` | `student@123` | IX-A | 3741 |  | MRS. RAM DEVI | 9140458775 | 665 |
+| 329 | **Kanchan Rathore** | `kanchan2547` | `student@123` | IX-B | 2547 |  | MRS. DEEPA RATHORE | 8641055040 | 707 |
+| 330 | **Kanishka Choudhary** | `kanishka1787` | `student@123` | IX-A | 1787 |  | MRS. POORNIMA CHOUDHARY | 8871673790 | 666 |
+| 331 | **Kaushal Singh Sisodiya** | `kaushal1751` | `student@123` | IX-A | 1751 |  | MRS. AMITA SINGH SISODIYA | 8349669430 | 667 |
+| 332 | **Love Rathore  [H]** | `love3747` | `student@123` | IX-B | 3747 |  | MRS. DEEPALI RATHORE | 9685296439 | 708 |
+| 333 | **Manit Jain** | `manit2961` | `student@123` | IX-A | 2961 |  | MRS. EKTA JAIN | 9425963916 | 668 |
+| 334 | **Mayank Chhadodi** | `mayank2310` | `student@123` | IX-B | 2310 |  | MRS. KAVITA CHHADODI | 9926734268 | 709 |
+| 335 | **Mayank Thakur  [H]** | `mayank3755` | `student@123` | IX-A | 3755 |  | MRS. GAYATRI THAKUR | 9752023975 | 669 |
+| 336 | **Modak Kumrawat** | `modak1833` | `student@123` | IX-B | 1833 |  | MRS. HEMLATA KUMRAWAT | 9826437377 | 710 |
+| 337 | **Mohammad Noman** | `mohammad2144` | `student@123` | IX-A | 2144 |  | MRS. SHABINA BEE | 9826767777 | 670 |
+| 338 | **Mudit Dandwate** | `mudit1908` | `student@123` | IX-B | 1908 |  | MRS. KETKI DANDWATE | 9754545046 | 711 |
+| 339 | **Naitik Doad** | `naitik2150` | `student@123` | IX-A | 2150 |  | MRS. BABITA DOAD | 9926880483 | 671 |
+| 340 | **Naitik Patel** | `naitik3124` | `student@123` | IX-B | 3124 |  | MRS. REENA PATEL | 6264334035 | 712 |
+| 341 | **Naitik Solanki** | `naitik3566` | `student@123` | IX-A | 3566 |  | MRS. BHAVNA SOLANKI | 7773020966 | 672 |
+| 342 | **Naivedhya Sharma** | `naivedhya2637` | `student@123` | IX-B | 2637 |  | MRS. MANDAKINI SHARMA | 9630778881 | 713 |
+| 343 | **Narayan Songara** | `narayan3413` | `student@123` | IX-A | 3413 |  | MRS. KAVITA SONGARA | 9770053391 | 673 |
+| 344 | **Navi Singh Chauhan** | `navi2656` | `student@123` | IX-A | 2656 |  | MRS. SNEHA SINGH CHAUHAN | 9926810178 | 674 |
+| 345 | **Nikita Kumrawat** | `nikita2059` | `student@123` | IX-B | 2059 |  | MRS. SAKHI KUMRAWAT | 9009921444 | 714 |
+| 346 | **Parag Verma** | `parag2706` | `student@123` | IX-B | 2706 |  | MRS. PUSHPA VERMA | 9098305802 | 715 |
+| 347 | **Pari Verma** | `pari2705` | `student@123` | IX-B | 2705 |  | MRS. PUSHPA VERMA | 9098305802 | 716 |
+| 348 | **Parish Raghuvanshi** | `parish2180` | `student@123` | IX-A | 2180 |  | MRS. RANJANA RAGHUVANSHI | 9826466568 | 675 |
+| 349 | **Prathviraj Jawra** | `prathviraj3713` | `student@123` | IX-B | 3713 |  | MRS. MAMTA SINGH | 7067455493 | 717 |
+| 350 | **Prince Parmar** | `prince3373` | `student@123` | IX-A | 3373 |  | MRS. SEEMA PARMAR | 9691515850 | 676 |
+| 351 | **Pritam Mourya** | `pritam3345` | `student@123` | IX-A | 3345 |  | MR. RADHA MOURYA | 9575585610 | 677 |
+| 352 | **Puneet Jat** | `puneet2610` | `student@123` | IX-B | 2610 |  | MRS. DOLLY JAT | 9826555484 | 718 |
+| 353 | **Purab Bairagi** | `purab2946` | `student@123` | IX-A | 2946 |  | MRS. KIRAN BAIRAGI | 7000604675 | 678 |
+| 354 | **Rachitendra Joshi** | `rachitendra1919` | `student@123` | IX-A | 1919 |  | MRS. PADMA JOSHI | 9752911022 | 679 |
+| 355 | **Raj Choudhary** | `raj3111` | `student@123` | IX-B | 3111 |  | MRS. MADHU CHOUDHARY | 9340031249 | 719 |
+| 356 | **Rajeev Yadav** | `rajeev2774` | `student@123` | IX-B | 2774 |  | MRS. KAVITA YADAV | 7805051780 | 720 |
+| 357 | **Rajvardhan Goud** | `rajvardhan2790` | `student@123` | IX-A | 2790 |  | MRS. SEEMA GOUD | 9754716916 | 680 |
+| 358 | **Rajveer Singh Jawara** | `rajveer3597` | `student@123` | IX-A | 3597 |  | MRS. ANITA JAWARA | 8962545548 | 681 |
+| 359 | **Ridansh Songara  [H]** | `ridansh3653` | `student@123` | IX-A | 3653 |  | MRS. DEEPA SONGARA | 9753362859 | 682 |
+| 360 | **Ritveer Yadav** | `ritveer1795` | `student@123` | IX-A | 1795 |  | MRS. SAPNA YADAV | 9827809357 | 683 |
+| 361 | **Sanidhy Joshi** | `sanidhy3500` | `student@123` | IX-A | 3500 |  | MRS.NEHA JOSHI | 9826678072 | 684 |
+| 362 | **Shireen Mirda** | `shireen2013` | `student@123` | IX-B | 2013 |  | MRS. TABASSUM BEE | 9826501935 | 721 |
+| 363 | **Shivam Kamdar** | `shivam3076` | `student@123` | IX-A | 3076 |  | MRS. HEMLATA BAI | 9826063386 | 685 |
+| 364 | **Shivani Thakur** | `shivani3017` | `student@123` | IX-A | 3017 |  | MRS. MEENA THAKUR | 9131162686 | 686 |
+| 365 | **Shravani Ghorpade** | `shravani1767` | `student@123` | IX-A | 1767 |  | MRS. RAJSHREE GHORPADE | 9827781300 | 687 |
+| 366 | **Simran Solanki** | `simran2881` | `student@123` | IX-B | 2881 |  | MRS. KAVITA SOLANKI | 9754544855 | 722 |
+| 367 | **Sobaran Singh Rana** | `sobaran1995` | `student@123` | IX-B | 1995 |  | LATE MRS. PRITI RANA | 9826416587 | 723 |
+| 368 | **Stuti Patidar** | `stuti1766` | `student@123` | IX-A | 1766 |  | MRS. MANISHA PATIDAR | 9926448888 | 688 |
+| 369 | **Tanikesh Mourya** | `tanikesh3744` | `student@123` | IX-B | 3744 |  | MRS. LAXMI MOURYA | 9993152490 | 724 |
+| 370 | **Tanishk Choudhary** | `tanishk3045` | `student@123` | IX-B | 3045 |  | MRS. SAGAR BAI | 7697811888 | 725 |
+| 371 | **Trisha Singh** | `trisha3609` | `student@123` | IX-B | 3609 |  | MRS. PRATIMA SINGH | 6392863294 | 726 |
+| 372 | **Unnati Nagar** | `unnati2249` | `student@123` | IX-B | 2249 |  | MRS. JYOTI NAGAR | 9826489999 | 727 |
+| 373 | **Vansh Choudhary** | `vansh3048` | `student@123` | IX-A | 3048 |  | MRS. RITU CHOUDHARY | 9926911640 | 689 |
+| 374 | **Varnika Verma** | `varnika3505` | `student@123` | IX-A | 3505 |  | MRS. PREMA VERMA | 9877107336 | 690 |
+| 375 | **Vedansh Patel** | `vedansh2404` | `student@123` | IX-B | 2404 |  | MRS. MADHURI PATEL | 8109824724 | 728 |
+| 376 | **Vedant Rathore** | `vedant2197` | `student@123` | IX-B | 2197 |  | MRS. SAPNA RATHORE | 9329681784 | 729 |
+| 377 | **Viha Nagar** | `viha2947` | `student@123` | IX-A | 2947 |  | MRS. MADHURI NAGAR | 9826630961 | 691 |
+| 378 | **Vinay Makwana** | `vinay3141` | `student@123` | IX-B | 3141 |  | MRS. ANITA MAKWANA | 9685119913 | 730 |
+| 379 | **Vinita Mourya** | `vinita2543` | `student@123` | IX-B | 2543 |  | MRS. CHINKITA MOURYA | 9755449599 | 731 |
+| 380 | **Yash Badodiya** | `yash1842` | `student@123` | IX-B | 1842 |  | MRS. SHOBHA BADODIYA | 8959783772 | 732 |
+| 381 | **Zeeshan Sheikh** | `zeeshan1872` | `student@123` | IX-A | 1872 |  | MRS. ROSHAN BEE | 9039226736 | 692 |
+| 382 | **Aakruti Dixit** | `aakruti3401` | `student@123` | LKG-A | 3401 |  | MRS. ARPITA DIXIT | 9993449069 | 939 |
+| 383 | **Aarohi Raghuwanshi** | `aarohi3605` | `student@123` | LKG-B | 3605 |  | MRS.REKHA RAGHUWANSHI | 7000129318 | 961 |
+| 384 | **Aayansh Solanki** | `aayansh3750` | `student@123` | LKG-B | 3750 |  | MRS. SHIVANI SOLANKI | 9516593434 | 962 |
+| 385 | **Abhyuday Choudhary** | `abhyuday3647` | `student@123` | LKG-A | 3647 |  | MRS. POORNIMA CHOUDHARY | 9340453539 | 940 |
+| 386 | **Aditi Dubey** | `aditi3478` | `student@123` | LKG-A | 3478 |  | MRS.BANDANA DUBEY | 7987133251 | 941 |
+| 387 | **Amayra Kushwah** | `amayra3674` | `student@123` | LKG-A | 3674 |  | MRS. LUCKY KUSHWAH | 9713010001 | 942 |
+| 388 | **Anav Khandelwal** | `anav3602` | `student@123` | LKG-B | 3602 |  | MRS.MEGHA KHANDELWAL | 8109677777 | 963 |
+| 389 | **Anaya Sharma** | `anaya3583` | `student@123` | LKG-B | 3583 |  | MRS. BARKHA SHARMA | 9109519718 | 964 |
+| 390 | **Anushka Choudhary** | `anushka3480` | `student@123` | LKG-A | 3480 |  | MRS. NILAM CHOUDHARY | 8435298528 | 943 |
+| 391 | **Ayansh Gupta** | `ayansh3656` | `student@123` | LKG-B | 3656 |  | MRS. ANJU GUPTA | 7828030701 | 965 |
+| 392 | **Bhanavi Chouhan** | `bhanavi3608` | `student@123` | LKG-B | 3608 |  | MRS. SAPNA CHOUHAN | 7987195374 | 966 |
+| 393 | **Daksh Singh Chouhan** | `daksh3416` | `student@123` | LKG-A | 3416 |  | MRS. PRIYANKA CHOUHAN | 9098852222 | 944 |
+| 394 | **Devansh Makwana** | `devansh3671` | `student@123` | LKG-B | 3671 |  | MRS. VARSHA MAKWANA | 9685119913 | 967 |
+| 395 | **Disha Raghuvanshi** | `disha3470` | `student@123` | LKG-A | 3470 |  | MRS. SAVITA RAGHUVANSHI | 7024282828 | 945 |
+| 396 | **Divyansh Bagwan** | `divyansh3446` | `student@123` | LKG-B | 3446 |  | MRS. ARTI BAGWAN | 9926716832 | 968 |
+| 397 | **Gauravi Patidar** | `gauravi3507` | `student@123` | LKG-B | 3507 |  | MR. KAVITA PATIDAR | 9977162629 | 969 |
+| 398 | **Gautami Jadhav** | `gautami3556` | `student@123` | LKG-B | 3556 |  | MRS. JAYA JADHAV | 9575555334 | 970 |
+| 399 | **Heer Jadhav** | `heer3624` | `student@123` | LKG-B | 3624 |  | MRS. ASHVINI JADHAV | 9644113088 | 971 |
+| 400 | **Hitarth Chhaparwal** | `hitarth3504` | `student@123` | LKG-B | 3504 |  | MRS. RENUKA CHHAPARWAL | 9826096186 | 972 |
+| 401 | **Jyanshu Mishra** | `jyanshu3639` | `student@123` | LKG-A | 3639 |  | MRS. RUBI MISHRA | 9826677736 | 946 |
+| 402 | **Kavya Mandloi** | `kavya3632` | `student@123` | LKG-A | 3632 |  | MRS. SHIVANI MANDLOI | 9754383970 | 947 |
+| 403 | **Kiyansh Patidar** | `kiyansh3522` | `student@123` | LKG-B | 3522 |  | MRS. PRIYA PATIDAR | 8889857793 | 973 |
+| 404 | **Krishiv Choudhary** | `krishiv3617` | `student@123` | LKG-B | 3617 |  | MRS. HARSHITA CHOUDHARY | 9009020298 | 974 |
+| 405 | **Kushal Singh Solanki** | `kushal3637` | `student@123` | LKG-A | 3637 |  | MRS. KOMAL SINGH SOLANKI | 9179612791 | 948 |
+| 406 | **Manvi Raghuvanshi** | `manvi3615` | `student@123` | LKG-A | 3615 |  | MRS. PRITI RAGHUVANSHI | 9617138152 | 949 |
+| 407 | **Milind Choudhary** | `milind3582` | `student@123` | LKG-B | 3582 |  | MRS. BABITA CHOUDHARY | 9770983060 | 975 |
+| 408 | **Naman Patel** | `naman3518` | `student@123` | LKG-B | 3518 |  | MRS. CHETNA PATEL | 9009090814 | 976 |
+| 409 | **Punyakirti Tyagi** | `punyakirti3535` | `student@123` | LKG-A | 3535 |  | MRS. KAMLA TYAGI | 9098558086 | 950 |
+| 410 | **Purvansh Bhandari** | `purvansh3666` | `student@123` | LKG-A | 3666 |  | MRS. PALLAVI BHANDARI | 6826024235 | 951 |
+| 411 | **Raghav Choudhary** | `raghav3516` | `student@123` | LKG-A | 3516 |  | MRS. RAKHI CHOUDHARY | 7974454170 | 952 |
+| 412 | **Ranjan Verma** | `ranjan3508` | `student@123` | LKG-A | 3508 |  | MRS. PRIYANKA VERMA | 9039465243 | 953 |
+| 413 | **Shivyansh Parihar** | `shivyansh3610` | `student@123` | LKG-B | 3610 |  | MRS. KAMNA PARIHAR | 8085422311 | 977 |
+| 414 | **Svanik Nagar** | `svanik3532` | `student@123` | LKG-A | 3532 |  | MRS. NEHA NAGAR | 8959962126 | 954 |
+| 415 | **Tanishka Yadav** | `tanishka3552` | `student@123` | LKG-A | 3552 |  | MRS. ANJALI YADAV | 8827272759 | 955 |
+| 416 | **Tanvika Khatri** | `tanvika3490` | `student@123` | LKG-A | 3490 |  | MRS. SHRUTI KHATRI | 9039369781 | 956 |
+| 417 | **Vaibhav Jadhav** | `vaibhav3603` | `student@123` | LKG-B | 3603 |  | MRS. VARSHA JADHAV | 9111039088 | 978 |
+| 418 | **Vedansh Verma** | `vedansh3459` | `student@123` | LKG-B | 3459 |  | MR. SUNITA VERMA | 8780697869 | 979 |
+| 419 | **Vedant Rathore** | `vedant3430` | `student@123` | LKG-A | 3430 |  | MRS. SANGEETA RATHORE | 7999910038 | 957 |
+| 420 | **Veer Rai** | `veer3493` | `student@123` | LKG-A | 3493 |  | MRS. SUNITA RAI | 9087221741 | 958 |
+| 421 | **Viraj Solanki** | `viraj3676` | `student@123` | LKG-B | 3676 |  | MRS. SWATI SOLANKI | 8654977652 | 980 |
+| 422 | **Vivan Singh Sisodiya** | `vivan3182` | `student@123` | LKG-B | 3182 |  | MRS. MAHIMA SISODIYA | 9009085911 | 981 |
+| 423 | **Yakshit Solanki** | `yakshit3562` | `student@123` | LKG-B | 3562 |  | MRS. SAPNA SOLANKI | 9752083386 | 982 |
+| 424 | **Yuvansh Jatav** | `yuvansh3531` | `student@123` | LKG-A | 3531 |  | MRS.KHUSHBU JATAV | 9685747450 | 959 |
+| 425 | **Zaira Khan** | `zaira3695` | `student@123` | LKG-A | 3695 |  | MRS. SHIREEN SHEIKH | 9630056104 | 960 |
+| 426 | **Aadhyashri Vaishnav** | `aadhyashri3714` | `student@123` | NUR-A | 3714 |  | MRS. PUSHPA VAISHNAV | 8839630747 | 983 |
+| 427 | **Aryamaan Singh Rathore** | `aryamaan3722` | `student@123` | NUR-A | 3722 |  | MRS. MEGHA RATHORE | 9294500107 | 984 |
+| 428 | **Chetnya Gehlod** | `chetnya3687` | `student@123` | NUR-A | 3687 |  | MRS. PUJA GEHLOD | 9691438170 | 985 |
+| 429 | **Dhriti Mishra** | `dhriti3733` | `student@123` | NUR-A | 3733 |  | MRS. RASHMI MISHRA | 9009357736 | 986 |
+| 430 | **Fatima Khan** | `fatima3759` | `student@123` | NUR-A | 3759 |  | MRS. AASIFA KHAN | 8109644254 | 987 |
+| 431 | **Garvit Yadav** | `garvit3689` | `student@123` | NUR-A | 3689 |  | MRS. KHUSHBU YADAV | 7024664850 | 988 |
+| 432 | **Gouranshi Gehlod** | `gouranshi3688` | `student@123` | NUR-A | 3688 |  | MRS. SONA GEHLOD | 9770928500 | 989 |
+| 433 | **Himakshi Chaturvedi** | `himakshi3698` | `student@123` | NUR-A | 3698 |  | MRS.  SHIKHA CHATURVEDI | 9981105556 | 990 |
+| 434 | **Kartvya Joshi** | `kartvya3679` | `student@123` | NUR-A | 3679 |  | MRS. POOJA JOSHI | 9827452867 | 991 |
+| 435 | **Manvik Sharda** | `manvik3700` | `student@123` | NUR-A | 3700 |  | MRS, MAHAK SHARDA | 9644431806 | 992 |
+| 436 | **Parnika Patel** | `parnika3764` | `student@123` | NUR-A | 3764 |  | MRS. MANISHA PATEL | 7247022714 | 993 |
+| 437 | **Parth Rajput** | `parth3762` | `student@123` | NUR-A | 3762 |  | MRS. VAISHALI RAJPUT | 9406803961 | 994 |
+| 438 | **Parthavi Gandharva** | `parthavi3703` | `student@123` | NUR-A | 3703 |  | MRS.  AYUSHI | 8085758274 | 995 |
+| 439 | **Prabhnoor Kaur** | `prabhnoor3753` | `student@123` | NUR-A | 3753 |  | MRS. KAMALJEET | 9977718124 | 996 |
+| 440 | **Riddhish Patidar** | `riddhish3692` | `student@123` | NUR-A | 3692 |  | MRS. SONALI PATIDAR | 9754705092 | 997 |
+| 441 | **Saanvi Singh Rajput** | `saanvi3694` | `student@123` | NUR-A | 3694 |  | MRS. PINKI KUMARI | 7812019009 | 998 |
+| 442 | **Shivin Raghuwanshi** | `shivin3731` | `student@123` | NUR-A | 3731 |  | MRS. NITIKA RAGHUWANSHI | 9617989444 | 999 |
+| 443 | **Tanush Meena** | `tanush3675` | `student@123` | NUR-A | 3675 |  | MRS. RAKSHA MEENA | 8770567062 | 1000 |
+| 444 | **Tejashwani Chouhan** | `tejashwani3745` | `student@123` | NUR-A | 3745 |  | MRS. PREM KUNWAR CHOUHAN | 9977078612 | 1001 |
+| 445 | **Vaidehi Sharma** | `vaidehi3697` | `student@123` | NUR-A | 3697 |  | MRS. KARUNA SHARMA | 9826615045 | 1002 |
+| 446 | **Ved Choudhary** | `ved3763` | `student@123` | NUR-A | 3763 |  | MRS. PREETI CHOUDHARY | 8959832701 | 1003 |
+| 447 | **Yashvardhan Chouhan** | `yashvardhan3717` | `student@123` | NUR-A | 3717 |  | MRS. RACHANA CHOUHAN | 9617075660 | 1004 |
+| 448 | **Abuzar Patel** | `abuzar3451` | `student@123` | UKG-A | 3451 |  | MRS. BUSHRA PATEL | 8319444385 | 1005 |
+| 449 | **Akshat Sharma** | `akshat3214` | `student@123` | UKG-B | 3214 |  | MRS. BARKHA SHARMA | 7879412053 | 1037 |
+| 450 | **Alexa Chouhan** | `alexa3453` | `student@123` | UKG-A | 3453 |  | MRS. ARTI CHOUHAN | 9826271433 | 1006 |
+| 451 | **Anvi Rajawat** | `anvi3195` | `student@123` | UKG-A | 3195 |  | MRS. BHAVANA SINGH RAJAWAT | 8871348042 | 1007 |
+| 452 | **Arun Patel** | `arun3521` | `student@123` | UKG-A | 3521 |  | MRS.GAYATREE | 7067878415 | 1008 |
+| 453 | **Aviraj Chouhan** | `aviraj3398` | `student@123` | UKG-A | 3398 |  | MRS. MAMTA CHOUHAN | 9669004911 | 1009 |
+| 454 | **Avyukt Chhadodi** | `avyukt3363` | `student@123` | UKG-B | 3363 |  | MRS. SIMRAN CHHDODI | 9977194143 | 1038 |
+| 455 | **Ayansh Parihar** | `ayansh3668` | `student@123` | UKG-B | 3668 |  | MRS. AYUSHI PARIHAR | 7999546248 | 1039 |
+| 456 | **Bhanupratap Singh Sisodiya** | `bhanupratap3643` | `student@123` | UKG-B | 3643 |  | MRS. PARAS KUNWAR SISODIYA | 7725826149 | 1040 |
+| 457 | **Devansh Singh Suner** | `devansh3619` | `student@123` | UKG-B | 3619 |  | MRS. AARIT SUNER | 9575651036 | 1041 |
+| 458 | **Divyansh Singh Chouhan** | `divyansh3223` | `student@123` | UKG-A | 3223 |  | MRS. RISHIKA CHOUHAN | 7748801213 | 1010 |
+| 459 | **Hardik Sisodiya** | `hardik3198` | `student@123` | UKG-B | 3198 |  | MRS. RITA SISODIYA | 7999527710 | 1042 |
+| 460 | **Harsh Panwar** | `harsh3448` | `student@123` | UKG-B | 3448 |  | MRS. POOJA PANWAR | 6261868632 | 1043 |
+| 461 | **Harshita Gupta** | `harshita3424` | `student@123` | UKG-B | 3424 |  | MRS. ANJU GUPTA | 7828030701 | 1044 |
+| 462 | **Harshvardhan Verma** | `harshvardhan3724` | `student@123` | UKG-A | 3724 |  | MRS. SANJU VERMA | 9669732553 | 1011 |
+| 463 | **Hetik Chandel** | `hetik3457` | `student@123` | UKG-B | 3457 |  | MRS. ALKA CHANDEL | 9098909046 | 1045 |
+| 464 | **Himanshu Choudhary** | `himanshu3179` | `student@123` | UKG-B | 3179 |  | MRS. DIKSHA CHOUDHARY | 9993007290 | 1046 |
+| 465 | **Izhaan Khan** | `izhaan3176` | `student@123` | UKG-A | 3176 |  | MRS. FARHIN KHAN | 9826458264 | 1012 |
+| 466 | **Jayant Choudhary** | `jayant3618` | `student@123` | UKG-A | 3618 |  | MRS. YANJANA CHOUDHARY | 7999600147 | 1013 |
+| 467 | **Jhilmil** | `jhilmil3616` | `student@123` | UKG-B | 3616 |  | MRS. REETA | 8461026726 | 1047 |
+| 468 | **Kartik Jogee** | `kartik3351` | `student@123` | UKG-B | 3351 |  | MRS. ISHIKA JOGEE | 7489391115 | 1048 |
+| 469 | **Kashvi Bairagi** | `kashvi3172` | `student@123` | UKG-B | 3172 |  | MRS. DEEPIKA BAIRAGI | 9179919343 | 1049 |
+| 470 | **Kashvi Chourasiya** | `kashvi3634` | `student@123` | UKG-A | 3634 |  | MRS. MONIKA CHOURASIYA | 9303092308 | 1014 |
+| 471 | **Kavya Jadhav** | `kavya3081` | `student@123` | UKG-A | 3081 |  | MRS. POOJA JADHAV | 9827496302 | 1015 |
+| 472 | **Khush Meena** | `khush3680` | `student@123` | UKG-A | 3680 |  | MRS. RAJNI MEENA | 7000810167 | 1016 |
+| 473 | **Krimansh Makwana** | `krimansh3353` | `student@123` | UKG-B | 3353 |  | MRS. MANISHA MAKWANA | 9685119877 | 1050 |
+| 474 | **Kunal Chhadiya** | `kunal3423` | `student@123` | UKG-A | 3423 |  | MRS. RACHNA CHHADIYA | 7999298619 | 1017 |
+| 475 | **Kushagra Sajankar** | `kushagra3686` | `student@123` | UKG-B | 3686 |  | MRS. POOJA SAJANKAR | 9327703046 | 1051 |
+| 476 | **Lakshit Singh Tanwar** | `lakshit3429` | `student@123` | UKG-A | 3429 |  | MRS. ANITA SINGH | 9827476104 | 1018 |
+| 477 | **Lakshya Rathore** | `lakshya3211` | `student@123` | UKG-A | 3211 |  | MRS. JANTA RATHORE | 9753950418 | 1019 |
+| 478 | **Lakshyaraj Parihar** | `lakshyaraj3433` | `student@123` | UKG-A | 3433 |  | MRS. SUMAN PARIHAR | 9893005115 | 1020 |
+| 479 | **Lavyam Jirati** | `lavyam3432` | `student@123` | UKG-A | 3432 |  | MRS. POOJA JIRATI | 9754739676 | 1021 |
+| 480 | **Madhav Singh** | `madhav3467` | `student@123` | UKG-A | 3467 |  | MRS. KHUSHBOO KUMARI | 8085475518 | 1022 |
+| 481 | **Mahir Rathore** | `mahir3431` | `student@123` | UKG-B | 3431 |  | MRS. SANGEETA RATHORE | 7999910038 | 1052 |
+| 482 | **Miraya Yadav** | `miraya3465` | `student@123` | UKG-B | 3465 |  | MRS. MAMTA YADAV | 9111260954 | 1053 |
+| 483 | **Nawaz Khan** | `nawaz3456` | `student@123` | UKG-A | 3456 |  | MRS. NAZIYA KHAN | 9981372911 | 1023 |
+| 484 | **Pragati Sejgaya** | `pragati3704` | `student@123` | UKG-A | 3704 |  | MRS. POOJA SEJGAYA | 9753058860 | 1024 |
+| 485 | **Pransh Dhapiya** | `pransh3667` | `student@123` | UKG-A | 3667 |  | MRS. NIKITA DHAPIYA | 8085171113 | 1025 |
+| 486 | **Pranvi Patidar** | `pranvi3681` | `student@123` | UKG-B | 3681 |  | MRS. AYUSHI PATIDAR | 9755287225 | 1054 |
+| 487 | **Prisha Dhiraj** | `prisha3188` | `student@123` | UKG-B | 3188 |  | MRS. PRIYANKA DHIRAJ | 9074841698 | 1055 |
+| 488 | **Rajveer Sule** | `rajveer3170` | `student@123` | UKG-A | 3170 |  | MRS. POONAM SULE | 9753950404 | 1026 |
+| 489 | **Riya Surywanshi** | `riya3623` | `student@123` | UKG-A | 3623 |  | MRS. DURGA SURYWANSHI | 9630348081 | 1027 |
+| 490 | **Riyanshi Nishad** | `riyanshi3677` | `student@123` | UKG-B | 3677 |  | MRS. RENUKA NISHAD | 8795208928 | 1056 |
+| 491 | **Riyant Raghuvanshi** | `riyant3425` | `student@123` | UKG-B | 3425 |  | MRS. RAVINA RAGHUVANSHI | 8770370207 | 1057 |
+| 492 | **Ronak Jadhav** | `ronak3178` | `student@123` | UKG-A | 3178 |  | MRS. BHARTI JADHAV | 9179400500 | 1028 |
+| 493 | **Rudraditya Jat** | `rudraditya3710` | `student@123` | UKG-B | 3710 |  | MRS. SONIYA JAT | 9753999993 | 1058 |
+| 494 | **Sakshi Bagwan** | `sakshi3180` | `student@123` | UKG-B | 3180 |  | MRS. ARTI BAGWAN | 9926716832 | 1059 |
+| 495 | **Sarav Panwar** | `sarav3658` | `student@123` | UKG-B | 3658 |  | MRS. KALPANA PANWAR | 9907794321 | 1060 |
+| 496 | **Satvik Raj** | `satvik3690` | `student@123` | UKG-A | 3690 |  | MRS. BEENA KUMARI | 9518043839 | 1029 |
+| 497 | **Shikha Panwar** | `shikha3230` | `student@123` | UKG-A | 3230 |  | MRS. DIVYA PANWAR | 9425070470 | 1030 |
+| 498 | **Shreeyansh Yadav** | `shreeyansh3604` | `student@123` | UKG-A | 3604 |  | MRS. MEERA YADAV | 8827799447 | 1031 |
+| 499 | **Shridhi Raghuvanshi** | `shridhi3187` | `student@123` | UKG-A | 3187 |  | MRS. SHIVANI RAGHUVANSHI | 8959650407 | 1032 |
+| 500 | **Shrit Choudhary** | `shrit3441` | `student@123` | UKG-B | 3441 |  | MRS. RITU CHOUDHARY | 9826075373 | 1061 |
+| 501 | **Tabish Khan** | `tabish3436` | `student@123` | UKG-B | 3436 |  | MRS. ARSHNAZ KHAN | 9407255555 | 1062 |
+| 502 | **Tanvi** | `tanvi3344` | `student@123` | UKG-B | 3344 |  | MRS. MONIKA | 8302255247 | 1063 |
+| 503 | **Tanvi Rajput** | `tanvi3728` | `student@123` | UKG-B | 3728 |  | MRS. KANCHAN RAJPUT | 7909670916 | 1064 |
+| 504 | **Tejal Tanwar** | `tejal3205` | `student@123` | UKG-B | 3205 |  | MRS. MONIKA TANWAR | 9893385009 | 1065 |
+| 505 | **Trisha Yadav** | `trisha3352` | `student@123` | UKG-B | 3352 |  | MRS. KOMAL YADAV | 9685812323 | 1066 |
+| 506 | **Urvashi Mishra** | `urvashi3104` | `student@123` | UKG-A | 3104 |  | MRS. KESHAR MISHRA | 9424654905 | 1033 |
+| 507 | **Vaidhika Choudhary** | `vaidhika3362` | `student@123` | UKG-B | 3362 |  | MRS. ARCHANA CHOUDHARY | 9893521200 | 1067 |
+| 508 | **Vaidik Kumrawat** | `vaidik3233` | `student@123` | UKG-A | 3233 |  | MRS. TRAPTI KUMRAWAT | 9827476104 | 1034 |
+| 509 | **Vihana Gathe** | `vihana3636` | `student@123` | UKG-B | 3636 |  | MRS. RAVEENA GATHE | 8817343497 | 1068 |
+| 510 | **Vratika Chouhan** | `vratika3422` | `student@123` | UKG-A | 3422 |  | MRS. NIRMALA CHOUHAN | 7725081531 | 1035 |
+| 511 | **Yuvaansh Nagar** | `yuvaansh3229` | `student@123` | UKG-A | 3229 |  | MRS. MONA NAGAR | 9399844922 | 1036 |
+| 512 | **Aarya Rai** | `aarya3758` | `student@123` | V-B | 3758 |  | MRS. SUNITA  RAI | 9302384430 | 330 |
+| 513 | **Abhas Singh** | `abhas3528` | `student@123` | V-A | 3528 |  | MRS. SHARDA DEVI | 7024437392 | 301 |
+| 514 | **Adira Yadav** | `adira2270` | `student@123` | V-C | 2270 |  | MRS. KAVITA YADAV | 7225959938 | 358 |
+| 515 | **Amendra Singh** | `amendra3372` | `student@123` | V-A | 3372 |  | MRS. AKANSHA | 9617114422 | 302 |
+| 516 | **Anish Songara** | `anish2852` | `student@123` | V-A | 2852 |  | MRS. VIDHYA SONGARA | 9399920575 | 303 |
+| 517 | **Anmol Septa** | `anmol3754` | `student@123` | V-B | 3754 |  | MRS. SHIVKANYA SEPTA | 7869819876 | 331 |
+| 518 | **Anshuman Choudhary** | `anshuman2338` | `student@123` | V-B | 2338 |  | MRS. KAVITA CHOUDHARY | 9826779074 | 332 |
+| 519 | **Anubhav Pandey** | `anubhav2749` | `student@123` | V-C | 2749 |  | MRS. SAROJ PANDEY | 9726290822 | 359 |
+| 520 | **Anuj** | `anuj3742` | `student@123` | V-A | 3742 |  | MRS. RAM DEVI | 9140458775 | 304 |
+| 521 | **Atharv Jaiswal** | `atharv2577` | `student@123` | V-A | 2577 |  | MRS. GEETANJALI JAISWAL | 9131074532 | 305 |
+| 522 | **Avanish Mukati** | `avanish3685` | `student@123` | V-B | 3685 |  | MRS. DHENU MUKATI | 9926329919 | 333 |
+| 523 | **Chetanya Jadhav** | `chetanya2457` | `student@123` | V-C | 2457 |  | MRS. JYOTI JADHAV | 9009007995 | 360 |
+| 524 | **Chirayu Jain** | `chirayu3699` | `student@123` | V-B | 3699 |  | MRS. SAPNA JAIN | 7746059107 | 334 |
+| 525 | **Devansh Singh** | `devansh2438` | `student@123` | V-B | 2438 |  | MRS. CHANDA SINGH | 9907193282 | 335 |
+| 526 | **Devanshi Bhume** | `devanshi2965` | `student@123` | V-C | 2965 |  | MRS. MANJULA BHUME | 7378439496 | 361 |
+| 527 | **Devika Gehlod** | `devika2335` | `student@123` | V-A | 2335 |  | MRS. SAPNA GEHLOD | 9977709606 | 306 |
+| 528 | **Devshri Gangarekar** | `devshri3735` | `student@123` | V-C | 3735 |  | MRS. MADHAVI GANGAREKAR | 9691752370 | 362 |
+| 529 | **Divyank Bhabar** | `divyank2752` | `student@123` | V-C | 2752 |  | MRS. RAJ BAI | 9165274613 | 363 |
+| 530 | **Divyansh Rathore** | `divyansh3116` | `student@123` | V-B | 3116 |  | MRS. NIKITA RATHORE | 7772005955 | 336 |
+| 531 | **Durgashree Gehlod** | `durgashree2868` | `student@123` | V-A | 2868 |  | MRS. MAMTA GEHLOD | 7869482543 | 307 |
+| 532 | **Geet Patidar** | `geet2369` | `student@123` | V-A | 2369 |  | MRS. MANISHA PATIDAR | 9926448888 | 308 |
+| 533 | **Gouransh Jat** | `gouransh3701` | `student@123` | V-B | 3701 |  | MRS. NITU JAT | 9691029007 | 337 |
+| 534 | **Gouransh Kumrawat** | `gouransh2426` | `student@123` | V-A | 2426 |  | MRS. TRIPTI KUMRAWAT | 9770019141 | 309 |
+| 535 | **Gouravraj Choudhary** | `gouravraj2563` | `student@123` | V-C | 2563 |  | MRS. RUPALI CHOUDHARY | 8959313635 | 364 |
+| 536 | **Hamza Altaf** | `hamza3474` | `student@123` | V-B | 3474 |  | SHABNAM PARVEEN | 9990093238 | 338 |
+| 537 | **Hanshika Yadav** | `hanshika2414` | `student@123` | V-C | 2414 |  | MRS. MEERA YADAV | 8827799447 | 365 |
+| 538 | **Harshita Chouhan** | `harshita2882` | `student@123` | V-A | 2882 |  | MRS. RITU CHOUHAN | 9669427989 | 310 |
+| 539 | **Jagrati Maida** | `jagrati2718` | `student@123` | V-C | 2718 |  | MRS. JYOTI MAIDA | 9926490949 | 366 |
+| 540 | **Janak Varma** | `janak3468` | `student@123` | V-B | 3468 |  | MRS. DIPTI VARMA | 9404121000 | 339 |
+| 541 | **Jayant Parmar** | `jayant2870` | `student@123` | V-B | 2870 |  | MRS. ROSHNI PARMAR | 9977529330 | 340 |
+| 542 | **Kartavya Khanna** | `kartavya3219` | `student@123` | V-A | 3219 |  | MRS. PRITI KHANNA | 8959745012 | 311 |
+| 543 | **Kartik Prajapat** | `kartik3611` | `student@123` | V-C | 3611 |  | MRS. POONAM PRAJAPAT | 9755557660 | 367 |
+| 544 | **Kartik Thakur** | `kartik3657` | `student@123` | V-C | 3657 |  | MRS. BINDU THAKUR | 9329080076 | 368 |
+| 545 | **Kavish Mukati** | `kavish3210` | `student@123` | V-C | 3210 |  | MRS. SAPNA MUKATI | 9926673333 | 369 |
+| 546 | **Keshvi Choudhary** | `keshvi2373` | `student@123` | V-A | 2373 |  | MRS. PURNIMA CHOUDHARY | 9340453539 | 312 |
+| 547 | **Lakshita Gehlot** | `lakshita2744` | `student@123` | V-A | 2744 |  | MRS. MANJU BALA GEHLOT | 8770323699 | 313 |
+| 548 | **Lakshy Mishra** | `lakshy3354` | `student@123` | V-A | 3354 |  | MRS. RUBI MISHRA | 9826677736 | 314 |
+| 549 | **Lakshya Raj Singh Goud** | `lakshya2802` | `student@123` | V-B | 2802 |  | MRS. LALITA GOUD | 9893713777 | 341 |
+| 550 | **Lavanya Jirati** | `lavanya2407` | `student@123` | V-C | 2407 |  | MRS. MAMTA JIRATI | 9111010206 | 370 |
+| 551 | **Lavya Pathe** | `lavya3706` | `student@123` | V-C | 3706 |  | MRS. VARSHA PATHE | 9589722444 | 371 |
+| 552 | **Manasvi Goyal** | `manasvi3437` | `student@123` | V-B | 3437 |  | MRS. UMA GOYAL | 9926288036 | 342 |
+| 553 | **Manmeet Saini** | `manmeet2529` | `student@123` | V-B | 2529 |  | MRS. KAVITA SAINI | 8946835640 | 343 |
+| 554 | **Manvendra Bhinde** | `manvendra2777` | `student@123` | V-C | 2777 |  | MRS. MAMTA BHINDE | 9907800268 | 372 |
+| 555 | **Mayank Yadav** | `mayank3059` | `student@123` | V-B | 3059 |  | MRS. UPASANA YADAV | 8085231282 | 344 |
+| 556 | **Mohammad Faiz Khan** | `mohammad2471` | `student@123` | V-C | 2471 |  | MRS. SHIFA KHAN | 9977374400 | 373 |
+| 557 | **Moinuddin Khan** | `moinuddin3201` | `student@123` | V-A | 3201 |  | MRS. NIKHAT BEE | 9907771555 | 315 |
+| 558 | **Nakshraj Chouhan** | `nakshraj2691` | `student@123` | V-A | 2691 |  | MRS. SONU CHOUHAN | 9098588932 | 316 |
+| 559 | **Nakul Chouhan** | `nakul3716` | `student@123` | V-A | 3716 |  | MRS. PUJA CHOUHAN | 9713840585 | 317 |
+| 560 | **Naman Yadav** | `naman3394` | `student@123` | V-B | 3394 |  | MRS. JYOTI YADAV | 6267787773 | 345 |
+| 561 | **Neha Kumari** | `neha3139` | `student@123` | V-B | 3139 |  | MRS. KUMARI REETA | 8461026726 | 346 |
+| 562 | **Nikunj Panwar** | `nikunj3635` | `student@123` | V-C | 3635 |  | MRS. DIPIKA PANWAR | 9977574849 | 374 |
+| 563 | **Nilanshi Upadhyay** | `nilanshi2361` | `student@123` | V-A | 2361 |  | MRS. NIKITA UPADHYAY | 9827645558 | 318 |
+| 564 | **Nimisha Kewat** | `nimisha2680` | `student@123` | V-C | 2680 |  | MRS. KAVITA KEWAT | 7974059818 | 375 |
+| 565 | **Prajwal Thakur** | `prajwal3454` | `student@123` | V-A | 3454 |  | MRS. JYOTI THAKUR | 9644099173 | 319 |
+| 566 | **Prakriti Susner** | `prakriti3165` | `student@123` | V-B | 3165 |  | MRS. LEENA SUSNER | 7000778079 | 347 |
+| 567 | **Preyansh Mahajan** | `preyansh3359` | `student@123` | V-A | 3359 |  | MRS. PUJA RITESH MAHAJAN | 7987963654 | 320 |
+| 568 | **Rachit Chourse** | `rachit2371` | `student@123` | V-C | 2371 |  | MRS. NISHA CHOURSE | 9826058612 | 376 |
+| 569 | **Rajvansh Sisodiya** | `rajvansh3118` | `student@123` | V-C | 3118 |  | MRS. RITU SISODIYA | 8717988656 | 377 |
+| 570 | **Samriddhi Maheshwari** | `samriddhi2341` | `student@123` | V-A | 2341 |  | MRS. NIDHI MAHESHWARI | 9826151615 | 321 |
+| 571 | **Samriddhi Thakur** | `samriddhi2364` | `student@123` | V-B | 2364 |  | MRS. POOJA THAKUR | 9770017316 | 348 |
+| 572 | **Sanay Soni** | `sanay3725` | `student@123` | V-A | 3725 |  | MRS. SONAM SONI | 9575955755 | 322 |
+| 573 | **Shivi Mishra** | `shivi2639` | `student@123` | V-A | 2639 |  | MRS. BINNU MISHRA | 8871741710 | 323 |
+| 574 | **Shobhit Mourya** | `shobhit3393` | `student@123` | V-B | 3393 |  | MRS. VARSHA MOURYA | 9685689670 | 349 |
+| 575 | **Shruti Rana** | `shruti2530` | `student@123` | V-A | 2530 |  | MRS. RITU RANA | 8109037300 | 324 |
+| 576 | **Somiya Choudhary** | `somiya2380` | `student@123` | V-B | 2380 |  | MRS. REENA CHOUDHARY | 7000221886 | 350 |
+| 577 | **Swastik Choudhary** | `swastik2425` | `student@123` | V-C | 2425 |  | MRS. SAPNA CHOUDHARY | 9977303777 | 378 |
+| 578 | **Tanveer Jamliya** | `tanveer2571` | `student@123` | V-C | 2571 |  | MRS. PREETI JAMLIYA | 9754544875 | 379 |
+| 579 | **Urvi Sharma** | `urvi2382` | `student@123` | V-B | 2382 |  | MRS. POOJA SHARMA | 9926173019 | 351 |
+| 580 | **Vandana Solanki** | `vandana3730` | `student@123` | V-C | 3730 |  | MRS. SEEMA SOLANKI | 7047140994 | 380 |
+| 581 | **Vansal Mourya** | `vansal3648` | `student@123` | V-B | 3648 |  | MRS. NEHA MOURYA | 9977674161 | 352 |
+| 582 | **Vansh Panwar** | `vansh2863` | `student@123` | V-A | 2863 |  | MRS. MAMTA PANWAR | 9826364612 | 325 |
+| 583 | **Vanshraj Dawar** | `vanshraj2645` | `student@123` | V-B | 2645 |  | MRS. KUSUM DAWAR | 8103805522 | 353 |
+| 584 | **Vanshraj Doad** | `vanshraj2822` | `student@123` | V-C | 2822 |  | MRS. VARSHA DOAD | 9981996699 | 381 |
+| 585 | **Vardan Jat** | `vardan2862` | `student@123` | V-C | 2862 |  | MRS. LALITA JAT | 9926911642 | 382 |
+| 586 | **Vedant Kumar Gupta** | `vedant3529` | `student@123` | V-B | 3529 |  | MRS. POOJA KUMARI | 8084472409 | 354 |
+| 587 | **Vinee Khatri** | `vinee3537` | `student@123` | V-A | 3537 |  | MRS. MITTAL KHATRI | 7389400666 | 326 |
+| 588 | **Viraj Bamotriya** | `viraj3044` | `student@123` | V-B | 3044 |  | MRS. ALKA BAMOTRIYA | 9399920575 | 355 |
+| 589 | **Viraj Parmar** | `viraj2411` | `student@123` | V-C | 2411 |  | MRS. SHOBHA PARMAR | 9685145302 | 383 |
+| 590 | **Viransh Badodiya** | `viransh2463` | `student@123` | V-C | 2463 |  | MRS. RACHNA BADODIYA | 8120755333 | 384 |
+| 591 | **Virat Doad** | `virat2821` | `student@123` | V-B | 2821 |  | MRS. VARSHA DOAD | 9981996699 | 356 |
+| 592 | **Vishavraj Singh Panwar** | `vishavraj3578` | `student@123` | V-B | 3578 |  | MRS. LAXMI PANWAR | 7354262911 | 357 |
+| 593 | **Vivaan Makwana** | `vivaan2658` | `student@123` | V-A | 2658 |  | MRS. DEEPIKA MAKWANA | 9713327111 | 327 |
+| 594 | **Yashasvi Bhandari** | `yashasvi3226` | `student@123` | V-A | 3226 |  | MRS. MAYA BHANDARI | 9826547443 | 328 |
+| 595 | **Yogeshwari Patel** | `yogeshwari3154` | `student@123` | V-C | 3154 |  | MRS. CHETNA PATEL | 9009090814 | 385 |
+| 596 | **Yuvraj Varma** | `yuvraj3396` | `student@123` | V-A | 3396 |  | MRS. JYOTI VARMA | 9926481654 | 329 |
+| 597 | **Aadesh Salunke** | `aadesh2539` | `student@123` | VI-B | 2539 |  | MRS. LALITA SALUNKE | 9009041685 | 418 |
+| 598 | **Aarav Goswami  [H]** | `aarav2991` | `student@123` | VI-C | 2991 |  | MRS. ANITA GOSWAMI | 9893995444 | 449 |
+| 599 | **Aarohi Somani** | `aarohi3368` | `student@123` | VI-A | 3368 |  | MRS. SANDHYA SOMANI | 9826054807 | 386 |
+| 600 | **Aarvi Kaur** | `aarvi3539` | `student@123` | VI-B | 3539 |  | MRS. BHUPENDRA KAUR | 8109171513 | 419 |
+| 601 | **Aastha Singh** | `aastha3364` | `student@123` | VI-C | 3364 |  | MRS. PRIYANKA SINGH | 6266121423 | 450 |
+| 602 | **Aayat Parveen** | `aayat3475` | `student@123` | VI-A | 3475 |  | MRS. SHABNAM PARVEEN | 9990093238 | 387 |
+| 603 | **Aayush Parmar** | `aayush2576` | `student@123` | VI-C | 2576 |  | MRS. REENA PARMAR | 9575406222 | 451 |
+| 604 | **Abdul Rehman** | `abdul2143` | `student@123` | VI-B | 2143 |  | MRS. SHABINA BEE | 9826767777 | 420 |
+| 605 | **Abhay Singh Sengar** | `abhay2642` | `student@123` | VI-A | 2642 |  | MRS. SAPNA SENGAR | 9039398362 | 388 |
+| 606 | **Abhika Vyas** | `abhika3002` | `student@123` | VI-B | 3002 |  | MRS. DEEPIKA VYAS | 9754280313 | 421 |
+| 607 | **Abhimanyu Suner** | `abhimanyu3403` | `student@123` | VI-B | 3403 |  | MRS. TEENA SUNER | 9826666728 | 422 |
+| 608 | **Abhinav Patel** | `abhinav3503` | `student@123` | VI-C | 3503 |  | MRS. SUDHA PATEL | 8461938201 | 452 |
+| 609 | **Advik Sharma** | `advik2918` | `student@123` | VI-C | 2918 |  | MRS. POOJA SHARMA | 9770655564 | 453 |
+| 610 | **Akshay Verma** | `akshay3397` | `student@123` | VI-B | 3397 |  | MRS. JYOTI VERMA | 9926481654 | 423 |
+| 611 | **Anamika Gautam** | `anamika2906` | `student@123` | VI-B | 2906 |  | MRS. URMILA GAUTAM | 9977986067 | 424 |
+| 612 | **Aniket Choudhary** | `aniket3134` | `student@123` | VI-B | 3134 |  | MRS. MANJU CHOUDHARY | 6266890119 | 425 |
+| 613 | **Ankush Gehlot** | `ankush3206` | `student@123` | VI-C | 3206 |  | MRS. KIRAN GEHALOT | 9753754733 | 454 |
+| 614 | **Anmol Rathore** | `anmol3660` | `student@123` | VI-C | 3660 |  | MRS. PAPITA RATHORE | 9617649644 | 455 |
+| 615 | **Ansh Pathak** | `ansh2737` | `student@123` | VI-B | 2737 |  | MRS. SHEETAL PATHAK | 9407164616 | 426 |
+| 616 | **Anshuman Choudhary** | `anshuman2729` | `student@123` | VI-A | 2729 |  | MRS. SAPNA CHOUDHARY | 7879416544 | 389 |
+| 617 | **Anushka** | `anushka2342` | `student@123` | VI-B | 2342 |  | MRS. BHAWNA MUKATI | 7909422424 | 427 |
+| 618 | **Anvesha Solanki** | `anvesha2830` | `student@123` | VI-B | 2830 |  | MRS. MONICA SOLANKI | 9407442278 | 428 |
+| 619 | **Anvi Mandloi** | `anvi2538` | `student@123` | VI-A | 2538 |  | MRS. BHARTI MANDLOI | 9926865751 | 390 |
+| 620 | **Aradhana Raghuwanshi** | `aradhana3053` | `student@123` | VI-B | 3053 |  | MRS. PINKI RAGHUWANSHI | 9425032061 | 429 |
+| 621 | **Arpan Dwivedi** | `arpan3740` | `student@123` | VI-C | 3740 |  | MRS. PRIYANKA DWIVEDI | 7772901299 | 456 |
+| 622 | **Ayansh Jain** | `ayansh2365` | `student@123` | VI-B | 2365 |  | MRS. NAYAN JAIN | 9826724071 | 430 |
+| 623 | **Darshan Sharma** | `darshan3589` | `student@123` | VI-B | 3589 |  | MRS. ALKA SHARMA | 9753008500 | 431 |
+| 624 | **Dhakad Prince Bhandari** | `dhakad2148` | `student@123` | VI-B | 2148 |  | MRS. YOGITA BHANDARI | 9039918787 | 432 |
+| 625 | **Divy Patel  [H]** | `divy3555` | `student@123` | VI-C | 3555 |  | MRS. SAPNA PATEL | 9340101188 | 457 |
+| 626 | **Divya Jain** | `divya3541` | `student@123` | VI-A | 3541 |  | MRS. POOJA JAIN | 9907909289 | 391 |
+| 627 | **Divyansh Choudhary** | `divyansh2420` | `student@123` | VI-A | 2420 |  | MRS. MAYA CHOUDHARY | 9009812183 | 392 |
+| 628 | **Drashti Jain** | `drashti3542` | `student@123` | VI-A | 3542 |  | MRS. POOJA JAIN | 9907909389 | 393 |
+| 629 | **Garv Parihar** | `garv3388` | `student@123` | VI-A | 3388 |  | MRS. BHAWNA PARIHAR | 9713775477 | 394 |
+| 630 | **Govind Thakur** | `govind3018` | `student@123` | VI-B | 3018 |  | MRS. MEENA THAKUR | 9131162686 | 433 |
+| 631 | **Hansika Verma** | `hansika2243` | `student@123` | VI-A | 2243 |  | MRS. JYOTI VERMA | 9691002141 | 395 |
+| 632 | **Harjot Singh Sohanpal** | `harjot2524` | `student@123` | VI-C | 2524 |  | MRS. JASVEER KAUR | 8770841387 | 458 |
+| 633 | **Harshit Dhakrey** | `harshit2617` | `student@123` | VI-C | 2617 |  | MRS. GEETA DHAKREY | 7465887042 | 459 |
+| 634 | **Ilyana Khan** | `ilyana3007` | `student@123` | VI-C | 3007 |  | MRS. ISHRAT BEE | 9826126789 | 460 |
+| 635 | **Jaya Choudhary** | `jaya2594` | `student@123` | VI-C | 2594 |  | MRS. MAMTA CHOUDHARY | 9009250061 | 461 |
+| 636 | **Jayesh Choudhary** | `jayesh2436` | `student@123` | VI-C | 2436 |  | MRS. RANI CHOUDHARY | 9754619319 | 462 |
+| 637 | **Jigar Rathore** | `jigar2848` | `student@123` | VI-A | 2848 |  | MRS. JANTA RATHORE | 9753950418 | 396 |
+| 638 | **Karan Singh Rajput** | `karan3472` | `student@123` | VI-B | 3472 |  | MR. SONAM KANWAR RAJPUT | 9584467557 | 434 |
+| 639 | **Kavya Raghuvanshi** | `kavya2245` | `student@123` | VI-A | 2245 |  | MRS. SANGEETA RAGHUVANSHI | 9977404643 | 397 |
+| 640 | **Kunal Jatav** | `kunal2221` | `student@123` | VI-C | 2221 |  | MRS. SARITA JATAV | 9098089261 | 463 |
+| 641 | **Kunj Soni** | `kunj2599` | `student@123` | VI-B | 2599 |  | MRS. DARSHIKA SONI | 9425095428 | 435 |
+| 642 | **Lakshya Dubey** | `lakshya2602` | `student@123` | VI-C | 2602 |  | MRS. POOJA DUBEY | 9039239017 | 464 |
+| 643 | **Lakshya Raj Singh Chouhan** | `lakshya2585` | `student@123` | VI-A | 2585 |  | MRS. TEENA CHOUHAN | 9907717748 | 398 |
+| 644 | **Lokya Chourasiya** | `lokya3169` | `student@123` | VI-A | 3169 |  | MRS. POOJA CHOURASIYA | 9407489881 | 399 |
+| 645 | **Mayank Khilawadiya** | `mayank2874` | `student@123` | VI-C | 2874 |  | MRS. SEEMA KHILAWDIYA | 9981875555 | 465 |
+| 646 | **Medhansh Das** | `medhansh3479` | `student@123` | VI-C | 3479 |  | MRS. KRISHNA DAS | 8966008866 | 466 |
+| 647 | **Mohd. Zishan Shah** | `mohd3622` | `student@123` | VI-B | 3622 |  | MRS. FARJANA BEE | 9179909886 | 436 |
+| 648 | **Namrata Raut** | `namrata3719` | `student@123` | VI-C | 3719 |  | MRS. SUPRIYA RAUT | 8359032623 | 467 |
+| 649 | **Ojasva Pathak** | `ojasva3484` | `student@123` | VI-A | 3484 |  | MRS. KIRTI PATHAK | 7879107568 | 400 |
+| 650 | **Parth Solanki** | `parth3723` | `student@123` | VI-B | 3723 |  | MRS. JYOTI SOLANKI | 8357992895 | 437 |
+| 651 | **Prachi Patel** | `prachi2608` | `student@123` | VI-B | 2608 |  | MRS. SMRITA PATEL | 9893258554 | 438 |
+| 652 | **Prashwet Awasthi** | `prashwet2818` | `student@123` | VI-B | 2818 |  | MRS. SHWETA AWASTHI | 9926477074 | 439 |
+| 653 | **Preet Yadav** | `preet2738` | `student@123` | VI-C | 2738 |  | MRS. ANTIM BALA | 9770702973 | 468 |
+| 654 | **Prince Solanki** | `prince2880` | `student@123` | VI-A | 2880 |  | MRS. KAVITA SOLANKI | 9754544855 | 401 |
+| 655 | **Prithviraj Singh Rathore** | `prithviraj2950` | `student@123` | VI-A | 2950 |  | MRS. RINKU KUNWAR | 9917179203 | 402 |
+| 656 | **Prithviraj Solanki** | `prithviraj2635` | `student@123` | VI-B | 2635 |  | MRS. MANJU SOLANKI | 9926370494 | 440 |
+| 657 | **Priyanshi Mishra** | `priyanshi3022` | `student@123` | VI-A | 3022 |  | MRS. SADHNA MISHRA | 6350427452 | 403 |
+| 658 | **Puspendra Singh** | `puspendra3390` | `student@123` | VI-C | 3390 |  | MRS. RADHA SINGH | 9343163841 | 469 |
+| 659 | **Raghavendra Sharma** | `raghavendra2715` | `student@123` | VI-B | 2715 |  | MRS. DEEPA SHARMA | 9575513388 | 441 |
+| 660 | **Raghuveer Raghuvanshi** | `raghuveer2296` | `student@123` | VI-C | 2296 |  | MRS. RANI RAGHUVANSHI | 9977193386 | 470 |
+| 661 | **Rajveer Raghuvanshi** | `rajveer2196` | `student@123` | VI-A | 2196 |  | MRS. KANCHAN RAGHUVANSHI | 9977863499 | 404 |
+| 662 | **Rajveer Singh Chouhan** | `rajveer2440` | `student@123` | VI-A | 2440 |  | MRS. SEEMA CHOUHAN | 9977078503 | 405 |
+| 663 | **Rajveer Songara** | `rajveer2856` | `student@123` | VI-A | 2856 |  | MRS. TEENA SONGARA | 9589882400 | 406 |
+| 664 | **Rajvi Soni** | `rajvi2452` | `student@123` | VI-B | 2452 |  | MRS. PARIDHI SONI | 7000810368 | 442 |
+| 665 | **Ranveer Gehlot** | `ranveer3029` | `student@123` | VI-C | 3029 |  | MRS. GAYATRI  GEHLOT | 9893463234 | 471 |
+| 666 | **Ranveer Patidar** | `ranveer3506` | `student@123` | VI-A | 3506 |  | MRS. KAVITA PATIDAR | 9977162629 | 407 |
+| 667 | **Ranveer Singh Jawara** | `ranveer3598` | `student@123` | VI-B | 3598 |  | MRS. ANITA JAWARA | 8962545548 | 443 |
+| 668 | **Rhythm Kadu** | `rhythm3683` | `student@123` | VI-A | 3683 |  | MRS. ANKITA KADU | 7489159789 | 408 |
+| 669 | **Rishit Patidar** | `rishit2241` | `student@123` | VI-A | 2241 |  | MRS. PINKY  PATIDAR | 9754549246 | 409 |
+| 670 | **Rishu Kumar** | `rishu3449` | `student@123` | VI-B | 3449 |  | MRS. JULI DEVI | 9993068104 | 444 |
+| 671 | **Riyarth Singh Kushwah** | `riyarth3199` | `student@123` | VI-B | 3199 |  | MRS. NIDHI KUSHWAH | 9754716111 | 445 |
+| 672 | **Ruhika Choudhary** | `ruhika2293` | `student@123` | VI-A | 2293 |  | MRS. ARCHANA CHOUDHARY | 9977336669 | 410 |
+| 673 | **Sakshi Jat** | `sakshi2611` | `student@123` | VI-A | 2611 |  | MRS. DOLLY JAT | 9826555484 | 411 |
+| 674 | **Samar Pratap Singh Solanki** | `samar2636` | `student@123` | VI-A | 2636 |  | MRS. JYOTI SOLANKI | 9977741027 | 412 |
+| 675 | **Sanaya Rathore** | `sanaya2526` | `student@123` | VI-A | 2526 |  | MRS. REENA RATHORE | 9685228629 | 413 |
+| 676 | **Sheetal Yadav** | `sheetal2244` | `student@123` | VI-C | 2244 |  | MRS. NEEMA YADAV | 8878998478 | 472 |
+| 677 | **Shivika Singh** | `shivika2598` | `student@123` | VI-A | 2598 |  | MRS. NISHA SINGH | 8819880348 | 414 |
+| 678 | **Siddhi Bharti** | `siddhi2258` | `student@123` | VI-B | 2258 |  | MRS. SARITA BHARTI | 8965065302 | 446 |
+| 679 | **Sunny Choudhary** | `sunny2107` | `student@123` | VI-A | 2107 |  | MRS. DIKSHA CHOUDHARY | 9826547742 | 415 |
+| 680 | **Tilak Sisodiya  [H]** | `tilak3568` | `student@123` | VI-C | 3568 |  | MRS. KOUSHAL SISODIYA | 8827123123 | 473 |
+| 681 | **Vansh Verma** | `vansh2992` | `student@123` | VI-A | 2992 |  | MRS. SUNITA VERMA | 8780697869 | 416 |
+| 682 | **Vihan Mandloi** | `vihan2470` | `student@123` | VI-B | 2470 |  | MRS. RASHIKA MANDLOI | 9752938669 | 447 |
+| 683 | **Vivan Yadav  [H]** | `vivan3571` | `student@123` | VI-C | 3571 |  | MRS. ALKA YADAV | 9907913330 | 474 |
+| 684 | **Yashwini Chouhan** | `yashwini2841` | `student@123` | VI-B | 2841 |  | MRS. RASHMI CHOUHAN | 8349871605 | 448 |
+| 685 | **Yogita Parmar** | `yogita2968` | `student@123` | VI-C | 2968 |  | MRS. PREMLATA PARMAR | 9893129196 | 475 |
+| 686 | **Yogyata Raghuvanshi** | `yogyata2295` | `student@123` | VI-C | 2295 |  | MRS. REKHA RAGHUVANSHI | 7000129318 | 476 |
+| 687 | **Yuvraj Raghuvanshi** | `yuvraj3140` | `student@123` | VI-A | 3140 |  | MRS. KAVITA RAGHUVANSHI | 9098195858 | 417 |
+| 688 | **Aahil Ahmed Khan** | `aahil2235` | `student@123` | VII-B | 2235 |  | MRS. ZARINA KHAN | 7747012413 | 509 |
+| 689 | **Aardhya Kanungo** | `aardhya2676` | `student@123` | VII-A | 2676 |  | MRS. MONIKA KANUNGO | 7987838916 | 477 |
+| 690 | **Aarna Parihar** | `aarna3599` | `student@123` | VII-C | 3599 |  | MRS. UPASANA PARIHAR | 9977605016 | 539 |
+| 691 | **Aarush Badwaya** | `aarush2741` | `student@123` | VII-C | 2741 |  | MRS. REKHA BADWAYA | 9424532879 | 540 |
+| 692 | **Aaryan Wankhade  [H]** | `aaryan3743` | `student@123` | VII-B | 3743 |  | MRS. MEENAKSHI WANKHADE | 9009370043 | 510 |
+| 693 | **Aditya Sharma** | `aditya2111` | `student@123` | VII-A | 2111 |  | MRS. NEHA SHARMA | 9575006400 | 478 |
+| 694 | **Aman Goud** | `aman3110` | `student@123` | VII-A | 3110 |  | MRS. TEENA GOUD | 8103435510 | 479 |
+| 695 | **Ananya Panchal** | `ananya3512` | `student@123` | VII-A | 3512 |  | MRS. POOJA PANCHAL | 9617171726 | 480 |
+| 696 | **Ansh Makwana** | `ansh3131` | `student@123` | VII-A | 3131 |  | MRS. SAPNA MAKWANA | 9575040093 | 481 |
+| 697 | **Anuj Jatwa** | `anuj2810` | `student@123` | VII-C | 2810 |  | MRS. MONIKA JATWA | 9826513180 | 541 |
+| 698 | **Anurag Lavavanshi** | `anurag3563` | `student@123` | VII-A | 3563 |  | MRS. MAYA LAVAVANSHI | 9826535315 | 482 |
+| 699 | **Anushka Raghuvanshi** | `anushka3417` | `student@123` | VII-C | 3417 |  | MRS. POOJA RAGHUVANSHI | 9926015902 | 542 |
+| 700 | **Anvesha Raghuvanshi** | `anvesha2358` | `student@123` | VII-A | 2358 |  | MRS. SHASHI RAGHUVANSHI | 9826096690 | 483 |
+| 701 | **Aradhya Tiwari** | `aradhya2816` | `student@123` | VII-C | 2816 |  | MRS. YOGITA TIWARI | 9827521500 | 543 |
+| 702 | **Aradhya Tyagi** | `aradhya3371` | `student@123` | VII-B | 3371 |  | MRS. KAMLA TYAGI | 9098558086 | 511 |
+| 703 | **Argh Jain** | `argh2564` | `student@123` | VII-B | 2564 |  | MRS. SONAM JAIN | 9893635550 | 512 |
+| 704 | **Ashutosh Tripathi** | `ashutosh3738` | `student@123` | VII-A | 3738 |  | MRS. ARADHANA TRIPATHI | 7974763477 | 484 |
+| 705 | **Ayansh Joshi** | `ayansh3498` | `student@123` | VII-C | 3498 |  | MRS. PRIYA JOSHI | 9977169189 | 544 |
+| 706 | **Bhavya Amrute** | `bhavya3231` | `student@123` | VII-A | 3231 |  | MRS. SUSHILA AMRUTE | 8109091018 | 485 |
+| 707 | **Deepankar Jena** | `deepankar2090` | `student@123` | VII-B | 2090 |  | MRS. SMRUTIMAYEE JENA | 9131380258 | 513 |
+| 708 | **Dhruv Sharma** | `dhruv3585` | `student@123` | VII-A | 3585 |  | MRS. ABHILASHA SHARMA | 9893921982 | 486 |
+| 709 | **Dipesh Raghuvanshi** | `dipesh2157` | `student@123` | VII-A | 2157 |  | MRS. POONAM RAGHUVANSHI | 9981782605 | 487 |
+| 710 | **Divy Jain** | `divy3549` | `student@123` | VII-A | 3549 |  | MRS. PRAGYA JAIN | 9893100430 | 488 |
+| 711 | **Divya Raghuvanshi** | `divya2155` | `student@123` | VII-A | 2155 |  | MRS. SAVITA RAGHUVANSHI | 9713734306 | 489 |
+| 712 | **Divyansh Chandel** | `divyansh3217` | `student@123` | VII-B | 3217 |  | MRS. SANGEETA CHANDEL | 8435363838 | 514 |
+| 713 | **Divyansh Parihar** | `divyansh3661` | `student@123` | VII-B | 3661 |  | MRS. POOJA PARIHAR | 9826289990 | 515 |
+| 714 | **Dixita Solanki** | `dixita2307` | `student@123` | VII-A | 2307 |  | MRS. SEEMA SOLANKI | 8085180212 | 490 |
+| 715 | **Faizan Ahmed** | `faizan2672` | `student@123` | VII-A | 2672 |  | MRS. ASHMA KHATOON | 9179168953 | 491 |
+| 716 | **Giriraj Choudhary** | `giriraj3355` | `student@123` | VII-B | 3355 |  | MRS. PUSHPA CHOUDHARY | 9753750090 | 516 |
+| 717 | **Gouri Jatwa** | `gouri2826` | `student@123` | VII-A | 2826 |  | MRS. JYOTI JATWA | 9826018451 | 492 |
+| 718 | **Goutam Chouhan** | `goutam2649` | `student@123` | VII-A | 2649 |  | MRS. LAXMI CHOUHAN | 9685950888 | 493 |
+| 719 | **Harshita Chouhan** | `harshita3715` | `student@123` | VII-A | 3715 |  | MRS. PUJA CHOUHAN | 9713840585 | 494 |
+| 720 | **Ishika Chouhan** | `ishika2958` | `student@123` | VII-B | 2958 |  | MRS. MANISHA CHOUHAN | 9575757356 | 517 |
+| 721 | **Kabir Maida** | `kabir2372` | `student@123` | VII-C | 2372 |  | MRS. JYOTI MAIDA | 9926490949 | 545 |
+| 722 | **Kamran Ahmed** | `kamran2673` | `student@123` | VII-B | 2673 |  | MRS. ASHMA KHATOON | 9179168953 | 518 |
+| 723 | **Kanak Jirati** | `kanak2128` | `student@123` | VII-C | 2128 |  | MRS. RITU JIRATI | 9893599750 | 546 |
+| 724 | **Kanchan Jirati** | `kanchan3158` | `student@123` | VII-B | 3158 |  | MRS. POOJA JIRATI | 7879447909 | 519 |
+| 725 | **Kartik Thakur** | `kartik3546` | `student@123` | VII-B | 3546 |  | LATE MRS. MAMTA THAKUR | 9617514444 | 520 |
+| 726 | **Khushi Solanki** | `khushi2731` | `student@123` | VII-B | 2731 |  | MRS. PUSHPA SOLANKI | 9754281754 | 521 |
+| 727 | **Krishna Johari** | `krishna3463` | `student@123` | VII-C | 3463 |  | MRS. LATA JOHARI | 7828248584 | 547 |
+| 728 | **Kriti Singh** | `kriti2666` | `student@123` | VII-C | 2666 |  | MRS. KIRAN DEVI | 9981684225 | 548 |
+| 729 | **Kuldeep Solanki** | `kuldeep3216` | `student@123` | VII-C | 3216 |  | MRS. SAPNA SOLANKI | 9977351755 | 549 |
+| 730 | **Kushveer Singh Chouhan** | `kushveer2193` | `student@123` | VII-A | 2193 |  | MRS. MAMTA CHOUHAN | 8720055546 | 495 |
+| 731 | **Lakshya Vishwakarma** | `lakshya2960` | `student@123` | VII-B | 2960 |  | MRS. ROSHNI VISHWAKARMA | 7974593826 | 522 |
+| 732 | **Lakshyaraj Singh Tanwar** | `lakshyaraj3652` | `student@123` | VII-C | 3652 |  | MRS. RADHA | 9111171291 | 550 |
+| 733 | **Mandar Dubey** | `mandar2978` | `student@123` | VII-A | 2978 |  | MRS. MEENAKSHI DUBEY | 7049070081 | 496 |
+| 734 | **Meetraj Chouhan** | `meetraj3718` | `student@123` | VII-C | 3718 |  | MRS. VARSHA CHOUHAN | 7694881163 | 551 |
+| 735 | **Mitansh Makwana** | `mitansh2669` | `student@123` | VII-A | 2669 |  | MRS. PAYAL MAKWANA | 9926625749 | 497 |
+| 736 | **Mohit Suner** | `mohit3737` | `student@123` | VII-A | 3737 |  | MRS. RACHANA SUNER | 9826466801 | 498 |
+| 737 | **Moksha Kothari** | `moksha2668` | `student@123` | VII-B | 2668 |  | MRS. MAMTA KOTHARI | 9826779238 | 523 |
+| 738 | **Naitik Gehlot** | `naitik3144` | `student@123` | VII-B | 3144 |  | MR. REENA GEHLOT | 7000909397 | 524 |
+| 739 | **Naman Jakhetiya** | `naman2168` | `student@123` | VII-C | 2168 |  | MRS. SWEETY JAKHETIYA | 9827278960 | 552 |
+| 740 | **Nihit Joshi** | `nihit3068` | `student@123` | VII-C | 3068 |  | MRS. MAMTA JOSHI | 7999005816 | 553 |
+| 741 | **Nitansh Jain** | `nitansh3227` | `student@123` | VII-B | 3227 |  | MRS. SAPNA JAIN | 9977904646 | 525 |
+| 742 | **Nitesh Panwar** | `nitesh3444` | `student@123` | VII-C | 3444 |  | MRS. KAVITA PANWAR | 9827549466 | 554 |
+| 743 | **Pratik Patel** | `pratik3125` | `student@123` | VII-A | 3125 |  | MRS. REENA PATEL | 6264334035 | 499 |
+| 744 | **Prince Kewat** | `prince2679` | `student@123` | VII-A | 2679 |  | MRS. KAVITA KEWAT | 7974059818 | 500 |
+| 745 | **Purv Jat Choudhary** | `purv2865` | `student@123` | VII-A | 2865 |  | MRS. SARITA JAT | 9926088502 | 501 |
+| 746 | **Purvi Sharma** | `purvi2930` | `student@123` | VII-A | 2930 |  | MRS. PREETI SHARMA | 8602430167 | 502 |
+| 747 | **Rachit Kothari** | `rachit3094` | `student@123` | VII-B | 3094 |  | MRS. GUNJAN KOTHARI | 8516002511 | 526 |
+| 748 | **Raj Bairagi** | `raj3515` | `student@123` | VII-B | 3515 |  | MRS. SUNITA BAIRAGI | 9713254850 | 527 |
+| 749 | **Rajat Makwana** | `rajat2727` | `student@123` | VII-B | 2727 |  | MRS. BHURI MAKWANA | 7354708144 | 528 |
+| 750 | **Rajvansh Solanki** | `rajvansh3157` | `student@123` | VII-C | 3157 |  | MRS. JYOTI SOKANKI | 7067455528 | 555 |
+| 751 | **Rajveer Parihar** | `rajveer3056` | `student@123` | VII-C | 3056 |  | MRS. SHARMILA PARIHAR | 9630543021 | 556 |
+| 752 | **Rajvi Sule** | `rajvi2242` | `student@123` | VII-B | 2242 |  | MRS. POONAM SULE | 9753950404 | 529 |
+| 753 | **Ranveer Singh Chouhan** | `ranveer2508` | `student@123` | VII-C | 2508 |  | MRS. RANJANA CHOUHAN | 9827642210 | 557 |
+| 754 | **Rishrika Patel** | `rishrika3523` | `student@123` | VII-C | 3523 |  | MRS. RANI PATEL | 8823822452 | 558 |
+| 755 | **Rituraj Mourya** | `rituraj3348` | `student@123` | VII-B | 3348 |  | MRS. CHANDA MOURYA | 9754667369 | 530 |
+| 756 | **Riya Sampla** | `riya2677` | `student@123` | VII-A | 2677 |  | MRS. RAJ SAMPLA | 8889900163 | 503 |
+| 757 | **Rudra Dangore** | `rudra3621` | `student@123` | VII-B | 3621 |  | MRS. RACHANA DANGORE | 9202604201 | 531 |
+| 758 | **Saksham Panwar** | `saksham3464` | `student@123` | VII-B | 3464 |  | MRS. PINKY PANWAR | 9098068208 | 532 |
+| 759 | **Samarth Srivastava** | `samarth3527` | `student@123` | VII-B | 3527 |  | MRS. ANJALI SHRIVASTAVA | 8318734688 | 533 |
+| 760 | **Sarvee Jain** | `sarvee3596` | `student@123` | VII-A | 3596 |  | MRS. SAPNA JAIN | 9826759107 | 504 |
+| 761 | **Shivansh Vishwakarma** | `shivansh2820` | `student@123` | VII-B | 2820 |  | MRS. MITHILA VISHWAKARMA | 9753183664 | 534 |
+| 762 | **Shubham Sheliwal** | `shubham3418` | `student@123` | VII-A | 3418 |  | MRS. ANITA SHELIWAL | 9111161519 | 505 |
+| 763 | **Sneha Ojha** | `sneha3183` | `student@123` | VII-C | 3183 |  | MRS. ANURADHA OJHA | 7566624704 | 559 |
+| 764 | **Soumya Kamdar** | `soumya2086` | `student@123` | VII-C | 2086 |  | MRS. BHAWNA KAMDAR | 9977498279 | 560 |
+| 765 | **Sourya Mishra** | `sourya2640` | `student@123` | VII-B | 2640 |  | MRS. BINNU MISHRA | 8871741710 | 535 |
+| 766 | **Tanish Kothari** | `tanish2121` | `student@123` | VII-A | 2121 |  | MRS. MANISHA  KOTHARI | 9826309324 | 506 |
+| 767 | **Tavishi Sharma** | `tavishi2663` | `student@123` | VII-A | 2663 |  | MRS. MADHURI SHARMA | 9039523503 | 507 |
+| 768 | **Urvashi Thakur** | `urvashi3646` | `student@123` | VII-C | 3646 |  | MRS. RANJANA THAKUR | 7771000051 | 561 |
+| 769 | **Vaibhav Raj Singh Sisodiya** | `vaibhav3601` | `student@123` | VII-C | 3601 |  | MRS. LAL KUNWAR SISODIYA | 9752254352 | 562 |
+| 770 | **Vaidik Chouhan** | `vaidik3109` | `student@123` | VII-A | 3109 |  | MRS. RADHA CHOUHAN | 7415134696 | 508 |
+| 771 | **Vaishnavi Patidar** | `vaishnavi2730` | `student@123` | VII-C | 2730 |  | MRS. SHAKUNTALA PATIDAR | 9826564853 | 563 |
+| 772 | **Vansh Choudhary** | `vansh2008` | `student@123` | VII-B | 2008 |  | MRS. PUJA CHOUDHARY | 9009042706 | 536 |
+| 773 | **Vansh Choudhary** | `vansh2165` | `student@123` | VII-C | 2165 |  | MRS. POOJA CHOUDHARY | 9009530970 | 564 |
+| 774 | **Varad Dubey** | `varad2977` | `student@123` | VII-B | 2977 |  | MRS. MEENAKSHI DUBEY | 7049070081 | 537 |
+| 775 | **Virat Panwar** | `virat3032` | `student@123` | VII-B | 3032 |  | MRS. ANURADHA PANWAR | 7047707070 | 538 |
+| 776 | **Vishvaditya Ghorpade** | `vishvaditya2124` | `student@123` | VII-C | 2124 |  | MRS. RAJSHREE GHORPADE | 9827781300 | 565 |
+| 777 | **Yashika Rathore** | `yashika3513` | `student@123` | VII-C | 3513 |  | MRS. RANI RATHORE | 9098468191 | 566 |
+| 778 | **Yashraj Giri** | `yashraj2866` | `student@123` | VII-C | 2866 |  | MRS. REKHA GIRI | 9893638605 | 567 |
+| 779 | **Yug Jat** | `yug2701` | `student@123` | VII-C | 2701 |  | MRS. RUPALI JAT | 7024409899 | 568 |
+| 780 | **Aarav Patel** | `aarav1983` | `student@123` | VIII-C | 1983 |  | MRS. RANJANA PATEL | 9926278279 | 627 |
+| 781 | **Aarya Tiwari** | `aarya2817` | `student@123` | VIII-A | 2817 |  | MRS. YOGITA TIWARI | 9827521500 | 569 |
+| 782 | **Abeer Jirati** | `abeer1980` | `student@123` | VIII-B | 1980 |  | MRS. POOJA JIRATI | 9754739676 | 598 |
+| 783 | **Abhijay Borkhediya** | `abhijay3489` | `student@123` | VIII-A | 3489 |  | MRS. MADHURI BORKHEDIYA | 7987797504 | 570 |
+| 784 | **Aditya Kumar Pandey** | `aditya3482` | `student@123` | VIII-B | 3482 |  | MRS. RITU PANDEY | 9644620777 | 599 |
+| 785 | **Akshat Panwar** | `akshat1855` | `student@123` | VIII-A | 1855 |  | MRS. REENA PANWAR | 9329220148 | 571 |
+| 786 | **Anant Solanki** | `anant3129` | `student@123` | VIII-A | 3129 |  | MRS. SAPNA SOLANKI | 9977351755 | 572 |
+| 787 | **Ananya Chouhan** | `ananya2840` | `student@123` | VIII-A | 2840 |  | MRS. RASHMI CHOUHAN | 8349871605 | 573 |
+| 788 | **Anaya Dhamani** | `anaya1955` | `student@123` | VIII-A | 1955 |  | MRS. DIMPAL DHAMANI | 9977883960 | 574 |
+| 789 | **Anima Garain  [H]** | `anima2328` | `student@123` | VIII-C | 2328 |  | MRS. SUNITA GARAIN | 9575102770 | 628 |
+| 790 | **Anmol Parihar** | `anmol3365` | `student@123` | VIII-C | 3365 |  | MRS. ALKA PARIHAR | 9753019800 | 629 |
+| 791 | **Ansh Dubey** | `ansh3477` | `student@123` | VIII-A | 3477 |  | MRS. BANDANA DUBEY | 7987133251 | 575 |
+| 792 | **Anshu Suner** | `anshu3736` | `student@123` | VIII-A | 3736 |  | MRS. REENA SUNER | 9039287316 | 576 |
+| 793 | **Anvi Chaturvedi** | `anvi2578` | `student@123` | VIII-A | 2578 |  | MRS. BHAVANA CHATURVEDI | 9009954608 | 577 |
+| 794 | **Aradhya Chharodi** | `aradhya1900` | `student@123` | VIII-A | 1900 |  | MRS. DEEPIKA CHHARODI | 9754507484 | 578 |
+| 795 | **Aradhya Yadav** | `aradhya1951` | `student@123` | VIII-B | 1951 |  | MRS. KAVITA YADAV | 9200572387 | 600 |
+| 796 | **Atharv Panchal** | `atharv3197` | `student@123` | VIII-B | 3197 |  | MRS. VINITA PANCHAL | 9981602999 | 601 |
+| 797 | **Atharw Rajput** | `atharw2871` | `student@123` | VIII-C | 2871 |  | MRS. TRIPTI RAJPUT | 8770845101 | 630 |
+| 798 | **Bhavya Agrawal** | `bhavya2046` | `student@123` | VIII-B | 2046 |  | MRS. KIRTI AGRAWAL | 9826086397 | 602 |
+| 799 | **Daksh Sonone** | `daksh3016` | `student@123` | VIII-A | 3016 |  | MRS. CHANCHALA SONONE | 9826039815 | 579 |
+| 800 | **Devraj Makwana** | `devraj2398` | `student@123` | VIII-B | 2398 |  | MRS. PINKY MAKWANA | 9977198337 | 603 |
+| 801 | **Dhruv Makwana** | `dhruv2446` | `student@123` | VIII-A | 2446 |  | MRS. SONIYA MAKWANA | 9977592999 | 580 |
+| 802 | **Dikshant Choudhary** | `dikshant2562` | `student@123` | VIII-B | 2562 |  | MRS. RUPALI CHOUDHARY | 8959313635 | 604 |
+| 803 | **Divyansh Gehlot** | `divyansh3031` | `student@123` | VIII-C | 3031 |  | MRS. ALKA GEHLOT | 9753105945 | 631 |
+| 804 | **Divyansh Prajapati** | `divyansh3234` | `student@123` | VIII-B | 3234 |  | MRS. ANJALI PRAJAPATI | 7000789450 | 605 |
+| 805 | **Dushyant Thakur** | `dushyant2339` | `student@123` | VIII-C | 2339 |  | MRS. SARIKA THAKUR | 9752967118 | 632 |
+| 806 | **Faiz Ahmed Khan** | `faiz1918` | `student@123` | VIII-B | 1918 |  | MRS. ZARINA KHAN | 7747012413 | 606 |
+| 807 | **Geet Barnashiya** | `geet2756` | `student@123` | VIII-B | 2756 |  | MRS. VARSHA BARNASHIYA | 8718800429 | 607 |
+| 808 | **Harsh Badodiya** | `harsh1961` | `student@123` | VIII-C | 1961 |  | MRS. REENA BADODIYA | 9009357357 | 633 |
+| 809 | **Harsh Makwana** | `harsh3103` | `student@123` | VIII-B | 3103 |  | MRS. SAPNA MAKWANA | 9926595027 | 608 |
+| 810 | **Harshal Choudhary** | `harshal2084` | `student@123` | VIII-C | 2084 |  | MRS. DEEPIKA CHOUDHARY | 8718885006 | 634 |
+| 811 | **Harshita Singh** | `harshita2333` | `student@123` | VIII-C | 2333 |  | MRS. MANJU SINGH | 7879865840 | 635 |
+| 812 | **Hemant Jat** | `hemant3502` | `student@123` | VIII-B | 3502 |  | MRS. RADHA BAI JAT | 9826560934 | 609 |
+| 813 | **Himanshu Sharma** | `himanshu2929` | `student@123` | VIII-B | 2929 |  | MRS. PREETI SHARMA | 8602430167 | 610 |
+| 814 | **Ishita Verma** | `ishita2019` | `student@123` | VIII-A | 2019 |  | MRS. RATAN VERMA | 9893564296 | 581 |
+| 815 | **Janamjay Singh Rajawat** | `janamjay1985` | `student@123` | VIII-B | 1985 |  | MRS. PRITU SINGH | 9926022178 | 611 |
+| 816 | **Janvi Chouhan** | `janvi2949` | `student@123` | VIII-C | 2949 |  | MRS. PREM KUNWAR | 9977078612 | 636 |
+| 817 | **Jaspreet Saini** | `jaspreet2236` | `student@123` | VIII-B | 2236 |  | MRS. KAVITA SAINI | 8946835640 | 612 |
+| 818 | **Kashish Kumrawat** | `kashish2924` | `student@123` | VIII-B | 2924 |  | MRS. MANJULA KUMRAWAT | 9981393521 | 613 |
+| 819 | **Lishika Mishra** | `lishika2758` | `student@123` | VIII-C | 2758 |  | MRS. RUBI MISHRA | 9826677736 | 637 |
+| 820 | **Mahitika Jamod** | `mahitika3015` | `student@123` | VIII-C | 3015 |  | MRS. CHAMPA JAMOD | 6265075787 | 638 |
+| 821 | **Mihika Choudhary** | `mihika1944` | `student@123` | VIII-B | 1944 |  | MRS. ANKITA CHOUDHARY | 9826474444 | 614 |
+| 822 | **Mohd. Numer Chhipa** | `mohd3626` | `student@123` | VIII-A | 3626 |  | MRS. SHABANA CHHIPA | 9179872200 | 582 |
+| 823 | **Mohit Dhakrey** | `mohit2618` | `student@123` | VIII-B | 2618 |  | MRS. GEETA DHAKREY | 7465887042 | 615 |
+| 824 | **Nahush Joshi** | `nahush3586` | `student@123` | VIII-B | 3586 |  | MRS. NEELAM JOSHI | 9926073569 | 616 |
+| 825 | **Naksh Choudhary** | `naksh1899` | `student@123` | VIII-C | 1899 |  | MRS. KAVITA CHOUDHARY | 9826779074 | 639 |
+| 826 | **Nancy Parmar** | `nancy2410` | `student@123` | VIII-A | 2410 |  | MRS. SHOBHA PARMAR | 9685145302 | 583 |
+| 827 | **Navneet Verma** | `navneet3757` | `student@123` | VIII-A | 3757 |  | MRS. DEEPIKA VERMA | 9685212415 | 584 |
+| 828 | **Neer Tiwari** | `neer2334` | `student@123` | VIII-A | 2334 |  | MRS. SOMYA TIWARI | 9685260601 | 585 |
+| 829 | **Niral Joshi** | `niral3186` | `student@123` | VIII-A | 3186 |  | MRS. HEMA JOSHI | 9926792639 | 586 |
+| 830 | **Parikshit Patil** | `parikshit3003` | `student@123` | VIII-C | 3003 |  | MRS. DIPALI PATIL | 8962703894 | 640 |
+| 831 | **Parth Mourya** | `parth3189` | `student@123` | VIII-A | 3189 |  | MRS. RANJANA  MOURYA | 9977478792 | 587 |
+| 832 | **Pransh Yadav** | `pransh2747` | `student@123` | VIII-B | 2747 |  | MRS. ASHA YADAV | 9098896285 | 617 |
+| 833 | **Pratik Patel** | `pratik3065` | `student@123` | VIII-B | 3065 |  | MRS. SARITA PATEL | 9893713781 | 618 |
+| 834 | **Praveen Makwana** | `praveen3014` | `student@123` | VIII-C | 3014 |  | MRS. SEEMA MAKWANA | 9926207511 | 641 |
+| 835 | **Prayag Nagar** | `prayag2806` | `student@123` | VIII-A | 2806 |  | MRS. SHOBHA NAGAR | 9425481259 | 588 |
+| 836 | **Prince Jirati** | `prince1994` | `student@123` | VIII-B | 1994 |  | MRS. RAVINA JIRATI | 9977737512 | 619 |
+| 837 | **Prince Rathore** | `prince2847` | `student@123` | VIII-C | 2847 |  | MRS. JANTA RATHORE | 9753950418 | 642 |
+| 838 | **Priyanshi** | `priyanshi3349` | `student@123` | VIII-B | 3349 |  | MR. BABITA | 7976637153 | 620 |
+| 839 | **Priyanshu Patra** | `priyanshu2378` | `student@123` | VIII-A | 2378 |  | MRS. CHHAYA PATRA | 9039553251 | 589 |
+| 840 | **Radhika Solanki** | `radhika2634` | `student@123` | VIII-B | 2634 |  | MRS. JYOTI SOLANKI | 9977741027 | 621 |
+| 841 | **Raghav Karma** | `raghav3591` | `student@123` | VIII-B | 3591 |  | MRS. SUNITA KARMA | 7987533502 | 622 |
+| 842 | **Raj Choudhary** | `raj3672` | `student@123` | VIII-A | 3672 |  | MRS. SAPNA CHOUDHARY | 9993555696 | 590 |
+| 843 | **Rajat Solanki** | `rajat2760` | `student@123` | VIII-C | 2760 |  | MRS. REENA SOLANKI | 9977480600 | 643 |
+| 844 | **Rajiv Parihar** | `rajiv3335` | `student@123` | VIII-A | 3335 |  | MRS. RANU PARIHAR | 9753758899 | 591 |
+| 845 | **Rajveer Rathore** | `rajveer2035` | `student@123` | VIII-A | 2035 |  | MRS. VARSHA RATHORE | 9977703471 | 592 |
+| 846 | **Rishabh Singh Sengar** | `rishabh2641` | `student@123` | VIII-B | 2641 |  | MRS. SAPNA SENGAR | 9039398362 | 623 |
+| 847 | **Sarthak Gupta** | `sarthak2614` | `student@123` | VIII-C | 2614 |  | MRS. AMRITA GUPTA | 8770859301 | 644 |
+| 848 | **Shivam Mourya** | `shivam3346` | `student@123` | VIII-C | 3346 |  | MRS. KALPANA MOURYA | 9753774287 | 645 |
+| 849 | **Shivam Yadav** | `shivam2808` | `student@123` | VIII-A | 2808 |  | MRS. SEEMA YADAV | 9644593497 | 593 |
+| 850 | **Shouryaditya Chouhan** | `shouryaditya2136` | `student@123` | VIII-C | 2136 |  | MRS. SHALINI CHOUHAN | 8959972808 | 646 |
+| 851 | **Shree Ram Khanve** | `shree3483` | `student@123` | VIII-C | 3483 |  | MRS. SUNITA KHANVE | 9630557687 | 647 |
+| 852 | **Suraj Rathore** | `suraj2546` | `student@123` | VIII-B | 2546 |  | MRS. DEEPA RATHORE | 8641055040 | 624 |
+| 853 | **Swastik Salunke** | `swastik1974` | `student@123` | VIII-A | 1974 |  | MRS. NIRMALA SALUNKE | 9893382007 | 594 |
+| 854 | **Tulsi Jadhav** | `tulsi2456` | `student@123` | VIII-C | 2456 |  | MRS. JYOTI JADHAV | 9009007722 | 648 |
+| 855 | **Umang Makwana** | `umang2694` | `student@123` | VIII-C | 2694 |  | MRS. ANITA MAKWANA | 7354708144 | 649 |
+| 856 | **Umang Singh Kamdar** | `umang3077` | `student@123` | VIII-A | 3077 |  | MRS. SAPNA KAMDAR | 9826669970 | 595 |
+| 857 | **Vaibhav Singh Rathore** | `vaibhav3711` | `student@123` | VIII-A | 3711 |  | MRS. SANTOSH RATHORE | 9926572819 | 596 |
+| 858 | **Veena Panwar** | `veena2462` | `student@123` | VIII-B | 2462 |  | MRS. BASANTI PANWAR | 9893143557 | 625 |
+| 859 | **Viram Raghuwanshi** | `viram1957` | `student@123` | VIII-C | 1957 |  | MRS. PINKI RAGHUWANSHI | 9926015901 | 650 |
+| 860 | **Virendra Choudhary** | `virendra1981` | `student@123` | VIII-C | 1981 |  | MRS. SAVITA CHOUDHARY | 9009530178 | 651 |
+| 861 | **Yashas V. Naik** | `yashas1911` | `student@123` | VIII-A | 1911 |  | MRS. PUSHPA | 7024664323 | 597 |
+| 862 | **Yuvraj Hawaldar** | `yuvraj2922` | `student@123` | VIII-B | 2922 |  | MRS. SANTOSH DEVI | 9981940478 | 626 |
+| 863 | **Aaryan Mourya** | `aaryan3627` | `student@123` | X-A | 3627 |  | MRS. JYOTSNA MORYA | 9826631683 | 733 |
+| 864 | **Aarzoo Parveen** | `aarzoo3476` | `student@123` | X-A | 3476 |  | MRS. SHABNAM PARVEEN | 9990093238 | 734 |
+| 865 | **Abhijeet Singh Jat** | `abhijeet2134` | `student@123` | X-B | 2134 |  | MRS. NITU SINGH JAT | 8959244674 | 768 |
+| 866 | **Aditya Rathore** | `aditya1527` | `student@123` | X-A | 1527 |  | MRS. SAPNA RATHORE | 9589090016 | 735 |
+| 867 | **Aishwary Maheshwari** | `aishwary1582` | `student@123` | X-A | 1582 |  | MRS. NIDHI MAHESHWARI | 9826151615 | 736 |
+| 868 | **Anish Jadhav** | `anish2073` | `student@123` | X-B | 2073 |  | MRS. ARCHANA JADHAV | 9977030898 | 769 |
+| 869 | **Anokhi Singh** | `anokhi2915` | `student@123` | X-A | 2915 |  | MRS. ANJALI SINGH | 7200626608 | 737 |
+| 870 | **Aparna Baghel** | `aparna2389` | `student@123` | X-B | 2389 |  | MRS. PREETI BAGHEL | 7987250836 | 770 |
+| 871 | **Aryan Kushwaha** | `aryan2502` | `student@123` | X-A | 2502 |  | MRS. PUSHPA DEVI | 7869888418 | 738 |
+| 872 | **Avi Kothari** | `avi3093` | `student@123` | X-B | 3093 |  | MRS. GUNJAN KOTHARI | 8516002511 | 771 |
+| 873 | **Azmal Ali** | `azmal3557` | `student@123` | X-B | 3557 |  | MRS. SAIRA | 9098858855 | 772 |
+| 874 | **Bhumi Tanwar** | `bhumi3306` | `student@123` | X-C | 3306 |  | MRS. REETU | 8619708400 | 802 |
+| 875 | **Chahat Verma** | `chahat2998` | `student@123` | X-A | 2998 |  | MRS. ROSHNI VERMA | 9826472345 | 739 |
+| 876 | **Deeksha Jain** | `deeksha3327` | `student@123` | X-C | 3327 |  | MRS. RADHA | 9630129284 | 803 |
+| 877 | **Deepika Jirati** | `deepika1737` | `student@123` | X-B | 1737 |  | MRS. RACHANA JIRATI | 9893599750 | 773 |
+| 878 | **Devraj Dhakad** | `devraj2340` | `student@123` | X-A | 2340 |  | MRS. ASHA DHAKAD | 7771002793 | 740 |
+| 879 | **Divyam Gehlot** | `divyam1736` | `student@123` | X-B | 1736 |  | MRS. SUNITA GEHLOT | 9424540699 | 774 |
+| 880 | **Harsh Sharma** | `harsh2717` | `student@123` | X-A | 2717 |  | MRS. SUMAN SHARMA | 9024329708 | 741 |
+| 881 | **Harshita Chouhan** | `harshita2980` | `student@123` | X-B | 2980 |  | MRS. ANJU CHOUHAN | 9009561154 | 775 |
+| 882 | **Harshita Jat** | `harshita2733` | `student@123` | X-B | 2733 |  | MRS. SANGEETA JAT | 9826119706 | 776 |
+| 883 | **Harshita Maida** | `harshita2048` | `student@123` | X-A | 2048 |  | MRS. JYOTI MAIDA | 9926490940 | 742 |
+| 884 | **Harshvardhan Singh Rajput** | `harshvardhan3471` | `student@123` | X-A | 3471 |  | MRS. SONAM KANWAR RAJPUT | 9584497557 | 743 |
+| 885 | **Himanshu Patel** | `himanshu1847` | `student@123` | X-B | 1847 |  | MRS. VIDHYA PATEL | 9977666644 | 777 |
+| 886 | **Hiten Jat** | `hiten2734` | `student@123` | X-B | 2734 |  | MRS. SANGEETA JAT | 9826119706 | 778 |
+| 887 | **Jaydeep Yadav** | `jaydeep2322` | `student@123` | X-A | 2322 |  | MRS. KALPANA YADAV | 9893763005 | 744 |
+| 888 | **Jayvardhan Kachhava** | `jayvardhan1839` | `student@123` | X-B | 1839 |  | MRS. LALITA SINGH KACHHAVA | 9977020981 | 779 |
+| 889 | **Kartik Raghuvanshi** | `kartik3117` | `student@123` | X-A | 3117 |  | MRS. ARCHANA RAGHUVANSHI | 9826856883 | 745 |
+| 890 | **Kawyansh Goyal** | `kawyansh3028` | `student@123` | X-B | 3028 |  | MRS. UMA GOYAL | 9926288036 | 780 |
+| 891 | **Keshvi Kumrawat** | `keshvi1556` | `student@123` | X-A | 1556 |  | MRS. RINKI KUMRAWAT | 9039896999 | 746 |
+| 892 | **Khushi Dubey** | `khushi2601` | `student@123` | X-B | 2601 |  | MRS. POOJA DUBEY | 9039239017 | 781 |
+| 893 | **Krishna Chouhan  [H]** | `krishna3025` | `student@123` | X-B | 3025 |  | MRS. SANTOSHI CHOUHAN | 9617431708 | 782 |
+| 894 | **Kuldeep Chouhan** | `kuldeep3162` | `student@123` | X-A | 3162 |  | MRS. NIRMALA CHOUHAN | 9179915400 | 747 |
+| 895 | **Lashika Parmar** | `lashika1735` | `student@123` | X-B | 1735 |  | MRS. NISHA PARMAR | 9827739114 | 783 |
+| 896 | **Manvi Jain** | `manvi1526` | `student@123` | X-A | 1526 |  | MRS. MALYA JAIN | 9425962234 | 748 |
+| 897 | **Mohit Singh Chouhan** | `mohit3450` | `student@123` | X-A | 3450 |  | MRS. SHOBHA CHOUHAN | 9131149128 | 749 |
+| 898 | **Naitik Patel** | `naitik1968` | `student@123` | X-B | 1968 |  | MRS. LALITA PATEL | 9977985162 | 784 |
+| 899 | **Naitik Raghuvanshi** | `naitik3105` | `student@123` | X-B | 3105 |  | MRS. SUNITA RAGHUVANSHI | 9977405070 | 785 |
+| 900 | **Namya Rai** | `namya1769` | `student@123` | X-B | 1769 |  | MRS. JYOTI RAI | 8878939546 | 786 |
+| 901 | **Navya Rathore** | `navya2725` | `student@123` | X-A | 2725 |  | MRS. RAKHI RATHORE | 9827868886 | 750 |
+| 902 | **Parth Songara** | `parth3395` | `student@123` | X-B | 3395 |  | MRS. PINKI SONGARA | 9009815999 | 787 |
+| 903 | **Parv Garg** | `parv1555` | `student@123` | X-A | 1555 |  | MRS. RANI GARG | 9977059292 | 751 |
+| 904 | **Pratik Aleriya** | `pratik2421` | `student@123` | X-A | 2421 |  | MRS. BABITA ALERIYA | 9074520250 | 752 |
+| 905 | **Priyanshi Amrute** | `priyanshi3232` | `student@123` | X-A | 3232 |  | MRS. SUSHILA AMRUTE | 8109091018 | 753 |
+| 906 | **Raghav Agrawal** | `raghav2037` | `student@123` | X-A | 2037 |  | MRS. SONU AGRAWAL | 9827048416 | 754 |
+| 907 | **Rahul Raghuvanshi** | `rahul2348` | `student@123` | X-B | 2348 |  | MRS. MAMTA RAGHUVANSHI | 9977516357 | 788 |
+| 908 | **Riddhima Chouhan** | `riddhima1553` | `student@123` | X-A | 1553 |  | MRS. KIRTI CHOUHAN | 9827521666 | 755 |
+| 909 | **Ridhima Mathur** | `ridhima2631` | `student@123` | X-A | 2631 |  | MRS. ANITA MATHUR | 9993490842 | 756 |
+| 910 | **Ritika Makwana** | `ritika2695` | `student@123` | X-B | 2695 |  | MRS. ANITA MAKWANA | 7354708144 | 789 |
+| 911 | **Riya Chouhan** | `riya3580` | `student@123` | X-B | 3580 |  | MRS. SANJU CHOUHAN | 9131822018 | 790 |
+| 912 | **Sakshi Bharti** | `sakshi2256` | `student@123` | X-B | 2256 |  | MRS. SARITA BHARTI | 8965065302 | 791 |
+| 913 | **Samanyu Tripathi** | `samanyu2595` | `student@123` | X-A | 2595 |  | MRS. SHIKHA AGARWAL | 9810654618 | 757 |
+| 914 | **Sarthak Jujar** | `sarthak2927` | `student@123` | X-A | 2927 |  | MRS. PRIYANKA JUJAR | 8109568658 | 758 |
+| 915 | **Shirin Sheikh** | `shirin1733` | `student@123` | X-A | 1733 |  | MRS. BENAZEER SHEIKH | 9826024027 | 759 |
+| 916 | **Shivam Devda** | `shivam3712` | `student@123` | X-A | 3712 |  | MRS. SUNITA DEVDA | 9826928978 | 760 |
+| 917 | **Shivam Kumar Shriwastav** | `shivam3554` | `student@123` | X-B | 3554 |  | MRS. PUNAM DEVI | 8521321193 | 792 |
+| 918 | **Shourya Pratap Singh Goud** | `shourya2801` | `student@123` | X-B | 2801 |  | MRS. LALITA GOUD | 9893713777 | 793 |
+| 919 | **Shresth Kothari** | `shresth1554` | `student@123` | X-A | 1554 |  | MRS. MANISHA  KOTHARI | 9826309324 | 761 |
+| 920 | **Sonakshi Singh** | `sonakshi2522` | `student@123` | X-A | 2522 |  | MRS. NISHA SINGH | 8819880348 | 762 |
+| 921 | **Suhani Mangal** | `suhani2739` | `student@123` | X-A | 2739 |  | MRS. ANITA MANGAL | 6260255097 | 763 |
+| 922 | **Swadheen Nayak** | `swadheen2117` | `student@123` | X-B | 2117 |  | MRS. BABILATA PUHAN | 9039073019 | 794 |
+| 923 | **Trilok Makwana** | `trilok1732` | `student@123` | X-B | 1732 |  | MRS. REENA MAKWANA | 9977964940 | 795 |
+| 924 | **Trisha Yadav** | `trisha2492` | `student@123` | X-B | 2492 |  | MRS. SEEMA YADAV | 9926075092 | 796 |
+| 925 | **Tushar Singh** | `tushar1734` | `student@123` | X-B | 1734 |  | MRS. CHANCHAL | 9826647868 | 797 |
+| 926 | **Vaibhav Dangi** | `vaibhav2955` | `student@123` | X-A | 2955 |  | MRS. VIJAY LAXMI  DANGI | 8819080518 | 764 |
+| 927 | **Vanshraj Singh Panwar** | `vanshraj2697` | `student@123` | X-A | 2697 |  | MRS. ASHA KUNWAR | 9977074888 | 765 |
+| 928 | **Veer Rathore** | `veer2803` | `student@123` | X-A | 2803 |  | MRS. TEENA RATHORE | 9425124976 | 766 |
+| 929 | **Vikrant Baghel  [H]** | `vikrant3682` | `student@123` | X-B | 3682 |  | MRS. SHEETAL BAGHEL | 8770319832 | 798 |
+| 930 | **Vinay Chouhan** | `vinay1528` | `student@123` | X-B | 1528 |  | MRS. MAYA BAI CHOUHAN | 9770080737 | 799 |
+| 931 | **Vishal Hawaldar** | `vishal2921` | `student@123` | X-B | 2921 |  | MRS. SANTOSH DEVI | 9981940478 | 800 |
+| 932 | **Yashwardhan Singh Panwar  [H]** | `yashwardhan2964` | `student@123` | X-A | 2964 |  | MRS. ARUNA KUNWAR | 9039114483 | 767 |
+| 933 | **Yogendra Choudhary** | `yogendra2552` | `student@123` | X-B | 2552 |  | MRS. KOMAL CHOUDHARY | 9977305682 | 801 |
+| 934 | **Aarav Patel** | `aarav3161` | `student@123` | XI-NEW | 3161 |  | MRS. RACHIYTA PATEL | 9826777592 | 832 |
+| 935 | **Aarushi Patel** | `aarushi3061` | `student@123` | XI-SCI | 3061 |  | MRS. MEENA PATEL | 9753368125 | 851 |
+| 936 | **Aarya Jena** | `aarya1758` | `student@123` | XI-SCI | 1758 |  | MRS. KAMINI JENA | 9893419390 | 852 |
+| 937 | **Anishka Raghuvanshi** | `anishka1653` | `student@123` | XI-NEW | 1653 |  | MRS. SHASHI RAGHUVANSHI | 9826096690 | 833 |
+| 938 | **Anjali Jat** | `anjali1464` | `student@123` | XI-COM | 1464 |  | MRS. URMILA JAT | 9826016895 | 804 |
+| 939 | **Arihant Rathore  [H]** | `arihant3760` | `student@123` | XI-COM | 3760 |  | MRS. LALITA RATHORE | 9098369533 | 805 |
+| 940 | **Arpit Bharti** | `arpit3749` | `student@123` | XI-COM | 3749 |  | MRS.  VISHNU BHARTI | 9827203130 | 806 |
+| 941 | **Arush Sharma** | `arush1666` | `student@123` | XI-SCI | 1666 |  | MRS. MONA SHARMA | 9993341802 | 853 |
+| 942 | **Aryan Mukati** | `aryan1703` | `student@123` | XI-COM | 1703 |  | MRS. AMITA MUKATI | 8120634582 | 807 |
+| 943 | **Aryan Panwar** | `aryan2765` | `student@123` | XI-NEW | 2765 |  | MRS. REENA PANWAR | 9575758818 | 834 |
+| 944 | **Atharv Soni** | `atharv2939` | `student@123` | XI-COM | 2939 |  | MRS. MEGHA SONI | 9826076264 | 808 |
+| 945 | **Ayush Raghuvanshi** | `ayush2162` | `student@123` | XI-COM | 2162 |  | MRS. SUDHA RAGHUVANSHI | 6263028254 | 809 |
+| 946 | **Ayushi Kushwaha** | `ayushi2503` | `student@123` | XI-SCI | 2503 |  | MRS. PUSHPA DEVI | 7869888418 | 854 |
+| 947 | **Daksh Jatav** | `daksh1390` | `student@123` | XI-COM | 1390 |  | MRS. KALEE JATAV | 9098642392 | 810 |
+| 948 | **Deepak Raghuvanshi** | `deepak1669` | `student@123` | XI-COM | 1669 |  | MRS. RANJANA RAGHUVANSHI | 9826869751 | 811 |
+| 949 | **Devendra Gehlot** | `devendra1640` | `student@123` | XI-COM | 1640 |  | MRS. SEEMA GEHLOT | 9981631110 | 812 |
+| 950 | **Devendra Jataw** | `devendra2832` | `student@123` | XI-NEW | 2832 |  | MRS. MAMTA JATAW | 9165166998 | 835 |
+| 951 | **Durgesh Jat** | `durgesh2309` | `student@123` | XI-COM | 2309 |  | MRS. MONU JAT | 9893414148 | 813 |
+| 952 | **Edha Singhal** | `edha3191` | `student@123` | XI-COM | 3191 |  | MRS. DISHA SINGHAL | 9425148387 | 814 |
+| 953 | **Hardik Dubey** | `hardik1693` | `student@123` | XI-NEW | 1693 |  | MRS. ABHA DUBEY | 9926528315 | 836 |
+| 954 | **Harsh Patel** | `harsh3746` | `student@123` | XI-COM | 3746 |  | MRS. SANTOSH PATEL | 9826466807 | 815 |
+| 955 | **Harsh Yadav  [H]** | `harsh2849` | `student@123` | XI-SCI | 2849 |  | MRS. ANITA YADAV | 9893971002 | 855 |
+| 956 | **Hitesh Raghuvanshi** | `hitesh2133` | `student@123` | XI-COM | 2133 |  | MRS. SANGEETA RAGHUVANSHI | 9977404643 | 816 |
+| 957 | **Jayesh Singh** | `jayesh2689` | `student@123` | XI-SCI | 2689 |  | MRS. CHANDA DEVI | 9713706414 | 856 |
+| 958 | **Kanak Jadhav** | `kanak1392` | `student@123` | XI-NEW | 1392 |  | MRS. DEEPIKA JADHAV | 7772916444 | 837 |
+| 959 | **Keshav Bairagi** | `keshav2945` | `student@123` | XI-NEW | 2945 |  | MRS. KIRAN BAIRAGI | 7000604675 | 838 |
+| 960 | **Kratika Kadam** | `kratika1606` | `student@123` | XI-SCI | 1606 |  | MRS. KAVITA NAVGHANE  KADAM | 8889933350 | 857 |
+| 961 | **Kunal Singh Tanwar** | `kunal2390` | `student@123` | XI-NEW | 2390 |  | MRS. ARCHANA SINGH TANWAR | 9827302108 | 839 |
+| 962 | **Mahim Yadav** | `mahim2280` | `student@123` | XI-COM | 2280 |  | MRS. VANDANA YADAV | 9009040324 | 817 |
+| 963 | **Mohammad Arfan Khan** | `mohammad1625` | `student@123` | XI-SCI | 1625 |  | MRS. PARVEEN KHAN | 9754592577 | 858 |
+| 964 | **Mohammad Arsh Khan** | `mohammad2750` | `student@123` | XI-COM | 2750 |  | MRS. RUKHSAR KHAN | 9630377616 | 818 |
+| 965 | **Mohit Gurjar** | `mohit3079` | `student@123` | XI-NEW | 3079 |  | MRS. BISHNU BAI | 9318412855 | 840 |
+| 966 | **Mohit Rathore** | `mohit3208` | `student@123` | XI-COM | 3208 |  | MRS. KAVITA RATHORE | 9826613358 | 819 |
+| 967 | **Mohit Suner  [H]** | `mohit3034` | `student@123` | XI-NEW | 3034 |  | MRS. REENA SUNER | 9826584110 | 841 |
+| 968 | **Nitin Chouhan** | `nitin1659` | `student@123` | XI-NEW | 1659 |  | MRS. SANGEETA CHOUHAN | 9827714707 | 842 |
+| 969 | **Prakhar Tiwari** | `prakhar2392` | `student@123` | XI-COM | 2392 |  | MRS. POOJA TIWARI | 9685009259 | 820 |
+| 970 | **Prathviraj Singh Suner  [H]** | `prathviraj3033` | `student@123` | XI-NEW | 3033 |  | MRS. BABITA SUNER | 9826511674 | 843 |
+| 971 | **Prisha Salunke** | `prisha1605` | `student@123` | XI-SCI | 1605 |  | MRS. NIRMALA SALUNKE | 9893382007 | 859 |
+| 972 | **Purvi Garg** | `purvi3235` | `student@123` | XI-COM | 3235 |  | MRS. SHWETA GARG | 9425190821 | 821 |
+| 973 | **Raghvendra Singh Jat** | `raghvendra2936` | `student@123` | XI-COM | 2936 |  | MRS. ANITA JAT | 9826299356 | 822 |
+| 974 | **Sachin Singh Dawar** | `sachin1394` | `student@123` | XI-COM | 1394 |  | MRS. MAMTA DAWAR | 7747059007 | 823 |
+| 975 | **Samarth Raghuvanshi** | `samarth2182` | `student@123` | XI-COM | 2182 |  | MRS. POOJA RAGHUVANSHI | 9926015902 | 824 |
+| 976 | **Samiksha Raghuvanshi** | `samiksha2131` | `student@123` | XI-COM | 2131 |  | MRS. AVANTI BAI RAGHUVANSHI | 9926933311 | 825 |
+| 977 | **Shivam Parihar** | `shivam3055` | `student@123` | XI-NEW | 3055 |  | MRS. KAMANA PARIHAR | 9827842936 | 844 |
+| 978 | **Shivraj Singh Chouhan** | `shivraj1630` | `student@123` | XI-COM | 1630 |  | MRS. LAXMI CHOUHAN | 9685950888 | 826 |
+| 979 | **Shlok Makwana** | `shlok1937` | `student@123` | XI-SCI | 1937 |  | MRS. JYOTI MAKWANA | 9977307752 | 860 |
+| 980 | **Shriji Mishra** | `shriji1524` | `student@123` | XI-NEW | 1524 |  | MRS. REKHA MISHRA | 9179531010 | 845 |
+| 981 | **Siddhi Rathore** | `siddhi2804` | `student@123` | XI-NEW | 2804 |  | MRS. RANU RATHORE | 9826259959 | 846 |
+| 982 | **Somya Kanungo** | `somya2675` | `student@123` | XI-COM | 2675 |  | MRS. MONIKA KANUNGO | 7987838916 | 827 |
+| 983 | **Sonam Raghuvanshi** | `sonam2132` | `student@123` | XI-COM | 2132 |  | MRS. AVANTI BAI RAGHUVANSHI | 9926933311 | 828 |
+| 984 | **Sumit Mishra** | `sumit1707` | `student@123` | XI-SCI | 1707 |  | MRS. ARCHANA MISHRA | 7219877101 | 861 |
+| 985 | **Tanish A. Jirati** | `tanish1513` | `student@123` | XI-COM | 1513 |  | MRS. REENA JIRATI | 9753100604 | 829 |
+| 986 | **Tanish V. Jirati** | `tanish1353` | `student@123` | XI-NEW | 1353 |  | MRS. MAMTA JIRATI | 9617002126 | 847 |
+| 987 | **Vandana Pawar** | `vandana2427` | `student@123` | XI-SCI | 2427 |  | MRS. ANURADHA PAWAR | 7047707070 | 862 |
+| 988 | **Vansh Mukati** | `vansh2684` | `student@123` | XI-NEW | 2684 |  | MRS. CHANDA MUKATI | 9977221246 | 848 |
+| 989 | **Vedahi Soni** | `vedahi2569` | `student@123` | XI-SCI | 2569 |  | MRS. DARSHIKA SONI | 9425095428 | 863 |
+| 990 | **Vedant Patidar** | `vedant1891` | `student@123` | XI-COM | 1891 |  | MRS. GAYATRI PATIDAR | 9826063846 | 830 |
+| 991 | **Vinay Nakum** | `vinay2855` | `student@123` | XI-SCI | 2855 |  | MRS. BHAVNA NAKUM | 9589724889 | 864 |
+| 992 | **Vishal Chouhan** | `vishal2785` | `student@123` | XI-COM | 2785 |  | MRS. REENA CHOUHAN | 9752786472 | 831 |
+| 993 | **Yogesh Verma** | `yogesh2300` | `student@123` | XI-NEW | 2300 |  | MRS. LEELA VERMA | 9171253824 | 849 |
+| 994 | **Yuvraj Mourya** | `yuvraj3392` | `student@123` | XI-NEW | 3392 |  | MRS. SAVITA MOURYA | 9617259854 | 850 |
+| 995 | **Aarav Sharma** | `aarav2491` | `student@123` | XII-COM | 2491 |  | MRS. DEEPIKA SHARMA | 9630319347 | 865 |
+| 996 | **Abhijeet Choudhary** | `abhijeet1810` | `student@123` | XII-COM | 1810 |  | MRS. RADHA CHOUDHARY | 9754559047 | 866 |
+| 997 | **Adarsh Kamdar** | `adarsh1315` | `student@123` | XII-COM | 1315 |  | MRS. BHAWNA KAMDAR | 9977498279 | 867 |
+| 998 | **Aditya Mourya** | `aditya1680` | `student@123` | XII-COM | 1680 |  | MRS. PREM MOURYA | 9630752791 | 868 |
+| 999 | **Aditya Verma** | `aditya1849` | `student@123` | XII-SCI | 1849 |  | MRS. RATAN VERMA | 9893564296 | 923 |
+| 1000 | **Akshara Kumrawat** | `akshara1226` | `student@123` | XII-COM | 1226 |  | MRS. SAKHI KUMRAWAT | 9893930005 | 869 |
+| 1001 | **Anant Baghel** | `anant3092` | `student@123` | XII-SCI | 3092 |  | MRS. PREETI BAGHEL | 9425954349 | 924 |
+| 1002 | **Anjali Yadav** | `anjali2910` | `student@123` | XII-COM | 2910 |  | MRS. MAMTA YADAV | 7999306050 | 870 |
+| 1003 | **Anuj Parihar** | `anuj3008` | `student@123` | XII-COM | 3008 |  | MRS. RINKI PARIHAR | 8085494040 | 871 |
+| 1004 | **Apurv Gupta  [H]** | `apurv3260` | `student@123` | XII-HUM | 3260 |  | MRS. ASHA GUPTA | 9782219804 | 909 |
+| 1005 | **Arhan Khan** | `arhan1328` | `student@123` | XII-SCI | 1328 |  | MRS. ZEENAT KHAN | 9009994354 | 925 |
+| 1006 | **Atharv Pratap Singh** | `atharv3156` | `student@123` | XII-COM | 3156 |  | MRS. USHA SINGH | 9532122242 | 872 |
+| 1007 | **Atharv Rathore** | `atharv1286` | `student@123` | XII-COM | 1286 |  | MRS. ARCHANA RATHORE | 8120001168 | 873 |
+| 1008 | **Ayush Bagdiya** | `ayush2622` | `student@123` | XII-SCI | 2622 |  | MRS. SHARMILA | 9691330772 | 926 |
+| 1009 | **Bajrang Saran  [H]** | `bajrang3255` | `student@123` | XII-HUM | 3255 |  | MRS. KAMLA DEVI | 6367258681 | 910 |
+| 1010 | **Bibek Nayak** | `bibek1454` | `student@123` | XII-COM | 1454 |  | MRS. BABILATA PUHAN | 9039073019 | 874 |
+| 1011 | **Deepak Shrivastav** | `deepak2363` | `student@123` | XII-SCI | 2363 |  | MRS. NEELAM SHRIVASTAV | 6232744418 | 927 |
+| 1012 | **Dhanveer Singh Chouhan** | `dhanveer1783` | `student@123` | XII-SCI | 1783 |  | MRS. NILAM KUVAR CHOUHAN | 9753569896 | 928 |
+| 1013 | **Dhruv Patidar** | `dhruv1550` | `student@123` | XII-COM | 1550 |  | MRS. SUNITA PATIDAR | 9617026064 | 875 |
+| 1014 | **Dhruvkesh Bamaniya  [H]** | `dhruvkesh3254` | `student@123` | XII-HUM | 3254 |  | MRS. SANJULATA BAMANIYA | 9116850149 | 911 |
+| 1015 | **Divyansh Kamdar** | `divyansh3153` | `student@123` | XII-COM | 3153 |  | MRS. SHIVKANYA KAMDAR | 9893194050 | 876 |
+| 1016 | **Divyansh Raghuvanshi** | `divyansh2204` | `student@123` | XII-COM | 2204 |  | MRS. KAVITA RAGHUVANSHI | 9009911087 | 877 |
+| 1017 | **Gautam Kelwa  [H]** | `gautam3239` | `student@123` | XII-HUM | 3239 |  | MRS. ROOPA KELWA | 9926531117 | 912 |
+| 1018 | **Hanshika Kumawat  [H]** | `hanshika3250` | `student@123` | XII-HUM | 3250 |  | MRS. ANITA KUMAWAT | 9602419292 | 913 |
+| 1019 | **Harshita Gupta** | `harshita2613` | `student@123` | XII-COM | 2613 |  | MRS. AMRITA GUPTA | 8770859301 | 878 |
+| 1020 | **Jayant Yadav** | `jayant3520` | `student@123` | XII-SCI | 3520 |  | MRS. SARITA YADAV | 9907023930 | 929 |
+| 1021 | **Jigyasa Singh** | `jigyasa1382` | `student@123` | XII-SCI | 1382 |  | MRS. SHALINI SINGH | 9977929243 | 930 |
+| 1022 | **Kanhaiya Parmar** | `kanhaiya3122` | `student@123` | XII-COM | 3122 |  | MRS. CHINTA PARMAR | 9753171548 | 879 |
+| 1023 | **Khushhal Chouhan** | `khushhal1692` | `student@123` | XII-COM | 1692 |  | MRS. MAMTA CHOUHAN | 7828569131 | 880 |
+| 1024 | **Krishna Patidar** | `krishna1473` | `student@123` | XII-COM | 1473 |  | MRS. VIDHYA PATIDAR | 9826629592 | 881 |
+| 1025 | **Lishika Raghuvanshi** | `lishika2181` | `student@123` | XII-COM | 2181 |  | MRS. RANJANA RAGHUVANSHI | 9826466568 | 882 |
+| 1026 | **Lucky Saini  [H]** | `lucky3261` | `student@123` | XII-HUM | 3261 |  | MRS. DEVKI SAINI | 9649461512 | 914 |
+| 1027 | **Mahee Yadav** | `mahee3519` | `student@123` | XII-SCI | 3519 |  | MRS. HEMLATA YADAV | 8827318135 | 931 |
+| 1028 | **Mohammad Abdul Basit** | `mohammad2475` | `student@123` | XII-SCI | 2475 |  | MRS. ASMA KHATOON | 9179168953 | 932 |
+| 1029 | **Moksh Bhandari** | `moksh2006` | `student@123` | XII-COM | 2006 |  | MRS. YOGITA BHANDARI | 9826547443 | 883 |
+| 1030 | **Naveen Rathod** | `naveen1320` | `student@123` | XII-COM | 1320 |  | MRS. MANJU RATHOD | 9981066085 | 884 |
+| 1031 | **Paramveer Singh Panwar** | `paramveer2772` | `student@123` | XII-COM | 2772 |  | MRS. SANJU BAI | 9926199860 | 885 |
+| 1032 | **Parth Makwana** | `parth1864` | `student@123` | XII-COM | 1864 |  | MRS. SONIYA MAKWANA | 9977592999 | 886 |
+| 1033 | **Parth Rathore** | `parth2724` | `student@123` | XII-COM | 2724 |  | MRS. RAKHI RATHORE | 9827868886 | 887 |
+| 1034 | **Piyush Kumar Nag** | `piyush3673` | `student@123` | XII-COM | 3673 |  | MRS. SUNITA NAG | 9893167544 | 888 |
+| 1035 | **Piyush Raghuvanshi** | `piyush2161` | `student@123` | XII-COM | 2161 |  | MRS. SUDHA RAGHUVANSHI | 6263028254 | 889 |
+| 1036 | **Piyush Singh Solanki** | `piyush2308` | `student@123` | XII-COM | 2308 |  | MRS. SEEMA SOLANKI | 8085180212 | 890 |
+| 1037 | **Piyush Verma** | `piyush1366` | `student@123` | XII-COM | 1366 |  | MRS. SHARMILA VERMA | 9826329512 | 891 |
+| 1038 | **Prakriti Mohanty** | `prakriti1299` | `student@123` | XII-COM | 1299 |  | MRS. PURNIMA MOHANTY | 9302460135 | 892 |
+| 1039 | **Pranav Patel  [H]** | `pranav3241` | `student@123` | XII-HUM | 3241 |  | MRS. MALTEE PATEL | 7470754380 | 915 |
+| 1040 | **Pranjal Kumar  [H]** | `pranjal3252` | `student@123` | XII-HUM | 3252 |  | MRS. SANDHYA KUMARI | 9314998954 | 916 |
+| 1041 | **Prathviraj Mukati** | `prathviraj3142` | `student@123` | XII-SCI | 3142 |  | MRS. RADHA MUKATI | 9826810247 | 933 |
+| 1042 | **Prayag Singh  [H]** | `prayag3259` | `student@123` | XII-HUM | 3259 |  | MRS. BHANWAR KANWAR | 8696953999 | 917 |
+| 1043 | **Princy Singh** | `princy1532` | `student@123` | XII-COM | 1532 |  | MRS. KIRAN DEVI | 9981684225 | 893 |
+| 1044 | **Ridham Soni** | `ridham2248` | `student@123` | XII-COM | 2248 |  | MRS. REENA SONI | 9977073749 | 894 |
+| 1045 | **Risalat Khanam  [H]** | `risalat3263` | `student@123` | XII-HUM | 3263 |  | MRS. NAFEES SULTANA | 7426808228 | 918 |
+| 1046 | **Rishabh Sen  [H]** | `rishabh3249` | `student@123` | XII-HUM | 3249 |  | MRS. LAJWANTI SEN | 8290935894 | 919 |
+| 1047 | **Riya Verma** | `riya1277` | `student@123` | XII-COM | 1277 |  | MRS. DURGA VERMA | 9826154824 | 895 |
+| 1048 | **Rudra Mukati** | `rudra2384` | `student@123` | XII-COM | 2384 |  | MRS. SEEMA MUKATI | 9754544843 | 896 |
+| 1049 | **Sharad Bharti** | `sharad2255` | `student@123` | XII-COM | 2255 |  | MRS. KAVITA BHARTI | 9826758111 | 897 |
+| 1050 | **Shaurya Sampla** | `shaurya1781` | `student@123` | XII-SCI | 1781 |  | MRS. RAJ SAMPLA | 8889900163 | 934 |
+| 1051 | **Shraddha Chouhan** | `shraddha2138` | `student@123` | XII-SCI | 2138 |  | MRS. SHALINI CHOUHAN | 8959972808 | 935 |
+| 1052 | **Shubham Mishra** | `shubham1622` | `student@123` | XII-SCI | 1622 |  | MRS. SUNDRA MISHRA | 9926556833 | 936 |
+| 1053 | **Shweta Yadav** | `shweta3558` | `student@123` | XII-COM | 3558 |  | MRS. ANTIMBALA  YADAV | 9770702973 | 898 |
+| 1054 | **Siddhi Jain** | `siddhi1300` | `student@123` | XII-COM | 1300 |  | MRS. RUCHI JAIN | 9691462326 | 899 |
+| 1055 | **Sneha Malviya  [H]** | `sneha3246` | `student@123` | XII-HUM | 3246 |  | MRS. KAMAL MALVIYA | 8461820483 | 920 |
+| 1056 | **Sujal Khatri** | `sujal2494` | `student@123` | XII-COM | 2494 |  | MRS. MITTAL KHATRI | 9826216850 | 900 |
+| 1057 | **Sumit Raghuvanshi** | `sumit1702` | `student@123` | XII-COM | 1702 |  | MRS. SAROJ RAGHUVANSHI | 9926066482 | 901 |
+| 1058 | **Tamanna Joshi** | `tamanna3184` | `student@123` | XII-COM | 3184 |  | MRS. PRIYA JOSHI | 9754144583 | 902 |
+| 1059 | **Tanish Panwar** | `tanish2959` | `student@123` | XII-COM | 2959 |  | MRS. REENA PANWAR | 9827458698 | 903 |
+| 1060 | **Tanish Raghuvanshi** | `tanish2156` | `student@123` | XII-COM | 2156 |  | MRS. POONAM RAGHUVANSHI | 9981782605 | 904 |
+| 1061 | **Tanish Rathore** | `tanish1663` | `student@123` | XII-COM | 1663 |  | MRS. JYOTI RATHORE | 9977059090 | 905 |
+| 1062 | **Tasmiya Mansoori  [H]** | `tasmiya3244` | `student@123` | XII-HUM | 3244 |  | MRS. SHAMIM MANSOORI | 6266828089 | 921 |
+| 1063 | **Toshil Jain  [H]** | `toshil3243` | `student@123` | XII-HUM | 3243 |  | MRS. AARTI JAIN | 8989833328 | 922 |
+| 1064 | **Utkarsh Yadav** | `utkarsh1695` | `student@123` | XII-SCI | 1695 |  | MRS. REENA YADAV | 9993201955 | 937 |
+| 1065 | **Vaibhav Raghuvanshi** | `vaibhav1671` | `student@123` | XII-COM | 1671 |  | MRS. MANJU RAGHUVANSHI | 9926931896 | 906 |
+| 1066 | **Vaishnav Mishra** | `vaishnav2536` | `student@123` | XII-SCI | 2536 |  | MRS. NEELAM MISHRA | 7470906730 | 938 |
+| 1067 | **Vibhika Verma** | `vibhika1367` | `student@123` | XII-COM | 1367 |  | MRS. BHAVANA VERMA | 9826329512 | 907 |
+| 1068 | **Vinay Mourya** | `vinay2217` | `student@123` | XII-COM | 2217 |  | MRS. CHINKITA MOURYA | 9755449599 | 908 |

@@ -21,7 +21,7 @@ class StudentProfile(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, null=True)
     admission_number = models.CharField(max_length=50) # removed unique=True
     roll_number = models.CharField(max_length=20, null=True, blank=True)
-    rfid_code = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    rfid_code = models.CharField(max_length=100, blank=True, null=True)
     class_section = models.ForeignKey('classes.ClassSection', on_delete=models.SET_NULL, null=True, blank=True, related_name='students')
     assigned_shift = models.ForeignKey('timetable.Shift', on_delete=models.SET_NULL, null=True, blank=True, related_name='students')
     parent = models.ForeignKey(Parent, on_delete=models.SET_NULL, null=True, blank=True, related_name='children')
@@ -48,7 +48,11 @@ class StudentProfile(models.Model):
             models.UniqueConstraint(
                 fields=['school', 'admission_number'],
                 name='unique_admission_per_school',
-            )
+            ),
+            models.UniqueConstraint(
+                fields=['school', 'rfid_code'],
+                name='unique_student_rfid_per_school',
+            ),
         ]
 
     def __str__(self):

@@ -392,7 +392,7 @@ const ManageTeachers = () => {
                                                     border: `1px solid ${t.role === 'Class Teacher' ? '#bfdbfe' : t.role === 'Staff' ? '#ddd6fe' : '#e2e8f0'}`
                                                 }}
                                             >
-                                                {t.role || 'Subject Teacher'}
+                                                {t.role || '—'}
                                             </span>
                                         </td>
                                         <td style={td}>{t.assigned_shift_name || '—'}</td>

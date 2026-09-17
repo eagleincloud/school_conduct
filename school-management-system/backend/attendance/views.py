@@ -1,15 +1,15 @@
 from collections import defaultdict
 import calendar
 from datetime import date as date_type
-from datetime import timedelta, datetime as datetime_type
+from datetime import timedelta, datetime as datetime_type, time
 
 from django.db import transaction
 from django.db.models import Q
 from rest_framework import status, views, permissions
 from rest_framework.response import Response
-from .models import Attendance
-from .serializers import AttendanceSerializer
-from core.permissions import IsTeacher, IsStudent
+from .models import Attendance, AttendanceSetting
+from .serializers import AttendanceSerializer, AttendanceSettingSerializer
+from core.permissions import IsTeacher, IsStudent, IsAdmin
 from communication.models import Notification
 from holidays.models import Holiday
 from timetable.models import TimeTableEntry
@@ -116,6 +116,10 @@ class TeacherAttendanceSheetView(views.APIView):
         records = Attendance.objects.filter(student_id__in=student_ids, date=target_date)
         rec_by_student = {r.student_id: r for r in records}
 
+        setting = AttendanceSetting.objects.filter(school=request.user.school).first()
+        late_cutoff = setting.student_late_time if setting and setting.student_late_time else time(8, 30)
+        is_past_or_today = target_date <= timezone.localdate()
+
         rows = []
         present = 0
         absent = 0
@@ -123,7 +127,15 @@ class TeacherAttendanceSheetView(views.APIView):
         marked = 0
         for idx, s in enumerate(students, start=1):
             rec = rec_by_student.get(s.id)
-            st = rec.status if rec else None
+            if rec:
+                st = rec.status
+                if rec.punch_time:
+                    local_punch = timezone.localtime(rec.punch_time) if timezone.is_aware(rec.punch_time) else rec.punch_time
+                    if local_punch.time() > late_cutoff:
+                        st = 'late'
+            else:
+                st = 'absent' if is_past_or_today else None
+
             if st in ('present', 'absent', 'late'):
                 marked += 1
                 if st == 'present':
@@ -154,6 +166,7 @@ class TeacherAttendanceSheetView(views.APIView):
                 'date': target_date.isoformat(),
                 'is_editable': is_editable,
                 'can_mark': can_mark,
+                'late_cutoff_time': late_cutoff.strftime('%H:%M'),
                 'summary': {
                     'present': present,
                     'absent': absent,
@@ -286,18 +299,23 @@ class StudentPunchAttendanceView(views.APIView):
         else:
             punch_dt = timezone.now()
 
+        setting = AttendanceSetting.objects.filter(school=student_profile.school).first()
+        late_cutoff = setting.student_late_time if setting and setting.student_late_time else time(8, 30)
+        local_punch = timezone.localtime(punch_dt) if timezone.is_aware(punch_dt) else punch_dt
+        punch_status = 'late' if local_punch.time() > late_cutoff else 'present'
+
         attendance, created = Attendance.objects.select_related('student').get_or_create(
             student=student_profile,
             date=target_date,
             defaults={
-                'status': 'present',
+                'status': punch_status,
                 'verification_status': 'approved',
                 'marked_via': 'rfid',
                 'punch_time': punch_dt,
             },
         )
 
-        attendance.status = 'present'
+        attendance.status = punch_status
         attendance.verification_status = 'approved'
         attendance.marked_via = 'rfid'
         attendance.punch_time = punch_dt
@@ -527,6 +545,10 @@ class TeacherClassAttendanceSummaryView(views.APIView):
         for r in recent_records:
             recent_by_student[r.student_id].append(r)
 
+        setting = AttendanceSetting.objects.filter(school=request.user.school).first()
+        late_cutoff = setting.student_late_time if setting and setting.student_late_time else time(8, 30)
+        is_past_or_today = target_date <= date_type.today()
+
         rows = []
         present = 0
         absent = 0
@@ -540,7 +562,11 @@ class TeacherClassAttendanceSummaryView(views.APIView):
                 if rec.verification_status == 'pending':
                     status_value = 'pending'
                 elif rec.verification_status == 'approved':
-                    status_value = rec.status  # 'present' or 'late' (teacher may mark late)
+                    status_value = rec.status
+                    if rec.punch_time:
+                        local_punch = timezone.localtime(rec.punch_time) if timezone.is_aware(rec.punch_time) else rec.punch_time
+                        if local_punch.time() > late_cutoff:
+                            status_value = 'late'
                     marked += 1
                     if status_value == 'present':
                         present += 1
@@ -550,6 +576,10 @@ class TeacherClassAttendanceSummaryView(views.APIView):
                     status_value = 'absent'
                     marked += 1
                     absent += 1
+            elif is_past_or_today:
+                status_value = 'absent'
+                marked += 1
+                absent += 1
 
             recent_list = recent_by_student.get(s.id, [])
             recent_present = sum(
@@ -570,7 +600,8 @@ class TeacherClassAttendanceSummaryView(views.APIView):
                 }
             )
 
-        class_attendance_pct = (sum(1 for r in rows if r.get('status') in ('present', 'late')) / marked * 100.0) if marked else 0.0
+        total_count = len(students)
+        class_attendance_pct = (sum(1 for r in rows if r.get('status') in ('present', 'late')) / total_count * 100.0) if total_count else 0.0
 
         return Response(
             {
@@ -582,7 +613,7 @@ class TeacherClassAttendanceSummaryView(views.APIView):
                     'absent': absent,
                     'late': late,
                     'marked': marked,
-                    'total_students': len(students),
+                    'total_students': total_count,
                     'attendance_percentage': round(class_attendance_pct, 2),
                 },
                 'students': rows,
@@ -1023,4 +1054,42 @@ class BiometricDeviceHeartbeatView(views.APIView):
             },
             status=status.HTTP_200_OK,
         )
+
+
+class AttendanceSettingView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def _get_school(self, request):
+        if hasattr(request.user, 'school') and request.user.school:
+            return request.user.school
+        school_id = request.query_params.get('school_id') or request.data.get('school_id')
+        if school_id and (request.user.is_superuser or request.user.role == 'superadmin'):
+            from tenants.models import School
+            return School.objects.filter(id=school_id).first()
+        return None
+
+    def get(self, request):
+        school = self._get_school(request)
+        if not school:
+            return Response({'error': 'School not found or not associated with user'}, status=status.HTTP_404_NOT_FOUND)
+
+        setting, _ = AttendanceSetting.objects.get_or_create(school=school)
+        serializer = AttendanceSettingSerializer(setting)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        if not (request.user.is_superuser or request.user.role in ('admin', 'superadmin')):
+            return Response({'error': 'Only administrators can update attendance settings.'}, status=status.HTTP_403_FORBIDDEN)
+
+        school = self._get_school(request)
+        if not school:
+            return Response({'error': 'School not found or not associated with user'}, status=status.HTTP_404_NOT_FOUND)
+
+        setting, _ = AttendanceSetting.objects.get_or_create(school=school)
+        serializer = AttendanceSettingSerializer(setting, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 

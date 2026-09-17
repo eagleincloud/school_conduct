@@ -1,15 +1,17 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.core.mail import send_mail
 from django.conf import settings
 from .forms import EnquiryForm
 import logging
+from core.throttles import EnquiryRateThrottle
 
 logger = logging.getLogger(__name__)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
+@throttle_classes([EnquiryRateThrottle])
 def submit_enquiry(request):
     form = EnquiryForm(request.data)
     if form.is_valid():
@@ -31,7 +33,7 @@ def submit_enquiry(request):
                 print(f"✅ Admin notification email sent to {settings.CONTACT_EMAIL}")
             except Exception as e:
                 print(f"❌ Failed to send admin email: {e}")
-                logger.error(f"Failed to send admin notification email: {e}")
+                logger.exception('Failed to send admin notification email')
 
             # confirmation email to user
             user_subject = f"Enquiry Received: {enquiry.subject}"
@@ -48,11 +50,11 @@ def submit_enquiry(request):
                 print(f"✅ Confirmation email sent to {enquiry.email}")
             except Exception as e:
                 print(f"❌ Failed to send user email: {e}")
-                logger.error(f"Failed to send user confirmation email: {e}")
+                logger.exception('Failed to send user confirmation email')
 
             return Response({"status": "success", "message": "Enquiry submitted successfully!"})
         except Exception as e:
-            logger.error(f"Error saving enquiry: {e}")
+            logger.exception('Error saving enquiry')
             return Response({"status": "error", "message": "Internal server error"}, status=500)
     
     return Response({"status": "error", "message": "Invalid form data", "errors": form.errors}, status=400)

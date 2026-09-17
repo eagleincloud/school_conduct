@@ -11,14 +11,14 @@ from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.utils import timezone
 from django.views import View
-from rest_framework import permissions, status, views
+from rest_framework import permissions, status, views, generics
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from tenants.models import School
 
-from .models import BiometricDevice, generate_device_secret_key
-from .serializers import BiometricDeviceSerializer
+from .models import BiometricDevice, BiometricEventLog, generate_device_secret_key
+from .serializers import BiometricDeviceSerializer, BiometricEventLogSerializer
 from .bridge_runtime import (
     delete_device_runtime_config,
     get_bridge_executable_path,
@@ -75,7 +75,7 @@ def _should_refresh_connectivity(device, cooldown_seconds=15):
     if not device.is_active:
         return False
     if not device.device_ip or not device.device_port:
-        return device.integration_mode == 'tcp_xml_push'
+        return device.integration_mode in {'tcp_xml_push', 'http_push'}
     if not device.last_tested_at:
         return True
     return device.last_tested_at < timezone.now() - timedelta(seconds=cooldown_seconds)
@@ -117,10 +117,13 @@ def _default_bridge_url(request):
 
 
 def _tcp_listener_config():
+    public_api = urlparse(settings.PUBLIC_API_BASE_URL)
     return {
         'host': settings.BIOMETRIC_TCP_HOST,
+        'public_host': public_api.hostname or '',
         'port': settings.BIOMETRIC_TCP_PORT,
         'ack_message': settings.BIOMETRIC_TCP_ACK_MESSAGE,
+        'sbxpc_ack_message': settings.BIOMETRIC_SBXPC_ACK_MESSAGE,
     }
 
 
@@ -192,7 +195,7 @@ class BiometricDeviceConnectionProbeView(views.APIView):
         timeout_seconds = float(request.data.get('timeout_seconds') or 3)
         integration_mode = request.data.get('integration_mode') or 'bridge_pull'
 
-        if integration_mode != 'tcp_xml_push' and not device_ip:
+        if integration_mode not in {'tcp_xml_push', 'http_push'} and not device_ip:
             return Response({'error': 'device_ip is required'}, status=status.HTTP_400_BAD_REQUEST)
 
         if integration_mode in {'tcp_xml_push', 'http_push'}:
@@ -492,3 +495,32 @@ class BiometricDeviceStatusStreamView(View):
         response['Cache-Control'] = 'no-cache'
         response['X-Accel-Buffering'] = 'no'
         return response
+
+
+class BiometricEventLogListView(generics.ListAPIView):
+    """
+    Returns a list of biometric event logs for the user's school.
+    Supports filtering by device_id.
+    """
+    serializer_class = BiometricEventLogSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = None
+
+    def get_queryset(self):
+        user = self.request.user
+        if not _ensure_device_manager(user):
+            return BiometricEventLog.objects.none()
+
+        qs = BiometricEventLog.objects.all()
+
+        school_scope = _get_school_scope(self.request)
+        if school_scope:
+            qs = qs.filter(school=school_scope)
+        elif user.role == 'admin':
+            qs = qs.filter(school=user.school)
+
+        device_id = self.request.query_params.get('device_id')
+        if device_id:
+            qs = qs.filter(device_id=device_id)
+
+        return qs.order_by('-received_at')

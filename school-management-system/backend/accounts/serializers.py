@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth.password_validation import validate_password
 from .models import User
 
 
@@ -9,6 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'name', 'role', 'phone', 'school', 'profile_photo']
+        read_only_fields = fields
 
     def get_profile_photo(self, obj):
         request = self.context.get('request')
@@ -33,6 +35,53 @@ class UserSerializer(serializers.ModelSerializer):
             except Exception:
                 return None
         return None
+
+
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    """Fields a user is allowed to change on their own account."""
+
+    class Meta:
+        model = User
+        fields = ['email', 'name', 'phone', 'profile_photo']
+
+
+class UserCreateSerializer(serializers.ModelSerializer):
+    """School-admin user creation without role or tenant escalation."""
+
+    password = serializers.CharField(write_only=True, validators=[validate_password])
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'name', 'role', 'phone', 'school', 'password']
+        read_only_fields = ['id']
+
+    def validate_role(self, value):
+        if value not in {'admin', 'teacher', 'student'}:
+            raise serializers.ValidationError('School administrators may only create school users.')
+        return value
+
+    def validate(self, attrs):
+        request = self.context['request']
+        requested_school = attrs.get('school')
+
+        if request.user.is_superuser:
+            if requested_school is None:
+                raise serializers.ValidationError({'school': 'A school is required.'})
+        else:
+            if request.user.school_id is None:
+                raise serializers.ValidationError('Your account is not assigned to a school.')
+            if requested_school and requested_school.pk != request.user.school_id:
+                raise serializers.ValidationError({'school': 'You cannot create users for another school.'})
+            attrs['school'] = request.user.school
+
+        return attrs
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
 
 
 

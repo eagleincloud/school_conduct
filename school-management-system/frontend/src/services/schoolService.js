@@ -35,7 +35,7 @@ const schoolService = {
    */
   getAllSchools: async () => {
     try {
-      const response = await api.get("/schools/admin-schools/");
+      const response = await api.get("schools/admin-schools/");
       return response.data;
     } catch (error) {
       console.error("Error fetching all schools:", error);

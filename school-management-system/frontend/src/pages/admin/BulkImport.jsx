@@ -231,10 +231,13 @@ const BulkImport = () => {
                           {importType === 'student' && <th className="px-4 py-2 text-left text-xs font-medium text-green-700 uppercase">Admission No</th>}
                           {importType === 'teacher' && <th className="px-4 py-2 text-left text-xs font-medium text-green-700 uppercase">Employee ID</th>}
                           <th className="px-4 py-2 text-left text-xs font-medium text-green-700 uppercase">Name</th>
-                          {importType === 'student' && <th className="px-4 py-2 text-left text-xs font-medium text-green-700 uppercase">Username</th>}
+                          <th className="px-4 py-2 text-left text-xs font-medium text-green-700 uppercase">Username</th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-green-700 uppercase">Punch / RFID</th>
                           <th className="px-4 py-2 text-left text-xs font-medium text-green-700 uppercase">Email</th>
                           {importType === 'student' && <th className="px-4 py-2 text-left text-xs font-medium text-green-700 uppercase">Class - Section</th>}
                           {importType === 'teacher' && <th className="px-4 py-2 text-left text-xs font-medium text-green-700 uppercase">Specialization</th>}
+                          <th className="px-4 py-2 text-left text-xs font-medium text-green-700 uppercase">Phone</th>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-green-700 uppercase">Address</th>
                           <th className="px-4 py-2 text-right text-xs font-medium text-green-700 uppercase">Action</th>
                         </tr>
                       </thead>
@@ -244,10 +247,13 @@ const BulkImport = () => {
                             {importType === 'student' && <td className="px-4 py-2 whitespace-nowrap text-sm text-green-900">{row.admission_no}</td>}
                             {importType === 'teacher' && <td className="px-4 py-2 whitespace-nowrap text-sm text-green-900">{row.employee_id}</td>}
                             <td className="px-4 py-2 whitespace-nowrap text-sm text-green-900">{row.name}</td>
-                            {importType === 'student' && <td className="px-4 py-2 whitespace-nowrap text-sm text-green-900">{row.username || row.email.split('@')[0]}</td>}
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-green-900 font-mono font-semibold text-purple-700">{row.username || '—'}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-green-900 font-mono font-semibold text-blue-600">{row.rfid_code || '—'}</td>
                             <td className="px-4 py-2 whitespace-nowrap text-sm text-green-900">{row.email}</td>
-                            {importType === 'student' && <td className="px-4 py-2 whitespace-nowrap text-sm text-green-900">{row.class} - {row.section}</td>}
-                            {importType === 'teacher' && <td className="px-4 py-2 whitespace-nowrap text-sm text-green-900">{row.specialization}</td>}
+                            {importType === 'student' && <td className="px-4 py-2 whitespace-nowrap text-sm text-green-900">{row.class || '-'} - {row.section || '-'}</td>}
+                            {importType === 'teacher' && <td className="px-4 py-2 whitespace-nowrap text-sm text-green-900">{row.specialization || '-'}</td>}
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-green-900">{row.phone || '-'}</td>
+                            <td className="px-4 py-2 whitespace-nowrap text-sm text-green-900">{row.address || '-'}</td>
                             <td className="px-4 py-2 whitespace-nowrap text-sm text-right">
                               <button
                                 onClick={() => {

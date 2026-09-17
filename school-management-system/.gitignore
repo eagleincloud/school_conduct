@@ -13,6 +13,8 @@ staticfiles/
 # Environment
 .env
 .env.*
+!.env.example
+!**/.env.example
 
 # Python
 __pycache__/

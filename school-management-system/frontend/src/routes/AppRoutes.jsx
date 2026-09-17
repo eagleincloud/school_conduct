@@ -1,77 +1,79 @@
-import React from "react";
+import { Suspense, lazy } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Capacitor } from "@capacitor/core";
-import Login from "../pages/auth/Login";
-import LandingPage from "../pages/LandingPage";
 import ProtectedRoute from "./ProtectedRoute";
-import MobileGateway from "../pages/auth/MobileGateway";
 
-// Student
-import StudentDashboard from "../pages/student/Dashboard";
-import Notifications from "../pages/student/Notifications";
-import StudentProfile from "../pages/student/Profile";
-import StudentResults from "../pages/student/Results";
-import StudentAssignments from "../pages/student/Assignments";
-import StudentTimetable from "../pages/student/Timetable";
-import StudentFees from "../pages/student/Fees";
-import StudentFinanceCards from "../pages/student/FinanceCards";
-import StudentLedger from "../pages/student/Ledger";
-import StudentAttendance from "../pages/student/Attendance";
-import StudentHolidays from "../pages/student/Holidays";
-import StudentMessaging from "../pages/student/Messaging";
-import StudentSyllabus from "../pages/student/Syllabus";
-import StudentExams from "../pages/student/Exams";
-import GalleryPage from "../pages/common/Gallery";
+const Login = lazy(() => import("../pages/auth/Login"));
+const LandingPage = lazy(() => import("../pages/LandingPage"));
+const MobileGateway = lazy(() => import("../pages/auth/MobileGateway"));
+const SaaSLanding = lazy(() => import("../pages/SaaSLanding"));
 
-// Teacher
-import TeacherDashboard from "../pages/teacher/Dashboard";
-import TeacherProfile from "../pages/teacher/Profile";
-import TeacherStudents from "../pages/teacher/Students";
-import MarkAttendance from "../pages/teacher/MarkAttendance";
-import UploadResult from "../pages/teacher/UploadResult";
-import TeacherAssignment from "../pages/teacher/Assignment";
-import TeacherAssignmentList from "../pages/teacher/AssignmentList";
-import TeacherMessaging from "../pages/teacher/Messaging";
-import TeacherHolidays from "../pages/teacher/Holidays";
-import TeacherSyllabus from "../pages/teacher/Syllabus";
-import TeacherMyAttendance from "../pages/teacher/MyAttendance";
+const StudentDashboard = lazy(() => import("../pages/student/Dashboard"));
+const Notifications = lazy(() => import("../pages/student/Notifications"));
+const StudentProfile = lazy(() => import("../pages/student/Profile"));
+const StudentResults = lazy(() => import("../pages/student/Results"));
+const StudentAssignments = lazy(() => import("../pages/student/Assignments"));
+const StudentFees = lazy(() => import("../pages/student/Fees"));
+const StudentFinanceCards = lazy(() => import("../pages/student/FinanceCards"));
+const StudentLedger = lazy(() => import("../pages/student/Ledger"));
+const StudentAttendance = lazy(() => import("../pages/student/Attendance"));
+const StudentHolidays = lazy(() => import("../pages/student/Holidays"));
+const StudentMessaging = lazy(() => import("../pages/student/Messaging"));
+const StudentSyllabus = lazy(() => import("../pages/student/Syllabus"));
+const StudentExams = lazy(() => import("../pages/student/Exams"));
+const StudentShops = lazy(() => import("../pages/student/Shops"));
 
-// Admin
-import AddStudent from "../pages/admin/AddStudent";
-import AdminDashboard from "../pages/admin/Dashboard";
-import AddTeacher from "../pages/admin/AddTeacher";
-import AdminProfile from "../pages/admin/Profile";
-import ManageStudents from "../pages/admin/ManageStudents";
-import ManageTeachers from "../pages/admin/ManageTeachers";
-import AdminClasses from "../pages/admin/Classes";
-import AdminSubjects from "../pages/admin/Subjects";
-import AssignTeacher from "../pages/admin/AssignTeacher";
-import AdminExams from "../pages/admin/Exams";
-import PublishResults from "../pages/admin/PublishResults";
-import AdminFees from "../pages/admin/Fees";
-import AdminFinanceCards from "../pages/admin/FinanceCards";
-import AdminHolidays from "../pages/admin/Holidays";
-import AdminAnnouncements from "../pages/admin/Announcements";
-import AdminReports from "../pages/admin/Reports";
-import ShopLocations from "../pages/admin/ShopLocations";
-import StudentShops from "../pages/student/Shops";
-import BulkImport from "../pages/admin/BulkImport";
-import SubjectDetails from "../pages/admin/SubjectDetails";
-import TimeTable from "../pages/common/TimeTable";
-import AdminSyllabus from "../pages/admin/Syllabus";
-import AdminMessaging from "../pages/admin/Messaging";
-import BiometricMachines from "../pages/admin/BiometricMachines";
-import AdminTeacherAttendance from "../pages/admin/TeacherAttendance";
+const TeacherDashboard = lazy(() => import("../pages/teacher/Dashboard"));
+const TeacherProfile = lazy(() => import("../pages/teacher/Profile"));
+const TeacherStudents = lazy(() => import("../pages/teacher/Students"));
+const MarkAttendance = lazy(() => import("../pages/teacher/MarkAttendance"));
+const UploadResult = lazy(() => import("../pages/teacher/UploadResult"));
+const TeacherAssignment = lazy(() => import("../pages/teacher/Assignment"));
+const TeacherAssignmentList = lazy(() => import("../pages/teacher/AssignmentList"));
+const TeacherMessaging = lazy(() => import("../pages/teacher/Messaging"));
+const TeacherHolidays = lazy(() => import("../pages/teacher/Holidays"));
+const TeacherSyllabus = lazy(() => import("../pages/teacher/Syllabus"));
+const TeacherMyAttendance = lazy(() => import("../pages/teacher/MyAttendance"));
 
-import SaaSLanding from "../pages/SaaSLanding";
-import SuperAdminLogin from "../pages/superadmin/Login";
-import SuperAdminDashboard from "../pages/superadmin/Dashboard";
-import SuperAdminProfile from "../pages/superadmin/Profile";
-import DealerManagement from "../pages/superadmin/DealerManagement";
+const AddStudent = lazy(() => import("../pages/admin/AddStudent"));
+const AdminDashboard = lazy(() => import("../pages/admin/Dashboard"));
+const AddTeacher = lazy(() => import("../pages/admin/AddTeacher"));
+const AdminProfile = lazy(() => import("../pages/admin/Profile"));
+const ManageStudents = lazy(() => import("../pages/admin/ManageStudents"));
+const ManageTeachers = lazy(() => import("../pages/admin/ManageTeachers"));
+const AdminClasses = lazy(() => import("../pages/admin/Classes"));
+const AdminSubjects = lazy(() => import("../pages/admin/Subjects"));
+const AssignTeacher = lazy(() => import("../pages/admin/AssignTeacher"));
+const AdminExams = lazy(() => import("../pages/admin/Exams"));
+const PublishResults = lazy(() => import("../pages/admin/PublishResults"));
+const AdminFees = lazy(() => import("../pages/admin/Fees"));
+const AdminFinanceCards = lazy(() => import("../pages/admin/FinanceCards"));
+const AdminHolidays = lazy(() => import("../pages/admin/Holidays"));
+const AdminAnnouncements = lazy(() => import("../pages/admin/Announcements"));
+const AdminReports = lazy(() => import("../pages/admin/Reports"));
+const ShopLocations = lazy(() => import("../pages/admin/ShopLocations"));
+const BulkImport = lazy(() => import("../pages/admin/BulkImport"));
+const SubjectDetails = lazy(() => import("../pages/admin/SubjectDetails"));
+const AdminSyllabus = lazy(() => import("../pages/admin/Syllabus"));
+const AdminMessaging = lazy(() => import("../pages/admin/Messaging"));
+const BiometricMachines = lazy(() => import("../pages/admin/BiometricMachines"));
+const AdminTeacherAttendance = lazy(() => import("../pages/admin/TeacherAttendance"));
 
-import DealerLogin from "../pages/dealer/Login";
-import DealerDashboard from "../pages/dealer/Dashboard";
-import DealerProfile from "../pages/dealer/Profile";
+const GalleryPage = lazy(() => import("../pages/common/Gallery"));
+const TimeTable = lazy(() => import("../pages/common/TimeTable"));
+const SuperAdminLogin = lazy(() => import("../pages/superadmin/Login"));
+const SuperAdminDashboard = lazy(() => import("../pages/superadmin/Dashboard"));
+const SuperAdminProfile = lazy(() => import("../pages/superadmin/Profile"));
+const DealerManagement = lazy(() => import("../pages/superadmin/DealerManagement"));
+const DealerLogin = lazy(() => import("../pages/dealer/Login"));
+const DealerDashboard = lazy(() => import("../pages/dealer/Dashboard"));
+const DealerProfile = lazy(() => import("../pages/dealer/Profile"));
+
+const RouteLoader = () => (
+  <div role="status" aria-live="polite" style={{ padding: "2rem", textAlign: "center" }}>
+    Loading…
+  </div>
+);
 
 const AppRoutes = () => {
   const isMobileApp = Capacitor.getPlatform() !== "web";
@@ -99,7 +101,8 @@ const AppRoutes = () => {
   }
 
   return (
-    <Routes>
+    <Suspense fallback={<RouteLoader />}>
+      <Routes>
       <Route
         path="/"
         element={
@@ -238,8 +241,9 @@ const AppRoutes = () => {
         }
       />
 
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Suspense>
   );
 };
 

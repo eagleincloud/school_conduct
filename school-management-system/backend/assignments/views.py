@@ -41,6 +41,7 @@ class AssignmentCreateView(views.APIView):
     """
     permission_classes = [IsTeacher]
     parser_classes = [MultiPartParser, FormParser, JSONParser]
+    throttle_scope = 'upload'
 
     def _ensure_teacher_profile(self, user):
         profile = TeacherProfile.objects.filter(user=user).first()
@@ -63,7 +64,7 @@ class AssignmentCreateView(views.APIView):
 
     def post(self, request):
         teacher_profile = self._ensure_teacher_profile(request.user)
-        serializer = AssignmentSerializer(data=request.data)
+        serializer = AssignmentSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             assignment = serializer.save(created_by=teacher_profile)
 
@@ -123,7 +124,7 @@ class AssignmentDetailView(views.APIView):
         if not assignment:
             return Response({'error': 'Assignment not found'}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = AssignmentSerializer(assignment, data=request.data, partial=True)
+        serializer = AssignmentSerializer(assignment, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
             updated = serializer.save()
             return Response(AssignmentSerializer(updated).data, status=status.HTTP_200_OK)

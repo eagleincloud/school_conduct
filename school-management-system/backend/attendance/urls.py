@@ -9,6 +9,7 @@ from .device_views import (
     BiometricDeviceRotateSecretView,
     BiometricDeviceStatusStreamView,
     BiometricDeviceTestView,
+    BiometricEventLogListView,
 )
 from .views import (
     AttendanceMarkView,
@@ -22,6 +23,7 @@ from .views import (
     TeacherAttendanceVerificationDecisionView,
     BiometricDevicePunchView,
     BiometricDeviceHeartbeatView,
+    AttendanceSettingView,
 )
 from .teacher_attendance_views import (
     AdminTeacherAttendanceSheetView,
@@ -35,6 +37,7 @@ from .teacher_attendance_views import (
 
 urlpatterns = [
     path('devices/', BiometricDeviceListCreateView.as_view(), name='biometric-device-list-create'),
+    path('devices/logs/', BiometricEventLogListView.as_view(), name='biometric-device-logs'),
     path('devices/test-connection/', BiometricDeviceConnectionProbeView.as_view(), name='biometric-device-probe'),
     path('devices/<int:device_id>/', BiometricDeviceDetailView.as_view(), name='biometric-device-detail'),
     path('devices/<int:device_id>/test/', BiometricDeviceTestView.as_view(), name='biometric-device-test'),
@@ -63,4 +66,5 @@ urlpatterns = [
     path('staff/summary/', AdminTeacherAttendanceSummaryView.as_view(), name='staff-attendance-summary'),
     path('staff/my-attendance/', TeacherMyAttendanceView.as_view(), name='staff-my-attendance'),
     path('staff/biometric-punch/', TeacherBiometricPunchView.as_view(), name='staff-biometric-punch'),
+    path('settings/', AttendanceSettingView.as_view(), name='attendance-settings'),
 ]

@@ -86,7 +86,7 @@ This is the core background sync process:
 
 Due to strict Android 10+ Scoped Storage restrictions, writing directly to the shared `Download` directory is blocked. To address this, a custom diagnostic logger writes logs directly to the application's secure external storage directory:
 
-- **Log File Location**: `/sdcard/Android/data/com.schoolconduct.app/files/schoolconduct_log.txt`
+- **Log File Location**: `/sdcard/Android/data/com.eagleincloud.schoolconduct/files/schoolconduct_log.txt`
 - **Tracked Parameters**:
   - Service lifecycle states (`onCreate`, `onStartCommand`).
   - Network requests, endpoints, and HTTP status codes (e.g. `200 OK`).

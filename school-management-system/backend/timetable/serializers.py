@@ -41,3 +41,16 @@ class TimeTableEntrySerializer(serializers.ModelSerializer):
         if obj.end_time:
             return obj.end_time.strftime("%I:%M %p")
         return ""
+
+    def validate(self, attrs):
+        request = self.context.get('request')
+        if not request or request.user.is_superuser:
+            return attrs
+        school_id = request.user.school_id
+        teacher = attrs.get('teacher') or getattr(self.instance, 'teacher', None)
+        shift_ref = attrs.get('shift_ref') or getattr(self.instance, 'shift_ref', None)
+        if teacher and teacher.school_id != school_id:
+            raise serializers.ValidationError({'teacher': 'Teacher must belong to your school.'})
+        if shift_ref and shift_ref.school_id != school_id:
+            raise serializers.ValidationError({'shift_ref': 'Shift must belong to your school.'})
+        return attrs

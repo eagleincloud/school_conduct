@@ -100,11 +100,6 @@ export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const loginOptions = [
-    { label: 'Administrator', role: 'admin' },
-    { label: 'Teacher / Staff', role: 'teacher' },
-    { label: 'Parent / Student', role: 'student' }
-  ];
 
   const navLinks = [];
 
@@ -235,21 +230,13 @@ export default function LandingPage() {
           </nav>
 
           <div className="flex items-center gap-4">
-             <div className="hidden md:block relative group">
-                <button className="bg-blue-600 text-white px-8 py-3 rounded-2xl text-xs font-bold shadow-xl shadow-blue-600/20 hover:bg-blue-700 transition-all active:scale-95">
+             <div className="hidden md:block">
+                <button 
+                  onClick={() => navigate(`/school/${school.school_id}/login`)}
+                  className="bg-blue-600 text-white px-8 py-3 rounded-2xl text-xs font-bold shadow-xl shadow-blue-600/20 hover:bg-blue-700 transition-all active:scale-95 cursor-pointer"
+                >
                   Secure Access
                 </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-2xl border border-slate-100 py-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                   {loginOptions.map(role => (
-                      <button 
-                        key={role.role}
-                        onClick={() => navigate(`/school/${school.school_id}/login?role=${role.role}`)}
-                        className="w-full text-left px-6 py-3 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors"
-                      >
-                        {role.label}
-                      </button>
-                   ))}
-                </div>
              </div>
              <button
                 type="button"
@@ -277,19 +264,16 @@ export default function LandingPage() {
                 </button>
               ))}
               {navLinks.length > 0 && <div className="my-3 h-px bg-slate-100" />}
-              {loginOptions.map(({ label, role }) => (
-                <button
-                  key={role}
-                  type="button"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    navigate(`/school/${school.school_id}/login?role=${role}`);
-                  }}
-                  className="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors"
-                >
-                  {label}
-                </button>
-              ))}
+              <button
+                type="button"
+                onClick={() => {
+                  setMenuOpen(false);
+                  navigate(`/school/${school.school_id}/login`);
+                }}
+                className="w-full text-center px-4 py-3 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20"
+              >
+                Secure Access
+              </button>
             </div>
           </div>
         )}

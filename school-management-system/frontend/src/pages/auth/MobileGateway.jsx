@@ -2,14 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import schoolService from '../../services/schoolService';
 import { toast } from 'react-hot-toast';
-import { BASE_URL } from '../../services/api';
 
 const MobileGateway = () => {
     const [schoolId, setSchoolId] = useState('');
     const [verifying, setVerifying] = useState(false);
-    const [showSettings, setShowSettings] = useState(false);
-    const [customUrl, setCustomUrl] = useState(localStorage.getItem('mobile_api_url') || '');
-    const [connectionFailed, setConnectionFailed] = useState(false);
     const navigate = useNavigate();
 
     // Check if the school ID was already verified on this device
@@ -25,45 +21,38 @@ const MobileGateway = () => {
         const idToVerify = schoolId.trim().toUpperCase();
 
         if (!idToVerify) {
-            toast.error('Please enter a valid School ID.');
+            toast.error('Please enter your School ID.');
             return;
         }
 
-        // 1. Offline Detection
+        // Offline Detection
         if (typeof navigator !== 'undefined' && !navigator.onLine) {
-            toast.error('Offline Mode: Please check your internet connection and try again.');
+            toast.error('No Internet: Please check your connection and try again.');
             return;
         }
 
         setVerifying(true);
-        setConnectionFailed(false);
         try {
-            // Perform lookup using existing service client
             const schoolData = await schoolService.getSchoolInfo(idToVerify);
             
             if (schoolData) {
-                toast.success('School verified successfully!');
+                toast.success(`Welcome to ${schoolData.name || idToVerify}!`);
                 localStorage.setItem('mobile_school_id', idToVerify);
                 navigate(`/school/${idToVerify}/login`);
             }
         } catch (err) {
             console.error('Mobile Gateway verification failed:', err);
 
-            // 2. Timeout and Network Failures Handling
             if (err.code === 'ECONNABORTED' || err.message?.toLowerCase().includes('timeout')) {
-                toast.error('Request Timed Out: The server is taking too long to respond. Please try again.');
-                setConnectionFailed(true);
+                toast.error('Connection timed out. Please check your internet connection.');
             } else if (!err.response) {
-                toast.error('Network Error: Unreachable host. Please check your backend connection.');
-                setConnectionFailed(true);
+                toast.error('Unable to connect to server. Please check your internet connection.');
             } else {
                 const status = err.response.status;
                 if (status === 404) {
-                    // 3. Invalid School ID
-                    toast.error(`Invalid School ID: "${idToVerify}" does not exist in our system.`);
+                    toast.error(`School ID "${idToVerify}" not found. Please check and try again.`);
                 } else if (status >= 500) {
-                    // 4. Server 500 Errors
-                    toast.error('Server Error (500): The server encountered an internal issue. Please try again later.');
+                    toast.error('School server is currently updating. Please try again in a few moments.');
                 } else {
                     toast.error(err.response.data?.message || err.response.data?.error || 'Verification failed. Please try again.');
                 }
@@ -71,43 +60,6 @@ const MobileGateway = () => {
         } finally {
             setVerifying(false);
         }
-    };
-
-    const handleSaveUrl = (e) => {
-        e.preventDefault();
-        const urlToSave = customUrl.trim();
-        if (!urlToSave) {
-            toast.error('Please enter a valid URL.');
-            return;
-        }
-
-        try {
-            // Basic validation: must start with http:// or https://
-            new URL(urlToSave);
-        } catch (e) {
-            toast.error('Invalid URL format. Must start with http:// or https://');
-            return;
-        }
-
-        // Standardize URL by adding trailing slash /api/ or / if missing
-        let normalized = urlToSave.replace(/\/?$/, "/");
-        if (!normalized.includes('/api/')) {
-            normalized = normalized + 'api/';
-        }
-
-        localStorage.setItem('mobile_api_url', normalized);
-        toast.success('Backend URL updated! Reloading app...');
-        setTimeout(() => {
-            window.location.reload();
-        }, 1000);
-    };
-
-    const handleResetUrl = () => {
-        localStorage.removeItem('mobile_api_url');
-        toast.success('Reset to default URL! Reloading app...');
-        setTimeout(() => {
-            window.location.reload();
-        }, 1000);
     };
 
     return (
@@ -186,10 +138,11 @@ const MobileGateway = () => {
                         </label>
                         <input
                             type="text"
-                            placeholder="e.g. DEFAULT, KVS01"
+                            placeholder="e.g. CWS, DEFAULT"
                             value={schoolId}
                             onChange={(e) => setSchoolId(e.target.value)}
                             disabled={verifying}
+                            autoCapitalize="characters"
                             style={{
                                 width: '100%',
                                 padding: '14px 16px',
@@ -198,6 +151,7 @@ const MobileGateway = () => {
                                 borderRadius: '12px',
                                 color: '#0f172a',
                                 fontSize: '15px',
+                                fontWeight: '600',
                                 outline: 'none',
                                 boxSizing: 'border-box',
                                 transition: 'all 0.3s ease'
@@ -226,11 +180,7 @@ const MobileGateway = () => {
                         {verifying ? 'Verifying School...' : 'Continue'}
                     </button>
                 </form>
-
-
             </div>
-
-
         </div>
     );
 };

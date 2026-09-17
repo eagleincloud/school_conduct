@@ -5,6 +5,7 @@ from django.db import IntegrityError, transaction
 from core.permissions import IsAdmin, IsTeacher
 from .teacher_access import teacher_accessible_class_sections_queryset
 from students.models import StudentProfile
+from teachers.models import TeacherProfile
 from django.db.models import Q
 
 from .models import ClassSection, MainClass, MainSection
@@ -195,6 +196,12 @@ class AdminClassSectionCreateView(views.APIView):
 
         section_obj, _ = MainSection.objects.get_or_create(school=school, name=section_name)
 
+        class_teacher = None
+        if class_teacher_id:
+            class_teacher = TeacherProfile.objects.filter(id=class_teacher_id, user__school=school).first()
+            if not class_teacher:
+                return Response({'error': 'Class teacher not found in your school'}, status=status.HTTP_400_BAD_REQUEST)
+
         if ClassSection.objects.filter(school=school, class_ref=class_obj, section_ref=section_obj).exists():
             return Response({"error": "This section already exists in selected class"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -202,7 +209,7 @@ class AdminClassSectionCreateView(views.APIView):
             school=school,
             class_ref=class_obj,
             section_ref=section_obj,
-            class_teacher_id=class_teacher_id or None,
+            class_teacher=class_teacher,
             room_number=room_number,
         )
         obj = ClassSection.objects.select_related('class_ref', 'section_ref', 'class_teacher__user').get(id=obj.id)
@@ -244,8 +251,13 @@ class AdminClassSectionDetailView(views.APIView):
         obj.section_ref = target_section
 
         if class_teacher_id is not None:
-            # optionally verify teacher belongs to school
-            obj.class_teacher_id = class_teacher_id or None
+            if class_teacher_id:
+                class_teacher = TeacherProfile.objects.filter(id=class_teacher_id, user__school=school).first()
+                if not class_teacher:
+                    return Response({'error': 'Class teacher not found in your school'}, status=status.HTTP_400_BAD_REQUEST)
+                obj.class_teacher = class_teacher
+            else:
+                obj.class_teacher = None
         if room_number is not None:
             obj.room_number = (room_number or '').strip() or None
 

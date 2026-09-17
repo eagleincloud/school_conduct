@@ -63,19 +63,23 @@ export default function SuperAdminDashboard() {
 
   const fetchSchools = async () => {
     try {
-      const response = await api.get("/schools/admin-schools/");
-      setSchools(response.data);
+      const response = await api.get("schools/admin-schools/");
+      const data = response.data?.results || response.data || [];
+      setSchools(Array.isArray(data) ? data : []);
     } catch (err) {
       setError("Failed to fetch platform schools.");
+      setSchools([]);
     }
   };
 
   const fetchDealers = async () => {
     try {
-      const response = await api.get("/dealers/management/");
-      setDealers(response.data);
+      const response = await api.get("dealers/management/");
+      const data = response.data?.results || response.data || [];
+      setDealers(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Failed to fetch dealers");
+      setDealers([]);
     }
   };
 
@@ -143,7 +147,7 @@ export default function SuperAdminDashboard() {
     });
 
     try {
-      await api.post("/schools/admin-schools/", data, {
+      await api.post("schools/admin-schools/", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setIsModalOpen(false);
@@ -176,10 +180,22 @@ export default function SuperAdminDashboard() {
       });
       alert("School registered successfully!");
     } catch (err) {
-      alert(
-        err.response?.data?.detail ||
-          "Error creating school. Please verify unique fields.",
-      );
+      const data = err.response?.data;
+      let msg = "Error creating school.";
+      if (data) {
+        if (typeof data === "string") {
+          msg = data;
+        } else if (data.detail) {
+          msg = data.detail;
+        } else {
+          // DRF returns field-level errors as { field: ["error msg"] }
+          const fieldErrors = Object.entries(data)
+            .map(([key, val]) => `${key}: ${Array.isArray(val) ? val.join(", ") : val}`)
+            .join("\n");
+          msg = fieldErrors || msg;
+        }
+      }
+      alert(msg);
     }
   };
 
@@ -229,7 +245,7 @@ export default function SuperAdminDashboard() {
     });
 
     try {
-      await api.patch(`/schools/admin-schools/${editingSchoolId}/`, data, {
+      await api.patch(`schools/admin-schools/${editingSchoolId}/`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setIsModalOpen(false);
@@ -244,7 +260,7 @@ export default function SuperAdminDashboard() {
   const handleCreateDealer = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/dealers/management/", dealerFormData);
+      await api.post("dealers/management/", dealerFormData);
       setIsDealerModalOpen(false);
       fetchDealers();
       setDealerFormData({

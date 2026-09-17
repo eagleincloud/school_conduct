@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import { ChevronLeft, ChevronRight, X, Image as ImageIcon, Trash2, Maximize2 } from 'lucide-react';
 import { resolveImageUrl } from '../../utils/helpers';
 
-const GalleryCarousel = ({ images, token }) => {
+const GalleryCarousel = ({ images }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
     const timeoutRef = useRef(null);
@@ -41,7 +41,7 @@ const GalleryCarousel = ({ images, token }) => {
                 {images.map((img, idx) => (
                     <div key={img.id} className="min-w-full h-full relative">
                         <img
-                            src={`${resolveImageUrl(img.image_url)}${token ? `?token=${token}` : ''}`}
+                            src={resolveImageUrl(img.image_url)}
                             alt={img.title}
                             className="w-full h-full object-cover"
                         />
@@ -104,7 +104,6 @@ const GalleryPage = () => {
     const [fileInputKey, setFileInputKey] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
 
-    const token = localStorage.getItem('access_token');
 
     const fetchGallery = async () => {
         setLoading(true);
@@ -237,7 +236,7 @@ const GalleryPage = () => {
             {/* Slider View */}
             {!loading && images.length > 0 && (
                 <section className="space-y-6">
-                    <GalleryCarousel images={images} token={token} />
+                    <GalleryCarousel images={images} />
                 </section>
             )}
 
@@ -364,7 +363,7 @@ const GalleryPage = () => {
                             <div key={img.id} className="group bg-white rounded-[2rem] border border-slate-100 p-3 shadow-xl shadow-slate-200/40 hover:shadow-2xl transition-all duration-500">
                                 <div className="aspect-square rounded-2xl overflow-hidden relative mb-4">
                                     <img
-                                        src={`${resolveImageUrl(img.image_url)}${token ? `?token=${token}` : ''}`}
+                                        src={resolveImageUrl(img.image_url)}
                                         alt={img.title}
                                         className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                                     />

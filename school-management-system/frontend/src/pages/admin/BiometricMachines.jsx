@@ -14,6 +14,8 @@ import {
   Trash2,
   Wifi,
   WifiOff,
+  List,
+  X,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
@@ -99,13 +101,13 @@ const SectionTitle = ({ icon: Icon, title, body }) => (
 );
 
 export default function BiometricMachines() {
-  const currentUser = authService.getCurrentUser();
-  const isSuperadmin = currentUser.role === "superadmin";
+  const currentUser = authService.getCurrentUser() || {};
+  const isSuperadmin = currentUser?.role === "superadmin";
 
   const [devices, setDevices] = useState([]);
   const [schools, setSchools] = useState([]);
-  const [selectedSchool, setSelectedSchool] = useState(currentUser.school_id || "");
-  const [form, setForm] = useState({ ...defaultForm, school: currentUser.school_id || "" });
+  const [selectedSchool, setSelectedSchool] = useState(currentUser?.school_id || "");
+  const [form, setForm] = useState({ ...defaultForm, school: currentUser?.school_id || "" });
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -114,11 +116,22 @@ export default function BiometricMachines() {
   const [draftProbe, setDraftProbe] = useState(null);
   const [preview, setPreview] = useState(null);
   const [activePreviewId, setActivePreviewId] = useState(null);
+  const isDirectPushMode = ["tcp_xml_push", "http_push"].includes(form.integration_mode);
+
+  // Logs modal state
+  const [showLogsModal, setShowLogsModal] = useState(false);
+  const [logsModalDevice, setLogsModalDevice] = useState(null);
+  const [logs, setLogs] = useState([]);
+  const [loadingLogs, setLoadingLogs] = useState(false);
 
   const loadSchools = async () => {
     if (!isSuperadmin) return;
-    const response = await api.get("schools/admin-schools/");
-    setSchools(response.data || []);
+    try {
+      const response = await api.get("schools/admin-schools/");
+      setSchools(Array.isArray(response.data) ? response.data : (response.data?.results || []));
+    } catch (e) {
+      setSchools([]);
+    }
   };
 
   const loadDevices = async (schoolFilter = selectedSchool) => {
@@ -126,9 +139,10 @@ export default function BiometricMachines() {
     try {
       const params = isSuperadmin && schoolFilter ? { school: schoolFilter } : {};
       const data = await biometricDeviceService.list(params);
-      setDevices(data);
+      setDevices(Array.isArray(data) ? data : (data?.results || []));
     } catch (error) {
       toast.error("Failed to load biometric machines");
+      setDevices([]);
     } finally {
       setLoading(false);
     }
@@ -138,7 +152,7 @@ export default function BiometricMachines() {
     if (isSuperadmin) {
       loadSchools().catch(() => toast.error("Failed to load schools"));
     }
-    loadDevices(currentUser.school_id || "").catch(() => toast.error("Failed to load machines"));
+    loadDevices(currentUser?.school_id || "").catch(() => toast.error("Failed to load machines"));
   }, []);
 
   useEffect(() => {
@@ -147,13 +161,14 @@ export default function BiometricMachines() {
   }, [selectedSchool]);
 
   useEffect(() => {
-    const school = isSuperadmin ? selectedSchool : currentUser.school_id || "";
+    const school = isSuperadmin ? selectedSchool : currentUser?.school_id || "";
     const stream = biometricDeviceService.createStatusStream({ school });
 
     stream.onmessage = (event) => {
       try {
         const payload = JSON.parse(event.data);
-        setDevices(payload.devices || []);
+        const list = Array.isArray(payload.devices) ? payload.devices : [];
+        setDevices(list);
       } catch {
         // Ignore malformed stream messages.
       }
@@ -166,20 +181,21 @@ export default function BiometricMachines() {
     return () => {
       stream.close();
     };
-  }, [isSuperadmin, selectedSchool, currentUser.school_id]);
+  }, [isSuperadmin, selectedSchool, currentUser?.school_id]);
 
   const summary = useMemo(() => {
-    const total = devices.length;
-    const active = devices.filter((device) => device.is_active).length;
-    const online = devices.filter((device) => device.status_label === "online").length;
-    const recentlySeen = devices.filter((device) => device.last_seen_at).length;
+    const list = Array.isArray(devices) ? devices : [];
+    const total = list.length;
+    const active = list.filter((device) => device?.is_active).length;
+    const online = list.filter((device) => device?.status_label === "online").length;
+    const recentlySeen = list.filter((device) => device?.last_seen_at).length;
     return { total, active, online, recentlySeen };
   }, [devices]);
 
   const resetForm = () => {
     setEditingId(null);
     setDraftProbe(null);
-    setForm({ ...defaultForm, school: isSuperadmin ? selectedSchool : currentUser.school_id || "" });
+    setForm({ ...defaultForm, school: isSuperadmin ? selectedSchool : currentUser?.school_id || "" });
   };
 
   const handleEdit = (device) => {
@@ -253,7 +269,7 @@ export default function BiometricMachines() {
   };
 
   const handleDraftProbe = async () => {
-    if (!form.device_ip) {
+    if (!isDirectPushMode && !form.device_ip) {
       toast.error("Enter a machine IP first");
       return;
     }
@@ -264,6 +280,7 @@ export default function BiometricMachines() {
       const result = await biometricDeviceService.probeConnection({
         device_ip: normalizeIpAddress(form.device_ip),
         device_port: Number(form.device_port),
+        integration_mode: form.integration_mode,
       });
       setDraftProbe(result);
       if (result.ok) {
@@ -364,6 +381,31 @@ export default function BiometricMachines() {
     }
   };
 
+  const loadLogs = async (deviceId = null) => {
+    setLoadingLogs(true);
+    try {
+      const params = {};
+      if (deviceId) {
+        params.device_id = deviceId;
+      } else if (isSuperadmin && selectedSchool) {
+        params.school = selectedSchool;
+      }
+      const data = await biometricDeviceService.getLogs(params);
+      setLogs(Array.isArray(data) ? data : (data?.results || []));
+    } catch {
+      toast.error("Failed to load logs");
+      setLogs([]);
+    } finally {
+      setLoadingLogs(false);
+    }
+  };
+
+  const handleViewLogs = (device = null) => {
+    setLogsModalDevice(device);
+    setShowLogsModal(true);
+    loadLogs(device ? device.id : null);
+  };
+
   const copyText = async (value, successMessage) => {
     try {
       await navigator.clipboard.writeText(value);
@@ -381,7 +423,7 @@ export default function BiometricMachines() {
             <SectionTitle
               icon={ServerCog}
               title="Biometric Machine Control"
-              body="Register machines, test LAN connectivity, rotate secure tokens, and export bridge configs for each school or office entrance."
+              body="Register bridge-pull machines or receive supported biometric pushes directly on the public server."
             />
             <div className="flex flex-wrap gap-3">
               <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black uppercase tracking-widest text-slate-500">
@@ -420,6 +462,15 @@ export default function BiometricMachines() {
             >
               <ServerCog className="h-4 w-4" />
               {launchingBridges ? "Launching..." : "Launch all bridges"}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleViewLogs(null)}
+              className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-sm outline-none transition-all hover:bg-slate-50 focus:ring-4 focus:ring-slate-100"
+            >
+              <List className="h-4 w-4 text-slate-500" />
+              View Machine Logs
             </button>
 
             <button
@@ -553,7 +604,9 @@ export default function BiometricMachines() {
                 </label>
 
                 <label>
-                  <span className="text-xs font-black uppercase tracking-wide text-slate-500">IP address</span>
+                  <span className="text-xs font-black uppercase tracking-wide text-slate-500">
+                    {isDirectPushMode ? "Machine IP (inventory only)" : "Machine LAN IP"}
+                  </span>
                   <input
                     className="mt-1 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold outline-none"
                     value={form.device_ip}
@@ -562,12 +615,14 @@ export default function BiometricMachines() {
                       setForm((prev) => ({ ...prev, device_ip: normalizeIpAddress(event.target.value) }))
                     }
                     placeholder="192.168.0.150"
-                    required
+                    required={!isDirectPushMode}
                   />
                 </label>
 
                 <label>
-                  <span className="text-xs font-black uppercase tracking-wide text-slate-500">Port</span>
+                  <span className="text-xs font-black uppercase tracking-wide text-slate-500">
+                    {isDirectPushMode ? "Machine management port" : "Machine LAN port"}
+                  </span>
                   <input
                     type="number"
                     min="1"
@@ -576,6 +631,11 @@ export default function BiometricMachines() {
                     value={form.device_port}
                     onChange={(event) => setForm((prev) => ({ ...prev, device_port: event.target.value }))}
                   />
+                  {isDirectPushMode ? (
+                    <span className="mt-1 block text-xs font-semibold text-slate-400">
+                      This is not the public push port. Configure the terminal&apos;s log server to use TCP port 5555.
+                    </span>
+                  ) : null}
                 </label>
 
                 <label>
@@ -692,9 +752,10 @@ export default function BiometricMachines() {
               <h3 className="text-lg font-black text-slate-900">Setup flow</h3>
               <div className="mt-4 space-y-3 text-sm font-semibold text-slate-600">
                 <p>1. For bridge mode, register the machine LAN IP/port and use connection testing from the server side.</p>
-                <p>2. For TCP XML push mode, register the device serial and optional source IP allowlist, then configure the machine once with the public server IP and TCP port.</p>
-                <p>3. Launch bridges only for legacy bridge-pull machines. TCP push machines report in directly and do not need a customer-side worker.</p>
-                <p>4. Watch the machine card for last seen, last event, and last punch updates after live scans begin.</p>
+                <p>2. For TCP XML push mode, register the device serial, or its Machine ID plus source-IP allowlist.</p>
+                <p>3. On SBXPC/M50 terminals, set ManagerPCDomainName to the public server and ManagerPCPort to 5555.</p>
+                <p>4. Launch bridges only for legacy bridge-pull machines. Direct-push machines do not need a customer-side worker.</p>
+                <p>5. Watch the machine card for last seen, last event, and last punch updates after live scans begin.</p>
               </div>
             </div>
           </div>
@@ -723,14 +784,14 @@ export default function BiometricMachines() {
                       <div className="space-y-3">
                         <div className="flex flex-wrap items-center gap-2">
                           <h4 className="text-lg font-black text-slate-900">{device.name}</h4>
-                          <span className={`rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-widest ${statusTone(device.status_label)}`}>
-                            {device.status_label.replace("_", " ")}
+                          <span className={`rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-widest ${statusTone(device?.status_label)}`}>
+                            {device?.status_label ? String(device.status_label).replace("_", " ") : "offline"}
                           </span>
                           <span className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-slate-500">
-                            {device.device_type}
+                            {device?.device_type || "hybrid"}
                           </span>
                           <span className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-slate-500">
-                            {device.integration_mode?.replaceAll("_", " ")}
+                            {device?.integration_mode ? String(device.integration_mode).replace(/_/g, " ") : "bridge pull"}
                           </span>
                           {device.school_name ? (
                             <span className="rounded-full border border-school-blue/20 bg-school-blue/5 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-school-blue">
@@ -815,6 +876,14 @@ export default function BiometricMachines() {
                           <Trash2 className="h-4 w-4" />
                           Delete
                         </button>
+                        <button
+                          type="button"
+                          onClick={() => handleViewLogs(device)}
+                          className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs font-black uppercase tracking-wide text-slate-700"
+                        >
+                          <List className="h-4 w-4" />
+                          Logs
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -825,7 +894,7 @@ export default function BiometricMachines() {
             <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <h3 className="text-lg font-black text-slate-900">Bridge preview</h3>
+                  <h3 className="text-lg font-black text-slate-900">Integration preview</h3>
                   <p className="mt-1 text-sm font-semibold text-slate-500">
                     Downloaded configs match this payload. Use it with the Windows bridge app.
                   </p>
@@ -848,7 +917,11 @@ export default function BiometricMachines() {
                     <p><span className="font-black text-slate-900">Device:</span> {preview.device.name}</p>
                     <p className="mt-1"><span className="font-black text-slate-900">Target API:</span> {preview.config.server_url}</p>
                     {preview.tcp_listener ? (
-                      <p className="mt-1"><span className="font-black text-slate-900">TCP listener:</span> {preview.tcp_listener.host}:{preview.tcp_listener.port}</p>
+                      <p className="mt-1">
+                        <span className="font-black text-slate-900">Public TCP push target:</span>{" "}
+                        {preview.tcp_listener.public_host || preview.network_target?.host || "configured public host"}:
+                        {preview.tcp_listener.port}
+                      </p>
                     ) : null}
                     <p className="mt-1"><span className="font-black text-slate-900">Launch note:</span> {preview.launch_note}</p>
                   </div>
@@ -865,6 +938,107 @@ export default function BiometricMachines() {
           </div>
         </div>
       </div>
+
+      {showLogsModal ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
+          <div className="flex h-full max-h-[90vh] w-full max-w-5xl flex-col rounded-3xl bg-white shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-100 p-6">
+              <div>
+                <h2 className="text-xl font-black text-slate-900">
+                  {logsModalDevice ? `Machine Logs: ${logsModalDevice.name}` : "School Machine Logs"}
+                </h2>
+                <p className="mt-1 text-sm font-semibold text-slate-500">
+                  Real-time raw biometric events and heartbeats
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => loadLogs(logsModalDevice ? logsModalDevice.id : null)}
+                  className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50"
+                  disabled={loadingLogs}
+                >
+                  <RefreshCcw className={`h-4 w-4 ${loadingLogs ? "animate-spin" : ""}`} />
+                  Refresh
+                </button>
+                <button
+                  onClick={() => setShowLogsModal(false)}
+                  className="rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-auto p-6">
+              {loadingLogs && (!Array.isArray(logs) || logs.length === 0) ? (
+                <div className="flex h-40 items-center justify-center">
+                  <RefreshCcw className="h-8 w-8 animate-spin text-slate-300" />
+                </div>
+              ) : !Array.isArray(logs) || logs.length === 0 ? (
+                <div className="flex h-40 flex-col items-center justify-center text-slate-500">
+                  <Activity className="h-10 w-10 text-slate-200" />
+                  <p className="mt-3 text-sm font-bold">No event logs found</p>
+                </div>
+              ) : (
+                <div className="overflow-hidden rounded-2xl border border-slate-200">
+                  <table className="w-full text-left text-sm font-semibold">
+                    <thead className="bg-slate-50 text-xs font-black uppercase tracking-widest text-slate-500">
+                      <tr>
+                        <th className="px-6 py-4">Time</th>
+                        <th className="px-6 py-4">Event</th>
+                        <th className="px-6 py-4">Status</th>
+                        <th className="px-6 py-4">User RFID</th>
+                        <th className="px-6 py-4">Device</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 text-slate-700">
+                      {(Array.isArray(logs) ? logs : []).map((log) => (
+                        <tr key={log.id} className="hover:bg-slate-50">
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {fmtDateTime(log.received_at)}
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="rounded-full border border-slate-200 bg-white px-2 py-1 text-xs font-bold text-slate-600">
+                              {log.event_type || log.protocol}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span
+                              className={`rounded-full px-3 py-1 text-xs font-black uppercase tracking-wider ${
+                                log.status === "processed"
+                                  ? "bg-emerald-50 text-emerald-700"
+                                  : log.status === "error" || log.status === "failed"
+                                  ? "bg-rose-50 text-rose-700"
+                                  : "bg-amber-50 text-amber-700"
+                              }`}
+                            >
+                              {log.status}
+                            </span>
+                            {log.error_message ? (
+                              <div className="mt-1 max-w-[200px] truncate text-[10px] font-bold text-rose-500" title={log.error_message}>
+                                {log.error_message}
+                              </div>
+                            ) : null}
+                          </td>
+                          <td className="px-6 py-4 font-mono text-slate-900">
+                            {log.user_identifier || "-"}
+                          </td>
+                          <td className="px-6 py-4 text-xs font-bold text-slate-500">
+                            {log.device_name}
+                            <br />
+                            SN: {log.device_serial_number || "-"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

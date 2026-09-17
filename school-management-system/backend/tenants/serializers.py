@@ -60,33 +60,50 @@ class SchoolAdminSerializer(serializers.ModelSerializer):
         ]
 
 
+    def to_internal_value(self, data):
+        # Copy data if mutable or convert QueryDict/dict
+        if hasattr(data, 'copy'):
+            data = data.copy()
+        
+        # Nullify empty strings for nullable fields
+        nullable_fields = ['dealer', 'established_year', 'total_students_count', 'total_teachers_count', 'location']
+        for field in nullable_fields:
+            if field in data and (data[field] == '' or data[field] == 'null' or data[field] == 'undefined'):
+                data[field] = None
+
+        return super().to_internal_value(data)
+
     def create(self, validated_data):
+        from django.db import transaction
+
         admin_name = validated_data.pop('admin_name', None)
         admin_email = validated_data.pop('admin_email', None)
         admin_username = validated_data.pop('admin_username', None)
         admin_password = validated_data.pop('admin_password', None)
         admin_phone = validated_data.pop('admin_phone', None)
+
+        if admin_email and User.objects.filter(email=admin_email).exists():
+            raise serializers.ValidationError({"admin_email": ["A user with this email already exists."]})
+        if admin_username and User.objects.filter(username=admin_username).exists():
+            raise serializers.ValidationError({"admin_username": ["A user with this username already exists."]})
         
         # Ensure school is active by default
         if 'is_active' not in validated_data:
             validated_data['is_active'] = True
 
-        school = super().create(validated_data)
+        with transaction.atomic():
+            school = super().create(validated_data)
 
-        if admin_email and admin_username and admin_password:
-            # Check if email/username already exists
-            if User.objects.filter(email=admin_email).exists() or User.objects.filter(username=admin_username).exists():
-                raise serializers.ValidationError("A user with this email or username already exists.")
-                
-            User.objects.create_user(
-                username=admin_username,
-                email=admin_email,
-                password=admin_password,
-                name=admin_name or admin_username,
-                role='admin',
-                school=school,
-                phone=admin_phone,
-                is_staff=True # Admins might need some staff privileges in future
-            )
+            if admin_email and admin_username and admin_password:
+                User.objects.create_user(
+                    username=admin_username,
+                    email=admin_email,
+                    password=admin_password,
+                    name=admin_name or admin_username,
+                    role='admin',
+                    school=school,
+                    phone=admin_phone,
+                    is_staff=True
+                )
         
         return school

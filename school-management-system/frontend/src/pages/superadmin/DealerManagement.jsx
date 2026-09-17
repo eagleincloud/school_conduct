@@ -25,10 +25,12 @@ export default function DealerManagement() {
   const fetchDealers = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/dealers/management/');
-      setDealers(response.data);
+      const response = await api.get('dealers/management/');
+      const data = response.data?.results || response.data || [];
+      setDealers(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to fetch dealers');
+      setDealers([]);
     } finally {
       setLoading(false);
     }
