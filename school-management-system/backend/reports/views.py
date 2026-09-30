@@ -49,6 +49,35 @@ def _paginate(queryset, request, default_page_size=50):
     }
 
 
+def _get_school_holiday_dates(school_id, start_date, end_date):
+    """
+    Returns a set of datetime.date objects for school holidays within [start_date, end_date].
+    Only holidays belonging to this school (or global holidays) are returned.
+    """
+    try:
+        from holidays.models import Holiday
+        qs = Holiday.objects.filter(
+            start_date__lte=end_date
+        ).filter(
+            Q(end_date__gte=start_date) | Q(end_date__isnull=True, start_date__gte=start_date)
+        )
+        if school_id:
+            qs = qs.filter(Q(school_id=school_id) | Q(school__isnull=True))
+
+        holiday_dates = set()
+        for h in qs:
+            h_start = max(h.start_date, start_date)
+            h_end = min(h.end_date or h.start_date, end_date)
+            if h_start <= h_end:
+                cur = h_start
+                while cur <= h_end:
+                    holiday_dates.add(cur)
+                    cur += datetime.timedelta(days=1)
+        return holiday_dates
+    except Exception:
+        return set()
+
+
 # ═══════════════════════════════════════════════════════════════════════════
 #  PREVIEW  endpoints  (return JSON for on-screen tables)
 # ═══════════════════════════════════════════════════════════════════════════
@@ -198,6 +227,7 @@ class StudentAttendancePreviewView(APIView):
 
             is_sunday = sel_date.weekday() == 6
             is_future = sel_date > datetime.date.today()
+            is_holiday = sel_date in _get_school_holiday_dates(school_id, sel_date, sel_date)
 
             for s in stu_qs:
                 rec = att_map.get(s.id)
@@ -205,7 +235,7 @@ class StudentAttendancePreviewView(APIView):
                     row_status = rec.status
                     via = rec.marked_via
                     row_id = rec.id
-                elif is_sunday or is_future:
+                elif is_sunday or is_future or is_holiday:
                     continue
                 else:
                     row_status = 'absent'
@@ -376,9 +406,10 @@ class TeacherAttendancePreviewView(APIView):
             all_rows = []
             total_present, total_absent, total_late = 0, 0, 0
 
-            # Sunday check
+            # Sunday and holiday check
             is_sunday = sel_date.weekday() == 6
             is_future = sel_date > datetime.date.today()
+            is_holiday = sel_date in _get_school_holiday_dates(school_id, sel_date, sel_date)
 
             for t in tch_qs:
                 rec = att_map.get(t.id)
@@ -386,8 +417,8 @@ class TeacherAttendancePreviewView(APIView):
                     row_status = rec.status
                     via = rec.marked_via
                     row_id = rec.id
-                elif is_sunday or is_future:
-                    continue  # skip Sundays and future dates
+                elif is_sunday or is_future or is_holiday:
+                    continue  # skip Sundays, holidays, and future dates
                 else:
                     row_status = 'absent'
                     via = '-'
@@ -609,9 +640,15 @@ class StudentAttendanceDiaryView(APIView):
             att_qs = att_qs.filter(date__month=mn)
             num_days = calendar.monthrange(yr, mn)[1]
             columns = [str(d) for d in range(1, num_days + 1)]
+            holiday_dates = _get_school_holiday_dates(
+                school_id, datetime.date(yr, mn, 1), datetime.date(yr, mn, num_days)
+            )
         else:  # yearly
             mn = None
             columns = list(MONTH_ABBR)
+            holiday_dates = _get_school_holiday_dates(
+                school_id, datetime.date(yr, 1, 1), datetime.date(yr, 12, 31)
+            )
 
         # Build lookup: (student_id, date) -> status
         att_map = {}
@@ -641,6 +678,9 @@ class StudentAttendanceDiaryView(APIView):
                         row['cells'].append('-')
                         continue
                     if dt.weekday() == 6:  # Sunday
+                        row['cells'].append('S')
+                        continue
+                    if dt in holiday_dates:  # School Holiday
                         row['cells'].append('H')
                         continue
                     status = att_map.get((s.id, dt))
@@ -667,7 +707,7 @@ class StudentAttendanceDiaryView(APIView):
                             dt = datetime.date(yr, m_idx, d)
                         except ValueError:
                             continue
-                        if dt.weekday() == 6:  # Sunday
+                        if dt.weekday() == 6 or dt in holiday_dates:  # Sunday or School Holiday
                             continue
                         status = att_map.get((s.id, dt))
                         if status == 'present':
@@ -744,9 +784,15 @@ class TeacherAttendanceDiaryView(APIView):
             att_qs = att_qs.filter(date__month=mn)
             num_days = calendar.monthrange(yr, mn)[1]
             columns = [str(d) for d in range(1, num_days + 1)]
+            holiday_dates = _get_school_holiday_dates(
+                school_id, datetime.date(yr, mn, 1), datetime.date(yr, mn, num_days)
+            )
         else:  # yearly
             mn = None
             columns = list(MONTH_ABBR)
+            holiday_dates = _get_school_holiday_dates(
+                school_id, datetime.date(yr, 1, 1), datetime.date(yr, 12, 31)
+            )
 
         att_map = {}
         for rec in att_qs.values('teacher_id', 'date', 'status'):
@@ -773,6 +819,9 @@ class TeacherAttendanceDiaryView(APIView):
                         row['cells'].append('-')
                         continue
                     if dt.weekday() == 6:  # Sunday
+                        row['cells'].append('S')
+                        continue
+                    if dt in holiday_dates:  # School Holiday
                         row['cells'].append('H')
                         continue
                     status = att_map.get((t.id, dt))
@@ -799,7 +848,7 @@ class TeacherAttendanceDiaryView(APIView):
                             dt = datetime.date(yr, m_idx, d)
                         except ValueError:
                             continue
-                        if dt.weekday() == 6:  # Sunday
+                        if dt.weekday() == 6 or dt in holiday_dates:  # Sunday or School Holiday
                             continue
                         status = att_map.get((t.id, dt))
                         if status == 'present':
@@ -1011,6 +1060,7 @@ class AdminReportDownloadView(APIView):
                 att_map = {rec.student_id: rec for rec in att_qs.select_related('student__user')}
                 is_sunday = sel_date.weekday() == 6
                 is_future = sel_date > datetime.date.today()
+                is_holiday = sel_date in _get_school_holiday_dates(school_id, sel_date, sel_date)
 
                 count = 0
                 for s in stu_qs:
@@ -1018,7 +1068,7 @@ class AdminReportDownloadView(APIView):
                     if rec:
                         row_status = rec.status
                         via = rec.marked_via
-                    elif is_sunday or is_future:
+                    elif is_sunday or is_future or is_holiday:
                         continue
                     else:
                         row_status = 'absent'
@@ -1121,6 +1171,7 @@ class AdminReportDownloadView(APIView):
                 att_map = {rec.teacher_id: rec for rec in att_qs.select_related('teacher__user')}
                 is_sunday = sel_date.weekday() == 6
                 is_future = sel_date > datetime.date.today()
+                is_holiday = sel_date in _get_school_holiday_dates(school_id, sel_date, sel_date)
 
                 count = 0
                 for t in tch_qs:
@@ -1128,7 +1179,7 @@ class AdminReportDownloadView(APIView):
                     if rec:
                         row_status = rec.status
                         via = rec.marked_via
-                    elif is_sunday or is_future:
+                    elif is_sunday or is_future or is_holiday:
                         continue
                     else:
                         row_status = 'absent'
