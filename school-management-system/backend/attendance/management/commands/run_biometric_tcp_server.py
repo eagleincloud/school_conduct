@@ -104,26 +104,6 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
         self.diagnostics.log_open()
         self.device = None
         source_ip = self.client_address[0] if self.client_address else None
-        if source_ip:
-            try:
-                from attendance.models import BiometricDevice
-                from django.db.models import Q
-                dev = BiometricDevice.objects.filter(
-                    Q(allowed_source_ip=source_ip) | Q(device_ip=source_ip),
-                    is_active=True
-                ).first()
-                if dev:
-                    self.device = dev
-                    dev.last_seen_at = timezone.now()
-                    dev.last_test_status = 'online'
-                    dev.save(update_fields=['last_seen_at', 'last_test_status'])
-                    with _ACTIVE_LOCK:
-                        _ACTIVE_DEVICE_CONNECTIONS[self.client_address] = {
-                            'device_id': dev.id,
-                            'source_ip': source_ip,
-                        }
-            except Exception as exc:
-                logger.debug("Failed initial device check for %s: %s", source_ip, exc)
         try:
             self.request.settimeout(settings.BIOMETRIC_TCP_SOCKET_TIMEOUT)
             self._enable_tcp_keepalive()
@@ -314,7 +294,7 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
                 source_ip=source_ip,
             )
             serial = (payload.get('DeviceSerialNo') or '').strip()
-            if not self.device and serial:
+            if serial:
                 try:
                     from attendance.models import BiometricDevice
                     dev = BiometricDevice.objects.filter(
@@ -323,9 +303,14 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
                     ).first()
                     if dev:
                         self.device = dev
+                        now = timezone.now()
+                        dev.last_seen_at = now
+                        dev.last_test_status = 'online'
+                        update_fields = ['last_seen_at', 'last_test_status']
                         if source_ip and not dev.allowed_source_ip:
                             dev.allowed_source_ip = source_ip
-                            dev.save(update_fields=['allowed_source_ip'])
+                            update_fields.append('allowed_source_ip')
+                        dev.save(update_fields=update_fields)
                         with _ACTIVE_LOCK:
                             _ACTIVE_DEVICE_CONNECTIONS[self.client_address] = {
                                 'device_id': dev.id,
@@ -333,6 +318,27 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
                             }
                 except Exception as exc:
                     logger.debug("Failed resolving device for serial %s: %s", serial, exc)
+            elif not self.device and source_ip:
+                try:
+                    from attendance.models import BiometricDevice
+                    from django.db.models import Q
+                    dev = BiometricDevice.objects.filter(
+                        Q(allowed_source_ip=source_ip) | Q(device_ip=source_ip),
+                        is_active=True
+                    ).first()
+                    if dev:
+                        self.device = dev
+                        now = timezone.now()
+                        dev.last_seen_at = now
+                        dev.last_test_status = 'online'
+                        dev.save(update_fields=['last_seen_at', 'last_test_status'])
+                        with _ACTIVE_LOCK:
+                            _ACTIVE_DEVICE_CONNECTIONS[self.client_address] = {
+                                'device_id': dev.id,
+                                'source_ip': source_ip,
+                            }
+                except Exception as exc:
+                    logger.debug("Failed resolving fallback device for IP %s: %s", source_ip, exc)
             elif self.device:
                 with _ACTIVE_LOCK:
                     _ACTIVE_DEVICE_CONNECTIONS[self.client_address] = {

@@ -92,10 +92,12 @@ def _refresh_device_connectivity(device, timeout_seconds=1.5):
             )
             if is_active_seen:
                 message = f"Biometric machine is connected and active. Push listener on port {listener['port']} is healthy."
+                device.mark_test_result(True, message)
+                return True, latency_ms
             else:
-                message = f"TCP push listener on port {listener['port']} is ready. Machine will show online when connected."
-            device.mark_test_result(True, message)
-            return True, latency_ms
+                message = f"TCP push listener on port {listener['port']} is ready, but machine has not connected recently."
+                device.mark_test_result(False, message)
+                return False, None
         except Exception as exc:
             message = f"TCP push listener on port {listener['port']} is not reachable locally. {exc}"
             device.mark_test_result(False, message)

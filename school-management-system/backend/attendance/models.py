@@ -135,6 +135,8 @@ class BiometricDevice(models.Model):
         )
         if self.last_seen_at and self.last_seen_at >= now - timedelta(seconds=online_window_seconds):
             return True
+        if self.integration_mode in self.DIRECT_PUSH_INTEGRATION_MODES:
+            return False
         if (
             self.last_test_status == 'online'
             and self.last_tested_at
