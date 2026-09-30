@@ -86,14 +86,20 @@ def _refresh_device_connectivity(device, timeout_seconds=1.5):
         listener = _tcp_listener_config()
         try:
             latency_ms = _probe_local_tcp_listener(listener['port'], timeout_seconds=timeout_seconds)
-            message = (
-                f"EC2 TCP listener {listener['host']}:{listener['port']} is ready. "
-                "Waiting for the biometric machine to push attendance."
+            is_active_seen = (
+                device.last_seen_at
+                and device.last_seen_at >= timezone.now() - timedelta(seconds=device.ONLINE_WINDOW_SECONDS)
             )
-            device.mark_test_result(True, message)
-            return True, latency_ms
+            if is_active_seen:
+                message = f"Biometric machine is connected and active. Push listener on port {listener['port']} is healthy."
+                device.mark_test_result(True, message)
+                return True, latency_ms
+            else:
+                message = f"TCP push listener on port {listener['port']} is ready, but machine has not connected recently."
+                device.mark_test_result(False, message)
+                return False, None
         except Exception as exc:
-            message = f"EC2 TCP listener {listener['host']}:{listener['port']} is not reachable locally. {exc}"
+            message = f"TCP push listener on port {listener['port']} is not reachable locally. {exc}"
             device.mark_test_result(False, message)
             return False, None
 

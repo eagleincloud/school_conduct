@@ -1026,7 +1026,7 @@ class BiometricDeviceLiveStatusTests(TestCase):
             name='Main Gate',
             integration_mode='tcp_xml_push',
             device_serial_number='STATUS-001',
-            last_seen_at=timezone.now() - timedelta(seconds=16),
+            last_seen_at=timezone.now() - timedelta(seconds=BiometricDevice.DIRECT_PUSH_ONLINE_WINDOW_SECONDS + 5),
         )
 
         self.assertFalse(device.is_online_now())

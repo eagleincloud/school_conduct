@@ -1,6 +1,8 @@
 import logging
 import socket
 import socketserver
+import threading
+import time
 from datetime import datetime as datetime_type
 from http.client import HTTPMessage
 
@@ -31,6 +33,42 @@ _ACK_MODE_SUFFIXES = {
     'NO_TERMINATOR': b'',
 }
 
+_ACTIVE_DEVICE_CONNECTIONS = {}
+_ACTIVE_LOCK = threading.Lock()
+_HEARTBEAT_STARTED = False
+_HEARTBEAT_LOCK = threading.Lock()
+
+
+def _ensure_heartbeat_worker_running():
+    global _HEARTBEAT_STARTED
+    with _HEARTBEAT_LOCK:
+        if _HEARTBEAT_STARTED:
+            return
+        _HEARTBEAT_STARTED = True
+
+    def _worker():
+        from attendance.models import BiometricDevice
+        while True:
+            try:
+                time.sleep(20)
+                with _ACTIVE_LOCK:
+                    device_ids = list({
+                        info['device_id']
+                        for info in _ACTIVE_DEVICE_CONNECTIONS.values()
+                        if info.get('device_id')
+                    })
+                if device_ids:
+                    now = timezone.now()
+                    BiometricDevice.objects.filter(id__in=device_ids, is_active=True).update(
+                        last_seen_at=now,
+                        last_test_status='online',
+                    )
+            except Exception as exc:
+                logger.debug("Biometric connection heartbeat error: %s", exc)
+
+    thread = threading.Thread(target=_worker, daemon=True, name="BiometricTCPHeartbeat")
+    thread.start()
+
 
 def build_sbxpc_ack(payload):
     ack_template = settings.BIOMETRIC_SBXPC_ACK_TEMPLATE or settings.BIOMETRIC_SBXPC_ACK_MESSAGE
@@ -56,6 +94,7 @@ def build_sbxpc_ack(payload):
 
 class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
     def handle(self):
+        _ensure_heartbeat_worker_running()
         self.diagnostics = ConnectionDiagnostics(
             self.request,
             self.client_address,
@@ -63,11 +102,12 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
         )
         self._close_reason = 'server handler completed'
         self.diagnostics.log_open()
+        self.device = None
+        source_ip = self.client_address[0] if self.client_address else None
         try:
             self.request.settimeout(settings.BIOMETRIC_TCP_SOCKET_TIMEOUT)
             self._enable_tcp_keepalive()
             max_payload_bytes = settings.BIOMETRIC_TCP_MAX_PAYLOAD_BYTES
-            source_ip = self.client_address[0] if self.client_address else None
             self.processed_frame_count = 0
             self._handle_push_stream(max_payload_bytes, source_ip)
         except Exception as exc:
@@ -75,6 +115,8 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
             self.diagnostics.log_socket_error(exc)
             raise
         finally:
+            with _ACTIVE_LOCK:
+                _ACTIVE_DEVICE_CONNECTIONS.pop(self.client_address, None)
             self.diagnostics.log_close(self._close_reason)
 
     def _enable_tcp_keepalive(self):
@@ -83,6 +125,12 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
             return
         try:
             set_socket_option(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+            if hasattr(socket, 'TCP_KEEPIDLE'):
+                set_socket_option(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 30)
+            if hasattr(socket, 'TCP_KEEPINTVL'):
+                set_socket_option(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 10)
+            if hasattr(socket, 'TCP_KEEPCNT'):
+                set_socket_option(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, 3)
         except OSError as exc:
             logger.debug("Could not enable biometric TCP keepalive: %s", exc)
 
@@ -130,6 +178,12 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
             # Capture the exact recv() result before decoding, concatenation,
             # XML parsing, newline handling, or NUL removal.
             self.diagnostics.log_rx(chunk)
+            if self.device:
+                with _ACTIVE_LOCK:
+                    _ACTIVE_DEVICE_CONNECTIONS[self.client_address] = {
+                        'device_id': self.device.id,
+                        'source_ip': source_ip,
+                    }
             raw_message_buffer += chunk
             while b'\x00' in raw_message_buffer:
                 nul_position = raw_message_buffer.index(b'\x00')
@@ -239,7 +293,59 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
                 raw_payload=frame,
                 source_ip=source_ip,
             )
-            serial = payload.get('DeviceSerialNo', '')
+            serial = (payload.get('DeviceSerialNo') or '').strip()
+            if serial:
+                try:
+                    from attendance.models import BiometricDevice
+                    dev = BiometricDevice.objects.filter(
+                        device_serial_number__iexact=serial,
+                        is_active=True
+                    ).first()
+                    if dev:
+                        self.device = dev
+                        now = timezone.now()
+                        dev.last_seen_at = now
+                        dev.last_test_status = 'online'
+                        update_fields = ['last_seen_at', 'last_test_status']
+                        if source_ip and not dev.allowed_source_ip:
+                            dev.allowed_source_ip = source_ip
+                            update_fields.append('allowed_source_ip')
+                        dev.save(update_fields=update_fields)
+                        with _ACTIVE_LOCK:
+                            _ACTIVE_DEVICE_CONNECTIONS[self.client_address] = {
+                                'device_id': dev.id,
+                                'source_ip': source_ip,
+                            }
+                except Exception as exc:
+                    logger.debug("Failed resolving device for serial %s: %s", serial, exc)
+            elif not self.device and source_ip:
+                try:
+                    from attendance.models import BiometricDevice
+                    from django.db.models import Q
+                    dev = BiometricDevice.objects.filter(
+                        Q(allowed_source_ip=source_ip) | Q(device_ip=source_ip),
+                        is_active=True
+                    ).first()
+                    if dev:
+                        self.device = dev
+                        now = timezone.now()
+                        dev.last_seen_at = now
+                        dev.last_test_status = 'online'
+                        dev.save(update_fields=['last_seen_at', 'last_test_status'])
+                        with _ACTIVE_LOCK:
+                            _ACTIVE_DEVICE_CONNECTIONS[self.client_address] = {
+                                'device_id': dev.id,
+                                'source_ip': source_ip,
+                            }
+                except Exception as exc:
+                    logger.debug("Failed resolving fallback device for IP %s: %s", source_ip, exc)
+            elif self.device:
+                with _ACTIVE_LOCK:
+                    _ACTIVE_DEVICE_CONNECTIONS[self.client_address] = {
+                        'device_id': self.device.id,
+                        'source_ip': source_ip,
+                    }
+
             print(
                 f"Processed biometric TCP XML event serial={serial} "
                 f"event={payload.get('Event', '')} user={payload.get('UserID', '')} "
@@ -264,7 +370,11 @@ class BiometricTCPRequestHandler(socketserver.BaseRequestHandler):
                 ack_bytes = settings.BIOMETRIC_TCP_ACK_MESSAGE.encode('utf-8')
             if ack_bytes:
                 self._send_bytes(ack_bytes, message_number=message_number, label='TX ACK')
-            is_authorized = result.get('device_authorized') is True
+            is_authorized = (
+                result.get('device_authorized') is True
+                or result.get('status') in ('processed', 'duplicate', 'unmatched')
+                or bool(self.device)
+            )
             if is_sbxpc:
                 close_after_ack = settings.BIOMETRIC_SBXPC_CLOSE_AFTER_ACK or not is_authorized
             else:
