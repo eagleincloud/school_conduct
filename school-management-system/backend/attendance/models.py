@@ -55,11 +55,8 @@ class Attendance(models.Model):
 
 class BiometricDevice(models.Model):
     ONLINE_WINDOW_SECONDS = 300
-    # Direct-push terminals do not provide a persistent connection that can be
-    # inspected from Django. Treat recent packets as a short-lived heartbeat so
-    # a powered-off terminal does not remain online for five minutes.
-    DIRECT_PUSH_ONLINE_WINDOW_SECONDS = 120
-    TEST_ONLINE_WINDOW_SECONDS = 120
+    DIRECT_PUSH_ONLINE_WINDOW_SECONDS = 300
+    TEST_ONLINE_WINDOW_SECONDS = 300
     DIRECT_PUSH_INTEGRATION_MODES = ('tcp_xml_push', 'http_push')
     DEVICE_TYPE_CHOICES = (
         ('fingerprint', 'Fingerprint'),
@@ -138,8 +135,6 @@ class BiometricDevice(models.Model):
         )
         if self.last_seen_at and self.last_seen_at >= now - timedelta(seconds=online_window_seconds):
             return True
-        if self.integration_mode in self.DIRECT_PUSH_INTEGRATION_MODES:
-            return False
         if (
             self.last_test_status == 'online'
             and self.last_tested_at

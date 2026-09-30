@@ -685,6 +685,7 @@ def process_biometric_event(
                     return {
                         'ok': True,
                         'status': 'processed',
+                        'device_authorized': True,
                         'message': f'Duplicate biometric event reapplied to teacher attendance. {message}',
                         'target_type': 'teacher',
                         'teacher_name': teacher.user.name or teacher.user.username,
@@ -886,6 +887,7 @@ def process_biometric_event(
         return {
             'ok': True,
             'status': 'processed',
+            'device_authorized': True,
             'message': message,
             'target_type': 'teacher',
             'teacher_name': teacher.user.name or teacher.user.username,
@@ -906,6 +908,7 @@ def process_biometric_event(
     return {
         'ok': True,
         'status': 'processed',
+        'device_authorized': True,
         'message': message,
         'target_type': 'student',
         'student_name': student.user.name or student.user.username,
