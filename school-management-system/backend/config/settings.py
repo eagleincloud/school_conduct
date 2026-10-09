@@ -215,11 +215,15 @@ else:
         },
     }
 
+# Persistent session (user stays logged in until manual logout)
+JWT_ACCESS_DAYS = int(os.getenv('JWT_ACCESS_DAYS', '365'))
+JWT_REFRESH_DAYS = int(os.getenv('JWT_REFRESH_DAYS', '3650'))
+
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=int(os.getenv('JWT_ACCESS_MINUTES', '15'))),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=int(os.getenv('JWT_REFRESH_DAYS', '7'))),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=JWT_ACCESS_DAYS),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=JWT_REFRESH_DAYS),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': os.getenv('JWT_SIGNING_KEY', SECRET_KEY),
     'AUTH_HEADER_TYPES': ('Bearer',),
@@ -317,6 +321,8 @@ X_FRAME_OPTIONS = 'DENY'
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_AGE = int(os.getenv('SESSION_COOKIE_AGE', str(365 * 24 * 60 * 60)))  # 1 year
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 # ============================================================
 # EMAIL CONFIGURATION
