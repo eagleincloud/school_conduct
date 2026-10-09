@@ -79,16 +79,7 @@ public class BackgroundNotificationPlugin extends Plugin {
         // 2. Camera
         permissions.add(android.Manifest.permission.CAMERA);
         
-        // 3. Media
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissions.add(android.Manifest.permission.READ_MEDIA_IMAGES);
-            permissions.add(android.Manifest.permission.READ_MEDIA_VIDEO);
-        } else {
-            permissions.add(android.Manifest.permission.READ_EXTERNAL_STORAGE);
-            permissions.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-        
-        // 4. Phone
+        // 3. Phone
         permissions.add(android.Manifest.permission.CALL_PHONE);
         permissions.add(android.Manifest.permission.READ_PHONE_STATE);
 
